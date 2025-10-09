@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<podcast_directory version="1.0" last_updated="2025-10-09T18:11:11+00:00">
+  <metadata>
+    <total_podcasts>1</total_podcasts>
+    <created>2025-10-09T17:37:03+00:00</created>
+    <generator>Podcast Directory Manager v1.0.0</generator>
+  </metadata>
+  <podcasts>
+    <podcast id="pod_1760033471_68e7fabf9e131">
+      <title><![CDATA[Labor Radio-Podcast Weekly]]></title>
+      <feed_url><![CDATA[https://feed.podbean.com/laborradiopodcastweekly/feed.xml]]></feed_url>
+      <cover_image>pod_1760033471_68e7fabf9e131_68e7fabf9cdd1_1760033471_f9db63.jpg</cover_image>
+      <created_date>2025-10-09T18:11:11+00:00</created_date>
+      <updated_date>2025-10-09T18:11:11+00:00</updated_date>
+      <status>active</status>
+    </podcast>
+  </podcasts>
+</podcast_directory>
