@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<podcast_directory version="1.0" last_updated="2025-10-09T21:37:05+00:00">
+<podcast_directory version="1.0" last_updated="2025-10-09T18:31:24+00:00">
   <metadata>
     <total_podcasts>2</total_podcasts>
     <created>2025-10-09T17:37:03+00:00</created>
@@ -14,12 +14,12 @@
       <updated_date>2025-10-09T18:11:11+00:00</updated_date>
       <status>active</status>
     </podcast>
-    <podcast id="pod_1760045825_68e82b0116958">
-      <title><![CDATA[3rd & Fairfax: The WGAW Podcast - Writers Guild of America West]]></title>
+    <podcast id="pod_1760034684_68e7ff7c73f45">
+      <title><![CDATA[Back 3rd & Fairfax: The WGAW Podcast - Writers Guild of America West]]></title>
       <feed_url><![CDATA[https://3rdandfairfax.libsyn.com/rss]]></feed_url>
-      <cover_image>pod_1760045825_68e82b0116958_68e82b011557d_1760045825_11658f.png</cover_image>
-      <created_date>2025-10-09T21:37:05+00:00</created_date>
-      <updated_date>2025-10-09T21:37:05+00:00</updated_date>
+      <cover_image>pod_1760034684_68e7ff7c727f5_1760034684_c73905.png</cover_image>
+      <created_date>2025-10-09T18:31:24+00:00</created_date>
+      <updated_date>2025-10-09T18:31:24+00:00</updated_date>
       <status>active</status>
     </podcast>
   </podcasts>
