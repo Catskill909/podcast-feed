@@ -246,31 +246,6 @@ if (isset($_GET['edit'])) {
                 <?php endif; ?>
             </div>
 
-            <!-- Feed Link Card -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">RSS Feed</h3>
-                </div>
-                <div class="card-body">
-                    <p class="text-secondary mb-3">
-                        Use this RSS feed URL in your mobile app to access the podcast directory:
-                    </p>
-                    <div class="form-group">
-                        <input type="text" class="form-control" readonly
-                            value="<?php echo APP_URL; ?>/feed.php"
-                            id="feedUrl"
-                            onclick="this.select()">
-                    </div>
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-primary" onclick="copyFeedUrl()">
-                            📋 Copy URL
-                        </button>
-                        <a href="feed.php" target="_blank" class="btn btn-outline">
-                            👁️ View Feed
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </main>
 
