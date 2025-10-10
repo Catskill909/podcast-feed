@@ -764,7 +764,8 @@
 /* Feed Viewer Modal Styles */
 .modal-lg {
   max-width: 900px;
-  max-height: 90vh;
+  max-height: calc(100vh - 3rem);
+  margin: 1.5rem auto;
 }
 
 .feed-viewer-container {
@@ -1337,6 +1338,33 @@
 
 .btn-outline:hover i {
   color: white;
+}
+
+/* Help Modal Close Button - Material Design */
+#helpModal .modal-close {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(255, 255, 255, 0.08);
+  border: none;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+#helpModal .modal-close:hover {
+  color: rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+#helpModal .modal-close:active {
+  background-color: rgba(255, 255, 255, 0.22);
 }
 
 /* Responsive Help Modal */

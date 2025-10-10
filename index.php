@@ -770,7 +770,7 @@ if (isset($_GET['edit'])) {
                 <h3 class="modal-title"><i class="fa-solid fa-circle-question"></i> PodFeed Builder - Help & Guide</h3>
                 <button type="button" class="modal-close" onclick="hideHelpModal()">&times;</button>
             </div>
-            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+            <div class="modal-body">
                 
                 <!-- Quick Start -->
                 <div class="help-section">
@@ -1117,11 +1117,6 @@ if (isset($_GET['edit'])) {
                     </div>
                 </div>
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-lg" onclick="hideHelpModal()">
-                    Close
-                </button>
             </div>
         </div>
     </div>
