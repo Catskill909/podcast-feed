@@ -9,6 +9,9 @@
     // Set your password here (change this!)
     const CORRECT_PASSWORD = 'podcast2025';
     
+    // Debug: Log that auth.js is loading
+    console.log('🔒 Password protection active');
+    
     // Check if already authenticated
     const storedPassword = localStorage.getItem('podcast_auth');
     
