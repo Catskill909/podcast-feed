@@ -347,7 +347,7 @@ class PodcastApp {
             }
 
             const title = row.querySelector('td:nth-child(2) strong').textContent;
-            const feedUrl = row.querySelector('td:nth-child(3) a').href;
+            const feedUrl = row.querySelector('td:nth-child(3) a').textContent.trim();
             
             // Get description from data attribute if available
             const description = row.dataset.description || '';
