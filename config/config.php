@@ -12,8 +12,15 @@ $isLocalhost = in_array($_SERVER['SERVER_NAME'] ?? 'localhost', ['localhost', '1
 // Force production mode for password protection
 define('ENVIRONMENT', $isLocalhost ? 'development' : 'production');
 
-// Auto-detect APP_URL
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+// Auto-detect APP_URL with proper HTTPS detection
+// Check multiple sources for HTTPS (handles proxies/load balancers)
+$isHttps = (
+    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+    (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
+    (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') ||
+    (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)
+);
+$protocol = $isHttps ? 'https' : 'http';
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost:8000';
 define('APP_URL', $protocol . '://' . $host);
 
@@ -71,6 +78,18 @@ if (ENVIRONMENT === 'production') {
 $dirs = [DATA_DIR, UPLOADS_DIR, COVERS_DIR, LOGS_DIR, BACKUP_DIR];
 foreach ($dirs as $dir) {
     if (!is_dir($dir)) {
-        mkdir($dir, 0755, true);
+        // Use 0777 for Docker compatibility, suppress warnings
+        if (!@mkdir($dir, 0777, true)) {
+            // Try to continue anyway - directories might exist but mkdir failed
+            if (!is_dir($dir)) {
+                error_log("Failed to create directory: $dir");
+            }
+        } else {
+            // Set permissions after creation
+            @chmod($dir, 0777);
+        }
+    } else {
+        // Ensure existing directories are writable
+        @chmod($dir, 0777);
     }
 }
