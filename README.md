@@ -1,17 +1,20 @@
-# Podcast Directory Manager
+# PodFeed Builder
 
-A comprehensive podcast XML feed management system with a dark-themed interface that enables users to manage podcast directory entries through full CRUD operations.
+A modern, feature-rich podcast directory management system with RSS feed auto-import, health monitoring, and a beautiful dark-themed interface.
 
 ## 🚀 Features
 
+### **Core Features**
 - **Full CRUD Operations**: Create, Read, Update, Delete podcast entries
-- **Image Upload Management**: Cover image upload with strict dimension validation (1400x1400 to 2400x2400px)
-- **XML-Based Storage**: Lightweight file-based storage system using XML
+- **RSS Feed Auto-Import** ✨ NEW: Import podcasts from any RSS feed with one click
+- **Podcast Health Check** ✨ NEW: Validate RSS 2.0 structure, iTunes namespace, and feed accessibility
+- **Image Management**: Upload or auto-download cover images with validation
+- **XML-Based Storage**: Lightweight file-based storage system
 - **RSS Feed Generation**: Standard-compliant RSS feed output for app integration
-- **Dark Theme Interface**: Modern, responsive dark mode design
+- **Dark Theme Interface**: Modern Material Design dark mode with Oswald + Inter fonts
 - **Real-time Validation**: Client-side and server-side form validation
 - **Search & Filter**: Search through podcast entries
-- **Placeholder Authentication**: Structure ready for future admin login functionality
+- **Custom Password Protection**: Beautiful dark mode authentication modal
 
 ## 📋 Requirements
 
@@ -72,7 +75,20 @@ podcast-feed/
 
 ## 🎯 Usage
 
-### Adding a New Podcast
+### **Option 1: Import from RSS Feed** ✨ NEW
+
+1. Click **"Import from RSS"** button
+2. Paste any podcast RSS feed URL
+3. System automatically extracts:
+   - Podcast title
+   - Description
+   - Cover image (auto-downloads)
+   - Episode count
+   - Feed type (RSS 2.0, Atom, iTunes)
+4. Preview and edit extracted data
+5. Click **"Import Podcast"** to save
+
+### **Option 2: Add Manually**
 
 1. Click **"Add New Podcast"** button
 2. Enter podcast title (3-200 characters)
@@ -80,24 +96,24 @@ podcast-feed/
 4. Upload cover image (1400x1400 to 2400x2400 pixels, max 2MB)
 5. Click **"Add Podcast"** to save
 
-### Editing an Existing Podcast
+### **Health Check** 🏥 NEW
 
-1. Click the edit (✏️) button next to any podcast
-2. Modify the desired fields
-3. Upload a new cover image if needed
-4. Click **"Update Podcast"** to save changes
+1. Click the health check (🏥) button next to any podcast
+2. System validates:
+   - **Feed URL**: Accessibility and response time
+   - **RSS 2.0 Structure**: Required elements and format
+   - **iTunes Namespace**: Apple Podcasts compatibility
+   - **Cover Image**: Availability and format
+3. View detailed results with color-coded status badges
+4. Click "Check Again" to re-run validation
 
-### Deleting a Podcast
+### **Other Actions**
 
-1. Click the delete (🗑️) button next to any podcast
-2. Confirm deletion in the modal dialog
-3. The podcast and its cover image will be permanently removed
-
-### Viewing the RSS Feed
-
-- **Web View**: Click "View Feed" in the navigation or visit `feed.php`
-- **RSS URL**: Copy the feed URL from the RSS Feed card for app integration
-- **Direct Link**: `http://your-domain.com/podcast-feed/feed.php`
+- **Edit**: Click ✏️ to modify podcast details
+- **Delete**: Click 🗑️ to remove podcast (with confirmation)
+- **Toggle Status**: Click status badge to activate/deactivate
+- **View Feed**: Click feed URL to see RSS XML
+- **Stats**: Click "Stats" in navigation for directory statistics
 
 ## 🔧 Configuration
 
@@ -282,6 +298,17 @@ For issues, questions, or feature requests:
 
 ---
 
-**Version**: 1.0.0  
-**Last Updated**: January 2025  
-**Compatibility**: PHP 7.4+, Modern Browsers
+## 📚 Documentation
+
+- **[FUTURE-DEV.md](FUTURE-DEV.md)** - Roadmap and planned features
+- **[new-features-plan.md](new-features-plan.md)** - Detailed implementation plans
+- **[RSS-IMPORT-IMPLEMENTATION.md](RSS-IMPORT-IMPLEMENTATION.md)** - RSS import feature docs
+- **[DEPLOYMENT-CHECKLIST.md](DEPLOYMENT-CHECKLIST.md)** - Production deployment guide
+- **[image-import-bug.md](image-import-bug.md)** - Bug fixes and analysis
+
+---
+
+**Version**: 2.0.0  
+**Last Updated**: October 2025  
+**Compatibility**: PHP 7.4+, Modern Browsers  
+**New Features**: RSS Auto-Import, Health Check, Material Design UI

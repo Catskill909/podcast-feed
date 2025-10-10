@@ -253,7 +253,8 @@ class PodcastHealthChecker
         
         // Check image format if present
         if (isset($itunes->image)) {
-            $imageHref = (string) $itunes->image['href'];
+            $imageAttributes = $itunes->image->attributes();
+            $imageHref = isset($imageAttributes['href']) ? (string) $imageAttributes['href'] : '';
             if (empty($imageHref)) {
                 $issues[] = '<itunes:image> present but href attribute is empty';
             }
