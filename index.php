@@ -115,6 +115,7 @@ if (isset($_GET['edit'])) {
                     <ul class="nav-links">
                         <li><a href="#" onclick="showFeedModal()">View Feed</a></li>
                         <li><a href="#" onclick="showStats()">Stats</a></li>
+                        <li><a href="#" onclick="logout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
                     </ul>
                 </nav>
             </div>

@@ -789,6 +789,13 @@ function hideStatsModal() {
     window.podcastApp.hideStatsModal();
 }
 
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('podcast_auth');
+        location.reload();
+    }
+}
+
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.podcastApp = new PodcastApp();
