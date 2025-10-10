@@ -44,6 +44,21 @@ class PodcastManager
 
                 $coverImage = $uploadResult['filename'];
             }
+            // Handle RSS image URL if provided (from RSS import)
+            elseif (!empty($data['rss_image_url'])) {
+                require_once __DIR__ . '/RssFeedParser.php';
+                
+                // Generate temporary ID for filename
+                $tempId = 'pod_' . time() . '_' . uniqid();
+                
+                $parser = new RssFeedParser();
+                $downloadResult = $parser->downloadCoverImage($data['rss_image_url'], $tempId);
+                
+                if ($downloadResult['success']) {
+                    $coverImage = $downloadResult['filename'];
+                }
+                // Don't throw error if image download fails - just continue without image
+            }
 
             // Prepare data for XML
             $podcastData = [
@@ -70,7 +85,7 @@ class PodcastManager
             return [
                 'success' => true,
                 'id' => $podcastId,
-                'message' => 'Podcast added successfully'
+                'message' => 'Podcast imported successfully'
             ];
         } catch (Exception $e) {
             $this->logError('CREATE_ERROR', $e->getMessage());

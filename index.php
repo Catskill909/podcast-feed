@@ -127,9 +127,12 @@ if (isset($_GET['edit'])) {
         <div class="container">
             <!-- Page Header -->
             <div class="content-header">
-                <div>
+                <div style="display: flex; gap: var(--spacing-md);">
                     <button type="button" class="btn btn-primary" onclick="showAddModal()">
                         <i class="fa-solid fa-plus"></i> Add New Podcast
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="showImportRssModal()">
+                        <i class="fa-solid fa-rss"></i> Import from RSS
                     </button>
                 </div>
             </div>
@@ -537,6 +540,118 @@ if (isset($_GET['edit'])) {
                         🗑️ Delete Forever
                     </button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import RSS Modal -->
+    <div class="modal-overlay" id="importRssModal">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-rss"></i> Import Podcast from RSS Feed</h3>
+                <button type="button" class="modal-close" onclick="hideImportRssModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Step 1: Enter Feed URL -->
+                <div id="rssImportStep1">
+                    <div class="form-group">
+                        <label class="form-label required">RSS Feed URL</label>
+                        <input 
+                            type="url" 
+                            id="rssFeedUrlInput" 
+                            class="form-control" 
+                            placeholder="https://example.com/feed.xml"
+                            required
+                        />
+                        <small class="form-text">Enter the RSS feed URL of the podcast you want to import</small>
+                    </div>
+                    
+                    <div id="rssImportError" class="alert alert-danger" style="display: none; margin-top: var(--spacing-md);">
+                        <div class="alert-icon">❌</div>
+                        <div id="rssImportErrorMessage"></div>
+                    </div>
+                    
+                    <div id="rssImportLoading" style="display: none; text-align: center; padding: var(--spacing-xl);">
+                        <div style="font-size: 3rem; margin-bottom: var(--spacing-md);">⏳</div>
+                        <p style="color: var(--text-secondary);">Fetching and parsing RSS feed...</p>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Preview and Confirm -->
+                <div id="rssImportStep2" style="display: none;">
+                    <div class="alert alert-info" style="margin-bottom: var(--spacing-lg);">
+                        <div class="alert-icon">ℹ️</div>
+                        <div>Preview the extracted data below. You can edit any field before importing.</div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 200px 1fr; gap: var(--spacing-xl); margin-bottom: var(--spacing-xl);">
+                        <!-- Cover Image Preview -->
+                        <div>
+                            <label class="form-label">Cover Image</label>
+                            <div id="rssPreviewImageContainer" style="
+                                width: 200px; 
+                                height: 200px; 
+                                border: 1px solid var(--border-primary); 
+                                border-radius: var(--border-radius);
+                                overflow: hidden;
+                                background: var(--bg-tertiary);
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">
+                                <img id="rssPreviewImage" src="" alt="Cover" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                                <span id="rssNoImage" style="color: var(--text-muted); font-size: var(--font-size-sm);">No image</span>
+                            </div>
+                            <small class="form-text" id="rssImageInfo" style="display: none; margin-top: var(--spacing-sm);"></small>
+                        </div>
+                        
+                        <!-- Feed Info -->
+                        <div>
+                            <div class="form-group">
+                                <label class="form-label">Feed Type</label>
+                                <input type="text" id="rssFeedType" class="form-control" readonly style="background: var(--bg-tertiary);">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Episodes Found</label>
+                                <input type="text" id="rssEpisodeCount" class="form-control" readonly style="background: var(--bg-tertiary);">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form id="rssImportForm" method="POST">
+                        <input type="hidden" name="action" value="create">
+                        <input type="hidden" id="rssImageUrl" name="rss_image_url" value="">
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Podcast Title</label>
+                            <input type="text" id="rssTitle" name="title" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Feed URL</label>
+                            <input type="url" id="rssFeedUrl" name="feed_url" class="form-control" required readonly style="background: var(--bg-tertiary);">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea id="rssDescription" name="description" class="form-control" rows="4"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-lg" onclick="hideImportRssModal()">
+                    Cancel
+                </button>
+                <button type="button" id="rssFetchButton" class="btn btn-primary btn-lg" onclick="fetchRssFeedData()">
+                    <i class="fa-solid fa-download"></i> Fetch Feed
+                </button>
+                <button type="button" id="rssImportButton" class="btn btn-primary btn-lg" onclick="importRssFeed()" style="display: none;">
+                    <i class="fa-solid fa-check"></i> Import Podcast
+                </button>
+                <button type="button" id="rssBackButton" class="btn btn-secondary btn-lg" onclick="resetRssImportModal()" style="display: none;">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
             </div>
         </div>
     </div>

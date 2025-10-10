@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<podcast_directory version="1.0" last_updated="2025-10-10T02:02:34+00:00">
+<podcast_directory version="1.0" last_updated="2025-10-10T15:08:51+00:00">
   <metadata>
-    <total_podcasts>3</total_podcasts>
+    <total_podcasts>4</total_podcasts>
     <created>2025-10-09T17:37:03+00:00</created>
     <generator>Podcast Directory Manager v1.0.0</generator>
   </metadata>
@@ -31,6 +31,15 @@
       <cover_image>pod_1760054802_68e84e12d488b_68e84e12d3871_1760054802_2d4451.jpg</cover_image>
       <created_date>2025-10-10T00:06:42+00:00</created_date>
       <updated_date>2025-10-10T00:06:42+00:00</updated_date>
+      <status>active</status>
+    </podcast>
+    <podcast id="pod_1760108931_68e921838f8fe">
+      <title><![CDATA[America Works]]></title>
+      <feed_url><![CDATA[https://www.loc.gov/podcasts/america-works?fo=rss]]></feed_url>
+      <description><![CDATA[Features the voices of contemporary workers from throughout the United States talking about their lives, their workplaces, and their on-the-job experiences. Drawn from hundreds of longer oral history interviews collected by fieldworkers for the American Folklife Center's Occupational Folklife Project (OFP), America Works is a testament to the wisdom, wit, knowledge, and dedication of today's working Americans. These engaging oral histories, which have are preserved in the American Folklife Center's archive, are enriching and expanding America's historical record.]]></description>
+      <cover_image/>
+      <created_date>2025-10-10T15:08:51+00:00</created_date>
+      <updated_date>2025-10-10T15:08:51+00:00</updated_date>
       <status>active</status>
     </podcast>
   </podcasts>

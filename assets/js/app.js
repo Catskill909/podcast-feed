@@ -796,7 +796,189 @@ function logout() {
     }
 }
 
+// RSS Import Modal Functions
+function showImportRssModal() {
+    const modal = document.getElementById('importRssModal');
+    if (modal) {
+        resetRssImportModal();
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        
+        // Focus on URL input
+        setTimeout(() => {
+            document.getElementById('rssFeedUrlInput').focus();
+        }, 100);
+    }
+}
+
+function hideImportRssModal() {
+    const modal = document.getElementById('importRssModal');
+    if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+        resetRssImportModal();
+    }
+}
+
+function resetRssImportModal() {
+    // Reset to step 1
+    document.getElementById('rssImportStep1').style.display = 'block';
+    document.getElementById('rssImportStep2').style.display = 'none';
+    document.getElementById('rssImportError').style.display = 'none';
+    document.getElementById('rssImportLoading').style.display = 'none';
+    
+    // Reset buttons
+    document.getElementById('rssFetchButton').style.display = 'inline-block';
+    document.getElementById('rssImportButton').style.display = 'none';
+    document.getElementById('rssBackButton').style.display = 'none';
+    
+    // Clear inputs
+    document.getElementById('rssFeedUrlInput').value = '';
+    document.getElementById('rssTitle').value = '';
+    document.getElementById('rssFeedUrl').value = '';
+    document.getElementById('rssDescription').value = '';
+    document.getElementById('rssImageUrl').value = '';
+}
+
+async function fetchRssFeedData() {
+    const feedUrl = document.getElementById('rssFeedUrlInput').value.trim();
+    
+    // Validate URL
+    if (!feedUrl) {
+        showRssError('Please enter a feed URL');
+        return;
+    }
+    
+    // Show loading state
+    document.getElementById('rssImportError').style.display = 'none';
+    document.getElementById('rssImportLoading').style.display = 'block';
+    document.getElementById('rssFetchButton').disabled = true;
+    
+    try {
+        // Fetch feed data from API
+        const formData = new FormData();
+        formData.append('feed_url', feedUrl);
+        
+        const response = await fetch('api/import-rss.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Show preview
+            displayRssPreview(result.data);
+        } else {
+            showRssError(result.error || 'Failed to fetch feed');
+        }
+    } catch (error) {
+        console.error('RSS Fetch Error:', error);
+        showRssError('Network error. Please check your connection and try again.');
+    } finally {
+        document.getElementById('rssImportLoading').style.display = 'none';
+        document.getElementById('rssFetchButton').disabled = false;
+    }
+}
+
+function displayRssPreview(data) {
+    // Hide step 1, show step 2
+    document.getElementById('rssImportStep1').style.display = 'none';
+    document.getElementById('rssImportStep2').style.display = 'block';
+    
+    // Update buttons
+    document.getElementById('rssFetchButton').style.display = 'none';
+    document.getElementById('rssImportButton').style.display = 'inline-block';
+    document.getElementById('rssBackButton').style.display = 'inline-block';
+    
+    // Populate form fields
+    document.getElementById('rssTitle').value = data.title || '';
+    document.getElementById('rssFeedUrl').value = data.feed_url || '';
+    document.getElementById('rssDescription').value = data.description || '';
+    document.getElementById('rssImageUrl').value = data.image_url || '';
+    
+    // Display feed info
+    document.getElementById('rssFeedType').value = data.feed_type || 'Unknown';
+    document.getElementById('rssEpisodeCount').value = data.episode_count || '0';
+    
+    // Display image preview
+    if (data.image_url) {
+        const img = document.getElementById('rssPreviewImage');
+        img.src = data.image_url;
+        img.style.display = 'block';
+        document.getElementById('rssNoImage').style.display = 'none';
+        document.getElementById('rssImageInfo').textContent = 'Image will be downloaded on import';
+        document.getElementById('rssImageInfo').style.display = 'block';
+    } else {
+        document.getElementById('rssPreviewImage').style.display = 'none';
+        document.getElementById('rssNoImage').style.display = 'block';
+        document.getElementById('rssImageInfo').style.display = 'none';
+    }
+}
+
+function showRssError(message) {
+    const errorDiv = document.getElementById('rssImportError');
+    const errorMessage = document.getElementById('rssImportErrorMessage');
+    errorMessage.textContent = message;
+    errorDiv.style.display = 'flex';
+}
+
+async function importRssFeed() {
+    const form = document.getElementById('rssImportForm');
+    const title = document.getElementById('rssTitle').value.trim();
+    const feedUrl = document.getElementById('rssFeedUrl').value.trim();
+    
+    // Validate required fields
+    if (!title || !feedUrl) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    // Disable button during import
+    const importBtn = document.getElementById('rssImportButton');
+    importBtn.disabled = true;
+    importBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Importing...';
+    
+    try {
+        // Submit the form
+        form.submit();
+    } catch (error) {
+        console.error('Import Error:', error);
+        alert('Failed to import podcast. Please try again.');
+        importBtn.disabled = false;
+        importBtn.innerHTML = '<i class="fa-solid fa-check"></i> Import Podcast';
+    }
+}
+
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.podcastApp = new PodcastApp();
+    
+    // Add Enter key handler for RSS URL input
+    const rssUrlInput = document.getElementById('rssFeedUrlInput');
+    if (rssUrlInput) {
+        rssUrlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                fetchRssFeedData();
+            }
+        });
+    }
+    
+    // Close import modal on overlay click
+    document.addEventListener('click', (e) => {
+        if (e.target.id === 'importRssModal' && e.target.classList.contains('modal-overlay')) {
+            hideImportRssModal();
+        }
+    });
+    
+    // Close import modal on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('importRssModal');
+            if (modal && modal.classList.contains('show')) {
+                hideImportRssModal();
+            }
+        }
+    });
 });
