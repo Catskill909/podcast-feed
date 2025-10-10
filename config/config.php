@@ -78,18 +78,6 @@ if (ENVIRONMENT === 'production') {
 $dirs = [DATA_DIR, UPLOADS_DIR, COVERS_DIR, LOGS_DIR, BACKUP_DIR];
 foreach ($dirs as $dir) {
     if (!is_dir($dir)) {
-        // Use 0777 for Docker compatibility, suppress warnings
-        if (!@mkdir($dir, 0777, true)) {
-            // Try to continue anyway - directories might exist but mkdir failed
-            if (!is_dir($dir)) {
-                error_log("Failed to create directory: $dir");
-            }
-        } else {
-            // Set permissions after creation
-            @chmod($dir, 0777);
-        }
-    } else {
-        // Ensure existing directories are writable
-        @chmod($dir, 0777);
+        @mkdir($dir, 0755, true);
     }
 }
