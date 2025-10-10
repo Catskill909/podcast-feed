@@ -84,7 +84,16 @@ if (isset($_GET['edit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Podcast Directory Manager</title>
+    <title>PodFeed Builder</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
@@ -99,12 +108,11 @@ if (isset($_GET['edit'])) {
         <div class="container">
             <div class="header-content">
                 <a href="index.php" class="logo">
-                    <div class="logo-icon">🎧</div>
-                    <span>Podcast Directory</span>
+                    <i class="fa-solid fa-headphones logo-icon"></i>
+                    <span>PodFeed Builder</span>
                 </a>
                 <nav>
                     <ul class="nav-links">
-                        <li><a href="index.php" class="active">Manage</a></li>
                         <li><a href="#" onclick="showFeedModal()">View Feed</a></li>
                         <li><a href="#" onclick="showStats()">Stats</a></li>
                     </ul>
@@ -119,12 +127,8 @@ if (isset($_GET['edit'])) {
             <!-- Page Header -->
             <div class="content-header">
                 <div>
-                    <h1 class="page-title">Podcast Directory Manager</h1>
-                    <p class="page-subtitle">Manage your podcast directory with full CRUD operations</p>
-                </div>
-                <div>
-                    <button type="button" class="btn btn-primary btn-lg" onclick="showAddModal()">
-                        <span>➕</span> Add New Podcast
+                    <button type="button" class="btn btn-primary" onclick="showAddModal()">
+                        <i class="fa-solid fa-plus"></i> Add New Podcast
                     </button>
                 </div>
             </div>
@@ -143,29 +147,6 @@ if (isset($_GET['edit'])) {
                 </div>
             <?php endif; ?>
 
-            <!-- Statistics Cards -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">📊</div>
-                    <div class="stat-value"><?php echo $stats['total_podcasts']; ?></div>
-                    <div class="stat-label">Total Podcasts</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">✅</div>
-                    <div class="stat-value"><?php echo $stats['active_podcasts']; ?></div>
-                    <div class="stat-label">Active Podcasts</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">💾</div>
-                    <div class="stat-value"><?php echo $stats['storage_stats']['file_count']; ?></div>
-                    <div class="stat-label">Cover Images</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📏</div>
-                    <div class="stat-value"><?php echo $stats['storage_stats']['total_size_formatted']; ?></div>
-                    <div class="stat-label">Storage Used</div>
-                </div>
-            </div>
 
             <!-- Podcasts Table -->
             <div class="card">
@@ -388,6 +369,128 @@ if (isset($_GET['edit'])) {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="hideFeedModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div class="modal-overlay" id="statsModal">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h3 class="modal-title">📊 Directory Statistics</h3>
+                <button type="button" class="modal-close" onclick="hideStatsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="stats-modal-content">
+                    <!-- Overview Section -->
+                    <div class="stats-section">
+                        <h4 class="stats-section-title">Overview</h4>
+                        <div class="stats-cards-grid">
+                            <div class="stats-modal-card">
+                                <div class="stats-modal-card-icon">📊</div>
+                                <div class="stats-modal-card-content">
+                                    <div class="stats-modal-card-value"><?php echo $stats['total_podcasts']; ?></div>
+                                    <div class="stats-modal-card-label">Total Podcasts</div>
+                                </div>
+                            </div>
+                            <div class="stats-modal-card stats-success">
+                                <div class="stats-modal-card-icon">✅</div>
+                                <div class="stats-modal-card-content">
+                                    <div class="stats-modal-card-value"><?php echo $stats['active_podcasts']; ?></div>
+                                    <div class="stats-modal-card-label">Active</div>
+                                </div>
+                            </div>
+                            <div class="stats-modal-card stats-warning">
+                                <div class="stats-modal-card-icon">⏸️</div>
+                                <div class="stats-modal-card-content">
+                                    <div class="stats-modal-card-value"><?php echo $stats['total_podcasts'] - $stats['active_podcasts']; ?></div>
+                                    <div class="stats-modal-card-label">Inactive</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Storage Section -->
+                    <div class="stats-section">
+                        <h4 class="stats-section-title">Storage</h4>
+                        <div class="stats-details-grid">
+                            <div class="stats-detail-item">
+                                <div class="stats-detail-icon">💾</div>
+                                <div class="stats-detail-content">
+                                    <div class="stats-detail-label">Cover Images</div>
+                                    <div class="stats-detail-value"><?php echo $stats['storage_stats']['file_count']; ?> files</div>
+                                </div>
+                            </div>
+                            <div class="stats-detail-item">
+                                <div class="stats-detail-icon">📏</div>
+                                <div class="stats-detail-content">
+                                    <div class="stats-detail-label">Total Storage</div>
+                                    <div class="stats-detail-value"><?php echo $stats['storage_stats']['total_size_formatted']; ?></div>
+                                </div>
+                            </div>
+                            <div class="stats-detail-item">
+                                <div class="stats-detail-icon">📁</div>
+                                <div class="stats-detail-content">
+                                    <div class="stats-detail-label">Average File Size</div>
+                                    <div class="stats-detail-value">
+                                        <?php 
+                                        if ($stats['storage_stats']['file_count'] > 0) {
+                                            $avgSize = $stats['storage_stats']['total_size'] / $stats['storage_stats']['file_count'];
+                                            echo $avgSize >= 1024 ? round($avgSize / 1024, 2) . ' KB' : round($avgSize) . ' B';
+                                        } else {
+                                            echo '0 B';
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Section -->
+                    <div class="stats-section">
+                        <h4 class="stats-section-title">Activity</h4>
+                        <div class="stats-activity-list">
+                            <?php 
+                            $recentPodcasts = array_slice($podcasts, 0, 3);
+                            if (!empty($recentPodcasts)): 
+                            ?>
+                                <?php foreach ($recentPodcasts as $podcast): ?>
+                                    <div class="stats-activity-item">
+                                        <div class="stats-activity-icon">
+                                            <?php if ($podcast['cover_image'] && $podcast['image_info']): ?>
+                                                <img src="<?php echo htmlspecialchars($podcast['image_info']['url']); ?>" 
+                                                     alt="<?php echo htmlspecialchars($podcast['title']); ?>"
+                                                     class="stats-activity-thumb">
+                                            <?php else: ?>
+                                                <div class="stats-activity-thumb-placeholder">🎧</div>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="stats-activity-content">
+                                            <div class="stats-activity-title"><?php echo htmlspecialchars($podcast['title']); ?></div>
+                                            <div class="stats-activity-meta">
+                                                <span class="badge badge-<?php echo $podcast['status'] === 'active' ? 'success' : 'danger'; ?> badge-sm">
+                                                    <?php echo $podcast['status'] === 'active' ? '✓ Active' : '✕ Inactive'; ?>
+                                                </span>
+                                                <span class="stats-activity-date">
+                                                    Added <?php echo date('M j, Y', strtotime($podcast['created_date'])); ?>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div class="stats-empty-state">
+                                    <div class="stats-empty-icon">🎧</div>
+                                    <p>No podcasts yet</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="hideStatsModal()">Close</button>
             </div>
         </div>
     </div>

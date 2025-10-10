@@ -47,7 +47,16 @@ if ($auth->isAuthenticated()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Podcast Directory Manager</title>
+    <title>Login - PodFeed Builder</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
@@ -73,6 +82,7 @@ if ($auth->isAuthenticated()) {
         .login-logo {
             font-size: 4rem;
             margin-bottom: var(--spacing-md);
+            color: var(--accent-primary);
         }
 
         .demo-notice {
@@ -92,8 +102,8 @@ if ($auth->isAuthenticated()) {
         <div class="login-card">
             <div class="card">
                 <div class="login-header">
-                    <div class="login-logo">🎧</div>
-                    <h1>Podcast Directory</h1>
+                    <div class="login-logo"><i class="fa-solid fa-headphones"></i></div>
+                    <h1>PodFeed Builder</h1>
                     <p class="text-secondary">Admin Login</p>
                 </div>
 

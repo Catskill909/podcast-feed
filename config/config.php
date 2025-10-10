@@ -18,7 +18,7 @@ $host = $_SERVER['HTTP_HOST'] ?? 'localhost:8000';
 define('APP_URL', $protocol . '://' . $host);
 
 // Application Settings
-define('APP_NAME', 'Podcast Directory Manager');
+define('APP_NAME', 'PodFeed Builder');
 define('APP_VERSION', '1.0.0');
 
 // File Paths

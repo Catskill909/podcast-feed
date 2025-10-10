@@ -19,7 +19,7 @@ if (file_exists(__DIR__ . '/../.env')) {
 }
 
 // Application Settings
-define('APP_NAME', getenv('APP_NAME') ?: 'Podcast Directory Manager');
+define('APP_NAME', getenv('APP_NAME') ?: 'PodFeed Builder');
 define('APP_VERSION', getenv('APP_VERSION') ?: '1.0.0');
 define('APP_URL', getenv('APP_URL') ?: 'https://yourdomain.com');
 define('ENVIRONMENT', getenv('ENVIRONMENT') ?: 'production');

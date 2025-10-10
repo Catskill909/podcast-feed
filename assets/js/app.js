@@ -31,6 +31,7 @@ class PodcastApp {
                 this.hideModal();
                 this.hideDeleteModal();
                 this.hideStatusModal();
+                this.hideStatsModal();
             }
         });
 
@@ -41,6 +42,7 @@ class PodcastApp {
                 this.hideDeleteModal();
                 this.hideStatusModal();
                 this.hideFeedModal();
+                this.hideStatsModal();
             }
         });
 
@@ -675,17 +677,22 @@ class PodcastApp {
      * Show statistics modal
      */
     showStats() {
-        // This could be expanded to show detailed statistics
-        const statsData = document.querySelectorAll('.stat-value');
-        let statsText = 'Current Statistics:\n\n';
+        const modal = document.getElementById('statsModal');
+        if (modal) {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+    }
 
-        document.querySelectorAll('.stat-card').forEach(card => {
-            const value = card.querySelector('.stat-value').textContent;
-            const label = card.querySelector('.stat-label').textContent;
-            statsText += `${label}: ${value}\n`;
-        });
-
-        alert(statsText);
+    /**
+     * Hide statistics modal
+     */
+    hideStatsModal() {
+        const modal = document.getElementById('statsModal');
+        if (modal) {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
     }
 
     /**
@@ -776,6 +783,10 @@ function hideFeedModal() {
 
 function copyFeedUrl() {
     window.podcastApp.copyFeedUrlFromModal();
+}
+
+function hideStatsModal() {
+    window.podcastApp.hideStatsModal();
 }
 
 // Initialize the application when DOM is loaded
