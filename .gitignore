@@ -1,0 +1,49 @@
+# Environment Configuration
+.env
+.env.local
+.env.production
+config/config.local.php
+
+# Data Files (exclude from git, backup separately)
+data/podcasts.xml
+data/backup/*.xml
+
+# Uploads (exclude from git, backup separately)
+uploads/covers/*
+!uploads/covers/.gitkeep
+
+# Logs
+logs/*.log
+!logs/.gitkeep
+
+# System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+
+# PHP
+vendor/
+composer.phar
+
+# Session Files
+sessions/
+
+# Cache
+cache/
+*.cache

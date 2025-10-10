@@ -2,14 +2,23 @@
 
 /**
  * Podcast Directory Management System
- * Configuration File
+ * Configuration File - Auto-detects dev vs production
  */
+
+// Auto-detect environment
+$isLocalhost = in_array($_SERVER['SERVER_NAME'] ?? 'localhost', ['localhost', '127.0.0.1', '::1']) ||
+               strpos($_SERVER['SERVER_NAME'] ?? '', '.local') !== false;
+
+define('ENVIRONMENT', $isLocalhost ? 'development' : 'production');
+
+// Auto-detect APP_URL
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost:8000';
+define('APP_URL', $protocol . '://' . $host);
 
 // Application Settings
 define('APP_NAME', 'Podcast Directory Manager');
 define('APP_VERSION', '1.0.0');
-define('APP_URL', 'http://localhost:8000');
-define('ENVIRONMENT', 'development'); // 'development' or 'production'
 
 // File Paths
 define('DATA_DIR', __DIR__ . '/../data');
@@ -46,9 +55,16 @@ define('ERROR_MESSAGES', [
 // Timezone
 date_default_timezone_set('UTC');
 
-// Error Reporting (set to 0 in production)
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Error Reporting - Auto-configured based on environment
+if (ENVIRONMENT === 'production') {
+    error_reporting(0);
+    ini_set('display_errors', '0');
+    ini_set('log_errors', '1');
+    ini_set('error_log', LOGS_DIR . '/error.log');
+} else {
+    error_reporting(E_ALL);
+    ini_set('display_errors', '1');
+}
 
 // Create required directories if they don't exist
 $dirs = [DATA_DIR, UPLOADS_DIR, COVERS_DIR, LOGS_DIR, BACKUP_DIR];

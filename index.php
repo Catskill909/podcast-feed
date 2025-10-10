@@ -229,7 +229,8 @@ if (isset($_GET['edit'])) {
                                         </td>
                                         <td>
                                             <button type="button" 
-                                                class="badge badge-<?php echo $podcast['status'] === 'active' ? 'success' : 'danger'; ?> badge-clickable"
+                                                class="badge badge-<?php echo $podcast['status'] === 'active' ? 'success' : 'danger'; ?> badge-clickable tooltip"
+                                                data-tooltip="Change Status"
                                                 onclick="showStatusModal('<?php echo htmlspecialchars($podcast['id']); ?>', '<?php echo htmlspecialchars($podcast['title']); ?>', '<?php echo $podcast['status']; ?>')">
                                                 <?php echo $podcast['status'] === 'active' ? '✓ Active' : '✕ Inactive'; ?>
                                             </button>
@@ -364,23 +365,43 @@ if (isset($_GET['edit'])) {
 
     <!-- Delete Confirmation Modal -->
     <div class="modal-overlay" id="deleteModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Confirm Delete</h3>
+        <div class="modal modal-sm">
+            <div class="modal-header" style="background-color: rgba(218, 54, 51, 0.1); border-bottom-color: rgba(218, 54, 51, 0.2);">
+                <h3 class="modal-title" style="color: var(--accent-danger);">⚠️ Confirm Delete</h3>
                 <button type="button" class="modal-close" onclick="hideDeleteModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this podcast?</p>
-                <p><strong id="deletePodcastTitle"></strong></p>
-                <p class="text-muted">This action cannot be undone. The cover image will also be deleted.</p>
+                <div class="delete-warning">
+                    <div class="delete-icon">🗑️</div>
+                    <p style="margin-bottom: var(--spacing-md); font-size: var(--font-size-md);">Are you sure you want to delete this podcast?</p>
+                    <div class="delete-podcast-info">
+                        <strong id="deletePodcastTitle"></strong>
+                    </div>
+                    <div class="delete-consequences">
+                        <div class="consequence-item">
+                            <span class="consequence-icon">⚠️</span>
+                            <span>This action cannot be undone</span>
+                        </div>
+                        <div class="consequence-item">
+                            <span class="consequence-icon">🖼️</span>
+                            <span>Cover image will be permanently deleted</span>
+                        </div>
+                        <div class="consequence-item">
+                            <span class="consequence-icon">📊</span>
+                            <span>All podcast data will be removed</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="hideDeleteModal()">Cancel</button>
-                <form method="POST" style="display: inline;">
+            <div class="modal-footer" style="gap: var(--spacing-sm);">
+                <button type="button" class="btn btn-secondary btn-lg" onclick="hideDeleteModal()" style="flex: 1;">
+                    Cancel
+                </button>
+                <form method="POST" style="flex: 1;">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" id="deleteId" value="">
-                    <button type="submit" class="btn btn-danger">
-                        🗑️ Delete Podcast
+                    <button type="submit" class="btn btn-danger btn-lg" style="width: 100%;">
+                        🗑️ Delete Forever
                     </button>
                 </form>
             </div>

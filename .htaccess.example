@@ -1,0 +1,58 @@
+# Podcast Directory Manager - Simple HTTP Authentication
+# Copy this file to .htaccess and update the password file path
+
+# Enable Basic Authentication
+AuthType Basic
+AuthName "Podcast Directory - Admin Access"
+AuthUserFile /absolute/path/to/.htpasswd
+Require valid-user
+
+# Allow RSS feed to be public (no auth required)
+<Files "feed.php">
+    Satisfy Any
+    Allow from all
+</Files>
+
+# PHP Settings
+php_value upload_max_filesize 2M
+php_value post_max_size 3M
+php_value max_execution_time 60
+php_value memory_limit 128M
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Deny access to sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<Files ".env">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.xml">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Allow XML only for feed.php
+<Files "feed.php">
+    Order allow,deny
+    Allow from all
+</Files>
+
+# Prevent directory listing
+Options -Indexes
+
+# Enable clean URLs (optional)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+</IfModule>
