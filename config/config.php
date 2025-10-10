@@ -6,16 +6,11 @@
  */
 
 // Auto-detect environment
-// Check for localhost OR check for environment variable
+// Check for localhost
 $isLocalhost = in_array($_SERVER['SERVER_NAME'] ?? 'localhost', ['localhost', '127.0.0.1', '::1']);
 
-// Override: If you want to force production mode, uncomment this line:
-// define('ENVIRONMENT', 'production');
-
-// Otherwise, auto-detect:
-if (!defined('ENVIRONMENT')) {
-    define('ENVIRONMENT', $isLocalhost ? 'development' : 'production');
-}
+// Force production mode for password protection
+define('ENVIRONMENT', $isLocalhost ? 'development' : 'production');
 
 // Auto-detect APP_URL
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
