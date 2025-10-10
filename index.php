@@ -89,10 +89,8 @@ if (isset($_GET['edit'])) {
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
     
-    <!-- Simple Password Protection (only in production) -->
-    <?php if (ENVIRONMENT === 'production'): ?>
+    <!-- Simple Password Protection - ALWAYS ACTIVE -->
     <script src="auth.js"></script>
-    <?php endif; ?>
 </head>
 
 <body>
