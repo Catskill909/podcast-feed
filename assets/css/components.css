@@ -1194,3 +1194,159 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Info Button Style */
+.btn-info {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  color: white;
+  border: none;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+.btn-info:hover {
+  background: linear-gradient(135deg, #2563eb, #0891b2);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-info:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+/* Help Section Styles */
+.help-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  transition: all var(--transition-base);
+}
+
+.help-section:hover {
+  border-color: var(--border-focus);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.help-section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.help-section-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.help-section-content {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: var(--font-size-base);
+}
+
+.help-section-content p {
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.help-section-content ul,
+.help-section-content ol {
+  margin: var(--spacing-sm) 0;
+  padding-left: var(--spacing-xl);
+}
+
+.help-section-content li {
+  margin: var(--spacing-xs) 0;
+}
+
+.help-section-content code {
+  background: var(--bg-tertiary);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  color: var(--accent-primary);
+}
+
+.help-section-content kbd {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85em;
+  color: var(--text-primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.help-section-content strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Help Button Example */
+.help-button-example {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius);
+  margin: var(--spacing-sm) 0;
+  border: 1px solid var(--border-secondary);
+}
+
+.help-button-example button {
+  flex-shrink: 0;
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+.help-button-description {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+.help-button-description strong {
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Help Badge Example */
+.help-badge-example {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* Responsive Help Modal */
+@media (max-width: 768px) {
+  .help-button-example {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .help-section {
+    padding: var(--spacing-md);
+  }
+  
+  .help-section-title {
+    font-size: var(--font-size-base);
+  }
+  
+  .help-section-icon {
+    font-size: 1.25rem;
+  }
+}

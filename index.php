@@ -128,12 +128,17 @@ if (isset($_GET['edit'])) {
         <div class="container">
             <!-- Page Header -->
             <div class="content-header">
-                <div style="display: flex; gap: var(--spacing-md);">
-                    <button type="button" class="btn btn-primary" onclick="showAddModal()">
-                        <i class="fa-solid fa-plus"></i> Add New Podcast
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="showImportRssModal()">
-                        <i class="fa-solid fa-rss"></i> Import from RSS
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div style="display: flex; gap: var(--spacing-md);">
+                        <button type="button" class="btn btn-primary" onclick="showAddModal()">
+                            <i class="fa-solid fa-plus"></i> Add New Podcast
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="showImportRssModal()">
+                            <i class="fa-solid fa-rss"></i> Import from RSS
+                        </button>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="showHelpModal()">
+                        <i class="fa-solid fa-circle-question"></i> Help
                     </button>
                 </div>
             </div>
@@ -242,7 +247,7 @@ if (isset($_GET['edit'])) {
                                                 <button type="button" class="btn btn-danger btn-sm tooltip"
                                                     data-tooltip="Delete Podcast"
                                                     onclick="deletePodcast('<?php echo htmlspecialchars($podcast['id']); ?>', '<?php echo htmlspecialchars($podcast['title']); ?>')">
-                                                    🗑️
+                                                    <i class="fa-solid fa-trash"></i>
                                                 </button>
                                             </div>
                                         </td>
@@ -753,6 +758,365 @@ if (isset($_GET['edit'])) {
                 </button>
                 <button type="button" id="healthCheckAgainButton" class="btn btn-primary btn-lg" onclick="recheckPodcastHealth()" style="display: none;">
                     <i class="fa-solid fa-rotate-right"></i> Check Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-circle-question"></i> PodFeed Builder - Help & Guide</h3>
+                <button type="button" class="modal-close" onclick="hideHelpModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                
+                <!-- Quick Start -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">🚀</span>
+                        Quick Start
+                    </h3>
+                    <div class="help-section-content">
+                        <p>Welcome to PodFeed Builder! Choose your workflow:</p>
+                        <ul>
+                            <li><strong>Quick Import:</strong> Have an existing RSS feed? Use "Import from RSS" to auto-extract all details in seconds.</li>
+                            <li><strong>Manual Entry:</strong> Add podcasts from scratch with custom details using "Add New Podcast".</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Main Actions -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">🎬</span>
+                        Main Actions
+                    </h3>
+                    <div class="help-section-content">
+                        <div class="help-button-example">
+                            <button type="button" class="btn btn-primary" disabled>
+                                <i class="fa-solid fa-plus"></i> Add New Podcast
+                            </button>
+                            <p class="help-button-description">
+                                Manually add a podcast with custom details. Required: Title, Feed URL. Optional: Cover image, Description.
+                            </p>
+                        </div>
+                        
+                        <div class="help-button-example">
+                            <button type="button" class="btn btn-info" disabled>
+                                <i class="fa-solid fa-circle-question"></i> Help
+                            </button>
+                            <p class="help-button-description">
+                                View this help guide anytime. Access all documentation and feature explanations.
+                            </p>
+                        </div>
+                        
+                        <div class="help-button-example">
+                            <button type="button" class="btn btn-secondary" disabled>
+                                <i class="fa-solid fa-rss"></i> Import from RSS
+                            </button>
+                            <p class="help-button-description">
+                                Auto-import from any RSS feed URL. Supports RSS 2.0, Atom, and iTunes formats. Automatically downloads cover images.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Podcast Actions -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">⚙️</span>
+                        Podcast Actions
+                    </h3>
+                    <div class="help-section-content">
+                        <p>Each podcast in your directory has these action buttons:</p>
+                        
+                        <div class="help-button-example">
+                            <button type="button" class="btn btn-outline btn-sm" disabled>🏥</button>
+                            <p class="help-button-description">
+                                <strong>Health Check:</strong> Validate feed health, RSS 2.0 structure, iTunes compatibility, and cover image availability. Results show as 🟢 Pass, 🟡 Warning, or 🔴 Fail.
+                            </p>
+                        </div>
+                        
+                        <div class="help-button-example">
+                            <button type="button" class="btn btn-outline btn-sm" disabled>✏️</button>
+                            <p class="help-button-description">
+                                <strong>Edit:</strong> Modify podcast details, update feed URL, upload new cover image, or change description.
+                            </p>
+                        </div>
+                        
+                        <div class="help-button-example">
+                            <button type="button" class="btn btn-danger btn-sm" disabled>
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                            <p class="help-button-description">
+                                <strong>Delete:</strong> Permanently remove podcast and its cover image. Requires confirmation to prevent accidents.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Management -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">📊</span>
+                        Status Management
+                    </h3>
+                    <div class="help-section-content">
+                        <p>Click any status badge to toggle between active and inactive:</p>
+                        
+                        <div class="help-badge-example" style="margin: var(--spacing-md) 0;">
+                            <span class="badge badge-success">✓ Active</span>
+                            <span style="color: var(--text-secondary); margin-left: var(--spacing-sm);">
+                                Podcast appears in RSS feed and is visible to users
+                            </span>
+                        </div>
+                        
+                        <div class="help-badge-example" style="margin: var(--spacing-md) 0;">
+                            <span class="badge badge-danger">✕ Inactive</span>
+                            <span style="color: var(--text-secondary); margin-left: var(--spacing-sm);">
+                                Podcast hidden from RSS feed but preserved in database
+                            </span>
+                        </div>
+                        
+                        <p style="margin-top: var(--spacing-md); font-size: var(--font-size-sm); color: var(--text-muted);">
+                            💡 <strong>Tip:</strong> Use inactive status instead of deleting to temporarily hide podcasts while keeping their data.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- RSS Import Details -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">📥</span>
+                        RSS Import - Step by Step
+                    </h3>
+                    <div class="help-section-content">
+                        <ol>
+                            <li>Click <strong>"Import from RSS"</strong> button</li>
+                            <li>Paste your RSS feed URL (e.g., <code>https://example.com/feed.xml</code>)</li>
+                            <li>Click <strong>"Fetch Feed"</strong></li>
+                            <li>Review extracted data:
+                                <ul>
+                                    <li>Title (editable)</li>
+                                    <li>Description (editable)</li>
+                                    <li>Cover image (preview shown)</li>
+                                    <li>Feed type (RSS 2.0, Atom, iTunes)</li>
+                                    <li>Episode count</li>
+                                </ul>
+                            </li>
+                            <li>Edit any field if needed</li>
+                            <li>Click <strong>"Import Podcast"</strong></li>
+                        </ol>
+                        
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>Supported Formats:</strong>
+                            <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                                <li>RSS 2.0</li>
+                                <li>Atom</li>
+                                <li>iTunes podcast namespace</li>
+                                <li>Remote images (auto-downloaded)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health Check Details -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">🏥</span>
+                        Health Check - What Gets Validated
+                    </h3>
+                    <div class="help-section-content">
+                        <p>The health check runs 4 comprehensive tests:</p>
+                        
+                        <div style="margin: var(--spacing-md) 0;">
+                            <strong>1. Feed URL Check</strong>
+                            <ul>
+                                <li>HTTP accessibility (expects 200 OK)</li>
+                                <li>Response time measurement</li>
+                                <li>SSL certificate validation (production only)</li>
+                                <li>Timeout handling (10 seconds max)</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin: var(--spacing-md) 0;">
+                            <strong>2. RSS 2.0 Structure</strong>
+                            <ul>
+                                <li>Root <code>&lt;rss&gt;</code> element with version="2.0"</li>
+                                <li>Required <code>&lt;channel&gt;</code> element</li>
+                                <li>Required elements: <code>&lt;title&gt;</code>, <code>&lt;link&gt;</code>, <code>&lt;description&gt;</code></li>
+                                <li>Presence of <code>&lt;item&gt;</code> elements (episodes)</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin: var(--spacing-md) 0;">
+                            <strong>3. iTunes Namespace</strong>
+                            <ul>
+                                <li>iTunes namespace declaration</li>
+                                <li>Recommended tags: author, summary, image, category, explicit</li>
+                                <li>Image href attribute validation</li>
+                                <li>Explicit tag format check</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin: var(--spacing-md) 0;">
+                            <strong>4. Cover Image</strong>
+                            <ul>
+                                <li>File exists and is readable (local files)</li>
+                                <li>URL accessibility (remote images)</li>
+                                <li>Content-Type validation</li>
+                                <li>Response time measurement</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>Status Meanings:</strong>
+                            <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                                <li>🟢 <strong>PASS</strong> - All checks passed successfully</li>
+                                <li>🟡 <strong>WARNING</strong> - Works but has non-critical issues</li>
+                                <li>🔴 <strong>FAIL</strong> - Critical problems that need fixing</li>
+                                <li>⚪ <strong>SKIP</strong> - Skipped due to previous failure</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Requirements -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">🖼️</span>
+                        Image Requirements
+                    </h3>
+                    <div class="help-section-content">
+                        <div style="margin: var(--spacing-md) 0;">
+                            <strong>Dimensions:</strong>
+                            <ul>
+                                <li>Minimum: 1400×1400 pixels</li>
+                                <li>Maximum: 2400×2400 pixels</li>
+                                <li>Must be square (1:1 aspect ratio)</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin: var(--spacing-md) 0;">
+                            <strong>File Format:</strong>
+                            <ul>
+                                <li>Supported: JPG, PNG, GIF, WebP</li>
+                                <li>Maximum file size: 2MB</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin: var(--spacing-md) 0;">
+                            <strong>Upload Methods:</strong>
+                            <ul>
+                                <li><strong>Manual Upload:</strong> Click "Choose File" in Add/Edit modal</li>
+                                <li><strong>Auto-Download:</strong> Import from RSS (automatic)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Keyboard Shortcuts -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">⌨️</span>
+                        Keyboard Shortcuts
+                    </h3>
+                    <div class="help-section-content">
+                        <ul>
+                            <li><kbd>Escape</kbd> - Close any open modal</li>
+                            <li><kbd>Enter</kbd> - Submit RSS URL (in RSS import modal)</li>
+                            <li><strong>Click overlay</strong> - Close modal (all modals)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tips & Best Practices -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">💡</span>
+                        Tips & Best Practices
+                    </h3>
+                    <div class="help-section-content">
+                        <ul>
+                            <li><strong>Use RSS Import</strong> for quick setup - saves time and ensures accuracy</li>
+                            <li><strong>Run Health Checks</strong> regularly to catch broken feeds early</li>
+                            <li><strong>Keep images optimized</strong> - use 1400×1400 for best compatibility</li>
+                            <li><strong>Use descriptive titles</strong> - helps with search and organization</li>
+                            <li><strong>Check iTunes namespace</strong> - ensures Apple Podcasts compatibility</li>
+                            <li><strong>Toggle inactive</strong> instead of delete - keeps history and allows reactivation</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Troubleshooting -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">🔧</span>
+                        Troubleshooting
+                    </h3>
+                    <div class="help-section-content">
+                        <div style="margin: var(--spacing-md) 0;">
+                            <strong>RSS Import Fails:</strong>
+                            <ul>
+                                <li>Verify feed URL is valid and publicly accessible</li>
+                                <li>Try copying URL directly from browser address bar</li>
+                                <li>Check your internet connection</li>
+                                <li>Ensure feed uses HTTPS (or HTTP in development)</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin: var(--spacing-md) 0;">
+                            <strong>Image Not Showing:</strong>
+                            <ul>
+                                <li>Verify image meets size requirements (1400-2400px)</li>
+                                <li>Check file format (JPG, PNG, GIF, WebP only)</li>
+                                <li>Ensure file size is under 2MB</li>
+                                <li>Try re-uploading or re-importing</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin: var(--spacing-md) 0;">
+                            <strong>Health Check Shows Warnings:</strong>
+                            <ul>
+                                <li>Review specific check details in the modal</li>
+                                <li>Fix issues in the source RSS feed</li>
+                                <li>Re-run check after making fixes</li>
+                                <li>Contact feed provider if issues persist</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin: var(--spacing-md) 0;">
+                            <strong>Search Not Working:</strong>
+                            <ul>
+                                <li>Clear search field and try again</li>
+                                <li>Check spelling</li>
+                                <li>Search works on: title, feed URL, and description</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Features -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">🧭</span>
+                        Navigation Features
+                    </h3>
+                    <div class="help-section-content">
+                        <ul>
+                            <li><strong>Stats:</strong> Click "Stats" in navigation to view directory statistics, active/inactive counts, storage usage, and recent activity</li>
+                            <li><strong>View Feed:</strong> Click "View Feed" to see the generated RSS XML feed and copy the URL for app integration</li>
+                            <li><strong>Search:</strong> Use the search bar at the top of the table to filter podcasts by title, feed URL, or description</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-lg" onclick="hideHelpModal()">
+                    Close
                 </button>
             </div>
         </div>

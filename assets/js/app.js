@@ -1091,6 +1091,23 @@ function recheckPodcastHealth() {
     }
 }
 
+// Help Modal Functions
+function showHelpModal() {
+    const modal = document.getElementById('helpModal');
+    if (modal) {
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function hideHelpModal() {
+    const modal = document.getElementById('helpModal');
+    if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+}
+
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.podcastApp = new PodcastApp();
@@ -1113,6 +1130,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 hideImportRssModal();
             } else if (e.target.id === 'healthCheckModal') {
                 hideHealthCheckModal();
+            } else if (e.target.id === 'helpModal') {
+                hideHelpModal();
             }
         }
     });
@@ -1122,11 +1141,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Escape') {
             const importModal = document.getElementById('importRssModal');
             const healthModal = document.getElementById('healthCheckModal');
+            const helpModal = document.getElementById('helpModal');
             
             if (importModal && importModal.classList.contains('show')) {
                 hideImportRssModal();
             } else if (healthModal && healthModal.classList.contains('show')) {
                 hideHealthCheckModal();
+            } else if (helpModal && helpModal.classList.contains('show')) {
+                hideHelpModal();
             }
         }
     });
