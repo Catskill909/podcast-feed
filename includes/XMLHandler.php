@@ -159,6 +159,9 @@ class XMLHandler
         $feedUrl = $this->dom->createElement('feed_url');
         $feedUrl->appendChild($this->dom->createCDATASection($data['feed_url']));
 
+        $description = $this->dom->createElement('description');
+        $description->appendChild($this->dom->createCDATASection($data['description'] ?? ''));
+
         $coverImage = $this->dom->createElement('cover_image', $data['cover_image']);
         $created = $this->dom->createElement('created_date', date('c'));
         $updated = $this->dom->createElement('updated_date', date('c'));
@@ -166,6 +169,7 @@ class XMLHandler
 
         $podcast->appendChild($title);
         $podcast->appendChild($feedUrl);
+        $podcast->appendChild($description);
         $podcast->appendChild($coverImage);
         $podcast->appendChild($created);
         $podcast->appendChild($updated);
@@ -203,6 +207,20 @@ class XMLHandler
             $feedUrlNode = $xpath->query("feed_url", $podcast)->item(0);
             $feedUrlNode->nodeValue = '';
             $feedUrlNode->appendChild($this->dom->createCDATASection($data['feed_url']));
+        }
+
+        if (isset($data['description'])) {
+            $descriptionNode = $xpath->query("description", $podcast)->item(0);
+            if ($descriptionNode) {
+                $descriptionNode->nodeValue = '';
+                $descriptionNode->appendChild($this->dom->createCDATASection($data['description']));
+            } else {
+                // Create description node if it doesn't exist (for backwards compatibility)
+                $newDescription = $this->dom->createElement('description');
+                $newDescription->appendChild($this->dom->createCDATASection($data['description']));
+                $feedUrlNode = $xpath->query("feed_url", $podcast)->item(0);
+                $podcast->insertBefore($newDescription, $feedUrlNode->nextSibling);
+            }
         }
 
         if (isset($data['cover_image'])) {
@@ -289,6 +307,7 @@ class XMLHandler
             'id' => $node->getAttribute('id'),
             'title' => $xpath->query('title', $node)->item(0)->nodeValue ?? '',
             'feed_url' => $xpath->query('feed_url', $node)->item(0)->nodeValue ?? '',
+            'description' => $xpath->query('description', $node)->item(0)->nodeValue ?? '',
             'cover_image' => $xpath->query('cover_image', $node)->item(0)->nodeValue ?? '',
             'created_date' => $xpath->query('created_date', $node)->item(0)->nodeValue ?? '',
             'updated_date' => $xpath->query('updated_date', $node)->item(0)->nodeValue ?? '',
@@ -355,17 +374,16 @@ class XMLHandler
                 if (isset($podcast['status']) && $podcast['status'] === 'active') {
                     $item = $rss->createElement('item');
 
-                    $title = $rss->createElement('title');
-                    $title->appendChild($rss->createCDATASection($podcast['title'] ?? 'Untitled'));
-                    $item->appendChild($title);
+                    // Use plain text instead of CDATA for better compatibility
+                    $titleText = htmlspecialchars($podcast['title'] ?? 'Untitled', ENT_XML1, 'UTF-8');
+                    $item->appendChild($rss->createElement('title', $titleText));
 
-                    $description = $rss->createElement('description');
-                    $description->appendChild($rss->createCDATASection('Available podcast feed'));
-                    $item->appendChild($description);
+                    $descText = !empty($podcast['description']) ? $podcast['description'] : 'Available podcast feed';
+                    $descText = htmlspecialchars($descText, ENT_XML1, 'UTF-8');
+                    $item->appendChild($rss->createElement('description', $descText));
 
-                    $link = $rss->createElement('link');
-                    $link->appendChild($rss->createCDATASection($podcast['feed_url'] ?? ''));
-                    $item->appendChild($link);
+                    $linkText = htmlspecialchars($podcast['feed_url'] ?? '', ENT_XML1, 'UTF-8');
+                    $item->appendChild($rss->createElement('link', $linkText));
 
                     $item->appendChild($rss->createElement('guid', $podcast['id'] ?? ''));
                     $pubDate = isset($podcast['created_date']) ? date('r', strtotime($podcast['created_date'])) : date('r');
@@ -375,7 +393,17 @@ class XMLHandler
                     if (!empty($podcast['cover_image'])) {
                         $enclosure = $rss->createElement('enclosure');
                         $enclosure->setAttribute('url', APP_URL . '/uploads/covers/' . $podcast['cover_image']);
-                        $enclosure->setAttribute('type', 'image/jpeg');
+                        
+                        // Determine correct MIME type based on file extension
+                        $ext = strtolower(pathinfo($podcast['cover_image'], PATHINFO_EXTENSION));
+                        $mimeType = 'image/jpeg';
+                        if ($ext === 'png') {
+                            $mimeType = 'image/png';
+                        } elseif ($ext === 'gif') {
+                            $mimeType = 'image/gif';
+                        }
+                        
+                        $enclosure->setAttribute('type', $mimeType);
                         $item->appendChild($enclosure);
                     }
 

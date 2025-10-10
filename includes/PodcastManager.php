@@ -49,6 +49,7 @@ class PodcastManager
             $podcastData = [
                 'title' => trim($data['title']),
                 'feed_url' => trim($data['feed_url']),
+                'description' => trim($data['description'] ?? ''),
                 'cover_image' => $coverImage
             ];
 
@@ -100,7 +101,8 @@ class PodcastManager
 
             $updateData = [
                 'title' => trim($data['title']),
-                'feed_url' => trim($data['feed_url'])
+                'feed_url' => trim($data['feed_url']),
+                'description' => trim($data['description'] ?? '')
             ];
 
             // Handle image upload if provided
@@ -239,7 +241,8 @@ class PodcastManager
             foreach ($allPodcasts as $podcast) {
                 if (
                     strpos(strtolower($podcast['title']), $searchTerm) !== false ||
-                    strpos(strtolower($podcast['feed_url']), $searchTerm) !== false
+                    strpos(strtolower($podcast['feed_url']), $searchTerm) !== false ||
+                    strpos(strtolower($podcast['description'] ?? ''), $searchTerm) !== false
                 ) {
                     $results[] = $podcast;
                 }

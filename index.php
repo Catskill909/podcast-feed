@@ -19,7 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'create':
             $data = [
                 'title' => $_POST['title'] ?? '',
-                'feed_url' => $_POST['feed_url'] ?? ''
+                'feed_url' => $_POST['feed_url'] ?? '',
+                'description' => $_POST['description'] ?? ''
             ];
             $result = $podcastManager->createPodcast($data, $_FILES['cover_image'] ?? null);
             $message = $result['message'];
@@ -30,7 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'] ?? '';
             $data = [
                 'title' => $_POST['title'] ?? '',
-                'feed_url' => $_POST['feed_url'] ?? ''
+                'feed_url' => $_POST['feed_url'] ?? '',
+                'description' => $_POST['description'] ?? ''
             ];
             $result = $podcastManager->updatePodcast($id, $data, $_FILES['cover_image'] ?? null);
             $message = $result['message'];
@@ -195,7 +197,8 @@ if (isset($_GET['edit'])) {
                             </thead>
                             <tbody>
                                 <?php foreach ($podcasts as $podcast): ?>
-                                    <tr data-podcast-id="<?php echo htmlspecialchars($podcast['id']); ?>">
+                                    <tr data-podcast-id="<?php echo htmlspecialchars($podcast['id']); ?>" 
+                                        data-description="<?php echo htmlspecialchars($podcast['description'] ?? ''); ?>">
                                         <td>
                                             <?php if ($podcast['cover_image'] && $podcast['image_info']): ?>
                                                 <img src="<?php echo htmlspecialchars($podcast['image_info']['url']); ?>"
@@ -275,6 +278,14 @@ if (isset($_GET['edit'])) {
                             placeholder="https://example.com/podcast.xml" required>
                         <div class="invalid-feedback"></div>
                         <small class="form-text">Valid RSS feed URL required</small>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: var(--spacing-md);">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"
+                            placeholder="Enter podcast description (optional)" maxlength="500"></textarea>
+                        <div class="invalid-feedback"></div>
+                        <small class="form-text">Max 500 characters (optional)</small>
                     </div>
 
                     <div class="form-group" style="margin-bottom: var(--spacing-sm);">

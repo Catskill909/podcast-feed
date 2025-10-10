@@ -345,6 +345,9 @@ class PodcastApp {
 
             const title = row.querySelector('td:nth-child(2) strong').textContent;
             const feedUrl = row.querySelector('td:nth-child(3) a').href;
+            
+            // Get description from data attribute if available
+            const description = row.dataset.description || '';
 
             // Populate form
             document.getElementById('modalTitle').textContent = 'Edit Podcast';
@@ -352,6 +355,7 @@ class PodcastApp {
             document.getElementById('podcastId').value = podcastId;
             document.getElementById('title').value = title;
             document.getElementById('feed_url').value = feedUrl;
+            document.getElementById('description').value = description;
             document.getElementById('submitIcon').textContent = '✏️';
             document.getElementById('submitText').textContent = 'Update Podcast';
 
