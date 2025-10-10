@@ -228,6 +228,13 @@ class XMLHandler
             $coverNode->nodeValue = $data['cover_image'];
         }
 
+        if (isset($data['status'])) {
+            $statusNode = $xpath->query("status", $podcast)->item(0);
+            if ($statusNode) {
+                $statusNode->nodeValue = $data['status'];
+            }
+        }
+
         // Update timestamp
         $updatedNode = $xpath->query("updated_date", $podcast)->item(0);
         $updatedNode->nodeValue = date('c');

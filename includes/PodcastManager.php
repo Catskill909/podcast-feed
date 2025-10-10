@@ -175,6 +175,42 @@ class PodcastManager
     }
 
     /**
+     * Update podcast status
+     */
+    public function updatePodcastStatus($id, $status)
+    {
+        try {
+            // Check if podcast exists
+            $existingPodcast = $this->xmlHandler->getPodcast($id);
+            if (!$existingPodcast) {
+                throw new Exception('Podcast not found');
+            }
+
+            // Validate status
+            if (!in_array($status, ['active', 'inactive'])) {
+                throw new Exception('Invalid status value');
+            }
+
+            // Update status
+            $this->xmlHandler->updatePodcast($id, ['status' => $status]);
+
+            $this->logOperation('STATUS_CHANGE', $id, $existingPodcast['title'] . ' - ' . $status);
+
+            $statusText = $status === 'active' ? 'activated' : 'deactivated';
+            return [
+                'success' => true,
+                'message' => "Podcast {$statusText} successfully"
+            ];
+        } catch (Exception $e) {
+            $this->logError('STATUS_UPDATE_ERROR', $e->getMessage());
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    /**
      * Get single podcast by ID
      */
     public function getPodcast($id)

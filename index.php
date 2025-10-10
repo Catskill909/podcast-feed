@@ -45,6 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = $result['message'];
             $messageType = $result['success'] ? 'success' : 'danger';
             break;
+
+        case 'update_status':
+            $id = $_POST['id'] ?? '';
+            $status = $_POST['status'] ?? '';
+            $result = $podcastManager->updatePodcastStatus($id, $status);
+            $message = $result['message'];
+            $messageType = $result['success'] ? 'success' : 'danger';
+            break;
     }
 
     // Redirect to prevent form resubmission
@@ -220,9 +228,11 @@ if (isset($_GET['edit'])) {
                                             </a>
                                         </td>
                                         <td>
-                                            <span class="badge badge-<?php echo $podcast['status'] === 'active' ? 'success' : 'secondary'; ?>">
-                                                <?php echo ucfirst($podcast['status']); ?>
-                                            </span>
+                                            <button type="button" 
+                                                class="badge badge-<?php echo $podcast['status'] === 'active' ? 'success' : 'danger'; ?> badge-clickable"
+                                                onclick="showStatusModal('<?php echo htmlspecialchars($podcast['id']); ?>', '<?php echo htmlspecialchars($podcast['title']); ?>', '<?php echo $podcast['status']; ?>')">
+                                                <?php echo $podcast['status'] === 'active' ? '✓ Active' : '✕ Inactive'; ?>
+                                            </button>
                                         </td>
                                         <td class="text-muted">
                                             <?php echo date('M j, Y', strtotime($podcast['created_date'])); ?>
@@ -260,7 +270,7 @@ if (isset($_GET['edit'])) {
                 <button type="button" class="modal-close" onclick="hideModal()">&times;</button>
             </div>
             <form id="podcastForm" method="POST" enctype="multipart/form-data">
-                <div class="modal-body" style="padding: var(--spacing-md);">
+                <div class="modal-body">
                     <input type="hidden" name="action" id="formAction" value="create">
                     <input type="hidden" name="id" id="podcastId" value="">
 
@@ -306,7 +316,7 @@ if (isset($_GET['edit'])) {
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer" style="padding: var(--spacing-md);">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="hideModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary" id="submitBtn">
                         <span id="submitIcon">➕</span>
@@ -314,6 +324,41 @@ if (isset($_GET['edit'])) {
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Status Change Modal -->
+    <div class="modal-overlay" id="statusModal">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h3 class="modal-title">Change Podcast Status</h3>
+                <button type="button" class="modal-close" onclick="hideStatusModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: var(--spacing-md);">Change the status of:</p>
+                <p style="margin-bottom: var(--spacing-lg);"><strong id="statusPodcastTitle"></strong></p>
+                <div class="status-options">
+                    <button type="button" class="status-option status-option-active" onclick="changeStatus('active')">
+                        <span class="status-icon">✓</span>
+                        <div class="status-content">
+                            <div class="status-label">Active</div>
+                            <div class="status-description">Visible in RSS feed</div>
+                        </div>
+                    </button>
+                    <button type="button" class="status-option status-option-inactive" onclick="changeStatus('inactive')">
+                        <span class="status-icon">✕</span>
+                        <div class="status-content">
+                            <div class="status-label">Inactive</div>
+                            <div class="status-description">Hidden from RSS feed</div>
+                        </div>
+                    </button>
+                </div>
+                <form method="POST" id="statusForm" style="display: none;">
+                    <input type="hidden" name="action" value="update_status">
+                    <input type="hidden" name="id" id="statusId" value="">
+                    <input type="hidden" name="status" id="statusValue" value="">
+                </form>
+            </div>
         </div>
     </div>
 

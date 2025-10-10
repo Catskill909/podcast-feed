@@ -2,3 +2,6 @@
 [2025-10-09 21:37:05] CREATE: ID=pod_1760045825_68e82b0116958, Title="3rd & Fairfax: The WGAW Podcast - Writers Guild of America West"
 [2025-10-09 23:57:05] UPDATE: ID=pod_1760033471_68e7fabf9e131, Title="Labor Radio-Podcast Weekly"
 [2025-10-10 00:01:12] UPDATE: ID=pod_1760045825_68e82b0116958, Title="3rd & Fairfax: The WGAW Podcast - Writers Guild of America West"
+[2025-10-10 00:06:42] CREATE: ID=pod_1760054802_68e84e12d488b, Title="AFGE Y.O.U.N.G. Podcast"
+[2025-10-10 00:16:58] STATUS_CHANGE: ID=pod_1760033471_68e7fabf9e131, Title="Labor Radio-Podcast Weekly - inactive"
+[2025-10-10 00:17:11] STATUS_CHANGE: ID=pod_1760033471_68e7fabf9e131, Title="Labor Radio-Podcast Weekly - active"

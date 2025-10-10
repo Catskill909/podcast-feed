@@ -30,6 +30,7 @@ class PodcastApp {
             if (e.target.classList.contains('modal-overlay')) {
                 this.hideModal();
                 this.hideDeleteModal();
+                this.hideStatusModal();
             }
         });
 
@@ -38,6 +39,7 @@ class PodcastApp {
             if (e.key === 'Escape') {
                 this.hideModal();
                 this.hideDeleteModal();
+                this.hideStatusModal();
             }
         });
 
@@ -424,6 +426,55 @@ class PodcastApp {
     }
 
     /**
+     * Show status modal
+     */
+    showStatusModal(podcastId, podcastTitle, currentStatus) {
+        document.getElementById('statusId').value = podcastId;
+        document.getElementById('statusPodcastTitle').textContent = podcastTitle;
+        
+        // Highlight current status
+        const activeOption = document.querySelector('.status-option-active');
+        const inactiveOption = document.querySelector('.status-option-inactive');
+        
+        if (currentStatus === 'active') {
+            activeOption.style.borderColor = 'var(--accent-primary)';
+            activeOption.style.backgroundColor = 'rgba(35, 134, 54, 0.1)';
+            inactiveOption.style.borderColor = 'var(--border-primary)';
+            inactiveOption.style.backgroundColor = 'var(--bg-secondary)';
+        } else {
+            inactiveOption.style.borderColor = 'var(--accent-danger)';
+            inactiveOption.style.backgroundColor = 'rgba(218, 54, 51, 0.1)';
+            activeOption.style.borderColor = 'var(--border-primary)';
+            activeOption.style.backgroundColor = 'var(--bg-secondary)';
+        }
+
+        const modal = document.getElementById('statusModal');
+        if (modal) {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    /**
+     * Hide status modal
+     */
+    hideStatusModal() {
+        const modal = document.getElementById('statusModal');
+        if (modal) {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    }
+
+    /**
+     * Change podcast status
+     */
+    changeStatus(newStatus) {
+        document.getElementById('statusValue').value = newStatus;
+        document.getElementById('statusForm').submit();
+    }
+
+    /**
      * Reset form
      */
     resetForm() {
@@ -564,6 +615,18 @@ function copyFeedUrl() {
 
 function showStats() {
     window.podcastApp.showStats();
+}
+
+function showStatusModal(id, title, status) {
+    window.podcastApp.showStatusModal(id, title, status);
+}
+
+function hideStatusModal() {
+    window.podcastApp.hideStatusModal();
+}
+
+function changeStatus(status) {
+    window.podcastApp.changeStatus(status);
 }
 
 // Initialize the application when DOM is loaded
