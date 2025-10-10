@@ -166,12 +166,12 @@
                                         color: #8b949e;
                                         cursor: pointer;
                                         padding: 0.25rem;
-                                        font-size: 1.125rem;
+                                        font-size: 1rem;
                                         transition: color 0.2s ease;
                                         line-height: 1;
                                     "
-                                    title="Toggle password visibility"
-                                >👁️</button>
+                                    title="Show password"
+                                ><i class="fa-regular fa-eye"></i></button>
                             </div>
                         </div>
                         
@@ -244,8 +244,15 @@
             passwordInput.setAttribute('type', type);
             
             // Change icon based on state
-            this.textContent = type === 'password' ? '👁️' : '🙈';
-            this.style.color = type === 'password' ? '#8b949e' : '#f0f6fc';
+            if (type === 'password') {
+                this.innerHTML = '<i class="fa-regular fa-eye"></i>';
+                this.setAttribute('title', 'Show password');
+                this.style.color = '#8b949e';
+            } else {
+                this.innerHTML = '<i class="fa-regular fa-eye-slash"></i>';
+                this.setAttribute('title', 'Hide password');
+                this.style.color = '#f0f6fc';
+            }
         });
         
         // Hover effect for toggle button
