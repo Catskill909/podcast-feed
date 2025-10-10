@@ -40,6 +40,7 @@ class PodcastApp {
                 this.hideModal();
                 this.hideDeleteModal();
                 this.hideStatusModal();
+                this.hideFeedModal();
             }
         });
 
@@ -475,6 +476,138 @@ class PodcastApp {
     }
 
     /**
+     * Show feed modal with main RSS feed
+     */
+    async showFeedModal() {
+        const feedUrl = window.location.origin + '/feed.php';
+        document.getElementById('feedModalTitle').textContent = 'RSS Feed - All Active Podcasts';
+        document.getElementById('feedUrlInput').value = feedUrl;
+        
+        const modal = document.getElementById('feedModal');
+        if (modal) {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Load feed content
+        await this.loadFeedContent(feedUrl);
+    }
+
+    /**
+     * Show feed modal for specific podcast
+     */
+    async showPodcastFeedModal(feedUrl, title) {
+        document.getElementById('feedModalTitle').textContent = `RSS Feed - ${title}`;
+        document.getElementById('feedUrlInput').value = feedUrl;
+        
+        const modal = document.getElementById('feedModal');
+        if (modal) {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Load feed content
+        await this.loadFeedContent(feedUrl);
+    }
+
+    /**
+     * Load feed content via AJAX
+     */
+    async loadFeedContent(url) {
+        const contentElement = document.getElementById('feedContent');
+        contentElement.textContent = 'Loading feed...';
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const xmlText = await response.text();
+            
+            // Format XML for display
+            const formatted = this.formatXML(xmlText);
+            contentElement.textContent = formatted;
+        } catch (error) {
+            contentElement.textContent = `Error loading feed: ${error.message}`;
+            console.error('Feed load error:', error);
+        }
+    }
+
+    /**
+     * Format XML with indentation
+     */
+    formatXML(xml) {
+        const PADDING = '  ';
+        const reg = /(>)(<)(\/*)/g;
+        let formatted = '';
+        let pad = 0;
+
+        xml = xml.replace(reg, '$1\n$2$3');
+        
+        xml.split('\n').forEach((node) => {
+            let indent = 0;
+            if (node.match(/.+<\/\w[^>]*>$/)) {
+                indent = 0;
+            } else if (node.match(/^<\/\w/)) {
+                if (pad !== 0) {
+                    pad -= 1;
+                }
+            } else if (node.match(/^<\w([^>]*[^\/])?>.*$/)) {
+                indent = 1;
+            } else {
+                indent = 0;
+            }
+
+            formatted += PADDING.repeat(pad) + node + '\n';
+            pad += indent;
+        });
+
+        return formatted.trim();
+    }
+
+    /**
+     * Hide feed modal
+     */
+    hideFeedModal() {
+        const modal = document.getElementById('feedModal');
+        if (modal) {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    }
+
+    /**
+     * Copy feed URL from modal
+     */
+    copyFeedUrlFromModal() {
+        const input = document.getElementById('feedUrlInput');
+        input.select();
+        input.setSelectionRange(0, 99999); // For mobile devices
+
+        try {
+            navigator.clipboard.writeText(input.value).then(() => {
+                // Show success feedback
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✅ Copied!';
+                btn.style.backgroundColor = 'var(--accent-success)';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.backgroundColor = '';
+                }, 2000);
+            }).catch(() => {
+                // Fallback for older browsers
+                document.execCommand('copy');
+                alert('Feed URL copied to clipboard!');
+            });
+        } catch (err) {
+            alert('Failed to copy URL. Please copy manually.');
+            console.error('Copy failed:', err);
+        }
+    }
+
+    /**
      * Reset form
      */
     resetForm() {
@@ -627,6 +760,22 @@ function hideStatusModal() {
 
 function changeStatus(status) {
     window.podcastApp.changeStatus(status);
+}
+
+function showFeedModal() {
+    window.podcastApp.showFeedModal();
+}
+
+function showPodcastFeedModal(feedUrl, title) {
+    window.podcastApp.showPodcastFeedModal(feedUrl, title);
+}
+
+function hideFeedModal() {
+    window.podcastApp.hideFeedModal();
+}
+
+function copyFeedUrl() {
+    window.podcastApp.copyFeedUrlFromModal();
 }
 
 // Initialize the application when DOM is loaded

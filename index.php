@@ -105,7 +105,7 @@ if (isset($_GET['edit'])) {
                 <nav>
                     <ul class="nav-links">
                         <li><a href="index.php" class="active">Manage</a></li>
-                        <li><a href="feed.php" target="_blank">View Feed</a></li>
+                        <li><a href="#" onclick="showFeedModal()">View Feed</a></li>
                         <li><a href="#" onclick="showStats()">Stats</a></li>
                     </ul>
                 </nav>
@@ -224,9 +224,9 @@ if (isset($_GET['edit'])) {
                                             <strong><?php echo htmlspecialchars($podcast['title']); ?></strong>
                                         </td>
                                         <td>
-                                            <a href="<?php echo htmlspecialchars($podcast['feed_url']); ?>"
-                                                target="_blank"
-                                                title="<?php echo htmlspecialchars($podcast['feed_url']); ?>">
+                                            <a href="#" 
+                                                onclick="showPodcastFeedModal('<?php echo htmlspecialchars($podcast['feed_url']); ?>', '<?php echo htmlspecialchars($podcast['title']); ?>'); return false;"
+                                                title="Click to view feed">
                                                 <?php echo htmlspecialchars(strlen($podcast['feed_url']) > 50 ? substr($podcast['feed_url'], 0, 50) . '...' : $podcast['feed_url']); ?>
                                             </a>
                                         </td>
@@ -362,6 +362,32 @@ if (isset($_GET['edit'])) {
                     <input type="hidden" name="id" id="statusId" value="">
                     <input type="hidden" name="status" id="statusValue" value="">
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feed Viewer Modal -->
+    <div class="modal-overlay" id="feedModal">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h3 class="modal-title" id="feedModalTitle">RSS Feed</h3>
+                <button type="button" class="modal-close" onclick="hideFeedModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="feed-viewer-container">
+                    <div class="feed-url-display">
+                        <input type="text" id="feedUrlInput" readonly class="feed-url-input">
+                        <button type="button" class="btn btn-primary" onclick="copyFeedUrl()" title="Copy URL">
+                            📋 Copy URL
+                        </button>
+                    </div>
+                    <div class="feed-content-wrapper">
+                        <pre id="feedContent" class="feed-content">Loading feed...</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="hideFeedModal()">Close</button>
             </div>
         </div>
     </div>

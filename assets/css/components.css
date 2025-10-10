@@ -760,3 +760,74 @@
   text-align: center;
   font-size: var(--font-size-md);
 }
+
+/* Feed Viewer Modal Styles */
+.modal-lg {
+  max-width: 900px;
+  max-height: 90vh;
+}
+
+.feed-viewer-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.feed-url-display {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  padding: var(--spacing-md);
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--border-radius);
+}
+
+.feed-url-input {
+  flex: 1;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--text-primary);
+  font-family: monospace;
+  font-size: var(--font-size-sm);
+}
+
+.feed-content-wrapper {
+  max-height: 500px;
+  overflow-y: auto;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--border-radius);
+}
+
+.feed-content {
+  margin: 0;
+  padding: var(--spacing-md);
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+}
+
+.feed-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.feed-content::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+.feed-content::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 4px;
+}
+
+.feed-content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
