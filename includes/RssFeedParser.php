@@ -74,6 +74,9 @@ class RssFeedParser
     {
         $ch = curl_init();
         
+        // Enable SSL verification in production, disable in development
+        $sslVerify = (defined('ENVIRONMENT') && ENVIRONMENT === 'production');
+        
         curl_setopt_array($ch, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
@@ -81,7 +84,7 @@ class RssFeedParser
             CURLOPT_MAXREDIRS => 5,
             CURLOPT_TIMEOUT => $this->timeout,
             CURLOPT_USERAGENT => $this->userAgent,
-            CURLOPT_SSL_VERIFYPEER => false, // For development; enable in production
+            CURLOPT_SSL_VERIFYPEER => $sslVerify,
             CURLOPT_ENCODING => '', // Accept all encodings
         ]);
         
@@ -354,6 +357,9 @@ class RssFeedParser
     {
         $ch = curl_init();
         
+        // Enable SSL verification in production, disable in development
+        $sslVerify = (defined('ENVIRONMENT') && ENVIRONMENT === 'production');
+        
         curl_setopt_array($ch, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
@@ -361,7 +367,7 @@ class RssFeedParser
             CURLOPT_MAXREDIRS => 5,
             CURLOPT_TIMEOUT => $this->timeout,
             CURLOPT_USERAGENT => $this->userAgent,
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYPEER => $sslVerify,
         ]);
         
         $data = curl_exec($ch);
