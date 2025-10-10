@@ -237,12 +237,12 @@ if (isset($_GET['edit'])) {
                                                 <button type="button" class="btn btn-outline btn-sm tooltip"
                                                     data-tooltip="Check Health"
                                                     onclick="checkPodcastHealth('<?php echo htmlspecialchars($podcast['id']); ?>', '<?php echo htmlspecialchars($podcast['title']); ?>')">
-                                                    🏥
+                                                    <i class="fa-solid fa-heart-pulse"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-outline btn-sm tooltip"
                                                     data-tooltip="Edit Podcast"
                                                     onclick="editPodcast('<?php echo htmlspecialchars($podcast['id']); ?>')">
-                                                    ✏️
+                                                    <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-danger btn-sm tooltip"
                                                     data-tooltip="Delete Podcast"
@@ -833,14 +833,18 @@ if (isset($_GET['edit'])) {
                         <p>Each podcast in your directory has these action buttons:</p>
                         
                         <div class="help-button-example">
-                            <button type="button" class="btn btn-outline btn-sm" disabled>🏥</button>
+                            <button type="button" class="btn btn-outline btn-sm" disabled>
+                                <i class="fa-solid fa-heart-pulse"></i>
+                            </button>
                             <p class="help-button-description">
                                 <strong>Health Check:</strong> Validate feed health, RSS 2.0 structure, iTunes compatibility, and cover image availability. Results show as 🟢 Pass, 🟡 Warning, or 🔴 Fail.
                             </p>
                         </div>
                         
                         <div class="help-button-example">
-                            <button type="button" class="btn btn-outline btn-sm" disabled>✏️</button>
+                            <button type="button" class="btn btn-outline btn-sm" disabled>
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
                             <p class="help-button-description">
                                 <strong>Edit:</strong> Modify podcast details, update feed URL, upload new cover image, or change description.
                             </p>

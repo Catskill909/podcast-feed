@@ -1330,6 +1330,15 @@
   gap: var(--spacing-sm);
 }
 
+/* Make outline button icons white */
+.btn-outline i {
+  color: white;
+}
+
+.btn-outline:hover i {
+  color: white;
+}
+
 /* Responsive Help Modal */
 @media (max-width: 768px) {
   .help-button-example {
