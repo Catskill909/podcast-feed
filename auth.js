@@ -17,30 +17,48 @@
     
     if (storedPassword === CORRECT_PASSWORD) {
         // Already authenticated, allow access
+        console.log('✅ Already authenticated');
         return;
     }
+    
+    console.log('❌ Not authenticated - showing modal');
     
     // Not authenticated, show custom modal
     let attempts = 0;
     const maxAttempts = 3;
     
+    // Load Font Awesome if not already loaded
+    function loadFontAwesome() {
+        if (!document.querySelector('link[href*="font-awesome"]')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css';
+            document.head.appendChild(link);
+        }
+    }
+    
     // Create and inject modal HTML
     function createAuthModal() {
+        console.log('Creating auth modal...');
+        loadFontAwesome();
+        
         const modalHTML = `
             <div id="authModal" style="
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(13, 17, 23, 0.98);
-                backdrop-filter: blur(8px);
-                z-index: 999999;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                animation: fadeIn 0.3s ease;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                background: rgba(13, 17, 23, 0.98) !important;
+                backdrop-filter: blur(8px) !important;
+                z-index: 999999 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+                animation: fadeIn 0.3s ease !important;
+                visibility: visible !important;
+                opacity: 1 !important;
             ">
                 <style>
                     @keyframes fadeIn {
@@ -58,14 +76,16 @@
                     }
                 </style>
                 <div style="
-                    background: #161b22;
-                    border: 1px solid #30363d;
-                    border-radius: 12px;
-                    padding: 2.5rem;
-                    max-width: 420px;
-                    width: 90%;
-                    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
-                    animation: slideUp 0.3s ease;
+                    background: #161b22 !important;
+                    border: 1px solid #30363d !important;
+                    border-radius: 12px !important;
+                    padding: 2.5rem !important;
+                    max-width: 420px !important;
+                    width: 90% !important;
+                    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4) !important;
+                    animation: slideUp 0.3s ease !important;
+                    position: relative !important;
+                    z-index: 1000000 !important;
                 ">
                     <div style="text-align: center; margin-bottom: 2rem;">
                         <div style="
@@ -73,7 +93,7 @@
                             margin-bottom: 1rem;
                             color: #238636;
                         ">
-                            <i class="fa-solid fa-headphones"></i>
+                            🎧
                         </div>
                         <h1 style="
                             font-family: 'Oswald', sans-serif;
@@ -112,26 +132,47 @@
                                 color: #f0f6fc;
                                 font-size: 0.875rem;
                             ">Password</label>
-                            <input 
-                                type="password" 
-                                id="authPassword" 
-                                autocomplete="current-password"
-                                style="
-                                    display: block;
-                                    width: 100%;
-                                    padding: 0.75rem 1rem;
-                                    font-size: 1rem;
-                                    line-height: 1.5;
-                                    color: #f0f6fc;
-                                    background-color: #0d1117;
-                                    border: 1px solid #30363d;
-                                    border-radius: 6px;
-                                    transition: all 0.2s ease;
-                                    box-sizing: border-box;
-                                " 
-                                placeholder="Enter password"
-                                required
-                            />
+                            <div style="position: relative;">
+                                <input 
+                                    type="password" 
+                                    id="authPassword" 
+                                    autocomplete="current-password"
+                                    style="
+                                        display: block;
+                                        width: 100%;
+                                        padding: 0.75rem 3rem 0.75rem 1rem;
+                                        font-size: 1rem;
+                                        line-height: 1.5;
+                                        color: #f0f6fc;
+                                        background-color: #0d1117;
+                                        border: 1px solid #30363d;
+                                        border-radius: 6px;
+                                        transition: all 0.2s ease;
+                                        box-sizing: border-box;
+                                    " 
+                                    placeholder="Enter password"
+                                    required
+                                />
+                                <button 
+                                    type="button"
+                                    id="togglePassword"
+                                    style="
+                                        position: absolute;
+                                        right: 0.75rem;
+                                        top: 50%;
+                                        transform: translateY(-50%);
+                                        background: none;
+                                        border: none;
+                                        color: #8b949e;
+                                        cursor: pointer;
+                                        padding: 0.25rem;
+                                        font-size: 1.125rem;
+                                        transition: color 0.2s ease;
+                                        line-height: 1;
+                                    "
+                                    title="Toggle password visibility"
+                                >👁️</button>
+                            </div>
                         </div>
                         
                         <button 
@@ -151,7 +192,7 @@
                                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                             "
                         >
-                            <i class="fa-solid fa-unlock"></i> Unlock
+                            🔓 Unlock
                         </button>
                     </form>
                     
@@ -166,7 +207,9 @@
             </div>
         `;
         
+        console.log('Inserting modal into body...');
         document.body.insertAdjacentHTML('afterbegin', modalHTML);
+        console.log('Modal inserted, checking if element exists:', document.getElementById('authModal'));
         
         // Add hover effect to button
         const submitBtn = document.getElementById('authSubmit');
@@ -193,6 +236,58 @@
         
         // Focus the password input
         setTimeout(() => passwordInput.focus(), 100);
+        
+        // Handle password visibility toggle
+        const togglePasswordBtn = document.getElementById('togglePassword');
+        togglePasswordBtn.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Change icon based on state
+            this.textContent = type === 'password' ? '👁️' : '🙈';
+            this.style.color = type === 'password' ? '#8b949e' : '#f0f6fc';
+        });
+        
+        // Hover effect for toggle button
+        togglePasswordBtn.addEventListener('mouseenter', function() {
+            this.style.color = '#f0f6fc';
+        });
+        togglePasswordBtn.addEventListener('mouseleave', function() {
+            const type = passwordInput.getAttribute('type');
+            this.style.color = type === 'password' ? '#8b949e' : '#f0f6fc';
+        });
+        
+        // Handle form submission
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('authPassword').value;
+            
+            if (password === CORRECT_PASSWORD) {
+                // Correct password - save to localStorage
+                localStorage.setItem('podcast_auth', password);
+                
+                // Remove modal with fade out
+                const modal = document.getElementById('authModal');
+                modal.style.animation = 'fadeOut 0.3s ease';
+                modal.style.opacity = '0';
+                
+                setTimeout(() => {
+                    modal.remove();
+                    document.body.style.visibility = 'visible';
+                }, 300);
+            } else {
+                attempts++;
+                const remaining = maxAttempts - attempts;
+                
+                if (remaining > 0) {
+                    showError(`Incorrect password. ${remaining} attempt${remaining !== 1 ? 's' : ''} remaining.`);
+                    document.getElementById('attemptsRemaining').textContent = `Attempts remaining: ${remaining}`;
+                } else {
+                    showAccessDenied('Too many failed attempts.', true);
+                }
+            }
+        });
     }
     
     function showError(message) {
@@ -229,7 +324,7 @@
                     margin-bottom: 1.5rem;
                     color: #da3633;
                 ">
-                    <i class="fa-solid fa-lock"></i>
+                    🔒
                 </div>
                 <h2 style="
                     font-family: 'Oswald', sans-serif;
@@ -261,50 +356,28 @@
                             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                         "
                     ">
-                        <i class="fa-solid fa-rotate-right"></i> Try Again
+                        🔄 Try Again
                     </button>
                 ` : ''}
             </div>
         `;
     }
     
-    // Create the modal
-    createAuthModal();
-    
-    // Hide page content until authenticated
-    document.body.style.visibility = 'hidden';
-    
-    // Handle form submission
-    document.getElementById('authForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // Wait for DOM to be ready before doing anything
+    function init() {
+        // Hide page content immediately
+        document.body.style.visibility = 'hidden';
         
-        const password = document.getElementById('authPassword').value;
-        
-        if (password === CORRECT_PASSWORD) {
-            // Correct password - save to localStorage
-            localStorage.setItem('podcast_auth', password);
-            
-            // Remove modal with fade out
-            const modal = document.getElementById('authModal');
-            modal.style.animation = 'fadeOut 0.3s ease';
-            modal.style.opacity = '0';
-            
-            setTimeout(() => {
-                modal.remove();
-                document.body.style.visibility = 'visible';
-            }, 300);
-        } else {
-            attempts++;
-            const remaining = maxAttempts - attempts;
-            
-            if (remaining > 0) {
-                showError(`Incorrect password. ${remaining} attempt${remaining !== 1 ? 's' : ''} remaining.`);
-                document.getElementById('attemptsRemaining').textContent = `Attempts remaining: ${remaining}`;
-            } else {
-                showAccessDenied('Too many failed attempts.', true);
-            }
-        }
-    });
+        // Create the modal
+        createAuthModal();
+    }
+    
+    // Run when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
     
     // Add fadeOut animation
     const style = document.createElement('style');
