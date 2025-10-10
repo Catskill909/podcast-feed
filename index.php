@@ -20,7 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'title' => $_POST['title'] ?? '',
                 'feed_url' => $_POST['feed_url'] ?? '',
-                'description' => $_POST['description'] ?? ''
+                'description' => $_POST['description'] ?? '',
+                'rss_image_url' => $_POST['rss_image_url'] ?? ''
             ];
             $result = $podcastManager->createPodcast($data, $_FILES['cover_image'] ?? null);
             $message = $result['message'];
@@ -228,6 +229,11 @@ if (isset($_GET['edit'])) {
                                         </td>
                                         <td>
                                             <div class="table-actions">
+                                                <button type="button" class="btn btn-outline btn-sm tooltip"
+                                                    data-tooltip="Check Health"
+                                                    onclick="checkPodcastHealth('<?php echo htmlspecialchars($podcast['id']); ?>', '<?php echo htmlspecialchars($podcast['title']); ?>')">
+                                                    🏥
+                                                </button>
                                                 <button type="button" class="btn btn-outline btn-sm tooltip"
                                                     data-tooltip="Edit Podcast"
                                                     onclick="editPodcast('<?php echo htmlspecialchars($podcast['id']); ?>')">
@@ -651,6 +657,102 @@ if (isset($_GET['edit'])) {
                 </button>
                 <button type="button" id="rssBackButton" class="btn btn-secondary btn-lg" onclick="resetRssImportModal()" style="display: none;">
                     <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Health Check Modal -->
+    <div class="modal-overlay" id="healthCheckModal">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-heart-pulse"></i> <span id="healthCheckTitle">Podcast Health Check</span></h3>
+                <button type="button" class="modal-close" onclick="hideHealthCheckModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Loading State -->
+                <div id="healthCheckLoading" style="display: none; text-align: center; padding: var(--spacing-xl);">
+                    <div style="font-size: 3rem; margin-bottom: var(--spacing-md);">🔍</div>
+                    <p style="color: var(--text-secondary);">Running health checks...</p>
+                </div>
+                
+                <!-- Results -->
+                <div id="healthCheckResults" style="display: none;">
+                    <!-- Overall Status -->
+                    <div id="healthOverallStatus" class="alert" style="margin-bottom: var(--spacing-xl);">
+                        <div class="alert-icon" id="healthOverallIcon"></div>
+                        <div>
+                            <strong id="healthOverallMessage"></strong>
+                            <p id="healthOverallDetails" style="margin: var(--spacing-xs) 0 0 0; font-size: var(--font-size-sm);"></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Individual Checks -->
+                    <div class="health-checks-grid">
+                        <!-- Feed URL Check -->
+                        <div class="health-check-card" id="healthCheckFeedUrl">
+                            <div class="health-check-header">
+                                <span class="health-check-icon">🌐</span>
+                                <h4>Feed URL</h4>
+                                <span class="health-check-status-badge" id="feedUrlBadge"></span>
+                            </div>
+                            <div class="health-check-body">
+                                <p id="feedUrlMessage"></p>
+                                <div class="health-check-details" id="feedUrlDetails"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- RSS Structure Check -->
+                        <div class="health-check-card" id="healthCheckRss">
+                            <div class="health-check-header">
+                                <span class="health-check-icon">📄</span>
+                                <h4>RSS 2.0 Structure</h4>
+                                <span class="health-check-status-badge" id="rssStructureBadge"></span>
+                            </div>
+                            <div class="health-check-body">
+                                <p id="rssStructureMessage"></p>
+                                <div class="health-check-details" id="rssStructureDetails"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- iTunes Namespace Check -->
+                        <div class="health-check-card" id="healthCheckItunes">
+                            <div class="health-check-header">
+                                <span class="health-check-icon">🍎</span>
+                                <h4>iTunes Namespace</h4>
+                                <span class="health-check-status-badge" id="itunesNamespaceBadge"></span>
+                            </div>
+                            <div class="health-check-body">
+                                <p id="itunesNamespaceMessage"></p>
+                                <div class="health-check-details" id="itunesNamespaceDetails"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Cover Image Check -->
+                        <div class="health-check-card" id="healthCheckImage">
+                            <div class="health-check-header">
+                                <span class="health-check-icon">🖼️</span>
+                                <h4>Cover Image</h4>
+                                <span class="health-check-status-badge" id="coverImageBadge"></span>
+                            </div>
+                            <div class="health-check-body">
+                                <p id="coverImageMessage"></p>
+                                <div class="health-check-details" id="coverImageDetails"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: var(--spacing-xl); padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--border-radius); font-size: var(--font-size-sm); color: var(--text-muted);">
+                        <strong>Checked:</strong> <span id="healthCheckTimestamp"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-lg" onclick="hideHealthCheckModal()">
+                    Close
+                </button>
+                <button type="button" id="healthCheckAgainButton" class="btn btn-primary btn-lg" onclick="recheckPodcastHealth()" style="display: none;">
+                    <i class="fa-solid fa-rotate-right"></i> Check Again
                 </button>
             </div>
         </div>

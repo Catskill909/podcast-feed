@@ -950,6 +950,147 @@ async function importRssFeed() {
     }
 }
 
+// Health Check Modal Functions
+let currentHealthCheckPodcastId = null;
+
+function showHealthCheckModal() {
+    const modal = document.getElementById('healthCheckModal');
+    if (modal) {
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function hideHealthCheckModal() {
+    const modal = document.getElementById('healthCheckModal');
+    if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+        currentHealthCheckPodcastId = null;
+    }
+}
+
+async function checkPodcastHealth(podcastId, podcastTitle) {
+    currentHealthCheckPodcastId = podcastId;
+    
+    // Update modal title
+    document.getElementById('healthCheckTitle').textContent = podcastTitle;
+    
+    // Show modal and loading state
+    showHealthCheckModal();
+    document.getElementById('healthCheckLoading').style.display = 'block';
+    document.getElementById('healthCheckResults').style.display = 'none';
+    
+    try {
+        // Call health check API
+        const formData = new FormData();
+        formData.append('podcast_id', podcastId);
+        
+        const response = await fetch('api/health-check.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            displayHealthCheckResults(result.data);
+        } else {
+            alert('Health check failed: ' + (result.error || 'Unknown error'));
+            hideHealthCheckModal();
+        }
+    } catch (error) {
+        console.error('Health Check Error:', error);
+        alert('Network error. Please check your connection and try again.');
+        hideHealthCheckModal();
+    }
+}
+
+function displayHealthCheckResults(data) {
+    // Hide loading, show results
+    document.getElementById('healthCheckLoading').style.display = 'none';
+    document.getElementById('healthCheckResults').style.display = 'block';
+    document.getElementById('healthCheckAgainButton').style.display = 'inline-block';
+    
+    // Update timestamp
+    document.getElementById('healthCheckTimestamp').textContent = data.timestamp;
+    
+    // Update overall status
+    const overallStatus = document.getElementById('healthOverallStatus');
+    const overallIcon = document.getElementById('healthOverallIcon');
+    const overallMessage = document.getElementById('healthOverallMessage');
+    const overallDetails = document.getElementById('healthOverallDetails');
+    
+    // Remove old classes
+    overallStatus.className = 'alert';
+    
+    if (data.overall_status === 'healthy') {
+        overallStatus.classList.add('alert-success');
+        overallIcon.textContent = '✅';
+        overallMessage.textContent = 'All checks passed!';
+        overallDetails.textContent = 'Your podcast feed is healthy and properly configured.';
+    } else if (data.overall_status === 'warning') {
+        overallStatus.classList.add('alert-warning');
+        overallIcon.textContent = '⚠️';
+        overallMessage.textContent = 'Some issues detected';
+        overallDetails.textContent = 'Your feed is accessible but has some warnings that should be addressed.';
+    } else {
+        overallStatus.classList.add('alert-danger');
+        overallIcon.textContent = '❌';
+        overallMessage.textContent = 'Critical issues found';
+        overallDetails.textContent = 'Your feed has critical issues that need immediate attention.';
+    }
+    
+    // Update individual checks
+    updateHealthCheckCard('feedUrl', data.checks.feed_url);
+    updateHealthCheckCard('rssStructure', data.checks.rss_structure);
+    updateHealthCheckCard('itunesNamespace', data.checks.itunes_namespace);
+    updateHealthCheckCard('coverImage', data.checks.cover_image);
+}
+
+function updateHealthCheckCard(checkName, checkData) {
+    const badge = document.getElementById(checkName + 'Badge');
+    const message = document.getElementById(checkName + 'Message');
+    const details = document.getElementById(checkName + 'Details');
+    
+    // Update badge
+    badge.className = 'health-check-status-badge status-' + checkData.status;
+    badge.textContent = checkData.status.toUpperCase();
+    
+    // Update message
+    message.textContent = checkData.message;
+    
+    // Update details
+    if (checkData.details) {
+        details.textContent = checkData.details;
+        details.style.display = 'block';
+    } else {
+        details.textContent = '';
+        details.style.display = 'none';
+    }
+    
+    // Add extra info if available
+    if (checkData.http_code) {
+        details.textContent += (details.textContent ? ' | ' : '') + 'HTTP ' + checkData.http_code;
+    }
+    if (checkData.response_time) {
+        details.textContent += (details.textContent ? ' | ' : '') + checkData.response_time;
+    }
+    if (checkData.content_type) {
+        details.textContent += (details.textContent ? ' | ' : '') + checkData.content_type;
+    }
+    if (checkData.size) {
+        details.textContent += (details.textContent ? ' | ' : '') + checkData.size;
+    }
+}
+
+function recheckPodcastHealth() {
+    if (currentHealthCheckPodcastId) {
+        const title = document.getElementById('healthCheckTitle').textContent;
+        checkPodcastHealth(currentHealthCheckPodcastId, title);
+    }
+}
+
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.podcastApp = new PodcastApp();
@@ -965,19 +1106,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Close import modal on overlay click
+    // Close modals on overlay click
     document.addEventListener('click', (e) => {
-        if (e.target.id === 'importRssModal' && e.target.classList.contains('modal-overlay')) {
-            hideImportRssModal();
+        if (e.target.classList.contains('modal-overlay')) {
+            if (e.target.id === 'importRssModal') {
+                hideImportRssModal();
+            } else if (e.target.id === 'healthCheckModal') {
+                hideHealthCheckModal();
+            }
         }
     });
     
-    // Close import modal on Escape key
+    // Close modals on Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            const modal = document.getElementById('importRssModal');
-            if (modal && modal.classList.contains('show')) {
+            const importModal = document.getElementById('importRssModal');
+            const healthModal = document.getElementById('healthCheckModal');
+            
+            if (importModal && importModal.classList.contains('show')) {
                 hideImportRssModal();
+            } else if (healthModal && healthModal.classList.contains('show')) {
+                hideHealthCheckModal();
             }
         }
     });

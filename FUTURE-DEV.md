@@ -49,11 +49,12 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - System preference detection
 - **Impact:** Accessibility and user comfort
 
-### 7. **Podcast Preview Cards**
+### 7. **Podcast Preview Cards** 🔄 *Planned*
 - Hover over podcast to see full details
 - Show description, image, stats
 - Quick actions (edit, delete, toggle)
 - **Impact:** Less clicking, more information at a glance
+- **Status:** In planning phase (see new-features-plan.md)
 
 ### 8. **Dashboard Analytics**
 - Charts showing podcast growth over time
@@ -79,20 +80,25 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 
 ## 🔥 Advanced Features
 
-### 11. **RSS Feed Auto-Import**
-- Paste any RSS feed URL
-- Auto-extract: title, description, image, episodes
-- Preview before importing
-- Batch import multiple feeds
+### 11. **RSS Feed Auto-Import** ✅ *COMPLETED - 2025-10-10*
+- ✅ Paste any RSS feed URL
+- ✅ Auto-extract: title, description, image, episode count
+- ✅ Preview before importing with editable fields
+- ✅ Supports RSS 2.0, Atom, and iTunes formats
+- ✅ Automatic image download and validation
+- ⏳ Batch import multiple feeds (future enhancement)
 - **Impact:** Quickly populate directory from existing feeds
+- **Status:** Fully implemented and production-ready
+- **Docs:** See RSS-IMPORT-IMPLEMENTATION.md
 
-### 12. **Podcast Validation & Health Check**
+### 12. **Podcast Validation & Health Check** 🔄 *Planned*
 - Verify feed URLs are still active
 - Check if images are loading
 - Validate RSS feed structure
 - Alert on broken feeds
 - Auto-check daily
 - **Impact:** Keep directory clean and functional
+- **Status:** In planning phase (see new-features-plan.md)
 
 ### 13. **Version History & Rollback**
 - Track all changes to podcasts

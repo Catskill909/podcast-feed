@@ -56,8 +56,10 @@ class PodcastManager
                 
                 if ($downloadResult['success']) {
                     $coverImage = $downloadResult['filename'];
+                } else {
+                    // Log the error but continue without image
+                    error_log('RSS Image Download Failed: ' . ($downloadResult['error'] ?? 'Unknown error') . ' - URL: ' . $data['rss_image_url']);
                 }
-                // Don't throw error if image download fails - just continue without image
             }
 
             // Prepare data for XML
@@ -73,10 +75,9 @@ class PodcastManager
 
             // If we used a temporary ID for the image, rename it to use the real ID
             if ($coverImage && strpos($coverImage, 'pod_') === 0) {
-                $this->renameImageFile($coverImage, $podcastId);
+                $newFilename = $this->renameImageFile($coverImage, $podcastId);
 
                 // Update XML with correct filename
-                $newFilename = str_replace('pod_' . explode('_', $coverImage)[1], $podcastId, $coverImage);
                 $this->xmlHandler->updatePodcast($podcastId, ['cover_image' => $newFilename]);
             }
 
@@ -413,7 +414,12 @@ class PodcastManager
     private function renameImageFile($oldFilename, $newPodcastId)
     {
         $oldPath = COVERS_DIR . '/' . $oldFilename;
-        $newFilename = str_replace('pod_' . explode('_', $oldFilename)[1], $newPodcastId, $oldFilename);
+        
+        // Extract file extension from old filename
+        $extension = pathinfo($oldFilename, PATHINFO_EXTENSION);
+        
+        // Create new filename with podcast ID
+        $newFilename = $newPodcastId . '.' . $extension;
         $newPath = COVERS_DIR . '/' . $newFilename;
 
         if (file_exists($oldPath)) {
