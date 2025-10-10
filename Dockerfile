@@ -9,16 +9,15 @@ RUN a2enmod rewrite
 # Copy application files
 COPY . /var/www/html/
 
-# Set correct ownership and permissions for writable directories
-RUN chown -R www-data:www-data /var/www/html/data \
-    /var/www/html/uploads \
-    /var/www/html/logs && \
-    chmod -R 755 /var/www/html/data \
-    /var/www/html/uploads \
-    /var/www/html/logs
+# Copy and set up entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Set working directory
 WORKDIR /var/www/html
 
 # Expose port 80
 EXPOSE 80
+
+# Use custom entrypoint
+ENTRYPOINT ["docker-entrypoint.sh"]
