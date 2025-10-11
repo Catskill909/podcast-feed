@@ -450,7 +450,22 @@ class PodcastManager
         $timestamp = date('Y-m-d H:i:s');
         $logEntry = "[$timestamp] ERROR in $operation: $message\n";
 
-        file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
+        // Ensure log directory is writable
+        if (!is_writable(LOGS_DIR)) {
+            @chmod(LOGS_DIR, 0777);
+        }
+        
+        // Ensure log file is writable if it exists
+        if (file_exists($logFile) && !is_writable($logFile)) {
+            @chmod($logFile, 0666);
+        }
+
+        @file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
+        
+        // Set permissions on log file
+        if (file_exists($logFile)) {
+            @chmod($logFile, 0666);
+        }
     }
 
     /**

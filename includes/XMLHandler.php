@@ -89,10 +89,23 @@ class XMLHandler
         // Create backup before saving
         $this->createBackup();
 
-        $result = $this->dom->save($this->xmlFile);
-        if (!$result) {
-            throw new Exception('Failed to save XML file');
+        // Ensure XML file is writable
+        if (file_exists($this->xmlFile) && !is_writable($this->xmlFile)) {
+            @chmod($this->xmlFile, 0666);
         }
+        
+        // Ensure data directory is writable
+        if (!is_writable(DATA_DIR)) {
+            @chmod(DATA_DIR, 0777);
+        }
+
+        $result = @$this->dom->save($this->xmlFile);
+        if (!$result) {
+            throw new Exception('Failed to save XML file - check directory permissions');
+        }
+        
+        // Set permissions on the saved file
+        @chmod($this->xmlFile, 0666);
 
         return true;
     }
@@ -104,7 +117,18 @@ class XMLHandler
     {
         if (file_exists($this->xmlFile)) {
             $backupFile = BACKUP_DIR . '/podcasts_' . date('Y-m-d_H-i-s') . '.xml';
-            copy($this->xmlFile, $backupFile);
+            
+            // Ensure backup directory is writable
+            if (!is_writable(BACKUP_DIR)) {
+                @chmod(BACKUP_DIR, 0777);
+            }
+            
+            if (!@copy($this->xmlFile, $backupFile)) {
+                // Backup failed but don't stop the operation
+                error_log("Warning: Failed to create backup at $backupFile");
+            } else {
+                @chmod($backupFile, 0666);
+            }
 
             // Keep only last 10 backups
             $this->cleanupBackups();

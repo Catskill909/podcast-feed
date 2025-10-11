@@ -162,7 +162,21 @@ class ImageUploader
         $filePath = COVERS_DIR . '/' . $filename;
 
         if (file_exists($filePath)) {
-            return unlink($filePath);
+            // Ensure file is writable before deleting
+            if (!is_writable($filePath)) {
+                @chmod($filePath, 0666);
+            }
+            
+            // Ensure directory is writable
+            if (!is_writable(COVERS_DIR)) {
+                @chmod(COVERS_DIR, 0777);
+            }
+            
+            if (!@unlink($filePath)) {
+                error_log("Warning: Failed to delete image file: $filePath");
+                return false;
+            }
+            return true;
         }
 
         return true; // File doesn't exist, consider it deleted
