@@ -1,7 +1,29 @@
 # 🚀 Production Deployment Checklist
 
-**Last Updated:** 2025-10-10  
+**Last Updated:** 2025-10-11  
 **Feature:** RSS Feed Auto-Import
+
+---
+
+## 🚨 CRITICAL: AFTER EVERY DEPLOYMENT
+
+**YOU MUST RUN THESE COMMANDS IN COOLIFY TERMINAL:**
+
+```bash
+cd /app
+chown -R 65534:65534 data uploads logs
+chmod -R 755 data uploads logs
+```
+
+**Why:** Files reset to `root:root` on deploy, PHP runs as `nobody` (UID 65534)  
+**If you skip this:** ALL file operations will fail with permission errors  
+**Time required:** 30 seconds  
+**Frequency:** EVERY SINGLE DEPLOYMENT
+
+**Verify it worked:**
+1. Visit `https://your-domain.com/check-user.php`
+2. All directories should show "✅ Writable"
+3. Try deleting a podcast
 
 ---
 
