@@ -520,11 +520,21 @@ class PodcastApp {
         contentElement.textContent = 'Loading feed...';
 
         try {
-            const response = await fetch(url);
+            // Use proxy to avoid CORS issues with external feeds
+            const proxyUrl = `api/fetch-feed.php?url=${encodeURIComponent(url)}`;
+            const response = await fetch(proxyUrl);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const xmlText = await response.text();
+            
+            // Check if response is an error XML
+            if (xmlText.includes('<error>')) {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                const errorMsg = xmlDoc.querySelector('error')?.textContent || 'Unknown error';
+                throw new Error(errorMsg);
+            }
             
             // Format XML for display
             const formatted = this.formatXML(xmlText);

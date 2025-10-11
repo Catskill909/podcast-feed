@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<podcast_directory version="1.0" last_updated="2025-10-10T16:46:26+00:00">
+<podcast_directory version="1.0" last_updated="2025-10-11T00:40:21+00:00">
   <metadata>
-    <total_podcasts>4</total_podcasts>
+    <total_podcasts>5</total_podcasts>
     <created>2025-10-09T17:37:03+00:00</created>
     <generator>Podcast Directory Manager v1.0.0</generator>
   </metadata>
@@ -40,6 +40,15 @@
       <cover_image>pod_1760114786_68e938625c909.jpg</cover_image>
       <created_date>2025-10-10T16:46:26+00:00</created_date>
       <updated_date>2025-10-10T16:46:26+00:00</updated_date>
+      <status>active</status>
+    </podcast>
+    <podcast id="pod_1760143221_68e9a7756d076">
+      <title><![CDATA[WJFF - Radio Chatskill]]></title>
+      <feed_url><![CDATA[https://archive.wjffradio.org/getrss.php?id=radiochatskil]]></feed_url>
+      <description><![CDATA[Live, local conversations focused on arts, history, and current news.]]></description>
+      <cover_image>pod_1760143221_68e9a7756d076.jpg</cover_image>
+      <created_date>2025-10-11T00:40:21+00:00</created_date>
+      <updated_date>2025-10-11T00:40:21+00:00</updated_date>
       <status>active</status>
     </podcast>
   </podcasts>
