@@ -2,6 +2,40 @@
 
 A modern, feature-rich podcast directory management system with RSS feed auto-import, health monitoring, and a beautiful dark-themed interface.
 
+---
+
+## 🚨 CRITICAL: READ THESE FIRST
+
+### **For Production Deployment (Coolify/Nixpacks)**
+
+**⚠️ MUST RUN AFTER EVERY DEPLOYMENT:**
+
+```bash
+cd /app
+chown -R 65534:65534 data uploads logs
+chmod -R 755 data uploads logs
+```
+
+**Why:** Files reset to `root:root` on deploy, PHP runs as `nobody` (UID 65534)  
+**If you skip:** ALL file operations fail with permission errors  
+**Time:** 30 seconds  
+**Docs:** See [PRODUCTION-DEPLOYMENT-FINAL.md](PRODUCTION-DEPLOYMENT-FINAL.md)
+
+### **Essential Documentation**
+
+**MUST READ before deploying or debugging:**
+
+1. 🔴 **[PRODUCTION-DEPLOYMENT-FINAL.md](PRODUCTION-DEPLOYMENT-FINAL.md)** - Permission fix (prevents hours of debugging)
+2. 📋 **[DEPLOYMENT-CHECKLIST.md](DEPLOYMENT-CHECKLIST.md)** - Step-by-step deployment guide
+3. 🐛 **[production-delete-bug.md](production-delete-bug.md)** - Common issues and solutions
+4. 🚨 **[CRITICAL-FAILURE-ANALYSIS.md](CRITICAL-FAILURE-ANALYSIS.md)** - What NOT to do
+
+**Quick Diagnostics:**
+- Visit `/check-user.php` in production to verify permissions
+- All directories should show "✅ Writable"
+
+---
+
 ## 🚀 Features
 
 ### **Core Features**
