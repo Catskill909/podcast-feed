@@ -195,33 +195,43 @@ if (isset($_GET['edit'])) {
                         </div>
                     </div>
                     
-                    <!-- Auto-Scan Status -->
-                    <div style="display: flex; align-items: center; gap: var(--spacing-sm); color: var(--text-muted); font-size: var(--font-size-sm);">
-                        <i class="fa-solid fa-rotate" style="color: var(--accent-primary);"></i>
-                        <span id="autoScanStatus">
-                            <?php
-                            $lastScanFile = __DIR__ . '/data/last-scan.txt';
-                            if (file_exists($lastScanFile)) {
-                                $lastScan = file_get_contents($lastScanFile);
-                                $lastScanTime = strtotime($lastScan);
-                                $timeAgo = time() - $lastScanTime;
-                                
-                                if ($timeAgo < 60) {
-                                    echo 'Auto-scan: Just now';
-                                } elseif ($timeAgo < 3600) {
-                                    $mins = floor($timeAgo / 60);
-                                    echo 'Auto-scan: ' . $mins . ' min' . ($mins != 1 ? 's' : '') . ' ago';
+                    <!-- Auto-Sync Status -->
+                    <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                        <div style="display: flex; align-items: center; gap: var(--spacing-sm); color: var(--text-muted); font-size: var(--font-size-sm);">
+                            <i class="fa-solid fa-rotate" style="color: var(--accent-primary);"></i>
+                            <span id="autoScanStatus">
+                                <?php
+                                $lastScanFile = __DIR__ . '/data/last-scan.txt';
+                                if (file_exists($lastScanFile)) {
+                                    $lastScan = file_get_contents($lastScanFile);
+                                    $lastScanTime = strtotime($lastScan);
+                                    $timeAgo = time() - $lastScanTime;
+                                    
+                                    if ($timeAgo < 60) {
+                                        echo 'Auto-scan: Just now';
+                                    } elseif ($timeAgo < 3600) {
+                                        $mins = floor($timeAgo / 60);
+                                        echo 'Auto-scan: ' . $mins . ' min' . ($mins != 1 ? 's' : '') . ' ago';
+                                    } else {
+                                        echo 'Auto-scan: ' . date('g:i A', $lastScanTime);
+                                    }
                                 } else {
-                                    echo 'Auto-scan: ' . date('g:i A', $lastScanTime);
+                                    echo 'Auto-scan: Active (every 30 min)';
                                 }
-                            } else {
-                                echo 'Auto-scan: Active (every 30 min)';
-                            }
-                            ?>
-                        </span>
-                        <span class="tooltip" data-tooltip="Feeds automatically update every 30 minutes">
-                            <i class="fa-solid fa-circle-info" style="font-size: 12px;"></i>
-                        </span>
+                                ?>
+                            </span>
+                            <span class="tooltip" data-tooltip="Feeds automatically update every 30 minutes">
+                                <i class="fa-solid fa-circle-info" style="font-size: 12px;"></i>
+                            </span>
+                        </div>
+                        
+                        <!-- Sort Sync Indicator -->
+                        <div style="display: flex; align-items: center; gap: var(--spacing-sm); color: var(--text-muted); font-size: var(--font-size-sm);">
+                            <i class="fa-solid fa-arrows-rotate" style="color: var(--accent-success);"></i>
+                            <span class="tooltip" data-tooltip="Sort preferences sync automatically across browsers">
+                                Auto-sync: Active
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <?php endif; ?>

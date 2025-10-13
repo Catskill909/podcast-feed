@@ -8,6 +8,7 @@ class SortManager {
         this.currentSort = this.loadSortPreference();
         this.sortOptions = this.defineSortOptions();
         this.isDropdownOpen = false;
+        this.pollingInterval = null;
         this.init();
     }
 
@@ -22,12 +23,15 @@ class SortManager {
         
         // Load preference from server and update if different
         this.syncWithServer();
+        
+        // Start polling for changes every 30 seconds
+        this.startPolling();
     }
 
     /**
      * Sync with server preference on page load
      */
-    async syncWithServer() {
+    async syncWithServer(showNotification = false) {
         const serverSort = await this.loadSortPreferenceFromServer();
         if (serverSort && serverSort !== this.currentSort) {
             // Server has different preference, use it
@@ -46,6 +50,44 @@ class SortManager {
             } catch (error) {
                 console.error('Error updating localStorage:', error);
             }
+            
+            // Show notification if this was from polling (not initial load)
+            if (showNotification && window.podcastApp) {
+                const sortLabel = this.sortOptions[serverSort]?.label || serverSort;
+                window.podcastApp.showAlert(`Sort order updated to: ${sortLabel}`, 'info');
+            }
+        }
+    }
+
+    /**
+     * Start polling server for preference changes
+     */
+    startPolling() {
+        // Poll every 30 seconds
+        this.pollingInterval = setInterval(() => {
+            this.syncWithServer(true); // true = show notification on change
+        }, 30000); // 30 seconds
+        
+        console.log('Sort preference polling started (30s interval)');
+        
+        // Also check when user returns to tab (Page Visibility API)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                // User returned to tab, check for updates
+                console.log('Tab became visible, checking for sort updates...');
+                this.syncWithServer(true);
+            }
+        });
+    }
+
+    /**
+     * Stop polling (cleanup)
+     */
+    stopPolling() {
+        if (this.pollingInterval) {
+            clearInterval(this.pollingInterval);
+            this.pollingInterval = null;
+            console.log('Sort preference polling stopped');
         }
     }
 
