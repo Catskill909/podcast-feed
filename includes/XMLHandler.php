@@ -528,14 +528,14 @@ class XMLHandler
                         $dateB = strtotime($b['created_date'] ?? '1970-01-01');
                     }
                     
-                    $result = $dateA - $dateB;
+                    $result = $dateB - $dateA; // Compare B to A for natural desc order
                     break;
                     
                 case 'date':
                     // Sort by created date
                     $dateA = strtotime($a['created_date'] ?? '1970-01-01');
                     $dateB = strtotime($b['created_date'] ?? '1970-01-01');
-                    $result = $dateA - $dateB;
+                    $result = $dateB - $dateA; // Compare B to A for natural desc order
                     break;
                     
                 case 'title':
@@ -547,12 +547,12 @@ class XMLHandler
                     // Sort by status (active first if desc, inactive first if asc)
                     $statusA = ($a['status'] ?? 'inactive') === 'active' ? 1 : 0;
                     $statusB = ($b['status'] ?? 'inactive') === 'active' ? 1 : 0;
-                    $result = $statusA - $statusB;
+                    $result = $statusB - $statusA; // Compare B to A for natural desc order
                     break;
             }
             
-            // Apply sort order
-            return ($sortOrder === 'desc') ? -$result : $result;
+            // Apply sort order (desc is natural, asc inverts)
+            return ($sortOrder === 'asc') ? -$result : $result;
         });
         
         return $podcasts;
