@@ -5,6 +5,9 @@
  * CRUD interface for managing podcast entries
  */
 
+// Start session for flash messages
+session_start();
+
 require_once __DIR__ . '/includes/PodcastManager.php';
 
 $podcastManager = new PodcastManager();
@@ -56,17 +59,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
     }
 
-    // Redirect to prevent form resubmission
-    if ($result['success']) {
-        header('Location: ' . $_SERVER['PHP_SELF'] . '?success=' . urlencode($message));
-        exit;
-    }
+    // Store message in session and redirect to prevent form resubmission (PRG pattern)
+    $_SESSION['flash_message'] = $message;
+    $_SESSION['flash_type'] = $messageType;
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
 }
 
-// Handle GET success message
-if (isset($_GET['success'])) {
-    $message = $_GET['success'];
-    $messageType = 'success';
+// Retrieve flash message from session
+if (isset($_SESSION['flash_message'])) {
+    $message = $_SESSION['flash_message'];
+    $messageType = $_SESSION['flash_type'];
+    // Clear flash message after displaying
+    unset($_SESSION['flash_message']);
+    unset($_SESSION['flash_type']);
 }
 
 // Get all podcasts
