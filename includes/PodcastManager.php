@@ -67,7 +67,9 @@ class PodcastManager
                 'title' => trim($data['title']),
                 'feed_url' => trim($data['feed_url']),
                 'description' => trim($data['description'] ?? ''),
-                'cover_image' => $coverImage
+                'cover_image' => $coverImage,
+                'latest_episode_date' => $data['latest_episode_date'] ?? '',
+                'episode_count' => $data['episode_count'] ?? '0'
             ];
 
             // Add to XML
@@ -148,6 +150,47 @@ class PodcastManager
             ];
         } catch (Exception $e) {
             $this->logError('UPDATE_ERROR', $e->getMessage());
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Update podcast metadata only (episode date, count)
+     * Used by automated scanner - no validation of title/url
+     */
+    public function updatePodcastMetadata($id, $metadata)
+    {
+        try {
+            // Check if podcast exists
+            $existingPodcast = $this->xmlHandler->getPodcast($id);
+            if (!$existingPodcast) {
+                throw new Exception('Podcast not found');
+            }
+
+            // Only update metadata fields
+            $updateData = [];
+            
+            if (isset($metadata['latest_episode_date'])) {
+                $updateData['latest_episode_date'] = $metadata['latest_episode_date'];
+            }
+            
+            if (isset($metadata['episode_count'])) {
+                $updateData['episode_count'] = $metadata['episode_count'];
+            }
+
+            // Update XML
+            $this->xmlHandler->updatePodcast($id, $updateData);
+
+            return [
+                'success' => true,
+                'id' => $id,
+                'message' => 'Podcast metadata updated successfully'
+            ];
+        } catch (Exception $e) {
+            $this->logError('METADATA_UPDATE_ERROR', $e->getMessage());
             return [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -310,10 +353,10 @@ class PodcastManager
     /**
      * Get RSS feed XML
      */
-    public function getRSSFeed()
+    public function getRSSFeed($sortBy = 'episodes', $sortOrder = 'desc')
     {
         try {
-            return $this->xmlHandler->generateRSSFeed();
+            return $this->xmlHandler->generateRSSFeed($sortBy, $sortOrder);
         } catch (Exception $e) {
             $this->logError('RSS_ERROR', $e->getMessage());
             return false;

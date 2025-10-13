@@ -190,6 +190,10 @@ class XMLHandler
         $created = $this->dom->createElement('created_date', date('c'));
         $updated = $this->dom->createElement('updated_date', date('c'));
         $status = $this->dom->createElement('status', 'active');
+        
+        // Add latest episode date and episode count if provided
+        $latestEpisodeDate = $this->dom->createElement('latest_episode_date', $data['latest_episode_date'] ?? '');
+        $episodeCount = $this->dom->createElement('episode_count', $data['episode_count'] ?? '0');
 
         $podcast->appendChild($title);
         $podcast->appendChild($feedUrl);
@@ -198,6 +202,8 @@ class XMLHandler
         $podcast->appendChild($created);
         $podcast->appendChild($updated);
         $podcast->appendChild($status);
+        $podcast->appendChild($latestEpisodeDate);
+        $podcast->appendChild($episodeCount);
 
         $podcastsNode->appendChild($podcast);
 
@@ -256,6 +262,37 @@ class XMLHandler
             $statusNode = $xpath->query("status", $podcast)->item(0);
             if ($statusNode) {
                 $statusNode->nodeValue = $data['status'];
+            }
+        }
+        
+        // Update latest episode date if provided
+        if (isset($data['latest_episode_date'])) {
+            $latestEpisodeDateNode = $xpath->query("latest_episode_date", $podcast)->item(0);
+            if ($latestEpisodeDateNode) {
+                $latestEpisodeDateNode->nodeValue = $data['latest_episode_date'];
+            } else {
+                // Create node if it doesn't exist (backwards compatibility)
+                $newLatestEpisodeDate = $this->dom->createElement('latest_episode_date', $data['latest_episode_date']);
+                $statusNode = $xpath->query("status", $podcast)->item(0);
+                $podcast->insertBefore($newLatestEpisodeDate, $statusNode->nextSibling);
+            }
+        }
+        
+        // Update episode count if provided
+        if (isset($data['episode_count'])) {
+            $episodeCountNode = $xpath->query("episode_count", $podcast)->item(0);
+            if ($episodeCountNode) {
+                $episodeCountNode->nodeValue = $data['episode_count'];
+            } else {
+                // Create node if it doesn't exist (backwards compatibility)
+                $newEpisodeCount = $this->dom->createElement('episode_count', $data['episode_count']);
+                $latestEpisodeDateNode = $xpath->query("latest_episode_date", $podcast)->item(0);
+                if ($latestEpisodeDateNode) {
+                    $podcast->insertBefore($newEpisodeCount, $latestEpisodeDateNode->nextSibling);
+                } else {
+                    $statusNode = $xpath->query("status", $podcast)->item(0);
+                    $podcast->insertBefore($newEpisodeCount, $statusNode->nextSibling);
+                }
             }
         }
 
@@ -342,7 +379,9 @@ class XMLHandler
             'cover_image' => $xpath->query('cover_image', $node)->item(0)->nodeValue ?? '',
             'created_date' => $xpath->query('created_date', $node)->item(0)->nodeValue ?? '',
             'updated_date' => $xpath->query('updated_date', $node)->item(0)->nodeValue ?? '',
-            'status' => $xpath->query('status', $node)->item(0)->nodeValue ?? 'active'
+            'status' => $xpath->query('status', $node)->item(0)->nodeValue ?? 'active',
+            'latest_episode_date' => $xpath->query('latest_episode_date', $node)->item(0)->nodeValue ?? '',
+            'episode_count' => $xpath->query('episode_count', $node)->item(0)->nodeValue ?? '0'
         ];
     }
 
@@ -368,7 +407,7 @@ class XMLHandler
     /**
      * Generate RSS feed XML
      */
-    public function generateRSSFeed()
+    public function generateRSSFeed($sortBy = 'episodes', $sortOrder = 'desc')
     {
         try {
             $this->loadXML();
@@ -399,8 +438,9 @@ class XMLHandler
             $channel->appendChild($rss->createElement('lastBuildDate', date('r')));
             $channel->appendChild($rss->createElement('generator', APP_NAME . ' v' . APP_VERSION));
 
-            // Add podcast items
+            // Add podcast items (sorted)
             $podcasts = $this->getAllPodcasts();
+            $podcasts = $this->sortPodcasts($podcasts, $sortBy, $sortOrder);
             foreach ($podcasts as $podcast) {
                 if (isset($podcast['status']) && $podcast['status'] === 'active') {
                     $item = $rss->createElement('item');
@@ -464,5 +504,57 @@ class XMLHandler
 
             return $errorRss->saveXML();
         }
+    }
+    
+    /**
+     * Sort podcasts array by specified criteria
+     */
+    private function sortPodcasts($podcasts, $sortBy, $sortOrder)
+    {
+        usort($podcasts, function($a, $b) use ($sortBy, $sortOrder) {
+            $result = 0;
+            
+            switch($sortBy) {
+                case 'episodes':
+                    // Sort by latest episode date
+                    $dateA = !empty($a['latest_episode_date']) ? strtotime($a['latest_episode_date']) : 0;
+                    $dateB = !empty($b['latest_episode_date']) ? strtotime($b['latest_episode_date']) : 0;
+                    
+                    // If no episode date, fall back to created date
+                    if ($dateA === 0) {
+                        $dateA = strtotime($a['created_date'] ?? '1970-01-01');
+                    }
+                    if ($dateB === 0) {
+                        $dateB = strtotime($b['created_date'] ?? '1970-01-01');
+                    }
+                    
+                    $result = $dateA - $dateB;
+                    break;
+                    
+                case 'date':
+                    // Sort by created date
+                    $dateA = strtotime($a['created_date'] ?? '1970-01-01');
+                    $dateB = strtotime($b['created_date'] ?? '1970-01-01');
+                    $result = $dateA - $dateB;
+                    break;
+                    
+                case 'title':
+                    // Sort alphabetically by title
+                    $result = strcasecmp($a['title'] ?? '', $b['title'] ?? '');
+                    break;
+                    
+                case 'status':
+                    // Sort by status (active first if desc, inactive first if asc)
+                    $statusA = ($a['status'] ?? 'inactive') === 'active' ? 1 : 0;
+                    $statusB = ($b['status'] ?? 'inactive') === 'active' ? 1 : 0;
+                    $result = $statusA - $statusB;
+                    break;
+            }
+            
+            // Apply sort order
+            return ($sortOrder === 'desc') ? -$result : $result;
+        });
+        
+        return $podcasts;
     }
 }

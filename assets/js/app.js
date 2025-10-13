@@ -481,7 +481,24 @@ class PodcastApp {
      * Show feed modal with main RSS feed
      */
     async showFeedModal() {
-        const feedUrl = window.location.origin + '/feed.php';
+        // Get current sort from SortManager if available
+        let feedUrl = window.location.origin + '/feed.php';
+        
+        if (window.sortManager && window.sortManager.currentSort) {
+            const sortKey = window.sortManager.currentSort;
+            const sortMap = {
+                'date-newest': { sort: 'episodes', order: 'desc' },
+                'date-oldest': { sort: 'episodes', order: 'asc' },
+                'title-az': { sort: 'title', order: 'asc' },
+                'title-za': { sort: 'title', order: 'desc' },
+                'status-active': { sort: 'status', order: 'desc' },
+                'status-inactive': { sort: 'status', order: 'asc' }
+            };
+            
+            const sortParams = sortMap[sortKey] || { sort: 'episodes', order: 'desc' };
+            feedUrl += `?sort=${sortParams.sort}&order=${sortParams.order}`;
+        }
+        
         document.getElementById('feedModalTitle').textContent = 'RSS Feed - All Active Podcasts';
         document.getElementById('feedUrlInput').value = feedUrl;
         
@@ -520,9 +537,19 @@ class PodcastApp {
         contentElement.textContent = 'Loading feed...';
 
         try {
-            // Use proxy to avoid CORS issues with external feeds
-            const proxyUrl = `api/fetch-feed.php?url=${encodeURIComponent(url)}`;
-            const response = await fetch(proxyUrl);
+            // Check if this is a local feed (our own feed.php)
+            const isLocalFeed = url.includes(window.location.origin) || url.startsWith('/feed.php');
+            
+            let response;
+            if (isLocalFeed) {
+                // Fetch local feed directly
+                response = await fetch(url);
+            } else {
+                // Use proxy for external feeds to avoid CORS issues
+                const proxyUrl = `api/fetch-feed.php?url=${encodeURIComponent(url)}`;
+                response = await fetch(proxyUrl);
+            }
+            
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -1115,6 +1142,63 @@ function hideHelpModal() {
     if (modal) {
         modal.classList.remove('show');
         document.body.style.overflow = '';
+    }
+}
+
+// Refresh Feed Metadata Function
+async function refreshFeedMetadata(podcastId) {
+    const button = event.target.closest('button');
+    const originalIcon = button.innerHTML;
+    
+    try {
+        // Show loading state
+        button.disabled = true;
+        button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+        
+        const formData = new FormData();
+        formData.append('podcast_id', podcastId);
+        
+        const response = await fetch('api/refresh-feed-metadata.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Update the row's data attributes
+            const row = button.closest('tr');
+            if (row && result.data) {
+                row.dataset.latestEpisode = result.data.latest_episode_date || '';
+                row.dataset.episodeCount = result.data.episode_count || '0';
+            }
+            
+            // Show success message
+            window.podcastApp.showAlert(
+                `Feed data refreshed! Latest episode: ${result.data.latest_episode_date_formatted || 'Unknown'}`,
+                'success'
+            );
+            
+            // Re-apply current sort to reflect changes
+            if (window.sortManager) {
+                window.sortManager.applySortToTable(window.sortManager.currentSort);
+            }
+        } else {
+            window.podcastApp.showAlert(
+                `Failed to refresh feed data: ${result.error}`,
+                'danger'
+            );
+        }
+    } catch (error) {
+        console.error('Refresh error:', error);
+        window.podcastApp.showAlert(
+            'Network error while refreshing feed data',
+            'danger'
+        );
+    } finally {
+        // Restore button
+        button.disabled = false;
+        button.innerHTML = originalIcon;
     }
 }
 

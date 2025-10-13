@@ -182,11 +182,15 @@ class RssFeedParser
         // Count episodes
         $episodeCount = count($channel->item);
         
+        // Get latest episode date
+        $latestEpisodeDate = $this->getLatestEpisodeDate($channel->item);
+        
         return [
             'title' => $title,
             'description' => $description,
             'image_url' => $imageUrl,
             'episode_count' => $episodeCount,
+            'latest_episode_date' => $latestEpisodeDate,
             'feed_url' => $feedUrl,
             'feed_type' => 'RSS 2.0'
         ];
@@ -218,11 +222,15 @@ class RssFeedParser
         // Count entries
         $episodeCount = count($xml->entry);
         
+        // Get latest episode date
+        $latestEpisodeDate = $this->getLatestEpisodeDateAtom($xml->entry);
+        
         return [
             'title' => $title,
             'description' => $description,
             'image_url' => $imageUrl,
             'episode_count' => $episodeCount,
+            'latest_episode_date' => $latestEpisodeDate,
             'feed_url' => $feedUrl,
             'feed_type' => 'Atom'
         ];
@@ -275,6 +283,130 @@ class RssFeedParser
         
         $text = (string) $element;
         return trim(strip_tags($text));
+    }
+    
+    /**
+     * Get latest episode date from RSS items
+     */
+    private function getLatestEpisodeDate($items)
+    {
+        if (empty($items) || count($items) === 0) {
+            return null;
+        }
+        
+        $latestDate = null;
+        $latestTimestamp = 0;
+        
+        foreach ($items as $item) {
+            // Try pubDate first (RSS standard)
+            $pubDate = $this->extractText($item->pubDate);
+            
+            // If no pubDate, try dc:date (Dublin Core)
+            if (empty($pubDate)) {
+                $namespaces = $item->getNamespaces(true);
+                if (isset($namespaces['dc'])) {
+                    $dc = $item->children($namespaces['dc']);
+                    $pubDate = $this->extractText($dc->date);
+                }
+            }
+            
+            if (!empty($pubDate)) {
+                $timestamp = strtotime($pubDate);
+                if ($timestamp && $timestamp > $latestTimestamp) {
+                    $latestTimestamp = $timestamp;
+                    $latestDate = date('Y-m-d H:i:s', $timestamp);
+                }
+            }
+        }
+        
+        return $latestDate;
+    }
+    
+    /**
+     * Get latest episode date from Atom entries
+     */
+    private function getLatestEpisodeDateAtom($entries)
+    {
+        if (empty($entries) || count($entries) === 0) {
+            return null;
+        }
+        
+        $latestDate = null;
+        $latestTimestamp = 0;
+        
+        foreach ($entries as $entry) {
+            // Try published first
+            $published = $this->extractText($entry->published);
+            
+            // If no published, try updated
+            if (empty($published)) {
+                $published = $this->extractText($entry->updated);
+            }
+            
+            if (!empty($published)) {
+                $timestamp = strtotime($published);
+                if ($timestamp && $timestamp > $latestTimestamp) {
+                    $latestTimestamp = $timestamp;
+                    $latestDate = date('Y-m-d H:i:s', $timestamp);
+                }
+            }
+        }
+        
+        return $latestDate;
+    }
+    
+    /**
+     * Fetch only metadata from a feed (quick check for latest episode)
+     * This is a lightweight version that only gets what we need for sorting
+     */
+    public function fetchFeedMetadata($url)
+    {
+        try {
+            $xmlContent = $this->fetchFeedContent($url);
+            if (!$xmlContent) {
+                return [
+                    'success' => false,
+                    'error' => 'Unable to fetch feed'
+                ];
+            }
+            
+            libxml_use_internal_errors(true);
+            $xml = simplexml_load_string($xmlContent);
+            
+            if ($xml === false) {
+                return [
+                    'success' => false,
+                    'error' => 'Invalid XML'
+                ];
+            }
+            
+            $feedType = $this->detectFeedType($xml);
+            $latestEpisodeDate = null;
+            $episodeCount = 0;
+            
+            if ($feedType === 'rss') {
+                $channel = $xml->channel;
+                if ($channel) {
+                    $episodeCount = count($channel->item);
+                    $latestEpisodeDate = $this->getLatestEpisodeDate($channel->item);
+                }
+            } elseif ($feedType === 'atom') {
+                $episodeCount = count($xml->entry);
+                $latestEpisodeDate = $this->getLatestEpisodeDateAtom($xml->entry);
+            }
+            
+            return [
+                'success' => true,
+                'latest_episode_date' => $latestEpisodeDate,
+                'episode_count' => $episodeCount
+            ];
+            
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
     }
     
     /**

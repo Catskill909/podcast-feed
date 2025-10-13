@@ -97,6 +97,7 @@ if (isset($_GET['edit'])) {
     
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/sort-controls.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
     
     <!-- Simple Password Protection - ALWAYS ACTIVE -->
@@ -172,6 +173,53 @@ if (isset($_GET['edit'])) {
                     </div>
                 </div>
 
+                <!-- Sort Controls -->
+                <?php if (!empty($podcasts)): ?>
+                <div style="padding: 0 var(--spacing-xl) var(--spacing-md) var(--spacing-xl); display: flex; justify-content: space-between; align-items: center; gap: var(--spacing-md);">
+                    <div class="sort-controls">
+                        <button type="button" id="sortButton" class="sort-button" aria-haspopup="true" aria-expanded="false">
+                            <span style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                                <i class="fa-solid fa-arrow-down-wide-short"></i>
+                                <span id="currentSortLabel">Newest Episodes</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-down sort-chevron"></i>
+                        </button>
+                        <div id="sortDropdown" class="sort-dropdown" role="menu">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Auto-Scan Status -->
+                    <div style="display: flex; align-items: center; gap: var(--spacing-sm); color: var(--text-muted); font-size: var(--font-size-sm);">
+                        <i class="fa-solid fa-rotate" style="color: var(--accent-primary);"></i>
+                        <span id="autoScanStatus">
+                            <?php
+                            $lastScanFile = __DIR__ . '/data/last-scan.txt';
+                            if (file_exists($lastScanFile)) {
+                                $lastScan = file_get_contents($lastScanFile);
+                                $lastScanTime = strtotime($lastScan);
+                                $timeAgo = time() - $lastScanTime;
+                                
+                                if ($timeAgo < 60) {
+                                    echo 'Auto-scan: Just now';
+                                } elseif ($timeAgo < 3600) {
+                                    $mins = floor($timeAgo / 60);
+                                    echo 'Auto-scan: ' . $mins . ' min' . ($mins != 1 ? 's' : '') . ' ago';
+                                } else {
+                                    echo 'Auto-scan: ' . date('g:i A', $lastScanTime);
+                                }
+                            } else {
+                                echo 'Auto-scan: Active (every 30 min)';
+                            }
+                            ?>
+                        </span>
+                        <span class="tooltip" data-tooltip="Feeds automatically update every 30 minutes">
+                            <i class="fa-solid fa-circle-info" style="font-size: 12px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <?php endif; ?>
+
                 <?php if (empty($podcasts)): ?>
                     <div class="empty-state">
                         <div class="empty-state-icon">🎧</div>
@@ -193,6 +241,7 @@ if (isset($_GET['edit'])) {
                                     <th>Title</th>
                                     <th>Feed URL</th>
                                     <th>Status</th>
+                                    <th>Latest Episode</th>
                                     <th>Created</th>
                                     <th>Actions</th>
                                 </tr>
@@ -200,7 +249,9 @@ if (isset($_GET['edit'])) {
                             <tbody>
                                 <?php foreach ($podcasts as $podcast): ?>
                                     <tr data-podcast-id="<?php echo htmlspecialchars($podcast['id']); ?>" 
-                                        data-description="<?php echo htmlspecialchars($podcast['description'] ?? ''); ?>">
+                                        data-description="<?php echo htmlspecialchars($podcast['description'] ?? ''); ?>"
+                                        data-latest-episode="<?php echo htmlspecialchars($podcast['latest_episode_date'] ?? ''); ?>"
+                                        data-episode-count="<?php echo htmlspecialchars($podcast['episode_count'] ?? '0'); ?>">
                                         <td>
                                             <?php if ($podcast['cover_image'] && $podcast['image_info']): ?>
                                                 <img src="<?php echo htmlspecialchars($podcast['image_info']['url']); ?>"
@@ -215,11 +266,12 @@ if (isset($_GET['edit'])) {
                                             <strong><?php echo htmlspecialchars($podcast['title']); ?></strong>
                                         </td>
                                         <td>
-                                            <a href="#" 
+                                            <button type="button" 
+                                                class="btn btn-outline btn-sm"
                                                 onclick="showPodcastFeedModal('<?php echo htmlspecialchars($podcast['feed_url']); ?>', '<?php echo htmlspecialchars($podcast['title']); ?>'); return false;"
-                                                title="Click to view feed">
-                                                <?php echo htmlspecialchars(strlen($podcast['feed_url']) > 50 ? substr($podcast['feed_url'], 0, 50) . '...' : $podcast['feed_url']); ?>
-                                            </a>
+                                                title="<?php echo htmlspecialchars($podcast['feed_url']); ?>">
+                                                <i class="fa-solid fa-rss"></i> View Feed
+                                            </button>
                                         </td>
                                         <td>
                                             <button type="button" 
@@ -230,10 +282,40 @@ if (isset($_GET['edit'])) {
                                             </button>
                                         </td>
                                         <td class="text-muted">
+                                            <?php 
+                                            if (!empty($podcast['latest_episode_date'])) {
+                                                $epDate = strtotime($podcast['latest_episode_date']);
+                                                $now = time();
+                                                $diff = $now - $epDate;
+                                                
+                                                if ($diff < 0) {
+                                                    // Future date (shouldn't happen, but handle it)
+                                                    echo '<span style="color: var(--accent-primary); font-weight: 500;">Today</span>';
+                                                } elseif ($diff < 86400) { // Less than 24 hours
+                                                    echo '<span style="color: var(--accent-primary); font-weight: 500;">Today</span>';
+                                                } elseif ($diff < 172800) { // Less than 48 hours
+                                                    echo '<span style="color: var(--accent-primary);">Yesterday</span>';
+                                                } elseif ($diff < 604800) { // Less than 7 days
+                                                    echo '<span style="color: var(--accent-primary);">' . floor($diff / 86400) . ' days ago</span>';
+                                                } else {
+                                                    // Older than 7 days - show regular date, no green
+                                                    echo '<span class="text-muted">' . date('M j, Y', $epDate) . '</span>';
+                                                }
+                                            } else {
+                                                echo '<span style="color: var(--text-muted); font-style: italic;">Unknown</span>';
+                                            }
+                                            ?>
+                                        </td>
+                                        <td class="text-muted">
                                             <?php echo date('M j, Y', strtotime($podcast['created_date'])); ?>
                                         </td>
                                         <td>
                                             <div class="table-actions">
+                                                <button type="button" class="btn btn-outline btn-sm tooltip"
+                                                    data-tooltip="Refresh Feed Data"
+                                                    onclick="refreshFeedMetadata('<?php echo htmlspecialchars($podcast['id']); ?>')">
+                                                    <i class="fa-solid fa-rotate"></i>
+                                                </button>
                                                 <button type="button" class="btn btn-outline btn-sm tooltip"
                                                     data-tooltip="Check Health"
                                                     onclick="checkPodcastHealth('<?php echo htmlspecialchars($podcast['id']); ?>', '<?php echo htmlspecialchars($podcast['title']); ?>')">
@@ -1036,6 +1118,38 @@ if (isset($_GET['edit'])) {
                     </div>
                 </div>
 
+                <!-- Sorting & Automation -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">🔄</span>
+                        Sorting & Automated Updates
+                    </h3>
+                    <div class="help-section-content">
+                        <p><strong>Smart Sorting Options:</strong></p>
+                        <ul>
+                            <li><strong>Newest Episodes</strong> - Shows podcasts with the latest episodes first (perfect for finding fresh content!)</li>
+                            <li><strong>Oldest Episodes</strong> - Shows podcasts that haven't updated recently</li>
+                            <li><strong>A-Z / Z-A</strong> - Alphabetical sorting by podcast title</li>
+                            <li><strong>Active/Inactive First</strong> - Sort by podcast status</li>
+                        </ul>
+                        <p><strong>How to Use:</strong></p>
+                        <ul>
+                            <li>Click the <strong>sort dropdown</strong> below "Podcast Directory" title</li>
+                            <li>Choose your preferred sort option</li>
+                            <li>Table updates instantly - your choice is saved automatically</li>
+                            <li>Click <strong>"View Feed"</strong> to see RSS with your current sort applied</li>
+                        </ul>
+                        <p><strong>Automated Updates:</strong></p>
+                        <ul>
+                            <li><strong>Auto-scan runs every 30 minutes</strong> - checks all podcast feeds for new episodes</li>
+                            <li><strong>Latest Episode column</strong> shows when each podcast last published (Today, Yesterday, or date)</li>
+                            <li><strong>Refresh button (🔄)</strong> - manually update any podcast's episode data instantly</li>
+                            <li><strong>Status indicator</strong> - see "Auto-scan: X mins ago" to know when last scan ran</li>
+                        </ul>
+                        <p><strong>Pro Tip:</strong> Use "Newest Episodes" sort to quickly see which podcasts have fresh content!</p>
+                    </div>
+                </div>
+
                 <!-- Tips & Best Practices -->
                 <div class="help-section">
                     <h3 class="help-section-title">
@@ -1050,6 +1164,7 @@ if (isset($_GET['edit'])) {
                             <li><strong>Use descriptive titles</strong> - helps with search and organization</li>
                             <li><strong>Check iTunes namespace</strong> - ensures Apple Podcasts compatibility</li>
                             <li><strong>Toggle inactive</strong> instead of delete - keeps history and allows reactivation</li>
+                            <li><strong>Watch the Latest Episode column</strong> - green text means recent activity!</li>
                         </ul>
                     </div>
                 </div>
@@ -1124,6 +1239,7 @@ if (isset($_GET['edit'])) {
     <!-- JavaScript -->
     <script src="assets/js/validation.js"></script>
     <script src="assets/js/app.js"></script>
+    <script src="assets/js/sort-manager.js"></script>
 </body>
 
 </html>

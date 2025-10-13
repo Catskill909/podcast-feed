@@ -35,10 +35,17 @@ git push origin main
 
 ### **Essential Documentation**
 
+#### Deployment:
 1. 📋 **[DEPLOYMENT-CHECKLIST.md](DEPLOYMENT-CHECKLIST.md)** - Complete deployment guide
 2. ⚡ **[QUICK-START-DEPLOYMENT-FIX.md](QUICK-START-DEPLOYMENT-FIX.md)** - Fast setup guide
 3. 📊 **[DEPLOYMENT-ANALYSIS-SUMMARY.md](DEPLOYMENT-ANALYSIS-SUMMARY.md)** - Technical deep dive
 4. 🔒 **[SECURITY-AUDIT.md](SECURITY-AUDIT.md)** - Security best practices
+
+#### Automation & Sorting (NEW):
+5. 🚀 **[PRODUCTION-DEPLOYMENT-READY.md](PRODUCTION-DEPLOYMENT-READY.md)** - Production readiness guide
+6. 🔄 **[AUTOMATION-COMPLETE.md](AUTOMATION-COMPLETE.md)** - Automated scanning setup
+7. 📊 **[SERVER-SIDE-SORTING-COMPLETE.md](SERVER-SIDE-SORTING-COMPLETE.md)** - Sorting implementation
+8. 📝 **[sort-options.md](sort-options.md)** - Original planning document
 
 **Quick Diagnostics:**
 - Visit `/check-user.php` in production to verify permissions
@@ -50,8 +57,8 @@ git push origin main
 
 ### **Core Features**
 - **Full CRUD Operations**: Create, Read, Update, Delete podcast entries
-- **RSS Feed Auto-Import** ✨ NEW: Import podcasts from any RSS feed with one click
-- **Podcast Health Check** ✨ NEW: Validate RSS 2.0 structure, iTunes namespace, and feed accessibility
+- **RSS Feed Auto-Import** ✨: Import podcasts from any RSS feed with one click
+- **Podcast Health Check** ✨: Validate RSS 2.0 structure, iTunes namespace, and feed accessibility
 - **Image Management**: Upload or auto-download cover images with validation
 - **XML-Based Storage**: Lightweight file-based storage system
 - **RSS Feed Generation**: Standard-compliant RSS feed output for app integration
@@ -59,6 +66,14 @@ git push origin main
 - **Real-time Validation**: Client-side and server-side form validation
 - **Search & Filter**: Search through podcast entries
 - **Custom Password Protection**: Beautiful dark mode authentication modal
+
+### **🆕 Automated Features (October 2025)**
+- **Automated Feed Scanning** 🔄: Cron job updates episode dates every 30 minutes automatically
+- **Smart Sorting** 📊: Server-side sorting by latest episode dates, title, or status
+- **Episode Date Tracking** 📅: Automatically extracts and stores latest episode publication dates
+- **Sort Synchronization** 🔗: Admin panel and RSS feed sorting stay in sync
+- **Zero Maintenance** ✨: Set it and forget it - fully automated updates
+- **Production Ready** 🚀: Auto-detects environment, handles HTTPS, no hardcoded URLs
 
 ## 📋 Requirements
 
@@ -151,6 +166,26 @@ podcast-feed/
 3. View detailed results with color-coded status badges
 4. Click "Check Again" to re-run validation
 
+### **Sorting & Filtering** 📊 NEW
+
+1. **Sort Options**: Click the sort dropdown to choose:
+   - **Newest Episodes**: Shows podcasts with latest episodes first (default)
+   - **Oldest Episodes**: Shows podcasts with oldest episodes first
+   - **A-Z**: Alphabetical by title
+   - **Z-A**: Reverse alphabetical
+   - **Active First**: Active podcasts at top
+   - **Inactive First**: Inactive podcasts at top
+
+2. **View Feed**: Click "View Feed" button
+   - Shows RSS XML with current sort applied
+   - URL includes sort parameters automatically
+   - Copy URL for use in podcast apps
+
+3. **Refresh Feed Data**: Click 🔄 button on any podcast
+   - Fetches latest episode date from RSS feed
+   - Updates episode count
+   - Re-sorts automatically
+
 ### **Other Actions**
 
 - **Edit**: Click ✏️ to modify podcast details
@@ -158,6 +193,40 @@ podcast-feed/
 - **Toggle Status**: Click status badge to activate/deactivate
 - **View Feed**: Click feed URL to see RSS XML
 - **Stats**: Click "Stats" in navigation for directory statistics
+
+## 📡 RSS Feed URLs
+
+### For Podcast Apps
+
+Your RSS feed supports sorting parameters for different use cases:
+
+```
+# Default (Newest episodes first - recommended)
+https://your-domain.com/feed.php
+
+# With explicit sort parameters
+https://your-domain.com/feed.php?sort=episodes&order=desc  # Newest episodes
+https://your-domain.com/feed.php?sort=episodes&order=asc   # Oldest episodes
+https://your-domain.com/feed.php?sort=title&order=asc      # Alphabetical A-Z
+https://your-domain.com/feed.php?sort=date&order=desc      # Newest added
+https://your-domain.com/feed.php?sort=status&order=desc    # Active first
+```
+
+### Sort Parameters
+
+| Parameter | Values | Description |
+|-----------|--------|-------------|
+| `sort` | `episodes`, `date`, `title`, `status` | What to sort by |
+| `order` | `asc`, `desc` | Ascending or descending |
+
+**Default**: `sort=episodes&order=desc` (newest episodes first)
+
+### Automated Updates
+
+- Feed automatically updates every 30 minutes via cron job
+- Latest episode dates fetched from source RSS feeds
+- No manual refresh required
+- Always shows freshest content
 
 ## 🔧 Configuration
 

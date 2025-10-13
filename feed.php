@@ -9,12 +9,32 @@ require_once __DIR__ . '/includes/PodcastManager.php';
 
 // Set proper headers for XML output
 header('Content-Type: application/rss+xml; charset=UTF-8');
-header('Cache-Control: no-cache, must-revalidate');
-header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 3600) . ' GMT'); // Cache for 1 hour
+header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
 
 try {
+    // Get sort parameters from URL
+    $sortBy = $_GET['sort'] ?? 'episodes'; // Default to episodes (latest episode date)
+    $sortOrder = $_GET['order'] ?? 'desc'; // Default to descending (newest first)
+    
+    // Validate parameters
+    $allowedSorts = ['episodes', 'date', 'title', 'status'];
+    $allowedOrders = ['asc', 'desc'];
+    
+    if (!in_array($sortBy, $allowedSorts)) {
+        $sortBy = 'episodes';
+    }
+    if (!in_array($sortOrder, $allowedOrders)) {
+        $sortOrder = 'desc';
+    }
+    
     $podcastManager = new PodcastManager();
-    $rssXml = $podcastManager->getRSSFeed();
+    $rssXml = $podcastManager->getRSSFeed($sortBy, $sortOrder);
+    
+    // Add debug comment to XML
+    $debugComment = "<!-- Sorted by: $sortBy, Order: $sortOrder, Generated: " . date('Y-m-d H:i:s') . " -->\n";
+    $rssXml = str_replace('<rss ', $debugComment . '<rss ', $rssXml);
 
     if ($rssXml === false) {
         // Return error in RSS format
