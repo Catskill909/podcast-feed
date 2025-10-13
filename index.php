@@ -1155,7 +1155,15 @@ if (isset($_GET['edit'])) {
                             <li>Table updates instantly - your choice is saved automatically</li>
                             <li>Click <strong>"View Feed"</strong> to see RSS with your current sort applied</li>
                         </ul>
-                        <p><strong>Automated Updates:</strong></p>
+                        <p><strong>Auto-Sync Across Browsers:</strong></p>
+                        <ul>
+                            <li><strong>Changes sync automatically</strong> - no hard refresh needed!</li>
+                            <li><strong>Works across all browsers</strong> - change sort on one machine, see it everywhere</li>
+                            <li><strong>Updates every 30 seconds</strong> - checks for changes in the background</li>
+                            <li><strong>Instant when switching tabs</strong> - updates immediately when you return to the app</li>
+                            <li><strong>External apps stay in sync</strong> - your mobile app always gets the correct order</li>
+                        </ul>
+                        <p><strong>Automated Episode Updates:</strong></p>
                         <ul>
                             <li><strong>Auto-scan runs every 30 minutes</strong> - checks all podcast feeds for new episodes</li>
                             <li><strong>Latest Episode column</strong> shows when each podcast last published (Today, Yesterday, or date)</li>

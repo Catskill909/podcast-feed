@@ -72,7 +72,9 @@ git push origin main
 - **Automated Feed Scanning** 🔄: Cron job updates episode dates every 30 minutes automatically
 - **Smart Sorting** 📊: Server-side sorting by latest episode dates, title, or status
 - **Episode Date Tracking** 📅: Automatically extracts and stores latest episode publication dates
-- **Sort Synchronization** 🔗: Admin panel and RSS feed sorting stay in sync
+- **Sort Persistence** 💾: Sort preferences saved server-side for consistent feed output
+- **Auto-Sync Across Browsers** 🔄: Changes sync automatically across all browsers and machines
+- **Real-Time Updates** ⚡: No hard refresh needed - polls for changes every 30 seconds
 - **Zero Maintenance** ✨: Set it and forget it - fully automated updates
 - **Production Ready** 🚀: Auto-detects environment, handles HTTPS, no hardcoded URLs
 
@@ -177,12 +179,19 @@ podcast-feed/
    - **Active First**: Active podcasts at top
    - **Inactive First**: Inactive podcasts at top
 
-2. **View Feed**: Click "View Feed" button
+2. **Auto-Sync**: Sort preferences sync automatically
+   - Changes save to server instantly
+   - All browsers/machines see same order
+   - External apps (Flutter) get correctly sorted feed
+   - Polls for changes every 30 seconds
+   - No hard refresh needed!
+
+3. **View Feed**: Click "View Feed" button
    - Shows RSS XML with current sort applied
    - URL includes sort parameters automatically
    - Copy URL for use in podcast apps
 
-3. **Refresh Feed Data**: Click 🔄 button on any podcast
+4. **Refresh Feed Data**: Click 🔄 button on any podcast
    - Fetches latest episode date from RSS feed
    - Updates episode count
    - Re-sorts automatically
@@ -199,19 +208,25 @@ podcast-feed/
 
 ### For Podcast Apps
 
-Your RSS feed supports sorting parameters for different use cases:
+Your RSS feed uses **server-side sort preferences** for consistent output:
 
 ```
-# Default (Newest episodes first - recommended)
+# Default (uses saved preference from admin panel)
 https://your-domain.com/feed.php
 
-# With explicit sort parameters
+# Override with explicit sort parameters
 https://your-domain.com/feed.php?sort=episodes&order=desc  # Newest episodes
 https://your-domain.com/feed.php?sort=episodes&order=asc   # Oldest episodes
 https://your-domain.com/feed.php?sort=title&order=asc      # Alphabetical A-Z
 https://your-domain.com/feed.php?sort=date&order=desc      # Newest added
 https://your-domain.com/feed.php?sort=status&order=desc    # Active first
 ```
+
+**How It Works:**
+- Admin changes sort in any browser → Saves to server
+- `feed.php` reads saved preference as default
+- External apps get consistently sorted feed
+- URL parameters can override saved preference
 
 ### Sort Parameters
 
@@ -220,14 +235,15 @@ https://your-domain.com/feed.php?sort=status&order=desc    # Active first
 | `sort` | `episodes`, `date`, `title`, `status` | What to sort by |
 | `order` | `asc`, `desc` | Ascending or descending |
 
-**Default**: `sort=episodes&order=desc` (newest episodes first)
+**Default**: Uses saved preference from admin panel (changeable anytime)
 
 ### Automated Updates
 
-- Feed automatically updates every 30 minutes via cron job
-- Latest episode dates fetched from source RSS feeds
-- No manual refresh required
-- Always shows freshest content
+- **Episode Data**: Feed automatically updates every 30 minutes via cron job
+- **Sort Preferences**: Sync across all browsers automatically (30-second polling)
+- **Latest Episode Dates**: Fetched from source RSS feeds automatically
+- **No Manual Refresh**: Changes appear automatically in all browsers
+- **Always Fresh**: Content and sorting stay current
 
 ## 🔧 Configuration
 
@@ -427,8 +443,8 @@ For issues, questions, or feature requests:
 
 ---
 
-**Version**: 2.0.0  
-**Last Updated**: October 2025  
+**Version**: 2.1.0  
+**Last Updated**: October 13, 2025  
 **Compatibility**: PHP 7.4+, Modern Browsers  
-**Status**: ✅ Production Ready - Deployment Issues Solved  
-**Features**: RSS Auto-Import, Health Check, Material Design UI, Persistent Storage
+**Status**: ✅ Production Ready - Fully Automated  
+**Features**: RSS Auto-Import, Health Check, Auto-Sync Sorting, Material Design UI, Persistent Storage
