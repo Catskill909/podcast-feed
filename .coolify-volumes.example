@@ -1,0 +1,50 @@
+# Coolify Persistent Volumes Configuration
+# Copy this configuration to your Coolify dashboard
+
+# HOW TO USE:
+# 1. Go to Coolify Dashboard
+# 2. Select your podcast-feed application
+# 3. Navigate to "Storage" or "Persistent Storage" tab
+# 4. Add these three volumes:
+
+# ============================================
+# VOLUME 1: Data Directory (XML Database)
+# ============================================
+Name: podcast-data
+Source: (leave empty for Docker managed volume)
+Destination: /app/data
+Description: XML database and backups
+
+# ============================================
+# VOLUME 2: Uploads Directory (Cover Images)
+# ============================================
+Name: podcast-uploads
+Source: (leave empty for Docker managed volume)
+Destination: /app/uploads
+Description: Podcast cover images
+
+# ============================================
+# VOLUME 3: Logs Directory (Application Logs)
+# ============================================
+Name: podcast-logs
+Source: (leave empty for Docker managed volume)
+Destination: /app/logs
+Description: Error and operation logs
+
+# ============================================
+# ONE-TIME PERMISSION FIX (After adding volumes)
+# ============================================
+# Run this ONCE in Coolify terminal after adding volumes:
+#
+# cd /app
+# chown -R 65534:65534 data uploads logs
+# chmod -R 755 data uploads logs
+#
+# Then redeploy. Permissions will persist across all future deployments!
+
+# ============================================
+# VERIFICATION
+# ============================================
+# After setup, visit: https://your-domain.com/check-user.php
+# All directories should show "✅ Writable"
+# Deploy again - should still work without manual commands!
