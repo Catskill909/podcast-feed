@@ -5,25 +5,33 @@
 
 ---
 
-## 🚨 CRITICAL: AFTER EVERY DEPLOYMENT
+## ✅ DEPLOYMENT SOLUTION - VERIFIED WORKING
 
-**YOU MUST RUN THESE COMMANDS IN COOLIFY TERMINAL:**
+**Status:** ✅ **SOLVED** - Persistent volumes configured, tested, and confirmed working!
 
-```bash
-cd /app
-chown -R 65534:65534 data uploads logs
-chmod -R 755 data uploads logs
+### **One-Time Setup (Already Completed)**
+
+The deployment issue has been **permanently fixed** using Coolify persistent volumes:
+
+1. ✅ **Persistent volumes configured** in Coolify dashboard
+2. ✅ **Permissions set once** via terminal
+3. ✅ **Tested and verified** - data persists across deployments
+4. ✅ **No manual commands needed** on future deployments
+
+### **How It Works Now**
+
+```
+Code Change → Push to GitHub → Coolify Auto-Deploys → Data Persists ✅
 ```
 
-**Why:** Files reset to `root:root` on deploy, PHP runs as `nobody` (UID 65534)  
-**If you skip this:** ALL file operations will fail with permission errors  
-**Time required:** 30 seconds  
-**Frequency:** EVERY SINGLE DEPLOYMENT
+**No manual intervention required!** Your podcasts, images, and logs are safe in persistent volumes.
 
-**Verify it worked:**
-1. Visit `https://your-domain.com/check-user.php`
+### **Verify It's Working**
+
+1. Visit `https://podcast.supersoul.top/check-user.php`
 2. All directories should show "✅ Writable"
-3. Try deleting a podcast
+3. Add/delete podcasts - should work
+4. Deploy code changes - data persists automatically
 
 ---
 

@@ -4,11 +4,29 @@ A modern, feature-rich podcast directory management system with RSS feed auto-im
 
 ---
 
-## 🚨 CRITICAL: READ THESE FIRST
+## 🚨 DEPLOYMENT SETUP (One-Time Configuration)
 
 ### **For Production Deployment (Coolify/Nixpacks)**
 
-**⚠️ MUST RUN AFTER EVERY DEPLOYMENT:**
+**✅ PERMANENT FIX - Setup Once, Works Forever:**
+
+Your app uses file-based storage (XML database). To ensure data persists across deployments:
+
+#### **Step 1: Configure Persistent Volumes in Coolify**
+
+In your Coolify dashboard → Your app → **Persistent Storage** tab:
+
+Add these 3 **Volume Mounts**:
+
+```
+Volume 1: podcast-data → /app/data
+Volume 2: podcast-uploads → /app/uploads  
+Volume 3: podcast-logs → /app/logs
+```
+
+#### **Step 2: Fix Permissions (ONE TIME)**
+
+After adding volumes, run in Coolify terminal:
 
 ```bash
 cd /app
@@ -16,19 +34,21 @@ chown -R 65534:65534 data uploads logs
 chmod -R 755 data uploads logs
 ```
 
-**Why:** Files reset to `root:root` on deploy, PHP runs as `nobody` (UID 65534)  
-**If you skip:** ALL file operations fail with permission errors  
-**Time:** 30 seconds  
-**Docs:** See [PRODUCTION-DEPLOYMENT-FINAL.md](PRODUCTION-DEPLOYMENT-FINAL.md)
+#### **Step 3: Redeploy & Verify**
+
+1. Redeploy your app
+2. Visit `/check-user.php` - all directories should show "✅ Writable"
+3. Test CRUD operations
+4. **Deploy again** - everything should still work without manual commands!
+
+**That's it!** Your data now persists across all future deployments. No manual commands needed ever again.
 
 ### **Essential Documentation**
 
-**MUST READ before deploying or debugging:**
-
-1. 🔴 **[PRODUCTION-DEPLOYMENT-FINAL.md](PRODUCTION-DEPLOYMENT-FINAL.md)** - Permission fix (prevents hours of debugging)
-2. 📋 **[DEPLOYMENT-CHECKLIST.md](DEPLOYMENT-CHECKLIST.md)** - Step-by-step deployment guide
-3. 🐛 **[production-delete-bug.md](production-delete-bug.md)** - Common issues and solutions
-4. 🚨 **[CRITICAL-FAILURE-ANALYSIS.md](CRITICAL-FAILURE-ANALYSIS.md)** - What NOT to do
+1. 📋 **[DEPLOYMENT-CHECKLIST.md](DEPLOYMENT-CHECKLIST.md)** - Complete deployment guide
+2. ⚡ **[QUICK-START-DEPLOYMENT-FIX.md](QUICK-START-DEPLOYMENT-FIX.md)** - Fast setup guide
+3. 📊 **[DEPLOYMENT-ANALYSIS-SUMMARY.md](DEPLOYMENT-ANALYSIS-SUMMARY.md)** - Technical deep dive
+4. 🔒 **[SECURITY-AUDIT.md](SECURITY-AUDIT.md)** - Security best practices
 
 **Quick Diagnostics:**
 - Visit `/check-user.php` in production to verify permissions
@@ -334,15 +354,21 @@ For issues, questions, or feature requests:
 
 ## 📚 Documentation
 
-- **[FUTURE-DEV.md](FUTURE-DEV.md)** - Roadmap and planned features
-- **[new-features-plan.md](new-features-plan.md)** - Detailed implementation plans
-- **[RSS-IMPORT-IMPLEMENTATION.md](RSS-IMPORT-IMPLEMENTATION.md)** - RSS import feature docs
-- **[DEPLOYMENT-CHECKLIST.md](DEPLOYMENT-CHECKLIST.md)** - Production deployment guide
-- **[image-import-bug.md](image-import-bug.md)** - Bug fixes and analysis
+### **Quick Links**
+- 📖 **[DOCUMENTATION-INDEX.md](DOCUMENTATION-INDEX.md)** - Complete documentation index
+- ⚡ **[QUICK-START-DEPLOYMENT-FIX.md](QUICK-START-DEPLOYMENT-FIX.md)** - Fast deployment setup
+- 📋 **[DEPLOYMENT-CHECKLIST.md](DEPLOYMENT-CHECKLIST.md)** - Production deployment guide
+- 🔒 **[SECURITY-AUDIT.md](SECURITY-AUDIT.md)** - Security best practices
+- 🚀 **[FUTURE-DEV.md](FUTURE-DEV.md)** - Roadmap and planned features
+- 📡 **[RSS-IMPORT-IMPLEMENTATION.md](RSS-IMPORT-IMPLEMENTATION.md)** - RSS import feature docs
+
+### **Historical Documentation**
+- 📁 **[docs-archive/](docs-archive/)** - Archived development and debugging docs
 
 ---
 
 **Version**: 2.0.0  
 **Last Updated**: October 2025  
 **Compatibility**: PHP 7.4+, Modern Browsers  
-**New Features**: RSS Auto-Import, Health Check, Material Design UI
+**Status**: ✅ Production Ready - Deployment Issues Solved  
+**Features**: RSS Auto-Import, Health Check, Material Design UI, Persistent Storage
