@@ -19,6 +19,34 @@ class SortManager {
         this.attachEventListeners();
         this.applySortToTable(this.currentSort);
         this.updateButtonLabel();
+        
+        // Load preference from server and update if different
+        this.syncWithServer();
+    }
+
+    /**
+     * Sync with server preference on page load
+     */
+    async syncWithServer() {
+        const serverSort = await this.loadSortPreferenceFromServer();
+        if (serverSort && serverSort !== this.currentSort) {
+            // Server has different preference, use it
+            this.currentSort = serverSort;
+            this.updateButtonLabel();
+            this.updateActiveOption();
+            this.applySortToTable(serverSort);
+            
+            // Update localStorage to match server
+            try {
+                const data = {
+                    sortKey: serverSort,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('podcast_sort_preference', JSON.stringify(data));
+            } catch (error) {
+                console.error('Error updating localStorage:', error);
+            }
+        }
     }
 
     /**
@@ -66,9 +94,11 @@ class SortManager {
     }
 
     /**
-     * Load sort preference from localStorage
+     * Load sort preference from server (with localStorage fallback)
      */
     loadSortPreference() {
+        // Try to load from server first (synchronous for constructor)
+        // Will be updated async after page load
         try {
             const stored = localStorage.getItem('podcast_sort_preference');
             if (stored) {
@@ -76,15 +106,35 @@ class SortManager {
                 return data.sortKey || 'date-newest';
             }
         } catch (error) {
-            console.error('Error loading sort preference:', error);
+            console.error('Error loading sort preference from localStorage:', error);
         }
         return 'date-newest'; // Default
     }
 
     /**
-     * Save sort preference to localStorage
+     * Load sort preference from server (async)
      */
-    saveSortPreference(sortKey) {
+    async loadSortPreferenceFromServer() {
+        try {
+            const response = await fetch('api/sort-preference.php');
+            if (!response.ok) {
+                throw new Error('Failed to fetch sort preference');
+            }
+            const data = await response.json();
+            if (data.success && data.sortKey) {
+                return data.sortKey;
+            }
+        } catch (error) {
+            console.error('Error loading sort preference from server:', error);
+        }
+        return null;
+    }
+
+    /**
+     * Save sort preference to server (and localStorage as backup)
+     */
+    async saveSortPreference(sortKey) {
+        // Save to localStorage immediately for responsiveness
         try {
             const data = {
                 sortKey: sortKey,
@@ -92,7 +142,35 @@ class SortManager {
             };
             localStorage.setItem('podcast_sort_preference', JSON.stringify(data));
         } catch (error) {
-            console.error('Error saving sort preference:', error);
+            console.error('Error saving to localStorage:', error);
+        }
+
+        // Save to server (this controls feed.php output for external apps)
+        try {
+            const response = await fetch('api/sort-preference.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ sortKey: sortKey })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save sort preference to server');
+            }
+
+            const result = await response.json();
+            if (!result.success) {
+                console.error('Server error saving sort preference:', result.error);
+            } else {
+                console.log('Sort preference saved to server:', sortKey);
+            }
+        } catch (error) {
+            console.error('Error saving sort preference to server:', error);
+            // Show user feedback that save failed
+            if (window.podcastApp) {
+                window.podcastApp.showAlert('Warning: Sort preference may not persist across browsers', 'warning');
+            }
         }
     }
 

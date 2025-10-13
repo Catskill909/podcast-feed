@@ -6,6 +6,7 @@
  */
 
 require_once __DIR__ . '/includes/PodcastManager.php';
+require_once __DIR__ . '/includes/SortPreferenceManager.php';
 
 // Set proper headers for XML output
 header('Content-Type: application/rss+xml; charset=UTF-8');
@@ -14,9 +15,13 @@ header('Pragma: no-cache');
 header('Expires: 0');
 
 try {
-    // Get sort parameters from URL
-    $sortBy = $_GET['sort'] ?? 'episodes'; // Default to episodes (latest episode date)
-    $sortOrder = $_GET['order'] ?? 'desc'; // Default to descending (newest first)
+    // Load saved sort preference as default
+    $sortPrefManager = new SortPreferenceManager();
+    $savedPreference = $sortPrefManager->getPreference();
+    
+    // Get sort parameters from URL (can override saved preference)
+    $sortBy = $_GET['sort'] ?? $savedPreference['sort']; // Use saved preference as default
+    $sortOrder = $_GET['order'] ?? $savedPreference['order']; // Use saved preference as default
     
     // Validate parameters
     $allowedSorts = ['episodes', 'date', 'title', 'status'];
