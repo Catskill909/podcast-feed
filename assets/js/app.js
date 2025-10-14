@@ -1349,19 +1349,31 @@ function displayPodcastPreview(data) {
     if (data.latest_episode_date) {
         const epDate = new Date(data.latest_episode_date);
         const now = new Date();
-        const diff = now - epDate;
-        const daysDiff = Math.floor(diff / (1000 * 60 * 60 * 24));
         
-        if (daysDiff === 0) {
+        // Compare calendar dates, not elapsed time
+        // Strip time component to compare only calendar days
+        const epDay = new Date(epDate.getFullYear(), epDate.getMonth(), epDate.getDate());
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const daysDiff = Math.floor((today - epDay) / (1000 * 60 * 60 * 24));
+        
+        if (daysDiff < 0) {
+            // Future date
             latestEpEl.textContent = 'Today';
             latestEpEl.classList.add('highlight');
-        } else if (daysDiff === 1) {
+        } else if (daysDiff == 0) {
+            // Same calendar day = Today
+            latestEpEl.textContent = 'Today';
+            latestEpEl.classList.add('highlight');
+        } else if (daysDiff == 1) {
+            // One calendar day ago = Yesterday
             latestEpEl.textContent = 'Yesterday';
             latestEpEl.classList.add('highlight');
         } else if (daysDiff < 7) {
+            // 2-6 days ago
             latestEpEl.textContent = `${daysDiff} days ago`;
             latestEpEl.classList.add('highlight');
         } else {
+            // 7+ days ago - show date
             latestEpEl.textContent = formatDate(epDate);
             latestEpEl.classList.remove('highlight');
         }

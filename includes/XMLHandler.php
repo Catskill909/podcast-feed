@@ -457,7 +457,13 @@ class XMLHandler
                     $item->appendChild($rss->createElement('link', $linkText));
 
                     $item->appendChild($rss->createElement('guid', $podcast['id'] ?? ''));
-                    $pubDate = isset($podcast['created_date']) ? date('r', strtotime($podcast['created_date'])) : date('r');
+                    
+                    // Use latest_episode_date if available, fallback to created_date
+                    if (!empty($podcast['latest_episode_date'])) {
+                        $pubDate = date('r', strtotime($podcast['latest_episode_date']));
+                    } else {
+                        $pubDate = isset($podcast['created_date']) ? date('r', strtotime($podcast['created_date'])) : date('r');
+                    }
                     $item->appendChild($rss->createElement('pubDate', $pubDate));
 
                     // Add cover image as enclosure

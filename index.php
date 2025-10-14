@@ -305,19 +305,27 @@ if (isset($_GET['edit'])) {
                                             if (!empty($podcast['latest_episode_date'])) {
                                                 $epDate = strtotime($podcast['latest_episode_date']);
                                                 $now = time();
-                                                $diff = $now - $epDate;
                                                 
-                                                if ($diff < 0) {
+                                                // Compare calendar dates, not elapsed time
+                                                // This ensures "Today" = same calendar day, "Yesterday" = previous calendar day
+                                                $epDay = strtotime(date('Y-m-d', $epDate));
+                                                $today = strtotime(date('Y-m-d', $now));
+                                                $daysDiff = (int)floor(($today - $epDay) / 86400);
+                                                
+                                                if ($daysDiff < 0) {
                                                     // Future date (shouldn't happen, but handle it)
                                                     echo '<span style="color: var(--accent-primary); font-weight: 500;">Today</span>';
-                                                } elseif ($diff < 86400) { // Less than 24 hours
+                                                } elseif ($daysDiff == 0) {
+                                                    // Same calendar day = Today
                                                     echo '<span style="color: var(--accent-primary); font-weight: 500;">Today</span>';
-                                                } elseif ($diff < 172800) { // Less than 48 hours
+                                                } elseif ($daysDiff == 1) {
+                                                    // One calendar day ago = Yesterday
                                                     echo '<span style="color: var(--accent-primary);">Yesterday</span>';
-                                                } elseif ($diff < 604800) { // Less than 7 days
-                                                    echo '<span style="color: var(--accent-primary);">' . floor($diff / 86400) . ' days ago</span>';
+                                                } elseif ($daysDiff < 7) {
+                                                    // 2-6 days ago
+                                                    echo '<span style="color: var(--accent-primary);">' . $daysDiff . ' days ago</span>';
                                                 } else {
-                                                    // Older than 7 days - show regular date, no green
+                                                    // 7+ days ago - show actual date
                                                     echo '<span class="text-muted">' . date('M j, Y', $epDate) . '</span>';
                                                 }
                                             } else {
