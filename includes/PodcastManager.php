@@ -306,12 +306,29 @@ class PodcastManager
                 $podcasts = [];
             }
 
-            if ($includeImageInfo) {
-                foreach ($podcasts as &$podcast) {
-                    if ($podcast['cover_image']) {
+            // Fetch latest episode data from RSS feeds
+            foreach ($podcasts as &$podcast) {
+                try {
+                    if (!empty($podcast['feed_url'])) {
+                        $parser = new RssFeedParser();
+                        $feedData = $parser->fetchAndParse($podcast['feed_url']);
+                        
+                        if ($feedData['success']) {
+                            // Update with fresh data from RSS feed
+                            $podcast['latest_episode_date'] = $feedData['data']['latest_episode_date'] ?? $podcast['latest_episode_date'] ?? '';
+                            $podcast['episode_count'] = $feedData['data']['episode_count'] ?? $podcast['episode_count'] ?? '0';
+                        }
+                    }
+                    
+                    // Include image info if requested
+                    if ($includeImageInfo && !empty($podcast['cover_image'])) {
                         $imageInfo = $this->imageUploader->getImageInfo($podcast['cover_image']);
                         $podcast['image_info'] = $imageInfo;
                     }
+                } catch (Exception $e) {
+                    // Log the error but continue with other podcasts
+                    error_log('Error fetching feed for podcast ' . ($podcast['id'] ?? 'unknown') . ': ' . $e->getMessage());
+                    continue;
                 }
             }
 

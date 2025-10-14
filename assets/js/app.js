@@ -983,29 +983,47 @@ async function importRssFeed() {
         // Get the preview data
         const previewData = window.rssPreviewData;
         
-        // Create hidden input fields for the additional data
+        // Create a hidden form to submit the data
+        const hiddenForm = document.createElement('form');
+        hiddenForm.method = 'POST';
+        hiddenForm.action = form.action;
+        hiddenForm.style.display = 'none';
+        
+        // Add all form fields to the hidden form
+        const formData = new FormData(form);
+        
+        // Add latest_episode_date and episode_count from preview data
         if (previewData) {
-            // Add latest_episode_date if available
             if (previewData.latest_episode_date) {
-                const dateInput = document.createElement('input');
-                dateInput.type = 'hidden';
-                dateInput.name = 'latest_episode_date';
-                dateInput.value = previewData.latest_episode_date;
-                form.appendChild(dateInput);
+                formData.append('latest_episode_date', previewData.latest_episode_date);
             }
-            
-            // Add episode_count if available
             if (previewData.episode_count) {
-                const countInput = document.createElement('input');
-                countInput.type = 'hidden';
-                countInput.name = 'episode_count';
-                countInput.value = previewData.episode_count;
-                form.appendChild(countInput);
+                formData.append('episode_count', previewData.episode_count);
             }
         }
         
-        // Submit the form
-        form.submit();
+        // Add all form data to the hidden form
+        for (let [key, value] of formData.entries()) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = value;
+            hiddenForm.appendChild(input);
+        }
+        
+        // Add CSRF token if it exists
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        if (csrfToken) {
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = csrfToken;
+            hiddenForm.appendChild(csrfInput);
+        }
+        
+        // Submit the hidden form
+        document.body.appendChild(hiddenForm);
+        hiddenForm.submit();
     } catch (error) {
         console.error('Import Error:', error);
         alert('Failed to import podcast. Please try again.');
