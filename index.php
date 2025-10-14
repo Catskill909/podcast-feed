@@ -197,9 +197,9 @@ if (isset($_GET['edit'])) {
                     
                     <!-- Auto-Sync Status -->
                     <div style="display: flex; align-items: center; gap: var(--spacing-md);">
-                        <div style="display: flex; align-items: center; gap: var(--spacing-sm); color: var(--text-muted); font-size: var(--font-size-sm);">
-                            <i class="fa-solid fa-rotate" style="color: var(--accent-primary);"></i>
-                            <span id="autoScanStatus">
+                        <div class="tooltip" data-tooltip="Feeds automatically update every 30 minutes" style="display: flex; align-items: center; gap: var(--spacing-sm); font-size: var(--font-size-sm);">
+                            <i class="fa-solid fa-rotate" style="color: #238636;"></i>
+                            <span id="autoScanStatus" style="color: var(--text-muted);">
                                 <?php
                                 $lastScanFile = __DIR__ . '/data/last-scan.txt';
                                 if (file_exists($lastScanFile)) {
@@ -220,15 +220,12 @@ if (isset($_GET['edit'])) {
                                 }
                                 ?>
                             </span>
-                            <span class="tooltip" data-tooltip="Feeds automatically update every 30 minutes">
-                                <i class="fa-solid fa-circle-info" style="font-size: 12px;"></i>
-                            </span>
                         </div>
                         
                         <!-- Sort Sync Indicator -->
-                        <div style="display: flex; align-items: center; gap: var(--spacing-sm); color: var(--text-muted); font-size: var(--font-size-sm);">
-                            <i class="fa-solid fa-arrows-rotate" style="color: var(--accent-success);"></i>
-                            <span class="tooltip" data-tooltip="Sort preferences sync automatically across browsers">
+                        <div class="tooltip" data-tooltip="Sort preferences sync automatically across browsers" style="display: flex; align-items: center; gap: var(--spacing-sm); font-size: var(--font-size-sm);">
+                            <i class="fa-solid fa-arrows-rotate" style="color: #238636;"></i>
+                            <span style="color: var(--text-muted);">
                                 Auto-sync: Active
                             </span>
                         </div>
@@ -1360,21 +1357,6 @@ if (isset($_GET['edit'])) {
                 </div>
             </div>
 
-            <!-- Actions Footer -->
-            <div id="previewActions" class="preview-actions" style="display: none;">
-                <button type="button" class="btn btn-outline preview-action-btn" onclick="editPodcastFromPreview()">
-                    <i class="fa-solid fa-pen-to-square"></i> Edit
-                </button>
-                <button type="button" class="btn btn-outline preview-action-btn" onclick="refreshFeedFromPreview()">
-                    <i class="fa-solid fa-rotate"></i> Refresh
-                </button>
-                <button type="button" class="btn btn-outline preview-action-btn" onclick="checkHealthFromPreview()">
-                    <i class="fa-solid fa-heart-pulse"></i> Health Check
-                </button>
-                <button type="button" class="btn btn-danger preview-action-btn" onclick="deletePodcastFromPreview()">
-                    <i class="fa-solid fa-trash"></i> Delete
-                </button>
-            </div>
         </div>
     </div>
 

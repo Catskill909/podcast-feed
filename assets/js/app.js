@@ -1266,7 +1266,6 @@ async function showPodcastPreview(podcastId) {
     const loadingEl = document.getElementById('previewLoading');
     const errorEl = document.getElementById('previewError');
     const contentEl = document.getElementById('previewContent');
-    const actionsEl = document.getElementById('previewActions');
     
     // Show modal with loading state
     modal.classList.add('show');
@@ -1274,7 +1273,6 @@ async function showPodcastPreview(podcastId) {
     loadingEl.style.display = 'flex';
     errorEl.style.display = 'none';
     contentEl.style.display = 'none';
-    actionsEl.style.display = 'none';
     
     try {
         // Fetch podcast preview data
@@ -1307,7 +1305,6 @@ function displayPodcastPreview(data) {
     // Hide loading, show content
     document.getElementById('previewLoading').style.display = 'none';
     document.getElementById('previewContent').style.display = 'grid';
-    document.getElementById('previewActions').style.display = 'flex';
     
     // Update title
     document.getElementById('previewTitle').textContent = data.title;
@@ -1396,7 +1393,6 @@ function displayPodcastPreview(data) {
 function showPreviewError(message) {
     document.getElementById('previewLoading').style.display = 'none';
     document.getElementById('previewContent').style.display = 'none';
-    document.getElementById('previewActions').style.display = 'none';
     
     const errorEl = document.getElementById('previewError');
     document.getElementById('previewErrorMessage').textContent = message;
