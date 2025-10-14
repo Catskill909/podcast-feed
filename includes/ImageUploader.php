@@ -199,11 +199,11 @@ class ImageUploader
 
         $imageInfo = getimagesize($filePath);
         $fileSize = filesize($filePath);
-
+        
         return [
             'filename' => $filename,
             'path' => $filePath,
-            'url' => APP_URL . '/uploads/covers/' . $filename,
+            'url' => 'uploads/covers/' . $filename, // Simple relative path - frontend will resolve correctly
             'width' => $imageInfo[0],
             'height' => $imageInfo[1],
             'mime_type' => $imageInfo['mime'],

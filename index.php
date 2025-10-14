@@ -267,19 +267,25 @@ if (isset($_GET['edit'])) {
                                     <tr data-podcast-id="<?php echo htmlspecialchars($podcast['id']); ?>" 
                                         data-description="<?php echo htmlspecialchars($podcast['description'] ?? ''); ?>"
                                         data-latest-episode="<?php echo htmlspecialchars($podcast['latest_episode_date'] ?? ''); ?>"
-                                        data-episode-count="<?php echo htmlspecialchars($podcast['episode_count'] ?? '0'); ?>">
+                                        data-episode-count="<?php echo htmlspecialchars($podcast['episode_count'] ?? '0'); ?>"
+                                        data-feed-url="<?php echo htmlspecialchars($podcast['feed_url']); ?>">
                                         <td>
                                             <?php if ($podcast['cover_image'] && $podcast['image_info']): ?>
                                                 <img src="<?php echo htmlspecialchars($podcast['image_info']['url']); ?>"
                                                     alt="<?php echo htmlspecialchars($podcast['title']); ?>"
-                                                    class="podcast-cover"
-                                                    title="<?php echo $podcast['image_info']['width']; ?>x<?php echo $podcast['image_info']['height']; ?>px">
+                                                    class="podcast-cover podcast-cover-clickable"
+                                                    onclick="showPodcastPreview('<?php echo htmlspecialchars($podcast['id']); ?>')"
+                                                    title="Click to preview - <?php echo $podcast['image_info']['width']; ?>x<?php echo $podcast['image_info']['height']; ?>px">
                                             <?php else: ?>
-                                                <div class="podcast-cover-placeholder">No Image</div>
+                                                <div class="podcast-cover-placeholder podcast-cover-clickable" 
+                                                    onclick="showPodcastPreview('<?php echo htmlspecialchars($podcast['id']); ?>')"
+                                                    title="Click to preview">No Image</div>
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <strong><?php echo htmlspecialchars($podcast['title']); ?></strong>
+                                            <strong class="podcast-title-clickable" 
+                                                onclick="showPodcastPreview('<?php echo htmlspecialchars($podcast['id']); ?>')"
+                                                title="Click to preview"><?php echo htmlspecialchars($podcast['title']); ?></strong>
                                         </td>
                                         <td>
                                             <button type="button" 
@@ -327,6 +333,11 @@ if (isset($_GET['edit'])) {
                                         </td>
                                         <td>
                                             <div class="table-actions">
+                                                <button type="button" class="btn btn-outline btn-sm tooltip"
+                                                    data-tooltip="View Details"
+                                                    onclick="showPodcastPreview('<?php echo htmlspecialchars($podcast['id']); ?>')">
+                                                    <i class="fa-solid fa-circle-info"></i>
+                                                </button>
                                                 <button type="button" class="btn btn-outline btn-sm tooltip"
                                                     data-tooltip="Refresh Feed Data"
                                                     onclick="refreshFeedMetadata('<?php echo htmlspecialchars($podcast['id']); ?>')">
@@ -1256,6 +1267,113 @@ if (isset($_GET['edit'])) {
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <!-- Podcast Preview Modal -->
+    <div class="modal-overlay" id="previewModal">
+        <div class="modal podcast-preview-modal">
+            <div class="modal-header preview-modal-header">
+                <h3 class="modal-title" id="previewModalTitle">Podcast Preview</h3>
+                <button type="button" class="modal-close" onclick="hidePreviewModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <!-- Loading State -->
+                <div id="previewLoading" class="preview-loading">
+                    <div class="preview-loading-spinner"></div>
+                    <div class="preview-loading-text">Loading podcast details...</div>
+                </div>
+
+                <!-- Error State -->
+                <div id="previewError" class="preview-error" style="display: none;">
+                    <div class="preview-error-icon">⚠️</div>
+                    <div class="preview-error-message">Failed to load podcast details</div>
+                    <div class="preview-error-details" id="previewErrorMessage"></div>
+                </div>
+
+                <!-- Content -->
+                <div id="previewContent" class="preview-content" style="display: none;">
+                    <!-- Image Section -->
+                    <div class="preview-image-section">
+                        <img id="podcastPreviewImage" class="preview-podcast-image" alt="Podcast Cover" style="display: none;">
+                        <div id="previewImagePlaceholder" class="preview-image-placeholder">🎧</div>
+                        <div id="previewImageDimensions" class="preview-image-dimensions" style="display: none;"></div>
+                    </div>
+
+                    <!-- Details Section -->
+                    <div class="preview-details-section">
+                        <h2 id="previewTitle" class="preview-title"></h2>
+                        <div id="previewDescription" class="preview-description"></div>
+
+                        <!-- Meta Grid - 3 columns for compact layout -->
+                        <div class="preview-meta-grid">
+                            <div class="preview-meta-item">
+                                <div class="preview-meta-label">
+                                    <i class="fa-solid fa-podcast"></i>
+                                    Episodes
+                                </div>
+                                <div id="previewEpisodeCount" class="preview-meta-value highlight">0</div>
+                            </div>
+
+                            <div class="preview-meta-item">
+                                <div class="preview-meta-label">
+                                    <i class="fa-solid fa-calendar"></i>
+                                    Latest Episode
+                                </div>
+                                <div id="previewLatestEpisode" class="preview-meta-value">Unknown</div>
+                            </div>
+
+                            <div class="preview-meta-item">
+                                <div class="preview-meta-label">
+                                    <i class="fa-solid fa-toggle-on"></i>
+                                    Status
+                                </div>
+                                <div id="previewStatus" class="preview-meta-value">Active</div>
+                            </div>
+
+                            <div class="preview-meta-item">
+                                <div class="preview-meta-label">
+                                    <i class="fa-solid fa-tag"></i>
+                                    Category
+                                </div>
+                                <div id="previewCategory" class="preview-meta-value">Unknown</div>
+                            </div>
+
+                            <div class="preview-meta-item">
+                                <div class="preview-meta-label">
+                                    <i class="fa-solid fa-rss"></i>
+                                    Feed Type
+                                </div>
+                                <div id="previewFeedType" class="preview-meta-value">RSS</div>
+                            </div>
+
+                            <div class="preview-meta-item">
+                                <div class="preview-meta-label">
+                                    <i class="fa-solid fa-clock"></i>
+                                    Added
+                                </div>
+                                <div id="previewCreatedDate" class="preview-meta-value">Unknown</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Footer -->
+            <div id="previewActions" class="preview-actions" style="display: none;">
+                <button type="button" class="btn btn-outline preview-action-btn" onclick="editPodcastFromPreview()">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                </button>
+                <button type="button" class="btn btn-outline preview-action-btn" onclick="refreshFeedFromPreview()">
+                    <i class="fa-solid fa-rotate"></i> Refresh
+                </button>
+                <button type="button" class="btn btn-outline preview-action-btn" onclick="checkHealthFromPreview()">
+                    <i class="fa-solid fa-heart-pulse"></i> Health Check
+                </button>
+                <button type="button" class="btn btn-danger preview-action-btn" onclick="deletePodcastFromPreview()">
+                    <i class="fa-solid fa-trash"></i> Delete
+                </button>
             </div>
         </div>
     </div>

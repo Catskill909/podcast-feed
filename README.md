@@ -60,6 +60,7 @@ git push origin main
 - **Full CRUD Operations**: Create, Read, Update, Delete podcast entries
 - **RSS Feed Auto-Import** ✨: Import podcasts from any RSS feed with one click
 - **Podcast Health Check** ✨: Validate RSS 2.0 structure, iTunes namespace, and feed accessibility
+- **Podcast Preview Cards** ✨ NEW: Click cover/title to see comprehensive RSS metadata in beautiful modal
 - **Image Management**: Upload or auto-download cover images with validation
 - **XML-Based Storage**: Lightweight file-based storage system
 - **RSS Feed Generation**: Standard-compliant RSS feed output for app integration
@@ -77,6 +78,14 @@ git push origin main
 - **Real-Time Updates** ⚡: No hard refresh needed - polls for changes every 30 seconds
 - **Zero Maintenance** ✨: Set it and forget it - fully automated updates
 - **Production Ready** 🚀: Auto-detects environment, handles HTTPS, no hardcoded URLs
+
+### **🎭 UI/UX Features (October 14, 2025)**
+- **Podcast Preview Cards** 👁️: Click any cover or title to see full RSS metadata
+- **Beautiful Dark Modal**: Two-column layout with large image and comprehensive details
+- **Hover Effects**: Eye icon overlay on covers, gradient underline on titles
+- **Quick Actions**: Edit, Refresh, Health Check, Delete from preview
+- **Smart Formatting**: Intelligent date display (Today, Yesterday, etc.) and language names
+- **Comprehensive Data**: Shows title, description, episodes, category, author, language, pub date
 
 ## 📋 Requirements
 
@@ -195,6 +204,26 @@ podcast-feed/
    - Fetches latest episode date from RSS feed
    - Updates episode count
    - Re-sorts automatically
+
+### **Podcast Preview** 👁️ NEW
+
+1. **Click on any podcast cover or title** in the table
+2. Beautiful dark mode modal opens with comprehensive details:
+   - Large podcast image (240x240px)
+   - Full description
+   - Episode count (highlighted)
+   - Latest episode date (smart formatting)
+   - Category from RSS feed
+   - Author information
+   - Language (human-readable)
+   - Publication date
+   - Image dimensions
+3. **Quick Actions** at bottom:
+   - Edit: Opens edit modal
+   - Refresh: Updates feed metadata
+   - Health Check: Runs diagnostics
+   - Delete: Removes podcast
+4. **Close**: Press Escape or click outside modal
 
 ### **Other Actions**
 
@@ -366,6 +395,8 @@ Check these files for detailed error information:
 1. Use PHP built-in server:
    ```bash
    php -S localhost:8000
+   # Or if port 8000 is in use:
+   php -S localhost:8080
    ```
 
 2. Update `APP_URL` in config:
@@ -376,6 +407,12 @@ Check these files for detailed error information:
 3. Set development mode:
    ```php
    define('ENVIRONMENT', 'development');
+   ```
+
+4. Access the app:
+   ```
+   http://localhost:8000
+   # Or: http://localhost:8080
    ```
 
 ### Code Structure
@@ -437,14 +474,15 @@ For issues, questions, or feature requests:
 - 🔒 **[SECURITY-AUDIT.md](SECURITY-AUDIT.md)** - Security best practices
 - 🚀 **[FUTURE-DEV.md](FUTURE-DEV.md)** - Roadmap and planned features
 - 📡 **[RSS-IMPORT-IMPLEMENTATION.md](RSS-IMPORT-IMPLEMENTATION.md)** - RSS import feature docs
+- 👁️ **[PODCAST-PREVIEW-FEATURE.md](PODCAST-PREVIEW-FEATURE.md)** - Preview cards feature (NEW)
 
 ### **Historical Documentation**
 - 📁 **[docs-archive/](docs-archive/)** - Archived development and debugging docs
 
 ---
 
-**Version**: 2.1.0  
-**Last Updated**: October 13, 2025  
+**Version**: 2.2.0  
+**Last Updated**: October 14, 2025  
 **Compatibility**: PHP 7.4+, Modern Browsers  
 **Status**: ✅ Production Ready - Fully Automated  
-**Features**: RSS Auto-Import, Health Check, Auto-Sync Sorting, Material Design UI, Persistent Storage
+**Features**: RSS Auto-Import, Health Check, Auto-Sync Sorting, Podcast Preview Cards, Material Design UI, Persistent Storage

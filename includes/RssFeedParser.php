@@ -185,12 +185,23 @@ class RssFeedParser
         // Get latest episode date
         $latestEpisodeDate = $this->getLatestEpisodeDate($channel->item);
         
+        // Extract category
+        $category = $this->extractText($channel->category);
+        if (empty($category) && $itunes) {
+            // Try iTunes category
+            $itunesCategory = $itunes->category;
+            if ($itunesCategory) {
+                $category = (string) $itunesCategory->attributes()->text;
+            }
+        }
+        
         return [
             'title' => $title,
             'description' => $description,
             'image_url' => $imageUrl,
             'episode_count' => $episodeCount,
             'latest_episode_date' => $latestEpisodeDate,
+            'category' => $category ?: 'Uncategorized',
             'feed_url' => $feedUrl,
             'feed_type' => 'RSS 2.0'
         ];

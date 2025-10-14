@@ -1229,6 +1229,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 hideHealthCheckModal();
             } else if (e.target.id === 'helpModal') {
                 hideHelpModal();
+            } else if (e.target.id === 'previewModal') {
+                hidePreviewModal();
             }
         }
     });
@@ -1239,6 +1241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const importModal = document.getElementById('importRssModal');
             const healthModal = document.getElementById('healthCheckModal');
             const helpModal = document.getElementById('helpModal');
+            const previewModal = document.getElementById('previewModal');
             
             if (importModal && importModal.classList.contains('show')) {
                 hideImportRssModal();
@@ -1246,7 +1249,233 @@ document.addEventListener('DOMContentLoaded', () => {
                 hideHealthCheckModal();
             } else if (helpModal && helpModal.classList.contains('show')) {
                 hideHelpModal();
+            } else if (previewModal && previewModal.classList.contains('show')) {
+                hidePreviewModal();
             }
         }
     });
 });
+
+// Podcast Preview Modal Functions
+let currentPreviewPodcastId = null;
+
+async function showPodcastPreview(podcastId) {
+    currentPreviewPodcastId = podcastId;
+    
+    const modal = document.getElementById('previewModal');
+    const loadingEl = document.getElementById('previewLoading');
+    const errorEl = document.getElementById('previewError');
+    const contentEl = document.getElementById('previewContent');
+    const actionsEl = document.getElementById('previewActions');
+    
+    // Show modal with loading state
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    loadingEl.style.display = 'flex';
+    errorEl.style.display = 'none';
+    contentEl.style.display = 'none';
+    actionsEl.style.display = 'none';
+    
+    try {
+        // Fetch podcast preview data
+        const response = await fetch(`api/get-podcast-preview.php?id=${encodeURIComponent(podcastId)}`);
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            console.error('Invalid response type:', contentType);
+            const text = await response.text();
+            console.error('Response body:', text.substring(0, 500));
+            showPreviewError('Server configuration error. Please check the API endpoint.');
+            return;
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            displayPodcastPreview(result.data);
+        } else {
+            showPreviewError(result.error || 'Failed to load podcast details');
+        }
+    } catch (error) {
+        console.error('Preview fetch error:', error);
+        showPreviewError('Unable to load podcast details. Please try again.');
+    }
+}
+
+function displayPodcastPreview(data) {
+    // Hide loading, show content
+    document.getElementById('previewLoading').style.display = 'none';
+    document.getElementById('previewContent').style.display = 'grid';
+    document.getElementById('previewActions').style.display = 'flex';
+    
+    // Update title
+    document.getElementById('previewTitle').textContent = data.title;
+    
+    // Update description
+    const descEl = document.getElementById('previewDescription');
+    if (data.description && data.description !== 'No description available') {
+        descEl.textContent = data.description;
+        descEl.style.display = 'block';
+    } else {
+        descEl.textContent = 'No description available';
+        descEl.style.display = 'block';
+    }
+    
+    // Update image
+    const imageEl = document.getElementById('podcastPreviewImage');
+    const placeholderEl = document.getElementById('previewImagePlaceholder');
+    const dimensionsEl = document.getElementById('previewImageDimensions');
+    
+    if (data.image_url && data.image_url !== 'null' && data.image_url !== null && data.image_url.trim() !== '') {
+        imageEl.src = data.image_url;
+        imageEl.style.cssText = 'display: block !important; width: 240px !important; height: 240px !important;';
+        placeholderEl.style.display = 'none';
+        
+        if (data.image_width && data.image_height) {
+            dimensionsEl.textContent = `${data.image_width} × ${data.image_height} px`;
+            dimensionsEl.style.display = 'block';
+        } else {
+            dimensionsEl.style.display = 'none';
+        }
+    } else {
+        imageEl.style.display = 'none';
+        placeholderEl.style.display = 'flex';
+        dimensionsEl.style.display = 'none';
+    }
+    
+    // Update episode count
+    document.getElementById('previewEpisodeCount').textContent = data.episode_count || '0';
+    
+    // Update latest episode
+    const latestEpEl = document.getElementById('previewLatestEpisode');
+    if (data.latest_episode_date) {
+        const epDate = new Date(data.latest_episode_date);
+        const now = new Date();
+        const diff = now - epDate;
+        const daysDiff = Math.floor(diff / (1000 * 60 * 60 * 24));
+        
+        if (daysDiff === 0) {
+            latestEpEl.textContent = 'Today';
+            latestEpEl.classList.add('highlight');
+        } else if (daysDiff === 1) {
+            latestEpEl.textContent = 'Yesterday';
+            latestEpEl.classList.add('highlight');
+        } else if (daysDiff < 7) {
+            latestEpEl.textContent = `${daysDiff} days ago`;
+            latestEpEl.classList.add('highlight');
+        } else {
+            latestEpEl.textContent = formatDate(epDate);
+            latestEpEl.classList.remove('highlight');
+        }
+    } else {
+        latestEpEl.textContent = 'Unknown';
+        latestEpEl.classList.remove('highlight');
+    }
+    
+    // Update status
+    const statusEl = document.getElementById('previewStatus');
+    statusEl.textContent = data.status === 'active' ? 'Active' : 'Inactive';
+    statusEl.style.color = data.status === 'active' ? 'var(--accent-primary)' : 'var(--accent-danger)';
+    
+    // Update category
+    document.getElementById('previewCategory').textContent = data.category || 'Unknown';
+    
+    // Update feed type
+    document.getElementById('previewFeedType').textContent = data.feed_type || 'RSS';
+    
+    // Update created date
+    const createdEl = document.getElementById('previewCreatedDate');
+    if (data.created_date) {
+        createdEl.textContent = formatDate(new Date(data.created_date));
+    } else {
+        createdEl.textContent = 'Unknown';
+    }
+}
+
+function showPreviewError(message) {
+    document.getElementById('previewLoading').style.display = 'none';
+    document.getElementById('previewContent').style.display = 'none';
+    document.getElementById('previewActions').style.display = 'none';
+    
+    const errorEl = document.getElementById('previewError');
+    document.getElementById('previewErrorMessage').textContent = message;
+    errorEl.style.display = 'block';
+}
+
+function hidePreviewModal() {
+    const modal = document.getElementById('previewModal');
+    if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+        currentPreviewPodcastId = null;
+    }
+}
+
+// Preview modal action functions
+function editPodcastFromPreview() {
+    if (currentPreviewPodcastId) {
+        hidePreviewModal();
+        editPodcast(currentPreviewPodcastId);
+    }
+}
+
+function refreshFeedFromPreview() {
+    if (currentPreviewPodcastId) {
+        hidePreviewModal();
+        refreshFeedMetadata(currentPreviewPodcastId);
+    }
+}
+
+function checkHealthFromPreview() {
+    if (currentPreviewPodcastId) {
+        const title = document.getElementById('previewTitle').textContent;
+        hidePreviewModal();
+        checkPodcastHealth(currentPreviewPodcastId, title);
+    }
+}
+
+function deletePodcastFromPreview() {
+    if (currentPreviewPodcastId) {
+        const title = document.getElementById('previewTitle').textContent;
+        hidePreviewModal();
+        deletePodcast(currentPreviewPodcastId, title);
+    }
+}
+
+// Helper functions
+function formatDate(date) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+}
+
+function getLanguageName(code) {
+    const languages = {
+        'en': 'English',
+        'es': 'Spanish',
+        'fr': 'French',
+        'de': 'German',
+        'it': 'Italian',
+        'pt': 'Portuguese',
+        'ru': 'Russian',
+        'ja': 'Japanese',
+        'zh': 'Chinese',
+        'ko': 'Korean',
+        'ar': 'Arabic',
+        'hi': 'Hindi',
+        'nl': 'Dutch',
+        'sv': 'Swedish',
+        'no': 'Norwegian',
+        'da': 'Danish',
+        'fi': 'Finnish',
+        'pl': 'Polish',
+        'tr': 'Turkish',
+        'he': 'Hebrew'
+    };
+    
+    if (!code) return 'Unknown';
+    
+    // Handle language codes with region (e.g., en-US)
+    const baseCode = code.split('-')[0].toLowerCase();
+    return languages[baseCode] || code.toUpperCase();
+}
