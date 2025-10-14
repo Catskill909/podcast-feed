@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/XMLHandler.php';
 require_once __DIR__ . '/ImageUploader.php';
+require_once __DIR__ . '/RssFeedParser.php';
 
 /**
  * PodcastManager Class
