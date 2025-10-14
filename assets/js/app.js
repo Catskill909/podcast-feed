@@ -980,6 +980,30 @@ async function importRssFeed() {
     importBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Importing...';
     
     try {
+        // Get the preview data
+        const previewData = window.rssPreviewData;
+        
+        // Create hidden input fields for the additional data
+        if (previewData) {
+            // Add latest_episode_date if available
+            if (previewData.latest_episode_date) {
+                const dateInput = document.createElement('input');
+                dateInput.type = 'hidden';
+                dateInput.name = 'latest_episode_date';
+                dateInput.value = previewData.latest_episode_date;
+                form.appendChild(dateInput);
+            }
+            
+            // Add episode_count if available
+            if (previewData.episode_count) {
+                const countInput = document.createElement('input');
+                countInput.type = 'hidden';
+                countInput.name = 'episode_count';
+                countInput.value = previewData.episode_count;
+                form.appendChild(countInput);
+            }
+        }
+        
         // Submit the form
         form.submit();
     } catch (error) {
