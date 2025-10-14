@@ -302,35 +302,50 @@ if (isset($_GET['edit'])) {
                                         </td>
                                         <td class="text-muted">
                                             <?php 
+                                            $displayDate = '';
+                                            $dateToUse = '';
+                                            
+                                            // First try to use latest_episode_date
                                             if (!empty($podcast['latest_episode_date'])) {
-                                                $epDate = strtotime($podcast['latest_episode_date']);
-                                                $now = time();
-                                                
-                                                // Compare calendar dates, not elapsed time
-                                                // This ensures "Today" = same calendar day, "Yesterday" = previous calendar day
-                                                $epDay = strtotime(date('Y-m-d', $epDate));
-                                                $today = strtotime(date('Y-m-d', $now));
-                                                $daysDiff = (int)floor(($today - $epDay) / 86400);
-                                                
-                                                if ($daysDiff < 0) {
-                                                    // Future date (shouldn't happen, but handle it)
-                                                    echo '<span style="color: var(--accent-primary); font-weight: 500;">Today</span>';
-                                                } elseif ($daysDiff == 0) {
-                                                    // Same calendar day = Today
-                                                    echo '<span style="color: var(--accent-primary); font-weight: 500;">Today</span>';
-                                                } elseif ($daysDiff == 1) {
-                                                    // One calendar day ago = Yesterday
-                                                    echo '<span style="color: var(--accent-primary);">Yesterday</span>';
-                                                } elseif ($daysDiff < 7) {
-                                                    // 2-6 days ago
-                                                    echo '<span style="color: var(--accent-primary);">' . $daysDiff . ' days ago</span>';
-                                                } else {
-                                                    // 7+ days ago - show actual date
-                                                    echo '<span class="text-muted">' . date('M j, Y', $epDate) . '</span>';
-                                                }
-                                            } else {
-                                                echo '<span style="color: var(--text-muted); font-style: italic;">Unknown</span>';
+                                                $dateToUse = $podcast['latest_episode_date'];
                                             }
+                                            
+                                            if (!empty($dateToUse)) {
+                                                $epDate = strtotime($dateToUse);
+                                                if ($epDate === false) {
+                                                    // If strtotime fails, check for ISO 8601 format with timezone
+                                                    $date = new DateTime($dateToUse);
+                                                    $epDate = $date->getTimestamp();
+                                                }
+                                                
+                                                if ($epDate) {
+                                                    $now = time();
+                                                    
+                                                    // Compare calendar dates, not elapsed time
+                                                    $epDay = strtotime(date('Y-m-d', $epDate));
+                                                    $today = strtotime(date('Y-m-d', $now));
+                                                    $daysDiff = (int)floor(($today - $epDay) / 86400);
+                                                    
+                                                    if ($daysDiff < 0) {
+                                                        // Future date (shouldn't happen, but handle it)
+                                                        $displayDate = '<span style="color: var(--accent-primary); font-weight: 500;">Today</span>';
+                                                    } elseif ($daysDiff == 0) {
+                                                        // Same calendar day = Today
+                                                        $displayDate = '<span style="color: var(--accent-primary); font-weight: 500;">Today</span>';
+                                                    } elseif ($daysDiff == 1) {
+                                                        // One calendar day ago = Yesterday
+                                                        $displayDate = '<span style="color: var(--accent-primary);">Yesterday</span>';
+                                                    } elseif ($daysDiff < 7) {
+                                                        // 2-6 days ago
+                                                        $displayDate = '<span style="color: var(--accent-primary);">' . $daysDiff . ' days ago</span>';
+                                                    } else {
+                                                        // 7+ days ago - show actual date
+                                                        $displayDate = '<span class="text-muted">' . date('M j, Y', $epDate) . '</span>';
+                                                    }
+                                                }
+                                            }
+                                            
+                                            echo !empty($displayDate) ? $displayDate : '<span style="color: var(--text-muted); font-style: italic;">Unknown</span>';
                                             ?>
                                         </td>
                                         <td class="text-muted">
