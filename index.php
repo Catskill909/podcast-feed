@@ -713,9 +713,12 @@ if (isset($_GET['edit'])) {
                         <div id="rssImportErrorMessage"></div>
                     </div>
                     
+                    <!-- Validation Results Panel (NEW) -->
+                    <div id="rssValidationPanel" style="display: none; margin-top: var(--spacing-md);"></div>
+                    
                     <div id="rssImportLoading" style="display: none; text-align: center; padding: var(--spacing-xl);">
                         <div style="font-size: 3rem; margin-bottom: var(--spacing-md);">⏳</div>
-                        <p style="color: var(--text-secondary);">Fetching and parsing RSS feed...</p>
+                        <p id="rssLoadingMessage" style="color: var(--text-secondary);">Validating feed...</p>
                     </div>
                 </div>
                 

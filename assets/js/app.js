@@ -889,13 +889,49 @@ async function fetchRssFeedData() {
         return;
     }
     
-    // Show loading state
+    // Hide previous errors and validation results
     document.getElementById('rssImportError').style.display = 'none';
+    document.getElementById('rssValidationPanel').style.display = 'none';
+    
+    // Show loading state
     document.getElementById('rssImportLoading').style.display = 'block';
+    updateRssLoadingMessage('Validating feed...');
     document.getElementById('rssFetchButton').disabled = true;
     
     try {
-        // Fetch feed data from API
+        // STEP 1: VALIDATE FEED (NEW)
+        const validationResult = await validateRssFeedBeforeImport(feedUrl);
+        
+        if (!validationResult.success) {
+            showRssError(validationResult.error || 'Validation failed');
+            return;
+        }
+        
+        const validation = validationResult.validation;
+        
+        // Check if feed can be imported
+        if (!validation.can_import) {
+            // Show blocking errors
+            showValidationErrors(validation);
+            return;
+        }
+        
+        // Check for warnings
+        if (validation.warning_messages && validation.warning_messages.length > 0) {
+            // Show warnings and wait for user decision
+            const shouldContinue = await showValidationWarnings(validation);
+            if (!shouldContinue) {
+                return; // User cancelled
+            }
+        } else {
+            // Show brief success message
+            showValidationSuccess(validation);
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Show for 1 second
+        }
+        
+        // STEP 2: FETCH FULL DATA (EXISTING)
+        updateRssLoadingMessage('Fetching full feed data...');
+        
         const formData = new FormData();
         formData.append('feed_url', feedUrl);
         
@@ -919,6 +955,135 @@ async function fetchRssFeedData() {
         document.getElementById('rssImportLoading').style.display = 'none';
         document.getElementById('rssFetchButton').disabled = false;
     }
+}
+
+// NEW: Validate RSS feed before import
+async function validateRssFeedBeforeImport(feedUrl) {
+    try {
+        const response = await fetch('api/validate-rss-import.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ feed_url: feedUrl })
+        });
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Validation Error:', error);
+        return {
+            success: false,
+            error: 'Unable to validate feed. Please try again.'
+        };
+    }
+}
+
+// NEW: Update loading message
+function updateRssLoadingMessage(message) {
+    const loadingMsg = document.getElementById('rssLoadingMessage');
+    if (loadingMsg) {
+        loadingMsg.textContent = message;
+    }
+}
+
+// NEW: Show validation success (brief)
+function showValidationSuccess(validation) {
+    const panel = document.getElementById('rssValidationPanel');
+    const feedInfo = validation.feed_info || {};
+    
+    panel.innerHTML = `
+        <div class="alert alert-success">
+            <div class="alert-icon">✅</div>
+            <div>
+                <strong>Feed validated successfully!</strong>
+                <ul class="validation-check-list">
+                    <li>Valid ${feedInfo.feed_type || 'RSS 2.0'} structure</li>
+                    <li>Cover image: ${feedInfo.image_url ? 'Found' : 'N/A'}</li>
+                    <li>${feedInfo.episode_count || 0} episodes found</li>
+                </ul>
+            </div>
+        </div>
+    `;
+    panel.style.display = 'block';
+}
+
+// NEW: Show validation warnings (requires user action)
+function showValidationWarnings(validation) {
+    return new Promise((resolve) => {
+        const panel = document.getElementById('rssValidationPanel');
+        const warnings = validation.warning_messages || [];
+        
+        panel.innerHTML = `
+            <div class="alert alert-warning">
+                <div class="alert-icon">⚠️</div>
+                <div>
+                    <strong>Feed has ${warnings.length} warning(s)</strong>
+                    <ul class="validation-check-list">
+                        ${warnings.map(w => `<li>${w.message || w}</li>`).join('')}
+                    </ul>
+                    <p style="margin-top: var(--spacing-sm); font-size: var(--font-size-sm); color: var(--text-secondary);">
+                        These issues won't prevent import, but may affect compatibility with some podcast apps.
+                    </p>
+                    <div class="validation-buttons">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="cancelRssValidation()">
+                            Cancel
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="continueRssImportWithWarnings()">
+                            Continue Anyway
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        panel.style.display = 'block';
+        
+        // Set up global callbacks
+        window.cancelRssValidation = () => {
+            panel.style.display = 'none';
+            document.getElementById('rssImportLoading').style.display = 'none';
+            document.getElementById('rssFetchButton').disabled = false;
+            resolve(false);
+        };
+        
+        window.continueRssImportWithWarnings = () => {
+            panel.style.display = 'none';
+            resolve(true);
+        };
+    });
+}
+
+// NEW: Show validation errors (blocking)
+function showValidationErrors(validation) {
+    const panel = document.getElementById('rssValidationPanel');
+    const errors = validation.errors || [];
+    
+    panel.innerHTML = `
+        <div class="alert alert-danger">
+            <div class="alert-icon">❌</div>
+            <div>
+                <strong>Cannot import feed - ${errors.length} critical issue(s) found</strong>
+                <div style="margin-top: var(--spacing-md);">
+                    ${errors.map(error => `
+                        <div class="validation-error-detail">
+                            <strong>✗ ${error.message || 'Unknown error'}</strong>
+                            ${error.details ? `<p style="margin: var(--spacing-xs) 0 0 0; color: var(--text-secondary);">${error.details}</p>` : ''}
+                            ${error.suggestion ? `<p class="validation-suggestion">💡 ${error.suggestion}</p>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="margin-top: var(--spacing-md);">
+                    <a href="https://validator.w3.org/feed/" target="_blank" class="btn btn-secondary btn-sm">
+                        <i class="fa-solid fa-external-link"></i> Validate Feed Externally
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    panel.style.display = 'block';
+    
+    // Hide loading, re-enable button
+    document.getElementById('rssImportLoading').style.display = 'none';
+    document.getElementById('rssFetchButton').disabled = false;
 }
 
 function displayRssPreview(data) {
@@ -980,31 +1145,9 @@ async function importRssFeed() {
     importBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Importing...';
     
     try {
-        // Get the preview data
-        const previewData = window.rssPreviewData;
-        
-        // Create a simple form submission
-        const form = document.getElementById('rssImportForm');
-        
-        // Add hidden fields for the additional data
-        if (previewData) {
-            if (previewData.latest_episode_date) {
-                const dateInput = document.createElement('input');
-                dateInput.type = 'hidden';
-                dateInput.name = 'latest_episode_date';
-                dateInput.value = previewData.latest_episode_date;
-                form.appendChild(dateInput);
-            }
-            if (previewData.episode_count) {
-                const countInput = document.createElement('input');
-                countInput.type = 'hidden';
-                countInput.name = 'episode_count';
-                countInput.value = previewData.episode_count;
-                form.appendChild(countInput);
-            }
-        }
-        
-        // Submit the original form
+        // Submit the form
+        // NOTE: latest_episode_date will be populated by cron job or manual refresh
+        // We don't pass it during import to avoid stale data
         form.submit();
     } catch (error) {
         console.error('Import Error:', error);

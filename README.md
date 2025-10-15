@@ -4,6 +4,80 @@ A modern, feature-rich podcast directory management system with RSS feed auto-im
 
 ---
 
+## 🎯 IMPORTANT: What This App Does
+
+**PodFeed Builder is a FEED AGGREGATOR, not a podcast host.**
+
+### **Core Purpose:**
+This app creates a **meta-feed** (RSS feed of RSS feeds) for consumption by external applications (Flutter app, podcast players, etc.). It aggregates multiple podcast feeds into a single manageable directory.
+
+### **Critical Architecture Principle:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  DATA FLOW - UNDERSTAND THIS TO AVOID BUGS!                │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  SOURCE FEEDS (External)                                    │
+│  └─ Podcast episodes, dates, metadata                       │
+│     └─ THE SOURCE OF TRUTH                                  │
+│                                                             │
+│  YOUR DATABASE (podcasts.xml)                               │
+│  └─ Podcast title, feed URL, cover image                    │
+│  └─ Cached episode dates (updated by cron)                  │
+│     └─ FOR DISPLAY ONLY, NOT SOURCE OF TRUTH               │
+│                                                             │
+│  YOUR FEED (feed.php)                                       │
+│  └─ Aggregated list of podcasts                            │
+│     └─ Points to source feeds                               │
+│        └─ Flutter app reads this                            │
+│                                                             │
+│  FLUTTER APP (External)                                     │
+│  └─ Reads your feed                                         │
+│     └─ Fetches episodes from source feeds                   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### **What This Means For Development:**
+
+⚠️ **CRITICAL:** Latest episode dates and episode counts should ALWAYS come from the source RSS feeds, never from your database during import.
+
+**Why?**
+- You don't host the podcasts - you just list them
+- Source feeds are the single source of truth
+- Your database is just a cache for performance
+- Episode data must stay current with source feeds
+
+**How It Works:**
+1. **Import:** Saves podcast metadata (title, URL, image) - NO episode data
+2. **Cron Job:** Fetches episode data from source feeds every 30 minutes
+3. **Display:** Shows cached episode data from database (fast)
+4. **Modal/Preview:** Fetches live from source feeds (always current)
+5. **Your Feed:** Points to source feeds (Flutter app fetches from source)
+
+**Don't Try To:**
+- ❌ Store episode dates during import (they'll be stale)
+- ❌ Fetch RSS feeds on every page load (too slow)
+- ❌ Treat your database as the source of truth for episodes
+
+**Do:**
+- ✅ Let cron job update episode data regularly
+- ✅ Cache episode data for display performance
+- ✅ Fetch live data only when needed (modals, health checks)
+- ✅ Always point to source feeds in your output
+
+### **Future Potential:**
+While this app is currently a feed aggregator, it could evolve into:
+- Full podcast hosting platform
+- Podcast player website
+- Episode management system
+- Analytics dashboard
+
+**But for now:** It's a feed aggregator. Keep this in mind during development to avoid architectural confusion.
+
+---
+
 ## ✅ DEPLOYMENT STATUS
 
 ### **Production Deployment (Coolify/Nixpacks)**
@@ -59,8 +133,9 @@ git push origin main
 ### **Core Features**
 - **Full CRUD Operations**: Create, Read, Update, Delete podcast entries
 - **RSS Feed Auto-Import** ✨: Import podcasts from any RSS feed with one click
+- **RSS Feed Validation** ✨ NEW: Pre-import validation catches bad feeds before they cause issues
 - **Podcast Health Check** ✨: Validate RSS 2.0 structure, iTunes namespace, and feed accessibility
-- **Podcast Preview Cards** ✨ NEW: Click cover/title to see comprehensive RSS metadata in beautiful modal
+- **Podcast Preview Cards** ✨: Click cover/title to see comprehensive RSS metadata in beautiful modal
 - **Image Management**: Upload or auto-download cover images with validation
 - **XML-Based Storage**: Lightweight file-based storage system
 - **RSS Feed Generation**: Standard-compliant RSS feed output for app integration
@@ -126,6 +201,7 @@ podcast-feed/
 │   ├── PodcastManager.php       # Core CRUD operations
 │   ├── XMLHandler.php           # XML file management
 │   ├── ImageUploader.php        # Image upload handling
+│   ├── RssImportValidator.php   # RSS feed validation (NEW)
 │   └── functions.php            # Utility functions
 ├── assets/
 │   ├── css/
@@ -150,14 +226,28 @@ podcast-feed/
 
 1. Click **"Import from RSS"** button
 2. Paste any podcast RSS feed URL
-3. System automatically extracts:
+3. Click **"Fetch Feed"**
+4. **NEW: Automatic Validation** (2-3 seconds)
+   - ✅ **Perfect feeds**: Brief success message, auto-continues
+   - ⚠️ **Feeds with warnings**: Shows issues, you choose to continue or cancel
+   - ❌ **Bad feeds**: Shows errors, import blocked with helpful suggestions
+5. System automatically extracts:
    - Podcast title
    - Description
    - Cover image (auto-downloads)
    - Episode count
    - Feed type (RSS 2.0, Atom, iTunes)
-4. Preview and edit extracted data
-5. Click **"Import Podcast"** to save
+6. Preview and edit extracted data
+7. Click **"Import Podcast"** to save
+
+**Validation Checks:**
+- Valid RSS 2.0/Atom XML structure
+- Feed URL accessibility (HTTP 200)
+- Cover image exists and meets size requirements (1400-3000px)
+- Required fields present (title, link, description)
+- At least one episode exists
+- iTunes namespace and tags (warning if missing)
+- Response time (warning if >5 seconds)
 
 ### **Option 2: Add Manually**
 
@@ -481,8 +571,8 @@ For issues, questions, or feature requests:
 
 ---
 
-**Version**: 2.2.0  
-**Last Updated**: October 14, 2025  
+**Version**: 2.3.0  
+**Last Updated**: October 15, 2025  
 **Compatibility**: PHP 7.4+, Modern Browsers  
 **Status**: ✅ Production Ready - Fully Automated  
-**Features**: RSS Auto-Import, Health Check, Auto-Sync Sorting, Podcast Preview Cards, Material Design UI, Persistent Storage
+**Features**: RSS Auto-Import with Validation, Health Check, Auto-Sync Sorting, Podcast Preview Cards, Material Design UI, Persistent Storage

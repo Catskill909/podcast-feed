@@ -149,6 +149,54 @@
   margin-top: 2px;
 }
 
+/* Validation UI (RSS Import) */
+.validation-check-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-sm) 0 0 var(--spacing-lg);
+  font-size: var(--font-size-sm);
+}
+
+.validation-check-list li {
+  padding: var(--spacing-xs) 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-xs);
+}
+
+.validation-check-list li::before {
+  content: '✓';
+  color: var(--accent-primary);
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.validation-error-detail {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+}
+
+.validation-error-detail strong {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  color: var(--accent-danger);
+}
+
+.validation-suggestion {
+  margin-top: var(--spacing-xs);
+  color: var(--accent-warning);
+  font-size: var(--font-size-sm);
+}
+
+.validation-buttons {
+  margin-top: var(--spacing-md);
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
 /* Modals */
 .modal-overlay {
   position: fixed;
