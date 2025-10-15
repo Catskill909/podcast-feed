@@ -8,8 +8,28 @@ require_once __DIR__ . '/../config/config.php';
  */
 class RssFeedParser
 {
-    private $timeout = 10; // seconds
+    private $timeout = 3; // seconds (reduced for faster failures)
     private $userAgent = 'PodFeed Builder/1.0';
+    private $cacheTime = 3600; // Cache results for 1 hour
+
+    /**
+     * Get cached feed data if available
+     */
+    private function getCachedFeed($url) {
+        $cacheFile = sys_get_temp_dir() . '/feed_cache_' . md5($url);
+        if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $this->cacheTime)) {
+            return file_get_contents($cacheFile);
+        }
+        return false;
+    }
+
+    /**
+     * Save feed data to cache
+     */
+    private function cacheFeed($url, $content) {
+        $cacheFile = sys_get_temp_dir() . '/feed_cache_' . md5($url);
+        file_put_contents($cacheFile, $content);
+    }
     
     /**
      * Fetch and parse RSS feed from URL
@@ -68,10 +88,16 @@ class RssFeedParser
     }
     
     /**
-     * Fetch feed content using cURL
+     * Fetch feed content using cURL with caching
      */
     private function fetchFeedContent($url)
     {
+        // Try cache first
+        $cached = $this->getCachedFeed($url);
+        if ($cached !== false) {
+            return $cached;
+        }
+        
         $ch = curl_init();
         
         // Enable SSL verification in production, disable in development
@@ -83,6 +109,7 @@ class RssFeedParser
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_MAXREDIRS => 5,
             CURLOPT_TIMEOUT => $this->timeout,
+            CURLOPT_CONNECTTIMEOUT => 2, // Fast connection timeout
             CURLOPT_USERAGENT => $this->userAgent,
             CURLOPT_SSL_VERIFYPEER => $sslVerify,
             CURLOPT_ENCODING => '', // Accept all encodings
@@ -95,8 +122,13 @@ class RssFeedParser
         curl_close($ch);
         
         if ($error || $httpCode !== 200) {
-            error_log("RSS Fetch Error: HTTP $httpCode - $error");
+            error_log("RSS Fetch Error for $url: HTTP $httpCode - $error");
             return false;
+        }
+        
+        // Cache successful response
+        if ($content) {
+            $this->cacheFeed($url, $content);
         }
         
         return $content;

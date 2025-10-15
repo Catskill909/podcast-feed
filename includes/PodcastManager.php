@@ -296,6 +296,8 @@ class PodcastManager
 
     /**
      * Get all podcasts
+     * NOTE: Does NOT fetch RSS feeds on page load (performance/health check fix)
+     * Use refreshPodcastFeed() or cron job to update episode data
      */
     public function getAllPodcasts($includeImageInfo = false): array
     {
@@ -307,20 +309,9 @@ class PodcastManager
                 $podcasts = [];
             }
 
-            // Fetch latest episode data from RSS feeds
+            // Only include image info if requested (no RSS fetching on page load)
             foreach ($podcasts as &$podcast) {
                 try {
-                    if (!empty($podcast['feed_url'])) {
-                        $parser = new RssFeedParser();
-                        $feedData = $parser->fetchAndParse($podcast['feed_url']);
-                        
-                        if ($feedData['success']) {
-                            // Update with fresh data from RSS feed
-                            $podcast['latest_episode_date'] = $feedData['data']['latest_episode_date'] ?? $podcast['latest_episode_date'] ?? '';
-                            $podcast['episode_count'] = $feedData['data']['episode_count'] ?? $podcast['episode_count'] ?? '0';
-                        }
-                    }
-                    
                     // Include image info if requested
                     if ($includeImageInfo && !empty($podcast['cover_image'])) {
                         $imageInfo = $this->imageUploader->getImageInfo($podcast['cover_image']);
@@ -328,7 +319,7 @@ class PodcastManager
                     }
                 } catch (Exception $e) {
                     // Log the error but continue with other podcasts
-                    error_log('Error fetching feed for podcast ' . ($podcast['id'] ?? 'unknown') . ': ' . $e->getMessage());
+                    error_log('Error processing podcast ' . ($podcast['id'] ?? 'unknown') . ': ' . $e->getMessage());
                     continue;
                 }
             }
