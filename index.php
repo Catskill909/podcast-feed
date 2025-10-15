@@ -24,7 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'title' => $_POST['title'] ?? '',
                 'feed_url' => $_POST['feed_url'] ?? '',
                 'description' => $_POST['description'] ?? '',
-                'rss_image_url' => $_POST['rss_image_url'] ?? ''
+                'rss_image_url' => $_POST['rss_image_url'] ?? '',
+                'latest_episode_date' => $_POST['latest_episode_date'] ?? '',
+                'episode_count' => $_POST['episode_count'] ?? '0'
             ];
             $result = $podcastManager->createPodcast($data, $_FILES['cover_image'] ?? null);
             $message = $result['message'];
