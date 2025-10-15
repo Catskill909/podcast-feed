@@ -31,6 +31,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = $podcastManager->createPodcast($data, $_FILES['cover_image'] ?? null);
             $message = $result['message'];
             $messageType = $result['success'] ? 'success' : 'danger';
+            
+            // CRITICAL: Auto-refresh feed metadata after successful import
+            // This populates latest_episode_date immediately instead of waiting for cron
+            if ($result['success'] && !empty($result['id'])) {
+                require_once __DIR__ . '/includes/RssFeedParser.php';
+                try {
+                    $parser = new RssFeedParser();
+                    $podcast = $podcastManager->getPodcast($result['id']);
+                    if ($podcast && !empty($podcast['feed_url'])) {
+                        $feedResult = $parser->fetchFeedMetadata($podcast['feed_url']);
+                        if ($feedResult['success']) {
+                            $podcastManager->updatePodcastMetadata($result['id'], [
+                                'latest_episode_date' => $feedResult['latest_episode_date'] ?? '',
+                                'episode_count' => $feedResult['episode_count'] ?? '0'
+                            ]);
+                        }
+                    }
+                } catch (Exception $e) {
+                    // Log error but don't fail the import
+                    error_log('Auto-refresh after import failed: ' . $e->getMessage());
+                }
+            }
             break;
 
         case 'update':
