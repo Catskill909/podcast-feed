@@ -370,11 +370,17 @@ class PodcastManager
 
     /**
      * Get RSS feed XML
+     * Uses fresh podcast data with live RSS feed information (same as UI display)
      */
     public function getRSSFeed($sortBy = 'episodes', $sortOrder = 'desc')
     {
         try {
-            return $this->xmlHandler->generateRSSFeed($sortBy, $sortOrder);
+            // Get podcasts with fresh RSS data (same method used by UI)
+            // This ensures latest_episode_date is current from the actual RSS feeds
+            $podcasts = $this->getAllPodcasts(false);
+            
+            // Generate feed using the fresh data
+            return $this->xmlHandler->generateRSSFeedFromData($podcasts, $sortBy, $sortOrder);
         } catch (Exception $e) {
             $this->logError('RSS_ERROR', $e->getMessage());
             return false;

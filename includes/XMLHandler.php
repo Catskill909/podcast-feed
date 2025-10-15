@@ -513,6 +513,115 @@ class XMLHandler
     }
     
     /**
+     * Generate RSS feed XML from provided podcast data
+     * This version accepts fresh podcast data instead of reading from XML
+     * Used by PodcastManager to ensure latest episode dates are current
+     */
+    public function generateRSSFeedFromData($podcasts, $sortBy = 'episodes', $sortOrder = 'desc')
+    {
+        try {
+            $rss = new DOMDocument('1.0', 'UTF-8');
+            $rss->formatOutput = true;
+
+            // RSS root element
+            $rssRoot = $rss->createElement('rss');
+            $rssRoot->setAttribute('version', '2.0');
+            $rssRoot->setAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom');
+
+            // Channel element
+            $channel = $rss->createElement('channel');
+
+            // Channel metadata
+            $channel->appendChild($rss->createElement('title', 'Available Podcasts Directory'));
+            $channel->appendChild($rss->createElement('description', 'Directory of available podcasts for mobile app integration'));
+            $channel->appendChild($rss->createElement('link', APP_URL));
+
+            // Self link
+            $atomLink = $rss->createElement('atom:link');
+            $atomLink->setAttribute('href', APP_URL . '/feed.php');
+            $atomLink->setAttribute('rel', 'self');
+            $atomLink->setAttribute('type', 'application/rss+xml');
+            $channel->appendChild($atomLink);
+
+            $channel->appendChild($rss->createElement('lastBuildDate', date('r')));
+            $channel->appendChild($rss->createElement('generator', APP_NAME . ' v' . APP_VERSION));
+
+            // Sort podcasts
+            $podcasts = $this->sortPodcasts($podcasts, $sortBy, $sortOrder);
+            
+            // Add podcast items
+            foreach ($podcasts as $podcast) {
+                if (isset($podcast['status']) && $podcast['status'] === 'active') {
+                    $item = $rss->createElement('item');
+
+                    // Use plain text instead of CDATA for better compatibility
+                    $titleText = htmlspecialchars($podcast['title'] ?? 'Untitled', ENT_XML1, 'UTF-8');
+                    $item->appendChild($rss->createElement('title', $titleText));
+
+                    $descText = !empty($podcast['description']) ? $podcast['description'] : 'Available podcast feed';
+                    $descText = htmlspecialchars($descText, ENT_XML1, 'UTF-8');
+                    $item->appendChild($rss->createElement('description', $descText));
+
+                    $linkText = htmlspecialchars($podcast['feed_url'] ?? '', ENT_XML1, 'UTF-8');
+                    $item->appendChild($rss->createElement('link', $linkText));
+
+                    $item->appendChild($rss->createElement('guid', $podcast['id'] ?? ''));
+                    
+                    // Use latest_episode_date if available, fallback to created_date
+                    if (!empty($podcast['latest_episode_date'])) {
+                        $pubDate = date('r', strtotime($podcast['latest_episode_date']));
+                    } else {
+                        $pubDate = isset($podcast['created_date']) ? date('r', strtotime($podcast['created_date'])) : date('r');
+                    }
+                    $item->appendChild($rss->createElement('pubDate', $pubDate));
+
+                    // Add cover image as enclosure
+                    if (!empty($podcast['cover_image'])) {
+                        $enclosure = $rss->createElement('enclosure');
+                        $enclosure->setAttribute('url', APP_URL . '/uploads/covers/' . $podcast['cover_image']);
+                        
+                        // Determine correct MIME type based on file extension
+                        $ext = strtolower(pathinfo($podcast['cover_image'], PATHINFO_EXTENSION));
+                        $mimeType = 'image/jpeg';
+                        if ($ext === 'png') {
+                            $mimeType = 'image/png';
+                        } elseif ($ext === 'gif') {
+                            $mimeType = 'image/gif';
+                        }
+                        
+                        $enclosure->setAttribute('type', $mimeType);
+                        $item->appendChild($enclosure);
+                    }
+
+                    $channel->appendChild($item);
+                }
+            }
+
+            $rssRoot->appendChild($channel);
+            $rss->appendChild($rssRoot);
+
+            return $rss->saveXML();
+        } catch (Exception $e) {
+            // Return a basic RSS feed on error
+            $errorRss = new DOMDocument('1.0', 'UTF-8');
+            $errorRss->formatOutput = true;
+
+            $rssRoot = $errorRss->createElement('rss');
+            $rssRoot->setAttribute('version', '2.0');
+
+            $channel = $errorRss->createElement('channel');
+            $channel->appendChild($errorRss->createElement('title', 'Podcast Directory Error'));
+            $channel->appendChild($errorRss->createElement('description', 'Error generating podcast feed'));
+            $channel->appendChild($errorRss->createElement('link', APP_URL));
+
+            $rssRoot->appendChild($channel);
+            $errorRss->appendChild($rssRoot);
+
+            return $errorRss->saveXML();
+        }
+    }
+    
+    /**
      * Sort podcasts array by specified criteria
      */
     private function sortPodcasts($podcasts, $sortBy, $sortOrder)
