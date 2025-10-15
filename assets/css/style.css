@@ -134,10 +134,15 @@ a:hover, a:focus {
 }
 
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   background-color: var(--bg-secondary);
   border-bottom: 1px solid var(--border-primary);
   padding: var(--spacing-lg) 0;
   margin-bottom: var(--spacing-xxl);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .header-content {
