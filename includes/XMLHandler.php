@@ -194,6 +194,20 @@ class XMLHandler
         // Add latest episode date and episode count if provided
         $latestEpisodeDate = $this->dom->createElement('latest_episode_date', $data['latest_episode_date'] ?? '');
         $episodeCount = $this->dom->createElement('episode_count', $data['episode_count'] ?? '0');
+        
+        // Add health monitoring fields (initialized)
+        $healthStatus = $this->dom->createElement('health_status', 'healthy');
+        $lastCheckDate = $this->dom->createElement('last_check_date', '');
+        $lastSuccessDate = $this->dom->createElement('last_success_date', date('Y-m-d H:i:s'));
+        $consecutiveFailures = $this->dom->createElement('consecutive_failures', '0');
+        $totalFailures = $this->dom->createElement('total_failures', '0');
+        $totalChecks = $this->dom->createElement('total_checks', '0');
+        $avgResponseTime = $this->dom->createElement('avg_response_time', '0');
+        $successRate = $this->dom->createElement('success_rate', '100');
+        $lastError = $this->dom->createElement('last_error', '');
+        $lastErrorDate = $this->dom->createElement('last_error_date', '');
+        $autoDisabled = $this->dom->createElement('auto_disabled', 'false');
+        $autoDisabledDate = $this->dom->createElement('auto_disabled_date', '');
 
         $podcast->appendChild($title);
         $podcast->appendChild($feedUrl);
@@ -204,6 +218,18 @@ class XMLHandler
         $podcast->appendChild($status);
         $podcast->appendChild($latestEpisodeDate);
         $podcast->appendChild($episodeCount);
+        $podcast->appendChild($healthStatus);
+        $podcast->appendChild($lastCheckDate);
+        $podcast->appendChild($lastSuccessDate);
+        $podcast->appendChild($consecutiveFailures);
+        $podcast->appendChild($totalFailures);
+        $podcast->appendChild($totalChecks);
+        $podcast->appendChild($avgResponseTime);
+        $podcast->appendChild($successRate);
+        $podcast->appendChild($lastError);
+        $podcast->appendChild($lastErrorDate);
+        $podcast->appendChild($autoDisabled);
+        $podcast->appendChild($autoDisabledDate);
 
         $podcastsNode->appendChild($podcast);
 
@@ -381,7 +407,20 @@ class XMLHandler
             'updated_date' => $xpath->query('updated_date', $node)->item(0)->nodeValue ?? '',
             'status' => $xpath->query('status', $node)->item(0)->nodeValue ?? 'active',
             'latest_episode_date' => $xpath->query('latest_episode_date', $node)->item(0)->nodeValue ?? '',
-            'episode_count' => $xpath->query('episode_count', $node)->item(0)->nodeValue ?? '0'
+            'episode_count' => $xpath->query('episode_count', $node)->item(0)->nodeValue ?? '0',
+            // Health monitoring fields
+            'health_status' => $xpath->query('health_status', $node)->item(0)->nodeValue ?? 'healthy',
+            'last_check_date' => $xpath->query('last_check_date', $node)->item(0)->nodeValue ?? '',
+            'last_success_date' => $xpath->query('last_success_date', $node)->item(0)->nodeValue ?? '',
+            'consecutive_failures' => $xpath->query('consecutive_failures', $node)->item(0)->nodeValue ?? '0',
+            'total_failures' => $xpath->query('total_failures', $node)->item(0)->nodeValue ?? '0',
+            'total_checks' => $xpath->query('total_checks', $node)->item(0)->nodeValue ?? '0',
+            'avg_response_time' => $xpath->query('avg_response_time', $node)->item(0)->nodeValue ?? '0',
+            'success_rate' => $xpath->query('success_rate', $node)->item(0)->nodeValue ?? '100',
+            'last_error' => $xpath->query('last_error', $node)->item(0)->nodeValue ?? '',
+            'last_error_date' => $xpath->query('last_error_date', $node)->item(0)->nodeValue ?? '',
+            'auto_disabled' => $xpath->query('auto_disabled', $node)->item(0)->nodeValue ?? 'false',
+            'auto_disabled_date' => $xpath->query('auto_disabled_date', $node)->item(0)->nodeValue ?? ''
         ];
     }
 

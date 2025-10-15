@@ -22,6 +22,7 @@ chdir(dirname(__DIR__));
 
 require_once __DIR__ . '/../includes/PodcastManager.php';
 require_once __DIR__ . '/../includes/RssFeedParser.php';
+require_once __DIR__ . '/../includes/FeedHealthMonitor.php';
 
 // Configuration
 $config = [
@@ -46,6 +47,7 @@ try {
     $podcasts = $podcastManager->getAllPodcasts();
     
     $parser = new RssFeedParser();
+    $healthMonitor = new FeedHealthMonitor();
     
     $stats = [
         'total' => count($podcasts),
@@ -62,10 +64,14 @@ try {
         log_message("[$podcastNum/{$stats['total']}] Processing: {$podcast['title']}");
         
         try {
-            // Fetch feed metadata
+            // Fetch feed metadata with timing
+            $startTime = microtime(true);
             $result = $parser->fetchFeedMetadata($podcast['feed_url']);
+            $responseTime = microtime(true) - $startTime;
             
             if ($result['success']) {
+                // Record successful check
+                $healthMonitor->recordSuccess($podcast['id'], $responseTime);
                 // Check if data actually changed
                 $hasChanges = false;
                 
@@ -105,8 +111,11 @@ try {
                     log_message("  → No changes detected");
                 }
             } else {
-                $stats['failed']++;
+                // Record failure with error details
                 $error = $result['error'] ?? 'Unknown error';
+                $healthMonitor->recordFailure($podcast['id'], $error, 'fetch_error', 0, $responseTime);
+                
+                $stats['failed']++;
                 $stats['errors'][] = [
                     'podcast' => $podcast['title'],
                     'error' => $error
@@ -115,6 +124,9 @@ try {
             }
             
         } catch (Exception $e) {
+            // Record exception as failure
+            $healthMonitor->recordFailure($podcast['id'], $e->getMessage(), 'exception', 0, 0);
+            
             $stats['failed']++;
             $stats['errors'][] = [
                 'podcast' => $podcast['title'],
@@ -133,6 +145,9 @@ try {
     $endTime = microtime(true);
     $executionTime = round($endTime - $startTime, 2);
     
+    // Get health summary
+    $healthSummary = $healthMonitor->getHealthSummary();
+    
     // Summary
     log_message("========================================");
     log_message("Auto-Scan Completed");
@@ -142,6 +157,15 @@ try {
     log_message("No Changes: {$stats['skipped']}");
     log_message("Failed: {$stats['failed']}");
     log_message("Execution Time: {$executionTime}s");
+    log_message("");
+    log_message("Feed Health Status:");
+    log_message("  🟢 Healthy: {$healthSummary['healthy']}");
+    log_message("  🟡 Warning: {$healthSummary['warning']}");
+    log_message("  🟠 Degraded: {$healthSummary['degraded']}");
+    log_message("  🔴 Critical: {$healthSummary['critical']}");
+    log_message("  ⚫ Inactive: {$healthSummary['inactive']}");
+    log_message("  Avg Success Rate: {$healthSummary['avg_success_rate']}%");
+    log_message("  Avg Response Time: {$healthSummary['avg_response_time']}s");
     
     if (!empty($stats['errors'])) {
         log_message("========================================");
