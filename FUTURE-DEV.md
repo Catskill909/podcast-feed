@@ -127,23 +127,8 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - **Status:** Complete and production-ready
 - **Docs:** [PODCAST-PREVIEW-FEATURE.md](PODCAST-PREVIEW-FEATURE.md)
 
-### 8. **Dashboard Analytics**
-- Charts showing podcast growth over time
-- Most recently added podcasts
-- Activity timeline
-- Storage usage indicator
-- **Impact:** Better insights into your directory
 
-### 9. **Keyboard Shortcuts** ⏳ *Partially Complete*
-- ✅ `Esc` - Close modals (all modals)
-- ✅ `Enter` - Submit RSS URL in import modal
-- ⏳ `Ctrl+N` - New podcast (future)
-- ⏳ `Ctrl+F` - Focus search (future)
-- ⏳ `Ctrl+S` - Save form (future)
-- **Impact:** Power users work faster
-- **Status:** Basic shortcuts implemented
-
-### 10. **Mobile-Responsive Admin**
+### 8. **Mobile-Responsive Admin**
 - Touch-friendly buttons
 - Swipe actions (swipe to delete/edit)
 - Mobile-optimized modals
@@ -162,14 +147,8 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - Manual health checks working perfectly
 - **Future Enhancement:** Automated daily checks via cron job (optional)
 
-### 13. **Version History & Rollback**
-- Track all changes to podcasts
-- See who changed what and when
-- Rollback to previous version
-- Compare versions side-by-side
-- **Impact:** Safety net for mistakes
 
-### 14. **Scheduled Publishing**
+### 13. **Scheduled Publishing**
 - Set future publish date for podcasts
 - Auto-activate at specified time
 - Schedule deactivation
@@ -281,10 +260,7 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - ✅ Episode count (automated every 30 min)
 - ✅ Last episode date (automated every 30 min)
 - ✅ Color-coded freshness indicators
-- ⏳ Total duration (future enhancement)
-- ⏳ Update frequency analysis (future enhancement)
 - **Impact:** Better metadata and insights
-- **Status:** Core tracking complete and automated
 
 ### 30. **Featured/Trending Section**
 - Mark podcasts as featured
@@ -295,12 +271,6 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 ---
 
 ## 🔐 Advanced Security & Management
-
-### 31. **Multi-User Support**
-- Multiple admin accounts
-- Role-based permissions (admin, editor, viewer)
-- Activity logs per user
-- **Impact:** Team collaboration
 
 ### 32. **Content Moderation**
 - Approval workflow for new podcasts
