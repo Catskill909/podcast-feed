@@ -154,13 +154,24 @@ git push origin main
 - **Zero Maintenance** ✨: Set it and forget it - fully automated updates
 - **Production Ready** 🚀: Auto-detects environment, handles HTTPS, no hardcoded URLs
 
-### **🎭 UI/UX Features (October 14, 2025)**
-- **Podcast Preview Cards** 👁️: Click any cover or title to see full RSS metadata
+### **🎭 UI/UX Features (October 2025)**
+- **Podcast Preview Cards** 👁️: Click info button to see full RSS metadata
 - **Beautiful Dark Modal**: Two-column layout with large image and comprehensive details
 - **Hover Effects**: Eye icon overlay on covers, gradient underline on titles
 - **Quick Actions**: Edit, Refresh, Health Check, Delete from preview
 - **Smart Formatting**: Intelligent date display (Today, Yesterday, etc.) and language names
 - **Comprehensive Data**: Shows title, description, episodes, category, author, language, pub date
+
+### **🎧 Podcast Player Modal (October 16, 2025)** ✨ NEW
+- **In-Browser Audio Player** 🎵: Play podcast episodes directly in your browser
+- **Episode Management**: Browse, search, and sort all episodes from any podcast
+- **Full Playback Controls**: Play/pause, skip ±15s, previous/next episode, progress scrubber
+- **Advanced Features**: Volume control, playback speed (0.5x-2x), keyboard shortcuts
+- **Beautiful UI**: Material Design dark mode with smooth animations
+- **Episode Actions**: Download MP3 files, play episodes instantly
+- **Smart Behavior**: Speed resets between podcasts, audio stops when modal closes
+- **Client-Side Parsing**: Fast RSS feed parsing directly in browser
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
 
 ## 📋 Requirements
 
@@ -295,10 +306,30 @@ podcast-feed/
    - Updates episode count
    - Re-sorts automatically
 
-### **Podcast Preview** 👁️ NEW
+### **Podcast Player** 🎧 NEW (October 16, 2025)
 
 1. **Click on any podcast cover or title** in the table
-2. Beautiful dark mode modal opens with comprehensive details:
+2. Beautiful player modal opens with full episode list:
+   - Podcast cover and information at top
+   - Complete list of episodes with covers and metadata
+   - Search and sort episodes
+   - Download or play any episode
+3. **Play Episodes**:
+   - Click play button on any episode
+   - Audio player bar appears at bottom
+   - Full controls: play/pause, skip, scrubber, volume, speed
+   - Keyboard shortcuts (Space, arrows, M for mute)
+4. **Episode Actions**:
+   - Download: Save MP3 file to your device
+   - Play: Stream episode directly in browser
+5. **Close**: Press Escape, click X, or click outside modal
+   - Audio stops automatically when modal closes
+   - Playback speed resets to 1.0x
+
+### **Podcast Preview** 👁️ (Info Button)
+
+1. **Click the info button (ℹ️)** next to any podcast
+2. Preview modal opens with comprehensive details:
    - Large podcast image (240x240px)
    - Full description
    - Episode count (highlighted)
@@ -564,15 +595,16 @@ For issues, questions, or feature requests:
 - 🔒 **[SECURITY-AUDIT.md](SECURITY-AUDIT.md)** - Security best practices
 - 🚀 **[FUTURE-DEV.md](FUTURE-DEV.md)** - Roadmap and planned features
 - 📡 **[RSS-IMPORT-IMPLEMENTATION.md](RSS-IMPORT-IMPLEMENTATION.md)** - RSS import feature docs
-- 👁️ **[PODCAST-PREVIEW-FEATURE.md](PODCAST-PREVIEW-FEATURE.md)** - Preview cards feature (NEW)
+- 👁️ **[PODCAST-PREVIEW-FEATURE.md](PODCAST-PREVIEW-FEATURE.md)** - Preview cards feature
+- 🎧 **[PLAYER-MODAL-IMPLEMENTATION.md](PLAYER-MODAL-IMPLEMENTATION.md)** - Podcast player modal (NEW Oct 16)
 
 ### **Historical Documentation**
 - 📁 **[docs-archive/](docs-archive/)** - Archived development and debugging docs
 
 ---
 
-**Version**: 2.3.0  
-**Last Updated**: October 15, 2025  
+**Version**: 2.4.0  
+**Last Updated**: October 16, 2025  
 **Compatibility**: PHP 7.4+, Modern Browsers  
 **Status**: ✅ Production Ready - Fully Automated  
-**Features**: RSS Auto-Import with Validation, Health Check, Auto-Sync Sorting, Podcast Preview Cards, Material Design UI, Persistent Storage
+**Features**: RSS Auto-Import with Validation, Health Check, Auto-Sync Sorting, Podcast Preview Cards, **In-Browser Podcast Player**, Material Design UI, Persistent Storage

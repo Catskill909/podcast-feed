@@ -128,6 +128,7 @@ if (isset($_GET['edit'])) {
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/sort-controls.css">
+    <link rel="stylesheet" href="assets/css/player-modal.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
     
     <!-- Simple Password Protection - ALWAYS ACTIVE -->
@@ -279,7 +280,7 @@ if (isset($_GET['edit'])) {
                                     <th>Feed URL</th>
                                     <th>Status</th>
                                     <th>Latest Episode</th>
-                                    <th>Created</th>
+                                    <th>Episodes</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -292,21 +293,24 @@ if (isset($_GET['edit'])) {
                                         data-feed-url="<?php echo htmlspecialchars($podcast['feed_url']); ?>">
                                         <td>
                                             <?php if ($podcast['cover_image'] && $podcast['image_info']): ?>
-                                                <img src="<?php echo htmlspecialchars($podcast['image_info']['url']); ?>"
-                                                    alt="<?php echo htmlspecialchars($podcast['title']); ?>"
-                                                    class="podcast-cover podcast-cover-clickable"
-                                                    onclick="showPodcastPreview('<?php echo htmlspecialchars($podcast['id']); ?>')"
-                                                    title="Click to preview - <?php echo $podcast['image_info']['width']; ?>x<?php echo $podcast['image_info']['height']; ?>px">
+                                                <div class="podcast-cover-wrapper">
+                                                    <img src="<?php echo htmlspecialchars($podcast['image_info']['url']); ?>"
+                                                        alt="<?php echo htmlspecialchars($podcast['title']); ?>"
+                                                        class="podcast-cover podcast-cover-clickable"
+                                                        onclick="showPlayerModal('<?php echo htmlspecialchars($podcast['id']); ?>')">
+                                                    <div class="play-icon-overlay">
+                                                        <i class="fa-solid fa-play"></i>
+                                                    </div>
+                                                </div>
                                             <?php else: ?>
                                                 <div class="podcast-cover-placeholder podcast-cover-clickable" 
-                                                    onclick="showPodcastPreview('<?php echo htmlspecialchars($podcast['id']); ?>')"
-                                                    title="Click to preview">No Image</div>
+                                                    onclick="showPlayerModal('<?php echo htmlspecialchars($podcast['id']); ?>')">No Image</div>
                                             <?php endif; ?>
                                         </td>
                                         <td>
                                             <strong class="podcast-title-clickable" 
-                                                onclick="showPodcastPreview('<?php echo htmlspecialchars($podcast['id']); ?>')"
-                                                title="Click to preview"><?php echo htmlspecialchars($podcast['title']); ?></strong>
+                                                onclick="showPlayerModal('<?php echo htmlspecialchars($podcast['id']); ?>')"
+                                                title="Click to play"><?php echo htmlspecialchars($podcast['title']); ?></strong>
                                         </td>
                                         <td>
                                             <button type="button" 
@@ -372,8 +376,12 @@ if (isset($_GET['edit'])) {
                                             echo !empty($displayDate) ? $displayDate : '<span style="color: var(--text-muted); font-style: italic;">Unknown</span>';
                                             ?>
                                         </td>
-                                        <td class="text-muted">
-                                            <?php echo date('M j, Y', strtotime($podcast['created_date'])); ?>
+                                        <td>
+                                            <button type="button" 
+                                                class="btn btn-outline btn-sm"
+                                                onclick="showPlayerModal('<?php echo htmlspecialchars($podcast['id']); ?>')">
+                                                <?php echo $podcast['episode_count'] ?? 0; ?>
+                                            </button>
                                         </td>
                                         <td>
                                             <div class="table-actions">
@@ -1318,7 +1326,126 @@ if (isset($_GET['edit'])) {
         </div>
     </div>
 
-    <!-- Podcast Preview Modal -->
+    <!-- Podcast Player Modal -->
+    <div class="modal-overlay player-modal-overlay" id="playerModal">
+        <div class="modal modal-xl player-modal">
+            
+            <!-- Modal Header -->
+            <div class="player-modal-header">
+                <div class="player-modal-title">
+                    <span class="player-modal-icon"><i class="fa-solid fa-microphone"></i></span>
+                    <h2 id="playerModalTitle">Podcast Player</h2>
+                </div>
+                <button class="player-modal-close" onclick="hidePlayerModal()" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body player-modal-body">
+                
+                <!-- Podcast Info Section -->
+                <div class="player-podcast-info">
+                    <div class="player-podcast-cover">
+                        <img id="playerPodcastCover" src="" alt="Podcast Cover" style="display: none;">
+                        <div class="player-podcast-cover-placeholder">🎧</div>
+                    </div>
+                    <div class="player-podcast-details">
+                        <h3 id="playerPodcastName" class="player-podcast-name"></h3>
+                        <div id="playerPodcastDescription" class="player-podcast-description"></div>
+                        <div class="player-podcast-meta">
+                            <span class="badge badge-success" id="playerStatus">Active</span>
+                        </div>
+                        <div class="player-podcast-meta" style="margin-top: var(--spacing-xs);">
+                            <span class="badge badge-primary" id="playerEpisodeCount">0 Episodes</span>
+                            <span class="text-muted" style="font-size: var(--font-size-sm);">Latest: <span id="playerLatestEpisode">Unknown</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Episodes Section -->
+                <div class="player-episodes-section">
+                    <div class="player-episodes-header">
+                        <h4>EPISODES</h4>
+                        <div class="player-episodes-controls">
+                            <input type="text" id="playerEpisodeSearch" class="form-control form-control-sm" 
+                                   placeholder="Search episodes...">
+                            <select id="playerEpisodeSort" class="form-control form-control-sm">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="title">Title A-Z</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Episodes List -->
+                    <div id="playerEpisodesList" class="player-episodes-list">
+                        <div class="player-loading">
+                            <div class="spinner"></div>
+                            <p>Loading episodes...</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Audio Player (Sticky Bottom) -->
+            <div id="audioPlayerBar" class="audio-player-bar" style="display: none;">
+                <div class="audio-player-info">
+                    <span class="audio-player-label">NOW PLAYING</span>
+                    <span id="currentEpisodeTitle" class="audio-player-title"></span>
+                    <button class="audio-player-close" onclick="stopPlayback()">&times;</button>
+                </div>
+                
+                <div class="audio-player-progress">
+                    <span id="currentTime" class="audio-time">0:00</span>
+                    <div class="audio-progress-bar">
+                        <div id="audioBuffered" class="audio-buffered"></div>
+                        <div id="audioProgress" class="audio-progress"></div>
+                        <input type="range" id="audioScrubber" class="audio-scrubber" 
+                               min="0" max="100" value="0" step="0.1">
+                    </div>
+                    <span id="totalDuration" class="audio-time">0:00</span>
+                </div>
+
+                <div class="audio-player-controls">
+                    <button class="audio-control-btn" onclick="previousEpisode()" title="Previous">
+                        <i class="fa-solid fa-backward-step"></i>
+                    </button>
+                    <button class="audio-control-btn" onclick="skipBackward()" title="Skip -15s">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                    <button class="audio-control-btn audio-control-play" onclick="togglePlayback()" title="Play/Pause">
+                        <span id="playPauseIcon"><i class="fa-solid fa-play"></i></span>
+                    </button>
+                    <button class="audio-control-btn" onclick="skipForward()" title="Skip +15s">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                    <button class="audio-control-btn" onclick="nextEpisode()" title="Next">
+                        <i class="fa-solid fa-forward-step"></i>
+                    </button>
+                </div>
+
+                <div class="audio-player-extras">
+                    <div class="audio-volume">
+                        <button onclick="toggleMute()"><span id="volumeIcon"><i class="fa-solid fa-volume-high"></i></span></button>
+                        <input type="range" id="volumeSlider" min="0" max="100" value="100">
+                    </div>
+                    <div class="audio-speed">
+                        <button onclick="cyclePlaybackSpeed()">
+                            <span id="speedLabel">1x</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hidden audio element -->
+                <audio id="audioPlayer" preload="metadata"></audio>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Podcast Preview Modal (Keep for info button) -->
     <div class="modal-overlay" id="previewModal">
         <div class="modal podcast-preview-modal">
             <div class="modal-header preview-modal-header">
@@ -1414,6 +1541,8 @@ if (isset($_GET['edit'])) {
     <script src="assets/js/validation.js"></script>
     <script src="assets/js/app.js"></script>
     <script src="assets/js/sort-manager.js"></script>
+    <script src="assets/js/player-modal.js"></script>
+    <script src="assets/js/audio-player.js"></script>
 </body>
 
 </html>

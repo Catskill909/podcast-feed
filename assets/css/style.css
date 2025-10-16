@@ -292,6 +292,58 @@ a:hover, a:focus {
   cursor: not-allowed;
 }
 
+.podcast-cover-wrapper {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.podcast-cover-clickable {
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: block;
+}
+
+.play-icon-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--border-radius);
+    opacity: 0.6;
+    transition: all var(--transition-base);
+    pointer-events: none;
+}
+
+.play-icon-overlay i {
+    font-size: 2rem;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    transition: all var(--transition-base);
+}
+
+.podcast-cover-wrapper:hover .play-icon-overlay {
+    background: rgba(35, 134, 54, 0.85);
+    opacity: 1;
+}
+
+.podcast-cover-wrapper:hover .play-icon-overlay i {
+    transform: scale(1.2);
+}
+
+.podcast-cover-wrapper:hover .podcast-cover-clickable {
+    transform: scale(1.05);
+}
+
+.podcast-cover-wrapper:hover {
+    filter: drop-shadow(0 4px 12px rgba(35, 134, 54, 0.4));
+}
+
 .btn-primary {
   color: white;
   background-color: var(--accent-primary);
