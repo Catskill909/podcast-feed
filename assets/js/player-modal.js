@@ -588,11 +588,18 @@ class PodcastPlayerModal {
         try {
             const date = new Date(dateString);
             const now = new Date();
-            const diffTime = now - date;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            // Reset time to midnight for accurate day comparison
+            const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            const nowOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            
+            const diffTime = nowOnly - dateOnly;
+            const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
             if (diffDays === 0) return 'Today';
             if (diffDays === 1) return 'Yesterday';
+            if (diffDays === -1) return 'Tomorrow'; // Future date
+            if (diffDays < 0) return 'In the future'; // Future date
             if (diffDays < 7) return `${diffDays} days ago`;
             
             return date.toLocaleDateString('en-US', { 
