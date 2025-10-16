@@ -7,6 +7,10 @@
 require_once __DIR__ . '/../includes/PodcastManager.php';
 require_once __DIR__ . '/../includes/RssFeedParser.php';
 
+// CRITICAL: Set these AFTER includes to override config.php settings
+error_reporting(0);
+ini_set('display_errors', 0);
+
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

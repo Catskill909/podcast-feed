@@ -7,6 +7,10 @@
 
 require_once __DIR__ . '/../includes/SortPreferenceManager.php';
 
+// CRITICAL: Set these AFTER includes to override config.php settings
+error_reporting(0);
+ini_set('display_errors', 0);
+
 header('Content-Type: application/json');
 
 $sortPrefManager = new SortPreferenceManager();

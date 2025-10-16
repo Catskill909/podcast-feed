@@ -4,10 +4,14 @@
  * Get health status, reactivate feeds, reset errors
  */
 
-header('Content-Type: application/json; charset=utf-8');
-
 require_once __DIR__ . '/../includes/FeedHealthMonitor.php';
 require_once __DIR__ . '/../includes/PodcastManager.php';
+
+// CRITICAL: Set these AFTER includes to override config.php settings
+error_reporting(0);
+ini_set('display_errors', 0);
+
+header('Content-Type: application/json; charset=utf-8');
 
 try {
     $action = $_GET['action'] ?? $_POST['action'] ?? 'status';

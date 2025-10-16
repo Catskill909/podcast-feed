@@ -4,15 +4,16 @@
  * Fetches RSS feed metadata for preview modal
  */
 
-// Prevent HTML error output
+require_once __DIR__ . '/../includes/PodcastManager.php';
+require_once __DIR__ . '/../includes/RssFeedParser.php';
+
+// CRITICAL: Set these AFTER includes to override config.php settings
+// Prevent HTML error output (must be after config.php is loaded)
 error_reporting(0);
 ini_set('display_errors', 0);
 
 // Set JSON header
 header('Content-Type: application/json; charset=utf-8');
-
-require_once __DIR__ . '/../includes/PodcastManager.php';
-require_once __DIR__ . '/../includes/RssFeedParser.php';
 
 try {
     // Get podcast ID

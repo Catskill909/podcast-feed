@@ -7,13 +7,14 @@
  * This endpoint only validates, it does NOT import
  */
 
-header('Content-Type: application/json; charset=utf-8');
+require_once __DIR__ . '/../includes/RssImportValidator.php';
 
-// Prevent HTML error output
+// CRITICAL: Set these AFTER includes to override config.php settings
+// Prevent HTML error output (must be after config.php is loaded)
 error_reporting(0);
 ini_set('display_errors', 0);
 
-require_once __DIR__ . '/../includes/RssImportValidator.php';
+header('Content-Type: application/json; charset=utf-8');
 
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

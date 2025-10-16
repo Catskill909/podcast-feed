@@ -4,15 +4,16 @@
  * Fetches and parses all episodes from a podcast's RSS feed
  */
 
+require_once __DIR__ . '/../includes/PodcastManager.php';
+require_once __DIR__ . '/../includes/RssFeedParser.php';
+
+// CRITICAL: Set these AFTER includes to override config.php settings
 // Prevent any output before JSON
-error_reporting(E_ALL);
+error_reporting(0);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
 header('Content-Type: application/json');
-
-require_once __DIR__ . '/../includes/PodcastManager.php';
-require_once __DIR__ . '/../includes/RssFeedParser.php';
 
 try {
     // Get podcast ID from query parameter
