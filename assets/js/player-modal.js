@@ -191,6 +191,12 @@ class PodcastPlayerModal {
                 latestEl.textContent = 'Unknown';
             }
         }
+        
+        // Update the badge text for Latest
+        const latestBadgeEl = document.getElementById('playerLatestEpisodeBadge');
+        if (latestBadgeEl && podcast.latest_episode) {
+            latestBadgeEl.innerHTML = `Latest: <span id="playerLatestEpisode">${this.formatDate(podcast.latest_episode)}</span>`;
+        }
     }
 
     /**
@@ -396,6 +402,29 @@ class PodcastPlayerModal {
         }
 
         listEl.innerHTML = this.filteredEpisodes.map(episode => this.renderEpisodeCard(episode)).join('');
+        
+        // Check for truncated descriptions after rendering
+        setTimeout(() => this.checkTruncatedDescriptions(), 0);
+    }
+    
+    /**
+     * Check which descriptions are truncated and add class
+     */
+    checkTruncatedDescriptions() {
+        const descriptions = document.querySelectorAll('.player-episode-description');
+        descriptions.forEach(desc => {
+            // Check if text is truncated by comparing scroll height to client height
+            if (desc.scrollHeight > desc.clientHeight) {
+                desc.classList.add('truncated');
+            }
+        });
+    }
+    
+    /**
+     * Toggle description expanded state
+     */
+    toggleDescription(element) {
+        element.classList.toggle('expanded');
     }
 
     /**
@@ -430,7 +459,7 @@ class PodcastPlayerModal {
                         <span>${episode.duration || 'Unknown'}</span>
                     </div>
                     ${episode.description ? `
-                        <p class="player-episode-description">${this.escapeHtml(episode.description)}</p>
+                        <p class="player-episode-description" data-full-text="${this.escapeHtml(episode.description)}" onclick="event.stopPropagation(); playerModal.toggleDescription(this);">${this.escapeHtml(episode.description)}</p>
                     ` : ''}
                 </div>
                 <div class="player-episode-actions">

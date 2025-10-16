@@ -1355,10 +1355,8 @@ if (isset($_GET['edit'])) {
                         <div id="playerPodcastDescription" class="player-podcast-description"></div>
                         <div class="player-podcast-meta">
                             <span class="badge badge-success" id="playerStatus">Active</span>
-                        </div>
-                        <div class="player-podcast-meta" style="margin-top: var(--spacing-xs);">
                             <span class="badge badge-primary" id="playerEpisodeCount">0 Episodes</span>
-                            <span class="text-muted" style="font-size: var(--font-size-sm);">Latest: <span id="playerLatestEpisode">Unknown</span></span>
+                            <span class="badge badge-primary" id="playerLatestEpisodeBadge">Latest: <span id="playerLatestEpisode">Unknown</span></span>
                         </div>
                     </div>
                 </div>
