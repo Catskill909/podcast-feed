@@ -70,6 +70,12 @@ class PodcastPlayerModal {
         const modal = document.getElementById('playerModal');
         if (!modal) return;
 
+        // Reset sort order to default (newest first)
+        const sortSelect = document.getElementById('playerEpisodeSort');
+        if (sortSelect) {
+            sortSelect.value = 'newest';
+        }
+
         // Show modal
         modal.classList.add('show');
         document.body.style.overflow = 'hidden';
@@ -94,6 +100,12 @@ class PodcastPlayerModal {
         // STOP all audio when closing modal
         if (window.audioPlayer) {
             window.audioPlayer.stopPlayback();
+        }
+        
+        // Reset sort order to default
+        const sortSelect = document.getElementById('playerEpisodeSort');
+        if (sortSelect) {
+            sortSelect.value = 'newest';
         }
         
         // Clear current podcast
