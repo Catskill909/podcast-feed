@@ -431,7 +431,9 @@ class PodcastPlayerModal {
      * Render a single episode card
      */
     renderEpisodeCard(episode) {
-        const isPlaying = window.audioPlayer && window.audioPlayer.currentEpisode?.id === episode.id;
+        const isPlaying = window.audioPlayer && 
+                         window.audioPlayer.currentEpisode?.id === episode.id && 
+                         window.audioPlayer.isPlaying;
         const coverUrl = episode.image_url || this.currentPodcast?.cover_url || '';
         
         return `
