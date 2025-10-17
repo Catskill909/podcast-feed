@@ -168,7 +168,7 @@ a:hover, a:focus {
 
 .logo:hover {
   text-decoration: none;
-  color: var(--text-link);
+  color: var(--accent-primary);
 }
 
 .logo-icon {
