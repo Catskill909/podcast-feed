@@ -27,6 +27,7 @@ define('APP_URL', $protocol . '://' . $host);
 // Application Settings
 define('APP_NAME', 'PodFeed Builder');
 define('APP_VERSION', '1.0.0');
+define('ASSETS_VERSION', '20251017_1001'); // Update this when JS/CSS changes
 
 // File Paths
 define('DATA_DIR', __DIR__ . '/../data');

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test JS Loading</title>
+</head>
+<body>
+    <h1>Open Console and Check:</h1>
+    <ol>
+        <li>Is app.js loading?</li>
+        <li>Are there any errors?</li>
+        <li>Does window.updateAllLatestEpisodeDates exist?</li>
+    </ol>
+    
+    <div id="test-cell" class="latest-episode-cell">
+        <span>Loading...</span>
+    </div>
+    
+    <table>
+        <tr data-latest-episode="2025-10-16 14:00:00">
+            <td class="latest-episode-cell">
+                <span>Loading...</span>
+            </td>
+        </tr>
+    </table>
+
+    <script src="assets/js/app.js"></script>
+    
+    <script>
+        console.log('=== PRODUCTION DEBUG ===');
+        console.log('1. app.js loaded:', typeof window.updateAllLatestEpisodeDates);
+        console.log('2. formatLatestEpisodeDate exists:', typeof formatLatestEpisodeDate);
+        
+        if (typeof window.updateAllLatestEpisodeDates === 'function') {
+            console.log('3. Running updateAllLatestEpisodeDates...');
+            window.updateAllLatestEpisodeDates();
+        } else {
+            console.error('3. updateAllLatestEpisodeDates NOT FOUND!');
+        }
+        
+        // Test the function directly
+        if (typeof formatLatestEpisodeDate === 'function') {
+            const testDate = '2025-10-16 14:00:00';
+            const result = formatLatestEpisodeDate(testDate);
+            console.log('4. Test date format:', testDate, '->', result);
+        }
+    </script>
+</body>
+</html>

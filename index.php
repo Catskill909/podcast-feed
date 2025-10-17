@@ -1425,11 +1425,11 @@ if (isset($_GET['edit'])) {
     </div>
 
     <!-- JavaScript -->
-    <script src="assets/js/validation.js"></script>
-    <script src="assets/js/app.js"></script>
-    <script src="assets/js/sort-manager.js"></script>
-    <script src="assets/js/player-modal.js"></script>
-    <script src="assets/js/audio-player.js"></script>
+    <script src="assets/js/validation.js?v=<?php echo ASSETS_VERSION; ?>"></script>
+    <script src="assets/js/app.js?v=<?php echo ASSETS_VERSION; ?>"></script>
+    <script src="assets/js/sort-manager.js?v=<?php echo ASSETS_VERSION; ?>"></script>
+    <script src="assets/js/player-modal.js?v=<?php echo ASSETS_VERSION; ?>"></script>
+    <script src="assets/js/audio-player.js?v=<?php echo ASSETS_VERSION; ?>"></script>
 </body>
 
 </html>
