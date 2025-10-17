@@ -135,9 +135,24 @@
 
 .podcasts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spacing-xl);
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xxl);
+}
+
+/* Responsive grid adjustments */
+@media (min-width: 1400px) {
+  .podcasts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--spacing-xl);
+  }
+}
+
+@media (min-width: 1800px) {
+  .podcasts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-xl);
+  }
 }
 
 /* ============================================

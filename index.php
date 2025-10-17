@@ -29,7 +29,7 @@ $stats = $podcastManager->getStats();
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/browse.css">
+    <link rel="stylesheet" href="assets/css/browse.css?v=3.0.3">
     <link rel="stylesheet" href="assets/css/sort-controls.css">
     <link rel="stylesheet" href="assets/css/player-modal.css">
     
