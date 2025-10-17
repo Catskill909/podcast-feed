@@ -1654,3 +1654,72 @@ function getLanguageName(code) {
     const baseCode = code.split('-')[0].toLowerCase();
     return languages[baseCode] || code.toUpperCase();
 }
+
+/**
+ * Format date for display - SHARED UTILITY
+ * This is the EXACT same logic used in player-modal.js
+ * Uses user's local timezone for consistent display
+ */
+function formatLatestEpisodeDate(dateString) {
+    if (!dateString || dateString.trim() === '') {
+        return '<span style="color: var(--text-muted); font-style: italic;">Unknown</span>';
+    }
+
+    try {
+        const date = new Date(dateString);
+        const now = new Date();
+        
+        // Reset time to midnight for accurate day comparison
+        const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const nowOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        
+        const diffTime = nowOnly - dateOnly;
+        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) {
+            return '<span style="color: var(--accent-primary); font-weight: 500;">Today</span>';
+        }
+        if (diffDays === 1) {
+            return '<span style="color: var(--accent-primary);">Yesterday</span>';
+        }
+        if (diffDays === -1) {
+            return '<span style="color: var(--accent-primary); font-weight: 500;">Tomorrow</span>';
+        }
+        if (diffDays < 0) {
+            return '<span style="color: var(--accent-primary); font-weight: 500;">In the future</span>';
+        }
+        if (diffDays < 7) {
+            return `<span style="color: var(--accent-primary);">${diffDays} days ago</span>`;
+        }
+        
+        const formatted = date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric' 
+        });
+        return `<span class="text-muted">${formatted}</span>`;
+    } catch (e) {
+        console.error('Date parsing error:', e, dateString);
+        return '<span style="color: var(--text-muted); font-style: italic;">Unknown</span>';
+    }
+}
+
+/**
+ * Update all latest episode dates on page load
+ * This ensures consistent date display using user's local timezone
+ * READS FROM THE SAME data-latest-episode ATTRIBUTE AS THE MODALS
+ */
+function updateAllLatestEpisodeDates() {
+    const cells = document.querySelectorAll('.latest-episode-cell');
+    cells.forEach(cell => {
+        // Get the date from the parent row's data-latest-episode attribute
+        // This is the EXACT SAME source the modals use!
+        const row = cell.closest('tr');
+        const dateString = row ? row.dataset.latestEpisode : '';
+        const formattedDate = formatLatestEpisodeDate(dateString);
+        cell.innerHTML = formattedDate;
+    });
+}
+
+// Run on page load
+document.addEventListener('DOMContentLoaded', updateAllLatestEpisodeDates);

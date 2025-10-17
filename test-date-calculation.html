@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Date Calculation Test</title>
+</head>
+<body>
+    <h1>Date Calculation Debug</h1>
+    <div id="results"></div>
+
+    <script>
+        const dateString = "2025-10-15 14:00:00";
+        const results = [];
+        
+        results.push(`<h2>Testing: "${dateString}"</h2>`);
+        results.push(`<p><strong>Browser timezone:</strong> ${Intl.DateTimeFormat().resolvedOptions().timeZone}</p>`);
+        
+        // Test 1: What does new Date() give us?
+        const date = new Date(dateString);
+        results.push(`<h3>Step 1: new Date(dateString)</h3>`);
+        results.push(`<p>Result: ${date}</p>`);
+        results.push(`<p>ISO String: ${date.toISOString()}</p>`);
+        results.push(`<p>Local String: ${date.toLocaleString()}</p>`);
+        
+        // Test 2: Current time
+        const now = new Date();
+        results.push(`<h3>Step 2: Current time</h3>`);
+        results.push(`<p>Now: ${now}</p>`);
+        results.push(`<p>ISO String: ${now.toISOString()}</p>`);
+        results.push(`<p>Local String: ${now.toLocaleString()}</p>`);
+        
+        // Test 3: Reset to midnight
+        const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const nowOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        
+        results.push(`<h3>Step 3: Reset to midnight</h3>`);
+        results.push(`<p>Episode date at midnight: ${dateOnly}</p>`);
+        results.push(`<p>Today at midnight: ${nowOnly}</p>`);
+        
+        // Test 4: Calculate difference
+        const diffTime = nowOnly - dateOnly;
+        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+        
+        results.push(`<h3>Step 4: Calculate difference</h3>`);
+        results.push(`<p>Difference in milliseconds: ${diffTime}</p>`);
+        results.push(`<p>Difference in days: ${diffDays}</p>`);
+        
+        // Test 5: What would be displayed?
+        let display = '';
+        if (diffDays === 0) display = 'Today';
+        else if (diffDays === 1) display = 'Yesterday';
+        else if (diffDays < 7) display = `${diffDays} days ago`;
+        else display = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        
+        results.push(`<h3>Step 5: Display result</h3>`);
+        results.push(`<p style="font-size: 24px; color: green;"><strong>${display}</strong></p>`);
+        
+        // Test 6: Component breakdown
+        results.push(`<h3>Step 6: Date components</h3>`);
+        results.push(`<table border="1" cellpadding="5">`);
+        results.push(`<tr><th></th><th>Year</th><th>Month</th><th>Date</th><th>Hours</th><th>Minutes</th></tr>`);
+        results.push(`<tr><td><strong>Episode</strong></td><td>${date.getFullYear()}</td><td>${date.getMonth()}</td><td>${date.getDate()}</td><td>${date.getHours()}</td><td>${date.getMinutes()}</td></tr>`);
+        results.push(`<tr><td><strong>Now</strong></td><td>${now.getFullYear()}</td><td>${now.getMonth()}</td><td>${now.getDate()}</td><td>${now.getHours()}</td><td>${now.getMinutes()}</td></tr>`);
+        results.push(`<tr><td><strong>Episode@midnight</strong></td><td>${dateOnly.getFullYear()}</td><td>${dateOnly.getMonth()}</td><td>${dateOnly.getDate()}</td><td>${dateOnly.getHours()}</td><td>${dateOnly.getMinutes()}</td></tr>`);
+        results.push(`<tr><td><strong>Now@midnight</strong></td><td>${nowOnly.getFullYear()}</td><td>${nowOnly.getMonth()}</td><td>${nowOnly.getDate()}</td><td>${nowOnly.getHours()}</td><td>${nowOnly.getMinutes()}</td></tr>`);
+        results.push(`</table>`);
+        
+        document.getElementById('results').innerHTML = results.join('\n');
+    </script>
+</body>
+</html>
