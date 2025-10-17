@@ -88,6 +88,11 @@ class AudioPlayer {
 
         // Set audio source
         this.audio.src = episode.audio_url;
+        
+        // Set title attribute as fallback for browsers without MediaSession support
+        const podcastTitle = window.playerModal?.currentPodcast?.title || 'Podcast';
+        this.audio.title = `${episode.title} - ${podcastTitle}`;
+        
         this.audio.load();
 
         // Update UI
@@ -99,9 +104,38 @@ class AudioPlayer {
 
         // Update media session metadata
         this.updateMediaSession();
+        
+        // Update document title as fallback
+        this.updateDocumentTitle();
 
         // Save state
         this.savePlaybackState();
+    }
+    
+    /**
+     * Update document title (fallback for browsers without MediaSession)
+     */
+    updateDocumentTitle() {
+        if (!this.currentEpisode) return;
+        
+        const podcastTitle = window.playerModal?.currentPodcast?.title || 'Podcast Browser';
+        const episodeTitle = this.currentEpisode.title || 'Episode';
+        
+        // Store original title to restore later
+        if (!this.originalTitle) {
+            this.originalTitle = document.title;
+        }
+        
+        document.title = `▶ ${episodeTitle} - ${podcastTitle}`;
+    }
+    
+    /**
+     * Restore original document title
+     */
+    restoreDocumentTitle() {
+        if (this.originalTitle) {
+            document.title = this.originalTitle;
+        }
     }
 
     /**
@@ -190,6 +224,9 @@ class AudioPlayer {
         this.playbackSpeed = 1.0;
         this.audio.playbackRate = 1.0;
         this.updateSpeedLabel();
+        
+        // Restore original document title
+        this.restoreDocumentTitle();
         
         this.hidePlayerBar();
         this.hideMiniPlayer();

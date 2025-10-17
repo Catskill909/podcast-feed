@@ -263,7 +263,7 @@ $stats = $podcastManager->getStats();
     <!-- Scripts -->
     <script src="assets/js/browse.js?v=3.0.2"></script>
     <script src="assets/js/player-modal.js?v=3.0.1"></script>
-    <script src="assets/js/audio-player.js?v=3.0.4"></script>
+    <script src="assets/js/audio-player.js?v=3.0.5"></script>
 </body>
 
 </html>
