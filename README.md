@@ -205,12 +205,20 @@ git push origin main
    chmod 755 uploads/covers/
    ```
 
-3. **Configure the application** in `config/config.php`:
-   ```php
-   define('APP_URL', 'http://your-domain.com/podcast-feed');
+3. **🔐 IMPORTANT: Change the default password** in `auth.js`:
+   ```javascript
+   // Line 10 in auth.js
+   const CORRECT_PASSWORD = 'your-secure-password-here';  // Change from 'podcast2025'!
    ```
+   
+   **Note:** This is client-side protection for casual use. For production with sensitive data, see [GITHUB-SECURITY-AUDIT.md](GITHUB-SECURITY-AUDIT.md) for additional security options (HTTP Basic Auth, IP whitelisting, etc.).
 
-4. **Test the installation** by visiting `index.php` in your browser
+4. **Configure the application** (optional - auto-detects by default):
+   - APP_URL is auto-detected from server
+   - Environment auto-detected (localhost = development, else = production)
+   - HTTPS auto-detected from server headers
+
+5. **Test the installation** by visiting `index.php` in your browser
 
 ## 📁 Project Structure
 
