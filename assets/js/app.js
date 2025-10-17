@@ -1341,6 +1341,13 @@ async function refreshFeedMetadata(podcastId) {
             if (row && result.data) {
                 row.dataset.latestEpisode = result.data.latest_episode_date || '';
                 row.dataset.episodeCount = result.data.episode_count || '0';
+                
+                // CRITICAL: Update the displayed date immediately!
+                const dateCell = row.querySelector('.latest-episode-cell');
+                if (dateCell && result.data.latest_episode_date) {
+                    const formattedDate = formatLatestEpisodeDate(result.data.latest_episode_date);
+                    dateCell.innerHTML = formattedDate;
+                }
             }
             
             // Show success message
