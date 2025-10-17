@@ -1525,7 +1525,7 @@ if (isset($_GET['edit'])) {
     <script src="assets/js/app.js?v=<?php echo ASSETS_VERSION; ?>"></script>
     <script src="assets/js/sort-manager.js?v=<?php echo ASSETS_VERSION; ?>"></script>
     <script src="assets/js/player-modal.js?v=<?php echo ASSETS_VERSION; ?>"></script>
-    <script src="assets/js/audio-player.js?v=<?php echo ASSETS_VERSION; ?>"></script>
+    <script src="assets/js/audio-player.js?v=3.0.4"></script>
 </body>
 
 </html>

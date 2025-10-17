@@ -97,8 +97,57 @@ class AudioPlayer {
         // Auto-play
         this.play();
 
+        // Update media session metadata
+        this.updateMediaSession();
+
         // Save state
         this.savePlaybackState();
+    }
+
+    /**
+     * Update MediaSession API for lock screen controls
+     */
+    updateMediaSession() {
+        if (!('mediaSession' in navigator)) return;
+        if (!this.currentEpisode) return;
+
+        // Get podcast info from modal or current context
+        const podcastTitle = window.playerModal?.currentPodcast?.title || 'Podcast Browser';
+        const podcastImage = window.playerModal?.currentPodcast?.cover_url || '';
+
+        // Set metadata
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: this.currentEpisode.title || 'Unknown Episode',
+            artist: podcastTitle,
+            album: podcastTitle,
+            artwork: [
+                { src: podcastImage, sizes: '96x96',   type: 'image/jpeg' },
+                { src: podcastImage, sizes: '128x128', type: 'image/jpeg' },
+                { src: podcastImage, sizes: '192x192', type: 'image/jpeg' },
+                { src: podcastImage, sizes: '256x256', type: 'image/jpeg' },
+                { src: podcastImage, sizes: '384x384', type: 'image/jpeg' },
+                { src: podcastImage, sizes: '512x512', type: 'image/jpeg' }
+            ]
+        });
+
+        // Set action handlers
+        navigator.mediaSession.setActionHandler('play', () => this.play());
+        navigator.mediaSession.setActionHandler('pause', () => this.pause());
+        navigator.mediaSession.setActionHandler('previoustrack', () => this.previousEpisode());
+        navigator.mediaSession.setActionHandler('nexttrack', () => this.nextEpisode());
+        navigator.mediaSession.setActionHandler('seekbackward', () => this.skipBackward(15));
+        navigator.mediaSession.setActionHandler('seekforward', () => this.skipForward(15));
+        
+        // Seek to specific position (if supported)
+        try {
+            navigator.mediaSession.setActionHandler('seekto', (details) => {
+                if (details.seekTime) {
+                    this.audio.currentTime = details.seekTime;
+                }
+            });
+        } catch (error) {
+            // seekto not supported
+        }
     }
 
     /**
@@ -267,9 +316,30 @@ class AudioPlayer {
             }
         }
 
+        // Update MediaSession position state
+        this.updatePositionState();
+
         // Save progress periodically
         if (Math.floor(this.audio.currentTime) % 10 === 0) {
             this.savePlaybackState();
+        }
+    }
+
+    /**
+     * Update MediaSession position state
+     */
+    updatePositionState() {
+        if (!('mediaSession' in navigator)) return;
+        if (!this.audio.duration) return;
+
+        try {
+            navigator.mediaSession.setPositionState({
+                duration: this.audio.duration,
+                playbackRate: this.audio.playbackRate,
+                position: this.audio.currentTime
+            });
+        } catch (error) {
+            // Position state not supported
         }
     }
 
