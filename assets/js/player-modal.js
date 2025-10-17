@@ -117,24 +117,27 @@ class PodcastPlayerModal {
 
     /**
      * Load podcast data
+     * ALWAYS fetches fresh data from API to ensure latest episode is current
      */
     async loadPodcastData(podcastId) {
         try {
-            // Get podcast data from table row (already loaded)
-            const row = document.querySelector(`tr[data-podcast-id="${podcastId}"]`);
-            if (!row) {
-                throw new Error('Podcast not found');
+            // Fetch FRESH data from API (not stale HTML attributes!)
+            const response = await fetch(`api/get-podcast-preview.php?id=${podcastId}`);
+            const result = await response.json();
+            
+            if (!result.success) {
+                throw new Error(result.error || 'Failed to load podcast data');
             }
 
             const podcast = {
                 id: podcastId,
-                title: row.querySelector('.podcast-title-clickable')?.textContent || 'Unknown',
-                description: row.dataset.description || 'No description available',
-                feed_url: row.dataset.feedUrl || '',
-                episode_count: row.dataset.episodeCount || '0',
-                latest_episode: row.dataset.latestEpisode || '',
-                status: row.querySelector('.badge')?.textContent.includes('Active') ? 'active' : 'inactive',
-                cover_url: row.querySelector('.podcast-cover')?.src || null
+                title: result.data.title,
+                description: result.data.description,
+                feed_url: result.data.feed_url,
+                episode_count: result.data.episode_count,
+                latest_episode: result.data.latest_episode_date,  // FRESH from RSS feed!
+                status: result.data.status,
+                cover_url: result.data.image_url
             };
 
             this.currentPodcast = podcast;
