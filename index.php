@@ -914,6 +914,101 @@ if (isset($_GET['edit'])) {
                     </div>
                 </div>
 
+                <!-- Podcast Player -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">🎧</span>
+                        Podcast Player - Listen in Browser
+                    </h3>
+                    <div class="help-section-content">
+                        <p><strong>How to Access:</strong></p>
+                        <ul>
+                            <li>Click on any <strong>podcast cover image</strong> in the table</li>
+                            <li>Or click on the <strong>podcast title</strong></li>
+                            <li>Player modal opens with full episode list</li>
+                        </ul>
+                        
+                        <p><strong>Player Features:</strong></p>
+                        <ul>
+                            <li><strong>Browse Episodes</strong> - See all episodes with covers, titles, and dates</li>
+                            <li><strong>Search Episodes</strong> - Find specific episodes by title</li>
+                            <li><strong>Sort Episodes</strong> - Newest first or oldest first</li>
+                            <li><strong>Download Episodes</strong> - Save MP3 files to your device</li>
+                            <li><strong>Play in Browser</strong> - Stream episodes directly without downloading</li>
+                        </ul>
+                        
+                        <p><strong>Playback Controls:</strong></p>
+                        <ul>
+                            <li><strong>Play/Pause</strong> - Spacebar or click button</li>
+                            <li><strong>Skip Forward</strong> - +15 seconds (→ arrow key)</li>
+                            <li><strong>Skip Backward</strong> - -15 seconds (← arrow key)</li>
+                            <li><strong>Previous/Next Episode</strong> - Navigate between episodes</li>
+                            <li><strong>Progress Scrubber</strong> - Click or drag to jump to any position</li>
+                            <li><strong>Volume Control</strong> - Adjust volume or mute (M key)</li>
+                            <li><strong>Playback Speed</strong> - 0.5x to 2.0x (great for catching up!)</li>
+                        </ul>
+                        
+                        <p><strong>Keyboard Shortcuts:</strong></p>
+                        <ul>
+                            <li><kbd>Space</kbd> - Play/Pause</li>
+                            <li><kbd>→</kbd> - Skip forward 15 seconds</li>
+                            <li><kbd>←</kbd> - Skip backward 15 seconds</li>
+                            <li><kbd>M</kbd> - Mute/Unmute</li>
+                            <li><kbd>Escape</kbd> - Close player (audio stops automatically)</li>
+                        </ul>
+                        
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>💡 Pro Tips:</strong>
+                            <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                                <li>Playback speed resets to 1.0x when switching podcasts</li>
+                                <li>Audio stops automatically when you close the modal</li>
+                                <li>Episode dates show as "Today", "Yesterday", or specific date</li>
+                                <li>Click episode cover for larger view</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Podcast Info Modal -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">ℹ️</span>
+                        Podcast Info - Quick Preview
+                    </h3>
+                    <div class="help-section-content">
+                        <p><strong>How to Access:</strong></p>
+                        <ul>
+                            <li>Click the <strong>info button (ℹ️)</strong> next to any podcast</li>
+                            <li>Preview modal opens with comprehensive details</li>
+                        </ul>
+                        
+                        <p><strong>What You'll See:</strong></p>
+                        <ul>
+                            <li><strong>Large Cover Image</strong> - 240×240px preview</li>
+                            <li><strong>Full Description</strong> - Complete podcast description from RSS feed</li>
+                            <li><strong>Episode Count</strong> - Total number of episodes</li>
+                            <li><strong>Latest Episode</strong> - When the last episode was published (always fresh from feed!)</li>
+                            <li><strong>Category</strong> - Podcast genre/category</li>
+                            <li><strong>Author</strong> - Podcast creator/host</li>
+                            <li><strong>Language</strong> - Human-readable language name</li>
+                            <li><strong>Feed Type</strong> - RSS 2.0, Atom, or iTunes</li>
+                            <li><strong>Added Date</strong> - When you added it to your directory</li>
+                        </ul>
+                        
+                        <p><strong>Quick Actions:</strong></p>
+                        <ul>
+                            <li><strong>Edit</strong> - Opens edit modal</li>
+                            <li><strong>Refresh</strong> - Updates feed metadata</li>
+                            <li><strong>Health Check</strong> - Runs diagnostics</li>
+                            <li><strong>Delete</strong> - Removes podcast</li>
+                        </ul>
+                        
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>💡 Note:</strong> Info modal always fetches fresh data from the RSS feed, so you always see the most current episode information!
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Status Management -->
                 <div class="help-section">
                     <h3 class="help-section-title">

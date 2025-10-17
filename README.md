@@ -115,12 +115,18 @@ git push origin main
 3. 📊 **[DEPLOYMENT-ANALYSIS-SUMMARY.md](DEPLOYMENT-ANALYSIS-SUMMARY.md)** - Technical deep dive
 4. 🔒 **[SECURITY-AUDIT.md](SECURITY-AUDIT.md)** - Security best practices
 
-#### Automation & Sorting (NEW):
+#### Automation & Sorting:
 5. 🎉 **[TODAYS-WORK-SUMMARY.md](TODAYS-WORK-SUMMARY.md)** - Complete summary of Oct 13, 2025 updates
 6. 🚀 **[PRODUCTION-DEPLOYMENT-READY.md](PRODUCTION-DEPLOYMENT-READY.md)** - Production readiness guide
 7. 🔄 **[AUTOMATION-COMPLETE.md](AUTOMATION-COMPLETE.md)** - Automated scanning setup
 8. 📊 **[SERVER-SIDE-SORTING-COMPLETE.md](SERVER-SIDE-SORTING-COMPLETE.md)** - Sorting implementation
 9. 📝 **[sort-options.md](sort-options.md)** - Original planning document
+
+#### Latest Episode Data (NEW - Oct 17, 2025):
+10. 📡 **[DEEP-AUDIT-LATEST-EPISODE.md](DEEP-AUDIT-LATEST-EPISODE.md)** - Complete audit of all data sources
+11. 🎯 **[ONE-TRUTH-IMPLEMENTED.md](ONE-TRUTH-IMPLEMENTED.md)** - Live feed data implementation
+12. 🔧 **[CACHE-BUSTING-FIX.md](CACHE-BUSTING-FIX.md)** - Asset versioning system
+13. 📋 **[one-truth-latest-episode-fix.md](one-truth-latest-episode-fix.md)** - Technical deep dive
 
 **Quick Diagnostics:**
 - Visit `/check-user.php` in production to verify permissions
@@ -162,7 +168,7 @@ git push origin main
 - **Smart Formatting**: Intelligent date display (Today, Yesterday, etc.) and language names
 - **Comprehensive Data**: Shows title, description, episodes, category, author, language, pub date
 
-### **🎧 Podcast Player Modal (October 16, 2025)** ✨ NEW
+### **🎧 Podcast Player Modal (October 16, 2025)** ✨
 - **In-Browser Audio Player** 🎵: Play podcast episodes directly in your browser
 - **Episode Management**: Browse, search, and sort all episodes from any podcast
 - **Full Playback Controls**: Play/pause, skip ±15s, previous/next episode, progress scrubber
@@ -172,6 +178,15 @@ git push origin main
 - **Smart Behavior**: Speed resets between podcasts, audio stops when modal closes
 - **Client-Side Parsing**: Fast RSS feed parsing directly in browser
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+
+### **📡 Live Feed Data (October 17, 2025)** ✨ NEW
+- **Always Fresh Modals** 🔄: Player and info modals fetch live data from RSS feeds
+- **One Source of Truth**: RSS feeds are the ultimate source, not cached database
+- **Smart Caching**: Main page shows cached data for fast loads, modals show live data
+- **Refresh Button**: Manual refresh updates cached data and display immediately
+- **Cache Busting**: Version-based asset loading prevents stale JavaScript
+- **Consistent Display**: All locations use identical date calculation logic
+- **Performance Optimized**: Fast page loads with fresh data on demand
 
 ## 📋 Requirements
 
@@ -603,8 +618,8 @@ For issues, questions, or feature requests:
 
 ---
 
-**Version**: 2.4.0  
-**Last Updated**: October 16, 2025  
+**Version**: 2.5.0  
+**Last Updated**: October 17, 2025  
 **Compatibility**: PHP 7.4+, Modern Browsers  
 **Status**: ✅ Production Ready - Fully Automated  
-**Features**: RSS Auto-Import with Validation, Health Check, Auto-Sync Sorting, Podcast Preview Cards, **In-Browser Podcast Player**, Material Design UI, Persistent Storage
+**Features**: RSS Auto-Import with Validation, Health Check, Auto-Sync Sorting, Podcast Preview Cards, **In-Browser Podcast Player**, **Live Feed Data**, Material Design UI, Persistent Storage, Cache Busting
