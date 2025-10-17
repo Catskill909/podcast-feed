@@ -1711,15 +1711,43 @@ function formatLatestEpisodeDate(dateString) {
  */
 function updateAllLatestEpisodeDates() {
     const cells = document.querySelectorAll('.latest-episode-cell');
+    
+    if (cells.length === 0) {
+        console.warn('No .latest-episode-cell elements found');
+        return;
+    }
+    
+    console.log(`Updating ${cells.length} date cells`);
+    
     cells.forEach(cell => {
         // Get the date from the parent row's data-latest-episode attribute
         // This is the EXACT SAME source the modals use!
         const row = cell.closest('tr');
-        const dateString = row ? row.dataset.latestEpisode : '';
+        if (!row) {
+            console.warn('Cell has no parent row:', cell);
+            return;
+        }
+        
+        const dateString = row.dataset.latestEpisode || '';
+        console.log('Processing date:', dateString);
+        
         const formattedDate = formatLatestEpisodeDate(dateString);
         cell.innerHTML = formattedDate;
     });
+    
+    console.log('Date update complete');
 }
 
-// Run on page load
-document.addEventListener('DOMContentLoaded', updateAllLatestEpisodeDates);
+// Make it globally available
+window.updateAllLatestEpisodeDates = updateAllLatestEpisodeDates;
+
+// Run on page load - multiple methods to ensure it runs
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateAllLatestEpisodeDates);
+} else {
+    // DOM already loaded, run immediately
+    updateAllLatestEpisodeDates();
+}
+
+// Also run after a short delay as fallback
+setTimeout(updateAllLatestEpisodeDates, 100);

@@ -329,7 +329,19 @@ if (isset($_GET['edit'])) {
                                             </button>
                                         </td>
                                         <td class="text-muted latest-episode-cell">
-                                            <span style="color: var(--text-muted); font-style: italic;">Loading...</span>
+                                            <?php 
+                                            // Fallback: Show formatted date server-side, JavaScript will update it
+                                            if (!empty($podcast['latest_episode_date'])) {
+                                                try {
+                                                    $epDate = new DateTime($podcast['latest_episode_date']);
+                                                    echo '<span class="server-date">' . $epDate->format('M j, Y') . '</span>';
+                                                } catch (Exception $e) {
+                                                    echo '<span style="color: var(--text-muted); font-style: italic;">Unknown</span>';
+                                                }
+                                            } else {
+                                                echo '<span style="color: var(--text-muted); font-style: italic;">Unknown</span>';
+                                            }
+                                            ?>
                                         </td>
                                         <td>
                                             <button type="button" 
