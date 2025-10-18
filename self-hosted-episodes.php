@@ -1193,7 +1193,7 @@ $episodes = $manager->getEpisodes($podcastId);
                 podcastId: '<?php echo $podcastId; ?>',
                 onUploadComplete: function(file, metadata) {
                     // Auto-fill form fields with uploaded file data
-                    const audioUrlInput = document.getElementById('audio_url');
+                    const audioUrlInput = document.getElementById('audioUrlInput');
                     const durationInput = document.getElementById('hiddenDuration');
                     const fileSizeInput = document.getElementById('hiddenFileSize');
                     
