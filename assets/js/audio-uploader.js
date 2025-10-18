@@ -91,10 +91,7 @@ class AudioUploader {
         
         // Extract metadata FIRST
         this.extractMetadata(file).then(metadata => {
-            // IMMEDIATELY call the callback to populate form fields
-            this.options.onUploadComplete(file, metadata);
-            
-            // Then simulate upload UI
+            // Start the actual upload - callback will be called when upload completes
             this.uploadFile(file, metadata);
         }).catch(error => {
             this.showError('Failed to read audio file: ' + error.message);
