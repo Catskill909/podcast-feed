@@ -11,7 +11,7 @@ class ImageUploader
     /**
      * Upload and validate image file
      */
-    public function uploadImage($file, $podcastId): array
+    public function uploadImage($file, $podcastId, $isEpisodeImage = false): array
     {
         try {
             // Basic file validation
@@ -20,10 +20,12 @@ class ImageUploader
                 throw new Exception($validation['message']);
             }
 
-            // Validate image dimensions
-            $dimensionValidation = $this->validateImageDimensions($file['tmp_name']);
-            if (!$dimensionValidation['valid']) {
-                throw new Exception($dimensionValidation['message']);
+            // Validate image dimensions (skip for episode images - they're optional and inherit podcast cover)
+            if (!$isEpisodeImage) {
+                $dimensionValidation = $this->validateImageDimensions($file['tmp_name']);
+                if (!$dimensionValidation['valid']) {
+                    throw new Exception($dimensionValidation['message']);
+                }
             }
 
             // Generate unique filename

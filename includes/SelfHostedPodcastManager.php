@@ -253,7 +253,7 @@ class SelfHostedPodcastManager
 
             // Handle episode image upload
             if ($imageFile && $imageFile['error'] !== UPLOAD_ERR_NO_FILE) {
-                $uploadResult = $this->imageUploader->uploadImage($imageFile, $tempEpisodeId);
+                $uploadResult = $this->imageUploader->uploadImage($imageFile, $tempEpisodeId, true);
                 
                 if ($uploadResult['success']) {
                     $episodeData['episode_image'] = $uploadResult['filename'];
@@ -340,7 +340,7 @@ class SelfHostedPodcastManager
                     $this->imageUploader->deleteImage($existingEpisode['episode_image']);
                 }
 
-                $uploadResult = $this->imageUploader->uploadImage($imageFile, $episodeId);
+                $uploadResult = $this->imageUploader->uploadImage($imageFile, $episodeId, true);
                 
                 if ($uploadResult['success']) {
                     $episodeData['episode_image'] = $uploadResult['filename'];
