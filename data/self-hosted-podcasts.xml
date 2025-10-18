@@ -26,7 +26,7 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
     <keywords><![CDATA[]]></keywords>
     <complete>no</complete>
     <created_date>2025-10-18 02:44:31</created_date>
-    <updated_date>2025-10-18 03:02:01</updated_date>
+    <updated_date>2025-10-18 04:08:07</updated_date>
     <status>active</status>
     <episodes>
       <episode>
@@ -37,8 +37,8 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <duration>0</duration>
         <file_size>263437582</file_size>
         <pub_date>2025-10-18T03:00</pub_date>
-        <episode_number></episode_number>
-        <season_number></season_number>
+        <episode_number/>
+        <season_number/>
         <episode_type>full</episode_type>
         <explicit>no</explicit>
         <episode_image>ep_1760756521_68f303294f778_1760756543_fc92f1.jpg</episode_image>
@@ -46,6 +46,24 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <status>published</status>
         <created_date>2025-10-18 03:02:01</created_date>
         <updated_date>2025-10-18 03:02:23</updated_date>
+      </episode>
+      <episode>
+        <id>ep_1760760487_68f312a79a534</id>
+        <title><![CDATA[OSS sTaRkeY Latin Edits and Reggae Rockers 10-4-25]]></title>
+        <description><![CDATA[Live and direct for the WJFF Radio Catsill studios in Libery NY]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1760755471_68f2ff0f4c2fe/ep_1760760487_68f312a7960ea.mp3</audio_url>
+        <duration>0</duration>
+        <file_size>263316374</file_size>
+        <pub_date>2025-10-18 04:05:11</pub_date>
+        <episode_number></episode_number>
+        <season_number></season_number>
+        <episode_type>full</episode_type>
+        <explicit>no</explicit>
+        <episode_image>ep_1760760487_68f312a79a534.jpg</episode_image>
+        <guid>ep_1760760487_68f312a79a534</guid>
+        <status>published</status>
+        <created_date>2025-10-18 04:08:07</created_date>
+        <updated_date>2025-10-18 04:08:07</updated_date>
       </episode>
     </episodes>
   </podcast>
