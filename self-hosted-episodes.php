@@ -1192,12 +1192,19 @@ $episodes = $manager->getEpisodes($podcastId);
             audioUploader = new AudioUploader('audioUploadZone', {
                 podcastId: '<?php echo $podcastId; ?>',
                 onUploadComplete: function(file, metadata) {
-                    // Auto-fill HIDDEN form fields
+                    // Auto-fill form fields with uploaded file data
+                    const audioUrlInput = document.getElementById('audio_url');
                     const durationInput = document.getElementById('hiddenDuration');
                     const fileSizeInput = document.getElementById('hiddenFileSize');
                     
+                    // Set the audio URL from the server response
+                    if (audioUrlInput && metadata.url) {
+                        audioUrlInput.value = metadata.url;
+                        console.log('Audio URL set:', metadata.url);
+                    }
+                    
                     if (durationInput) {
-                        durationInput.value = Math.floor(metadata.duration); // Store as seconds
+                        durationInput.value = Math.floor(metadata.duration);
                         console.log('Duration set:', Math.floor(metadata.duration), 'seconds');
                     }
                     
@@ -1206,10 +1213,11 @@ $episodes = $manager->getEpisodes($podcastId);
                         console.log('File size set:', metadata.fileSize, 'bytes');
                     }
                     
-                    console.log('Audio metadata:', metadata);
+                    console.log('Audio uploaded successfully:', metadata);
                 },
                 onUploadError: function(error) {
                     console.error('Upload error:', error);
+                    alert('Audio upload failed: ' + error);
                 }
             });
             

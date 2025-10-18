@@ -162,30 +162,15 @@ class AudioUploader {
     
     uploadFile(file, metadata) {
         this.options.onUploadStart(file, metadata);
-        
-        // IMPORTANT: Keep the file in the input so it submits with the form
-        // The file is already in this.fileInput.files from drag/drop or file selection
         this.currentFile = file;
         
-        // Simulate progress for UI feedback
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += 10;
-            this.updateProgress(progress);
-            this.options.onUploadProgress(progress);
-            
-            if (progress >= 100) {
-                clearInterval(interval);
-                setTimeout(() => {
-                    this.hideProgress();
-                    this.showSuccess(file, metadata);
-                    // Don't call onUploadComplete again - already called in processFile
-                }, 500);
-            }
-        }, 200);
+        // Create FormData for AJAX upload
+        const formData = new FormData();
+        formData.append('audio_file', file);
+        formData.append('podcast_id', this.options.podcastId);
+        formData.append('episode_id', this.options.episodeId || 'ep_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
         
-        // In production, use real AJAX upload:
-        /*
+        // Use XMLHttpRequest for real upload with progress
         const xhr = new XMLHttpRequest();
         
         xhr.upload.addEventListener('progress', (e) => {
@@ -198,24 +183,47 @@ class AudioUploader {
         
         xhr.addEventListener('load', () => {
             if (xhr.status === 200) {
-                const response = JSON.parse(xhr.responseText);
-                this.hideProgress();
-                this.showSuccess(file, metadata, response);
-                this.options.onUploadComplete(file, metadata, response);
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        this.hideProgress();
+                        this.showSuccess(file, metadata);
+                        // Store the uploaded file URL for form submission
+                        this.uploadedFileUrl = response.url;
+                        this.uploadedDuration = response.duration;
+                        this.uploadedFileSize = response.file_size;
+                        // Call completion callback with server response
+                        this.options.onUploadComplete(file, {
+                            ...metadata,
+                            url: response.url,
+                            duration: response.duration,
+                            fileSize: response.file_size
+                        });
+                    } else {
+                        this.showError('Upload failed: ' + response.message);
+                        this.options.onUploadError(response.message);
+                    }
+                } catch (e) {
+                    this.showError('Upload failed: Invalid response');
+                    this.options.onUploadError('Invalid response');
+                }
             } else {
                 this.showError('Upload failed: ' + xhr.statusText);
                 this.options.onUploadError(xhr.statusText);
+                this.showZone();
+                this.hideProgress();
             }
         });
         
         xhr.addEventListener('error', () => {
-            this.showError('Upload failed. Please try again.');
+            this.showError('Upload failed. Please check your connection.');
             this.options.onUploadError('Network error');
+            this.showZone();
+            this.hideProgress();
         });
         
-        xhr.open('POST', '/api/upload-audio.php');
+        xhr.open('POST', '/api/upload-audio-chunk.php');
         xhr.send(formData);
-        */
     }
     
     showProgress() {
