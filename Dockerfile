@@ -6,6 +6,12 @@ RUN docker-php-ext-install pdo pdo_mysql
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
+# Set PHP upload limits for large audio files
+RUN echo 'upload_max_filesize = 500M' >> /usr/local/etc/php/conf.d/uploads.ini && \
+    echo 'post_max_size = 500M' >> /usr/local/etc/php/conf.d/uploads.ini && \
+    echo 'max_execution_time = 600' >> /usr/local/etc/php/conf.d/uploads.ini && \
+    echo 'memory_limit = 512M' >> /usr/local/etc/php/conf.d/uploads.ini
+
 # Copy application files
 COPY . /var/www/html/
 
