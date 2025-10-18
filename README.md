@@ -4,6 +4,88 @@ A complete podcast platform combining a modern directory browser with a full-fea
 
 ---
 
+## ⚠️ CRITICAL: DEVELOPMENT DISCIPLINE - READ FIRST
+
+**These principles MUST be followed on every task. They prevent hours of wasted effort:**
+
+### **🔍 Before Making ANY Changes:**
+
+1. **READ ALL PROVIDED DOCUMENTATION FIRST**
+   - Review debug docs, error logs, and user-provided context completely
+   - Understand what has already been tried and failed
+   - Never skip documentation - it contains the full picture
+
+2. **TRACE THE COMPLETE CODE PATH**
+   - Follow the entire flow from user action to server response
+   - Read the actual code files - don't assume how things work
+   - Check element IDs, form submissions, JavaScript callbacks, server handlers
+   - Verify data flow: form → JavaScript → AJAX → server → database
+
+3. **LOOK FOR SIMPLE BUGS FIRST**
+   - Element ID mismatches (JavaScript looking for wrong IDs)
+   - Form inputs trying to upload files twice
+   - Validation blocking legitimate submissions
+   - Missing or incorrect field names
+   - Callback functions called at wrong times
+
+4. **REASON THROUGH EXPECTED vs ACTUAL BEHAVIOR**
+   - What SHOULD happen when the user clicks "Submit"?
+   - What IS actually happening? (Check logs, network tab, console)
+   - Where does the actual behavior diverge from expected?
+   - Is it a code bug or infrastructure issue?
+
+5. **ONLY FIX INFRASTRUCTURE AFTER CODE IS PROVEN CORRECT**
+   - Don't create Dockerfiles, modify nginx configs, or change servers
+   - Infrastructure changes should be LAST RESORT
+   - 95% of bugs are code logic, not server config
+
+### **🚫 NEVER DO THESE:**
+
+- ❌ Stab in the dark with infrastructure changes
+- ❌ Create Dockerfiles without verifying code correctness first
+- ❌ Modify `.htaccess` when using Nginx (or vice versa)
+- ❌ Ask user to "test and see what happens" without analyzing code
+- ❌ Make assumptions about element IDs or form behavior
+- ❌ Skip reading provided debug documentation
+- ❌ Add complexity before finding the simple bug
+
+### **✅ ALWAYS DO THESE:**
+
+- ✅ Read all provided docs and error logs completely
+- ✅ Trace code path from start to finish
+- ✅ Look for simple bugs (IDs, validation, callbacks)
+- ✅ Verify form submission flow in detail
+- ✅ Check for double file uploads or duplicate processes
+- ✅ Test logic mentally before making changes
+- ✅ Add targeted debug logging to confirm hypothesis
+
+### **📝 Real Example - What Went Wrong (Oct 18, 2025):**
+
+**Problem:** Large file upload works via AJAX but form submission freezes
+
+**What I Did Wrong:**
+1. Created Apache Dockerfile (user had Nginx)
+2. Tried to add Traefik labels (UI doesn't exist)
+3. Modified `.htaccess` for Apache (running Nginx)
+4. Created `nixpacks.toml` without checking code
+5. Hours of infrastructure changes with no progress
+
+**What I Should Have Done:**
+1. Read the code in `self-hosted-episodes.php`
+2. Trace: Form submission → Audio file input → AJAX upload → Form POST
+3. Found Bug #1: Element ID mismatch (`'audio_url'` vs `'audioUrlInput'`)
+4. Found Bug #2: Image validation too strict for episodes
+5. Found Bug #3: Form trying to upload 251MB file AGAIN after AJAX already uploaded it
+6. **Total fix time: 15 minutes of code analysis**
+
+**The Simple Truth:**
+- AJAX uploaded the file successfully ✅
+- Form still had the 251MB file attached ❌
+- Form tried to upload it again → timeout
+- **Solution:** Clear and disable the file input after AJAX completes
+
+---
+
 ## 🎯 IMPORTANT: What This App Does
 
 **PodFeed Builder is BOTH a feed aggregator AND a complete podcast hosting platform.**
