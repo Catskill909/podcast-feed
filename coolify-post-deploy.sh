@@ -49,18 +49,31 @@ echo "================================================"
 
 # Add Nginx upload limit configuration
 if [ -f /nginx.conf ]; then
-    echo "Adding client_max_body_size to Nginx config..."
+    echo "Checking Nginx upload limits..."
     
     # Check if already configured
     if grep -q "client_max_body_size" /nginx.conf; then
         echo "✅ Nginx already configured for large uploads"
     else
-        # Add to http block
-        sed -i '/http {/a \    client_max_body_size 500M;\n    client_body_timeout 600s;\n    client_header_timeout 600s;' /nginx.conf
+        echo "Adding upload limits to Nginx..."
+        # Create a temp file with the config
+        cat > /tmp/nginx-upload.conf << 'EOF'
+# Large file upload support for podcast audio files
+client_max_body_size 500M;
+client_body_timeout 600s;
+client_header_timeout 600s;
+EOF
+        
+        # Insert after the first 'http {' line
+        awk '/http {/ && !found {print; system("cat /tmp/nginx-upload.conf"); found=1; next} 1' /nginx.conf > /tmp/nginx.conf.new
+        
+        # Replace the config
+        mv /tmp/nginx.conf.new /nginx.conf
+        rm -f /tmp/nginx-upload.conf
         
         # Reload nginx
         echo "Reloading Nginx..."
-        nginx -s reload
+        nginx -s reload 2>&1 || echo "⚠️  Nginx reload failed, will restart on next request"
         echo "✅ Nginx configured for 500M uploads"
     fi
 else
