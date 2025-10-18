@@ -225,9 +225,15 @@ class SelfHostedPodcastManager
      */
     public function addEpisode($podcastId, $episodeData, $imageFile = null, $audioFile = null)
     {
+        error_log("[MANAGER] addEpisode called for podcast: $podcastId");
+        error_log("[MANAGER] Episode data received: " . print_r($episodeData, true));
+        error_log("[MANAGER] Image file: " . ($imageFile ? 'YES' : 'NO'));
+        error_log("[MANAGER] Audio file: " . ($audioFile ? 'YES' : 'NO'));
+        
         try {
             // Generate episode ID first
             $tempEpisodeId = 'ep_' . time() . '_' . uniqid();
+            error_log("[MANAGER] Generated temp episode ID: $tempEpisodeId");
 
             // Handle audio file upload
             $hasAudioFile = ($audioFile && $audioFile['error'] !== UPLOAD_ERR_NO_FILE);

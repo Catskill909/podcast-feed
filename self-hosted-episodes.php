@@ -37,10 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     switch ($action) {
         case 'add_episode':
-            // Debug logging
-            error_log("=== ADD EPISODE DEBUG ===");
+            // EXTENSIVE DEBUG LOGGING
+            error_log("=== ADD EPISODE DEBUG [" . date('Y-m-d H:i:s') . "] ===");
             error_log("POST data: " . print_r($_POST, true));
             error_log("FILES data: " . print_r($_FILES, true));
+            error_log("Audio URL from form: " . ($_POST['audio_url'] ?? 'EMPTY'));
+            error_log("Duration from form: " . ($_POST['duration'] ?? 'EMPTY'));
+            error_log("File size from form: " . ($_POST['file_size'] ?? 'EMPTY'));
             
             $data = [
                 'title' => $_POST['title'] ?? '',
@@ -56,14 +59,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'status' => $_POST['status'] ?? 'published'
             ];
             
-            error_log("Episode data: " . print_r($data, true));
+            error_log("Episode data prepared: " . print_r($data, true));
+            error_log("Calling addEpisode...");
             
-            $result = $manager->addEpisode($podcastId, $data, $_FILES['episode_image'] ?? null, $_FILES['audio_file'] ?? null);
-            
-            error_log("Result: " . print_r($result, true));
+            try {
+                $result = $manager->addEpisode($podcastId, $data, $_FILES['episode_image'] ?? null, $_FILES['audio_file'] ?? null);
+                error_log("addEpisode returned: " . print_r($result, true));
+            } catch (Exception $e) {
+                error_log("EXCEPTION in addEpisode: " . $e->getMessage());
+                error_log("Stack trace: " . $e->getTraceAsString());
+                $result = ['success' => false, 'message' => 'Exception: ' . $e->getMessage()];
+            }
             
             $message = $result['message'];
             $messageType = $result['success'] ? 'success' : 'danger';
+            error_log("Setting message: $message (type: $messageType)");
             break;
 
         case 'update_podcast':
@@ -1196,6 +1206,7 @@ $episodes = $manager->getEpisodes($podcastId);
                     const audioUrlInput = document.getElementById('audioUrlInput');
                     const durationInput = document.getElementById('hiddenDuration');
                     const fileSizeInput = document.getElementById('hiddenFileSize');
+                    const audioFileInput = document.getElementById('audioFileInput');
                     
                     // Set the audio URL from the server response
                     if (audioUrlInput && metadata.url) {
@@ -1211,6 +1222,13 @@ $episodes = $manager->getEpisodes($podcastId);
                     if (fileSizeInput) {
                         fileSizeInput.value = metadata.fileSize;
                         console.log('File size set:', metadata.fileSize, 'bytes');
+                    }
+                    
+                    // CRITICAL: Clear the file input so form doesn't try to upload again!
+                    if (audioFileInput) {
+                        audioFileInput.value = '';
+                        audioFileInput.disabled = true;
+                        console.log('Audio file input cleared and disabled (already uploaded via AJAX)');
                     }
                     
                     console.log('Audio uploaded successfully:', metadata);
