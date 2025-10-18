@@ -1,0 +1,62 @@
+[staticAssets]
+"nginx.template.conf" = '''
+user www-data www-data;
+worker_processes 5;
+daemon off;
+
+events {
+  worker_connections 4096;
+}
+
+http {
+  include $!{nginx}/conf/mime.types;
+  index index.html index.htm index.php;
+  default_type application/octet-stream;
+  sendfile on;
+  tcp_nopush on;
+  
+  # CRITICAL: Large file upload support for podcast audio files
+  client_max_body_size 500M;
+  client_body_timeout 600s;
+  client_header_timeout 600s;
+  
+  server {
+    listen ${PORT};
+    listen [::]:${PORT};
+    server_name localhost;
+
+    $if(NIXPACKS_PHP_ROOT_DIR) (
+      root ${NIXPACKS_PHP_ROOT_DIR};
+    ) else (
+      root /app;
+    )
+
+    index index.php index.html;
+    charset utf-8;
+
+    location / {
+      try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    location ~ \.php$ {
+      fastcgi_pass 127.0.0.1:9000;
+      fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+      include $!{nginx}/conf/fastcgi_params;
+      include $!{nginx}/conf/fastcgi.conf;
+      
+      # PHP upload limits passed to PHP-FPM
+      fastcgi_param PHP_VALUE "upload_max_filesize=500M \n post_max_size=500M \n max_execution_time=600 \n memory_limit=512M";
+      
+      # Longer timeouts for large uploads
+      fastcgi_read_timeout 600s;
+    }
+
+    location ~ /\.(?!well-known).* {
+      deny all;
+    }
+  }
+}
+'''
