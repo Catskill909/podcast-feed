@@ -1,0 +1,891 @@
+<?php
+/**
+ * Self-Hosted Podcast Management
+ * Create and manage podcasts hosted within this system
+ */
+
+session_start();
+
+require_once __DIR__ . '/includes/SelfHostedPodcastManager.php';
+require_once __DIR__ . '/config/config.php';
+
+$manager = new SelfHostedPodcastManager();
+$message = '';
+$messageType = '';
+
+// Handle form submissions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? '';
+
+    switch ($action) {
+        case 'create_podcast':
+            $data = [
+                'title' => $_POST['title'] ?? '',
+                'description' => $_POST['description'] ?? '',
+                'author' => $_POST['author'] ?? '',
+                'email' => $_POST['email'] ?? '',
+                'website_url' => $_POST['website_url'] ?? '',
+                'category' => $_POST['category'] ?? '',
+                'subcategory' => $_POST['subcategory'] ?? '',
+                'language' => $_POST['language'] ?? 'en-us',
+                'explicit' => $_POST['explicit'] ?? 'no',
+                'copyright' => $_POST['copyright'] ?? '',
+                'podcast_type' => $_POST['podcast_type'] ?? 'episodic',
+                'owner_name' => $_POST['owner_name'] ?? $_POST['author'] ?? '',
+                'owner_email' => $_POST['owner_email'] ?? $_POST['email'] ?? '',
+                'subtitle' => $_POST['subtitle'] ?? '',
+                'keywords' => $_POST['keywords'] ?? ''
+            ];
+            $result = $manager->createPodcast($data, $_FILES['cover_image'] ?? null);
+            $message = $result['message'];
+            $messageType = $result['success'] ? 'success' : 'danger';
+            break;
+
+        case 'delete_podcast':
+            $id = $_POST['id'] ?? '';
+            $result = $manager->deletePodcast($id);
+            $message = $result['message'];
+            $messageType = $result['success'] ? 'success' : 'danger';
+            break;
+    }
+
+    // Store message and redirect (PRG pattern)
+    $_SESSION['flash_message'] = $message;
+    $_SESSION['flash_type'] = $messageType;
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+// Retrieve flash message
+if (isset($_SESSION['flash_message'])) {
+    $message = $_SESSION['flash_message'];
+    $messageType = $_SESSION['flash_type'];
+    unset($_SESSION['flash_message']);
+    unset($_SESSION['flash_type']);
+}
+
+// Get all self-hosted podcasts
+$podcasts = $manager->getAllPodcasts();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Hosted Podcasts v2 - <?php echo APP_NAME; ?> - <?php echo date('H:i:s'); ?></title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo ASSETS_VERSION; ?>">
+    <link rel="stylesheet" href="assets/css/components.css?v=<?php echo ASSETS_VERSION; ?>">
+    
+    <style>
+
+        .podcast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .podcast-card {
+            background: #2d2d2d;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #404040;
+        }
+
+        .podcast-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .podcast-card-image {
+            width: 100%;
+            height: 200px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .podcast-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .podcast-card-image .placeholder {
+            font-size: 4rem;
+            color: #4CAF50;
+        }
+
+        .podcast-card-content {
+            padding: 20px;
+        }
+
+        .podcast-card-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.4rem;
+            margin: 0 0 10px 0;
+            color: #e0e0e0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .podcast-card-meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: #9e9e9e;
+            margin-bottom: 15px;
+        }
+
+        .podcast-card-meta i {
+            margin-right: 5px;
+            color: #4CAF50;
+        }
+
+        .podcast-card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .podcast-card-actions .btn {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: #2d2d2d;
+            border-radius: 8px;
+            border: 2px dashed #404040;
+            margin-top: 30px;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #4CAF50;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            color: #e0e0e0;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-family: 'Inter', sans-serif;
+            color: #9e9e9e;
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .badge-warning {
+            background: rgba(255, 152, 0, 0.2);
+            color: #FF9800;
+        }
+
+        .feed-url-box {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #333;
+        }
+
+        .feed-url-box label {
+            display: block;
+            font-size: 0.85rem;
+            color: #9e9e9e;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .feed-url-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .feed-url-input-group input {
+            flex: 1;
+            background: #2d2d2d;
+            border: 1px solid #404040;
+            color: #e0e0e0;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .feed-url-input-group .btn {
+            white-space: nowrap;
+        }
+
+        /* Modern Form Styling */
+        .modern-form-modal {
+            max-width: 95vw !important;
+            width: 1200px !important;
+        }
+
+        .modern-form .form-section {
+            margin-bottom: 35px;
+        }
+
+        .modern-form .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #333;
+        }
+
+        .modern-form .section-header i {
+            color: #4CAF50;
+            font-size: 1.3rem;
+        }
+
+        .modern-form .section-header h3 {
+            margin: 0;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+
+        .modern-form .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .modern-form .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modern-form .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .modern-form label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #e0e0e0;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .modern-form label .required {
+            color: #f44336;
+        }
+
+        .modern-form label .optional {
+            color: #9e9e9e;
+            font-weight: 400;
+            font-size: 0.85rem;
+        }
+
+        .modern-form .form-input,
+        .modern-form .form-select {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            padding: 12px 16px;
+            background: #1a1a1a;
+            border: 2px solid #404040;
+            border-radius: 8px;
+            color: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .modern-form .form-input:focus,
+        .modern-form .form-select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: #222;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .modern-form .form-input::placeholder {
+            color: #666;
+        }
+
+        .modern-form textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.6;
+        }
+
+        .modern-form .form-hint {
+            font-size: 0.8rem;
+            color: #9e9e9e;
+            margin-top: 6px;
+            display: block;
+        }
+
+        /* Beautiful File Upload */
+        .file-upload-wrapper {
+            position: relative;
+        }
+
+        .file-upload-wrapper .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .file-upload-display {
+            background: #1a1a1a;
+            border: 2px dashed #404040;
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-display:hover {
+            border-color: #4CAF50;
+            background: #222;
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            color: #4CAF50;
+            opacity: 0.7;
+        }
+
+        .file-upload-text {
+            flex: 1;
+        }
+
+        .file-upload-text .file-name {
+            display: block;
+            font-size: 1rem;
+            color: #e0e0e0;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .file-upload-text .file-requirements {
+            display: block;
+            font-size: 0.8rem;
+            color: #9e9e9e;
+        }
+
+        .image-preview {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .image-preview.active {
+            display: block;
+        }
+
+        .image-preview img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            border: 2px solid #404040;
+        }
+
+        /* Select Dropdown Styling */
+        .modern-form .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234CAF50' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        .modern-form .form-select option {
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 10px;
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding-top: 25px;
+            margin-top: 30px;
+            border-top: 2px solid #333;
+        }
+
+        .modal-footer .btn {
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .modern-form .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .file-upload-display {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div style="max-width: 100%; padding: 0 40px;">
+        <!-- Compact Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #30363d; margin-bottom: 30px;">
+            <div style="display: flex; align-items: center; gap: 30px;">
+                <a href="admin.php" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back to Admin
+                </a>
+                <div>
+                    <h1 style="margin: 0; font-size: 1.5rem; color: #e0e0e0; font-family: 'Oswald', sans-serif;">
+                        <i class="fas fa-broadcast-tower" style="color: #4CAF50; margin-right: 10px;"></i>
+                        Self-Hosted Podcasts
+                    </h1>
+                    <div style="font-size: 0.85rem; color: #9e9e9e; margin-top: 2px;">Create and manage your own podcast feeds</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="toggleCreateForm()">
+                <i class="fas fa-plus"></i> <span id="toggleButtonText">Create New Podcast</span>
+            </button>
+        </div>
+
+        <!-- Flash Message -->
+        <?php if ($message): ?>
+            <div class="alert alert-<?php echo $messageType; ?>" id="flashMessage">
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Create Podcast Form (Collapsible) -->
+        <div id="createPodcastForm" style="display: none; margin-bottom: 40px;">
+            <div style="background: #2d2d2d; padding: 30px; border-radius: 8px; border: 1px solid #404040;">
+                <h2 style="margin: 0 0 30px 0; font-size: 1.5rem; color: #e0e0e0; font-family: 'Oswald', sans-serif;">
+                    <i class="fas fa-plus-circle" style="color: #4CAF50;"></i> Create New Podcast
+                </h2>
+                
+                <form method="POST" enctype="multipart/form-data" class="modern-form">
+                    <input type="hidden" name="action" value="create_podcast">
+                    
+                    <!-- Form content will go here -->
+                    <div class="form-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Podcast Title <span style="color: #f44336;">*</span></label>
+                            <input type="text" name="title" required placeholder="My Awesome Podcast" class="form-input" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                        </div>
+
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Description <span style="color: #f44336;">*</span></label>
+                            <textarea name="description" required placeholder="Tell listeners what your podcast is about..." rows="4" class="form-input" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem; resize: vertical;"></textarea>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Author Name <span style="color: #f44336;">*</span></label>
+                            <input type="text" name="author" required placeholder="John Doe" class="form-input" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Email <span style="color: #f44336;">*</span></label>
+                            <input type="email" name="email" required placeholder="john@example.com" class="form-input" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                            <small style="display: block; margin-top: 6px; color: #9e9e9e; font-size: 0.8rem;">Required for iTunes compliance</small>
+                        </div>
+
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Website URL <span style="color: #9e9e9e; font-weight: 400;">(optional)</span></label>
+                            <input type="url" name="website_url" placeholder="https://example.com" class="form-input" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                        </div>
+
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Cover Image <span style="color: #f44336;">*</span></label>
+                            <input type="file" name="cover_image" accept="image/*" required style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0;">
+                            <small style="display: block; margin-top: 6px; color: #9e9e9e; font-size: 0.8rem;">1400x1400 to 3000x3000 pixels • Max 2MB • JPG or PNG</small>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Category <span style="color: #f44336;">*</span></label>
+                            <select name="category" required style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                                <option value="">Select Category</option>
+                                <option value="Arts">🎨 Arts</option>
+                                <option value="Business">💼 Business</option>
+                                <option value="Comedy">😂 Comedy</option>
+                                <option value="Education">📚 Education</option>
+                                <option value="Technology">💻 Technology</option>
+                                <option value="News">📰 News</option>
+                                <option value="Sports">⚽ Sports</option>
+                                <option value="Music">🎵 Music</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Language</label>
+                            <select name="language" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                                <option value="en-us">🇺🇸 English (US)</option>
+                                <option value="es">🇪🇸 Spanish</option>
+                                <option value="fr">🇫🇷 French</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Explicit Content</label>
+                            <select name="explicit" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                                <option value="clean">Clean</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Podcast Type</label>
+                            <select name="podcast_type" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                                <option value="episodic">Episodic</option>
+                                <option value="serial">Serial</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px; display: flex; gap: 12px; justify-content: flex-end;">
+                        <button type="button" class="btn btn-secondary" onclick="toggleCreateForm()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Create Podcast
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Podcasts Grid -->
+        <?php if (empty($podcasts)): ?>
+            <div class="empty-state">
+                <i class="fas fa-podcast"></i>
+                <h2>No Self-Hosted Podcasts Yet</h2>
+                <p>Click "Create New Podcast" above to get started</p>
+            </div>
+        <?php else: ?>
+            <div class="podcast-grid">
+                <?php foreach ($podcasts as $podcast): ?>
+                    <div class="podcast-card">
+                        <div class="podcast-card-image">
+                            <?php if ($podcast['cover_image']): ?>
+                                <img src="<?php echo htmlspecialchars(COVERS_URL . '/' . $podcast['cover_image']); ?>" 
+                                     alt="<?php echo htmlspecialchars($podcast['title']); ?>">
+                            <?php else: ?>
+                                <div class="placeholder">
+                                    <i class="fas fa-podcast"></i>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="podcast-card-content">
+                            <h3 class="podcast-card-title"><?php echo htmlspecialchars($podcast['title']); ?></h3>
+                            
+                            <div class="podcast-card-meta">
+                                <div><i class="fas fa-user"></i> <?php echo htmlspecialchars($podcast['author']); ?></div>
+                                <div><i class="fas fa-list"></i> <?php echo $podcast['episode_count']; ?> episodes</div>
+                                <div><i class="fas fa-tag"></i> <?php echo htmlspecialchars($podcast['category'] ?: 'Uncategorized'); ?></div>
+                            </div>
+
+                            <span class="badge badge-success">
+                                <i class="fas fa-check-circle"></i> Active
+                            </span>
+
+                            <div class="feed-url-box">
+                                <label>RSS Feed URL:</label>
+                                <div class="feed-url-input-group">
+                                    <input type="text" 
+                                           readonly 
+                                           value="<?php echo htmlspecialchars(APP_URL . '/self-hosted-feed.php?id=' . $podcast['id']); ?>"
+                                           id="feed-url-<?php echo $podcast['id']; ?>">
+                                    <button class="btn btn-sm btn-secondary" 
+                                            onclick="copyFeedUrl('<?php echo $podcast['id']; ?>')">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="podcast-card-actions">
+                                <a href="self-hosted-episodes.php?podcast_id=<?php echo $podcast['id']; ?>" 
+                                   class="btn btn-primary btn-sm">
+                                    <i class="fas fa-headphones"></i> Episodes
+                                </a>
+                                <button class="btn btn-secondary btn-sm" 
+                                        onclick="viewFeed('<?php echo $podcast['id']; ?>')">
+                                    <i class="fas fa-rss"></i> View Feed
+                                </button>
+                                <button class="btn btn-danger btn-sm" 
+                                        onclick="deletePodcast('<?php echo $podcast['id']; ?>', '<?php echo htmlspecialchars(addslashes($podcast['title'])); ?>')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Create Podcast Modal -->
+    <div id="createPodcastModal" class="modal" style="max-width: 1400px !important; width: 95vw !important;">
+        <div class="modal-content modern-form-modal" style="max-height: 90vh; display: flex; flex-direction: column; max-width: 100% !important;">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> Create New Podcast</h2>
+                <button class="modal-close" onclick="closeCreateModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; flex: 1;">
+                <form method="POST" enctype="multipart/form-data" id="createPodcastForm" class="modern-form">
+                    <input type="hidden" name="action" value="create_podcast">
+                    
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <i class="fas fa-info-circle"></i>
+                            <h3>Basic Information</h3>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="title">Podcast Title <span class="required">*</span></label>
+                                <input type="text" id="title" name="title" required 
+                                       placeholder="My Awesome Podcast" class="form-input">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="description">Description <span class="required">*</span></label>
+                                <textarea id="description" name="description" rows="4" required
+                                          placeholder="Tell listeners what your podcast is about..." class="form-input"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="author">Author Name <span class="required">*</span></label>
+                                <input type="text" id="author" name="author" required
+                                       placeholder="John Doe" class="form-input">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email <span class="required">*</span></label>
+                                <input type="email" id="email" name="email" required
+                                       placeholder="john@example.com" class="form-input">
+                                <small class="form-hint">Required for iTunes compliance</small>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="website_url">Website URL <span class="optional">(optional)</span></label>
+                                <input type="url" id="website_url" name="website_url"
+                                       placeholder="https://example.com" class="form-input">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="cover_image">Cover Image <span class="required">*</span></label>
+                                <div class="file-upload-wrapper">
+                                    <input type="file" id="cover_image" name="cover_image" accept="image/*" required class="file-input">
+                                    <div class="file-upload-display">
+                                        <div class="file-upload-icon">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                        </div>
+                                        <div class="file-upload-text">
+                                            <span class="file-name">Click to upload or drag and drop</span>
+                                            <span class="file-requirements">1400x1400 to 3000x3000 pixels • Max 2MB • JPG or PNG</span>
+                                        </div>
+                                    </div>
+                                    <div id="imagePreview" class="image-preview"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Metadata -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <i class="fas fa-tags"></i>
+                            <h3>Podcast Metadata</h3>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="category">Category <span class="required">*</span></label>
+                                <select id="category" name="category" required class="form-select">
+                                    <option value="">Select Category</option>
+                                    <option value="Arts">🎨 Arts</option>
+                                    <option value="Business">💼 Business</option>
+                                    <option value="Comedy">😂 Comedy</option>
+                                    <option value="Education">📚 Education</option>
+                                    <option value="Fiction">📖 Fiction</option>
+                                    <option value="Health & Fitness">💪 Health & Fitness</option>
+                                    <option value="History">🏛️ History</option>
+                                    <option value="Kids & Family">👨‍👩‍👧‍👦 Kids & Family</option>
+                                    <option value="Leisure">🎮 Leisure</option>
+                                    <option value="Music">🎵 Music</option>
+                                    <option value="News">📰 News</option>
+                                    <option value="Science">🔬 Science</option>
+                                    <option value="Society & Culture">🌍 Society & Culture</option>
+                                    <option value="Sports">⚽ Sports</option>
+                                    <option value="Technology">💻 Technology</option>
+                                    <option value="True Crime">🔍 True Crime</option>
+                                    <option value="TV & Film">🎬 TV & Film</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="language">Language</label>
+                                <select id="language" name="language" class="form-select">
+                                    <option value="en-us">🇺🇸 English (US)</option>
+                                    <option value="en-gb">🇬🇧 English (UK)</option>
+                                    <option value="es">🇪🇸 Spanish</option>
+                                    <option value="fr">🇫🇷 French</option>
+                                    <option value="de">🇩🇪 German</option>
+                                    <option value="it">🇮🇹 Italian</option>
+                                    <option value="pt">🇵🇹 Portuguese</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="explicit">Explicit Content</label>
+                                <select id="explicit" name="explicit" class="form-select">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="clean">Clean</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="podcast_type">Podcast Type</label>
+                                <select id="podcast_type" name="podcast_type" class="form-select">
+                                    <option value="episodic">Episodic</option>
+                                    <option value="serial">Serial</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="copyright">Copyright <span class="optional">(optional)</span></label>
+                                <input type="text" id="copyright" name="copyright"
+                                       placeholder="© 2025 Your Name" class="form-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeCreateModal()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Create Podcast
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-hide flash message
+        setTimeout(() => {
+            const flash = document.getElementById('flashMessage');
+            if (flash) {
+                flash.style.opacity = '0';
+                setTimeout(() => flash.remove(), 300);
+            }
+        }, 5000);
+
+        function toggleCreateForm() {
+            const form = document.getElementById('createPodcastForm');
+            const button = document.getElementById('toggleButtonText');
+            
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+                button.textContent = 'Hide Form';
+                // Scroll to form
+                form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                form.style.display = 'none';
+                button.textContent = 'Create New Podcast';
+            }
+        }
+
+        function copyFeedUrl(podcastId) {
+            const input = document.getElementById('feed-url-' + podcastId);
+            input.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            const btn = event.target.closest('button');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            btn.classList.add('btn-success');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.classList.remove('btn-success');
+            }, 2000);
+        }
+
+        function viewFeed(podcastId) {
+            const url = '<?php echo APP_URL; ?>/self-hosted-feed.php?id=' + podcastId;
+            window.open(url, '_blank');
+        }
+
+        function deletePodcast(id, title) {
+            if (confirm('Are you sure you want to delete "' + title + '"? This will also delete all episodes and cannot be undone.')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.innerHTML = `
+                    <input type="hidden" name="action" value="delete_podcast">
+                    <input type="hidden" name="id" value="${id}">
+                `;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('createPodcastModal');
+            if (event.target === modal) {
+                closeCreateModal();
+            }
+        }
+    </script>
+</body>
+</html>

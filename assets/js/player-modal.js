@@ -329,7 +329,7 @@ class PodcastPlayerModal {
             
             // Get iTunes duration
             const itunesDuration = item.querySelector('duration')?.textContent || 
-                                  item.querySelectorAll('*').find(el => el.localName === 'duration')?.textContent || '';
+                                  Array.from(item.querySelectorAll('*')).find(el => el.localName === 'duration')?.textContent || '';
             
             // Get episode image (iTunes or media)
             let imageUrl = '';

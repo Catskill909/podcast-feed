@@ -27,13 +27,19 @@ define('APP_URL', $protocol . '://' . $host);
 // Application Settings
 define('APP_NAME', 'PodFeed Builder');
 define('APP_VERSION', '1.0.0');
-define('ASSETS_VERSION', '20251017_1117'); // Update this when JS/CSS changes
+define('ASSETS_VERSION', '20251017_1852'); // Update this when JS/CSS changes
 
 // File Paths
 define('DATA_DIR', __DIR__ . '/../data');
 define('UPLOADS_DIR', __DIR__ . '/../uploads');
 define('COVERS_DIR', UPLOADS_DIR . '/covers');
+define('AUDIO_DIR', UPLOADS_DIR . '/audio');
 define('LOGS_DIR', __DIR__ . '/../logs');
+
+// URL Paths
+define('UPLOADS_URL', APP_URL . '/uploads');
+define('COVERS_URL', UPLOADS_URL . '/covers');
+define('AUDIO_URL', UPLOADS_URL . '/audio');
 
 // XML Files
 define('PODCASTS_XML', DATA_DIR . '/podcasts.xml');
@@ -47,6 +53,11 @@ define('MAX_IMAGE_WIDTH', 2400);
 define('MAX_IMAGE_HEIGHT', 2400);
 define('ALLOWED_EXTENSIONS', ['jpg', 'jpeg', 'png', 'gif']);
 define('ALLOWED_MIME_TYPES', ['image/jpeg', 'image/png', 'image/gif']);
+
+// Audio Settings
+define('MAX_AUDIO_FILE_SIZE', 500 * 1024 * 1024); // 500MB
+define('ALLOWED_AUDIO_EXTENSIONS', ['mp3']);
+define('ALLOWED_AUDIO_MIME_TYPES', ['audio/mpeg', 'audio/mp3']);
 
 // Error Messages
 define('ERROR_MESSAGES', [
@@ -76,7 +87,7 @@ if (ENVIRONMENT === 'production') {
 }
 
 // Create required directories if they don't exist
-$dirs = [DATA_DIR, UPLOADS_DIR, COVERS_DIR, LOGS_DIR, BACKUP_DIR];
+$dirs = [DATA_DIR, UPLOADS_DIR, COVERS_DIR, AUDIO_DIR, LOGS_DIR, BACKUP_DIR];
 foreach ($dirs as $dir) {
     if (!is_dir($dir)) {
         @mkdir($dir, 0755, true);

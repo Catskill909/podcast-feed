@@ -205,7 +205,17 @@ class PodcastManager
     public function deletePodcast($id)
     {
         try {
-            // Get podcast data before deletion
+            // Check if this is a self-hosted podcast
+            if (strpos($id, 'shp_') === 0) {
+                // Self-hosted podcasts cannot be deleted from admin
+                // They must be managed through the Self-Hosted Podcasts page
+                return [
+                    'success' => false,
+                    'message' => 'Self-hosted podcasts cannot be deleted from here. Please use the Self-Hosted Podcasts page to manage this podcast. You can set it to Inactive to hide it from the public.'
+                ];
+            }
+            
+            // Get podcast data before deletion (RSS podcast)
             $podcast = $this->xmlHandler->getPodcast($id);
             if (!$podcast) {
                 throw new Exception('Podcast not found');
@@ -240,7 +250,26 @@ class PodcastManager
     public function updatePodcastStatus($id, $status)
     {
         try {
-            // Check if podcast exists
+            // Check if this is a self-hosted podcast
+            if (strpos($id, 'shp_') === 0) {
+                // Route to self-hosted podcast manager
+                require_once __DIR__ . '/SelfHostedPodcastManager.php';
+                $selfHostedManager = new SelfHostedPodcastManager();
+                
+                // Get the podcast
+                $podcast = $selfHostedManager->getPodcast($id);
+                if (!$podcast) {
+                    throw new Exception('Podcast not found');
+                }
+                
+                // Update status
+                $updateData = ['status' => $status];
+                $result = $selfHostedManager->updatePodcast($id, $updateData);
+                
+                return $result;
+            }
+            
+            // Check if podcast exists (RSS podcast)
             $existingPodcast = $this->xmlHandler->getPodcast($id);
             if (!$existingPodcast) {
                 throw new Exception('Podcast not found');
@@ -276,7 +305,32 @@ class PodcastManager
     public function getPodcast($id)
     {
         try {
+            // First try RSS podcasts
             $podcast = $this->xmlHandler->getPodcast($id);
+            
+            // If not found, check self-hosted podcasts
+            if (!$podcast && strpos($id, 'shp_') === 0) {
+                require_once __DIR__ . '/SelfHostedPodcastManager.php';
+                $selfHostedManager = new SelfHostedPodcastManager();
+                $shPodcast = $selfHostedManager->getPodcast($id);
+                
+                if ($shPodcast) {
+                    // Convert to RSS podcast format
+                    $podcast = [
+                        'id' => $shPodcast['id'],
+                        'title' => $shPodcast['title'],
+                        'feed_url' => APP_URL . '/self-hosted-feed.php?id=' . $shPodcast['id'],
+                        'description' => $shPodcast['description'] ?? '',
+                        'cover_image' => $shPodcast['cover_image'] ?? '',
+                        'latest_episode_date' => $shPodcast['updated_date'] ?? '',
+                        'episode_count' => $shPodcast['episode_count'] ?? 0,
+                        'status' => $shPodcast['status'] ?? 'active',
+                        'created_date' => $shPodcast['created_date'] ?? '',
+                        'is_self_hosted' => true
+                    ];
+                }
+            }
+            
             if (!$podcast) {
                 return null;
             }
@@ -302,11 +356,34 @@ class PodcastManager
     public function getAllPodcasts($includeImageInfo = false): array
     {
         try {
+            // Get RSS podcasts
             $podcasts = $this->xmlHandler->getAllPodcasts();
 
             // Ensure we always have an array
             if (!is_array($podcasts)) {
                 $podcasts = [];
+            }
+
+            // Get self-hosted podcasts
+            require_once __DIR__ . '/SelfHostedPodcastManager.php';
+            $selfHostedManager = new SelfHostedPodcastManager();
+            $selfHostedPodcasts = $selfHostedManager->getAllPodcasts();
+            
+            // Convert self-hosted podcasts to match RSS podcast format
+            foreach ($selfHostedPodcasts as $shPodcast) {
+                $podcasts[] = [
+                    'id' => $shPodcast['id'],
+                    'title' => $shPodcast['title'],
+                    'feed_url' => APP_URL . '/self-hosted-feed.php?id=' . $shPodcast['id'],
+                    'description' => $shPodcast['description'] ?? '',
+                    'cover_image' => $shPodcast['cover_image'] ?? '',
+                    'latest_episode_date' => $shPodcast['updated_date'] ?? '',
+                    'episode_count' => $shPodcast['episode_count'] ?? 0,
+                    'status' => $shPodcast['status'] ?? 'active',
+                    'is_self_hosted' => true,
+                    'author' => $shPodcast['author'] ?? '',
+                    'category' => $shPodcast['category'] ?? ''
+                ];
             }
 
             // Only include image info if requested (no RSS fetching on page load)

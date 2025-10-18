@@ -1,15 +1,16 @@
 # PodFeed Browser
 
-A modern podcast directory with a beautiful public browsing interface and powerful admin management system. Features RSS feed auto-import, health monitoring, in-browser audio player, and a stunning dark-themed UI.
+A complete podcast platform combining a modern directory browser with a full-featured podcast hosting system. Features RSS feed aggregation, self-hosted podcast creation, audio file management, health monitoring, in-browser audio player, and a stunning dark-themed UI.
 
 ---
 
 ## 🎯 IMPORTANT: What This App Does
 
-**PodFeed Builder is a FEED AGGREGATOR, not a podcast host.**
+**PodFeed Builder is BOTH a feed aggregator AND a complete podcast hosting platform.**
 
-### **Core Purpose:**
-This app creates a **meta-feed** (RSS feed of RSS feeds) for consumption by external applications (Flutter app, podcast players, etc.). It aggregates multiple podcast feeds into a single manageable directory.
+### **Dual Purpose:**
+1. **Feed Aggregator** - Creates a meta-feed (RSS feed of RSS feeds) for consumption by external applications (Flutter app, podcast players, etc.). Aggregates multiple podcast feeds into a single manageable directory.
+2. **Podcast Hosting Platform** - Full podcast creation system where you can create podcasts from scratch, upload audio files, manage episodes, and generate iTunes-compliant RSS feeds.
 
 ### **Critical Architecture Principle:**
 
@@ -67,14 +68,17 @@ This app creates a **meta-feed** (RSS feed of RSS feeds) for consumption by exte
 - ✅ Fetch live data only when needed (modals, health checks)
 - ✅ Always point to source feeds in your output
 
-### **Future Potential:**
-While this app is currently a feed aggregator, it could evolve into:
-- Full podcast hosting platform
-- Podcast player website
-- Episode management system
-- Analytics dashboard
+### **Current Capabilities:**
+✅ **Feed Aggregator** - Import and manage external podcast RSS feeds
+✅ **Podcast Hosting Platform** - Create and host your own podcasts with audio uploads
+✅ **Podcast Player Website** - Public browsing interface with in-browser player
+✅ **Episode Management System** - Full CRUD operations for episodes
 
-**But for now:** It's a feed aggregator. Keep this in mind during development to avoid architectural confusion.
+**Future Potential:**
+- Analytics dashboard
+- Automated transcription
+- Multi-user podcast networks
+- Monetization features
 
 ---
 
@@ -136,7 +140,20 @@ git push origin main
 
 ## 🚀 Features
 
-### **🎨 Public Browsing Interface (NEW - October 17, 2025)** ✨
+### **🎙️ Self-Hosted Podcast Platform (NEW - October 17, 2025)** ✨✨
+- **Complete Podcast Creation**: Create podcasts from scratch with full metadata
+- **Audio File Uploads**: Upload and host MP3 files directly on your server
+- **Episode Management**: Add, edit, and delete episodes with full control
+- **Cover Image Management**: Upload podcast and episode artwork
+- **iTunes Compliance**: Generates standard RSS 2.0 + iTunes namespace feeds
+- **Seamless Integration**: Self-hosted podcasts integrate with existing directory
+- **RSS Feed Generator**: Each podcast gets its own public RSS feed URL
+- **Beautiful Management UI**: Dark-themed interface matching existing design
+- **Persistent Storage**: All files stored in Coolify persistent volumes
+- **No Breaking Changes**: Modular architecture, zero impact on existing features
+- **~1,850 Lines of Code**: Complete system with validation and error handling
+
+### **🎨 Public Browsing Interface (October 17, 2025)** ✨
 - **Beautiful Podcast Grid**: Responsive card layout with cover images and overlays
 - **Hover Effects**: Smooth animations with play button overlay on hover
 - **Smart Stats Bar**: Clean display of podcast and episode counts
@@ -190,7 +207,7 @@ git push origin main
 - **Client-Side Parsing**: Fast RSS feed parsing directly in browser
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile
 
-### **📡 Live Feed Data (October 17, 2025)** ✨ NEW
+### **📡 Live Feed Data (October 17, 2025)** ✨
 - **Always Fresh Modals** 🔄: Player and info modals fetch live data from RSS feeds
 - **One Source of Truth**: RSS feeds are the ultimate source, not cached database
 - **Smart Caching**: Main page shows cached data for fast loads, modals show live data
@@ -244,11 +261,14 @@ podcast-feed/
 │   ├── config.php               # App configuration
 │   └── auth_placeholder.php     # Authentication structure
 ├── includes/
-│   ├── PodcastManager.php       # Core CRUD operations
-│   ├── XMLHandler.php           # XML file management
-│   ├── ImageUploader.php        # Image upload handling
-│   ├── RssImportValidator.php   # RSS feed validation (NEW)
-│   └── functions.php            # Utility functions
+│   ├── PodcastManager.php              # Core CRUD operations
+│   ├── XMLHandler.php                  # XML file management
+│   ├── ImageUploader.php               # Image upload handling
+│   ├── AudioUploader.php               # Audio file upload handling (NEW)
+│   ├── RssImportValidator.php          # RSS feed validation
+│   ├── SelfHostedPodcastManager.php    # Self-hosted podcast logic (NEW)
+│   ├── SelfHostedXMLHandler.php        # Self-hosted XML operations (NEW)
+│   └── functions.php                   # Utility functions
 ├── assets/
 │   ├── css/
 │   │   ├── style.css           # Main dark theme styles
@@ -262,13 +282,18 @@ podcast-feed/
 │       ├── audio-player.js     # Audio playback controls
 │       └── validation.js       # Form validation
 ├── data/
-│   ├── podcasts.xml            # XML data storage
-│   └── backup/                 # XML backups
+│   ├── podcasts.xml                 # Aggregated podcast directory
+│   ├── self-hosted-podcasts.xml     # Self-hosted podcasts (NEW)
+│   └── backup/                      # XML backups
 ├── uploads/
-│   └── covers/                 # Podcast cover images
+│   ├── covers/                      # Podcast cover images
+│   └── audio/                       # Self-hosted audio files (NEW)
+├── self-hosted-podcasts.php         # Self-hosted podcast management (NEW)
+├── self-hosted-episodes.php         # Episode management page (NEW)
+├── self-hosted-feed.php             # RSS feed generator (NEW)
 └── logs/
-    ├── error.log              # Error logging
-    └── operations.log         # Activity logging
+    ├── error.log                    # Error logging
+    └── operations.log               # Activity logging
 ```
 
 ## 🎯 Usage
@@ -300,7 +325,32 @@ podcast-feed/
 
 Access the admin panel by clicking "Admin" in the header or visiting `/admin.php` directly. Password required.
 
-#### **Option 1: Import from RSS Feed** ✨
+#### **Option 1: Create Self-Hosted Podcast** ✨ NEW
+
+1. Click **"Create Self-Hosted Podcast"** button (green)
+2. Fill in podcast metadata:
+   - Basic info (title, description, author, email, website)
+   - iTunes metadata (category, language, explicit flag, type)
+   - Upload cover image (1400-3000px)
+3. Click **"Create Podcast"**
+4. Click **"Episodes"** button to manage episodes
+5. Add episodes:
+   - Upload MP3 audio files (up to 500MB)
+   - Add episode metadata (title, description, duration)
+   - Optional episode artwork
+   - Set publication date and status
+6. Your podcast gets its own RSS feed URL
+7. Optionally import to main directory using "Import from RSS"
+
+**Self-Hosted Features:**
+- Complete podcast creation from scratch
+- Audio file hosting on your server
+- Episode management (add, edit, delete)
+- iTunes-compliant RSS feed generation
+- Persistent storage in Coolify volumes
+- Seamless integration with existing directory
+
+#### **Option 2: Import from RSS Feed** ✨
 
 1. Click **"Import from RSS"** button
 2. Paste any podcast RSS feed URL
@@ -327,7 +377,7 @@ Access the admin panel by clicking "Admin" in the header or visiting `/admin.php
 - iTunes namespace and tags (warning if missing)
 - Response time (warning if >5 seconds)
 
-### **Option 2: Add Manually**
+#### **Option 3: Add Manually**
 
 1. Click **"Add New Podcast"** button
 2. Enter podcast title (3-200 characters)
@@ -665,15 +715,18 @@ For issues, questions, or feature requests:
 - 🚀 **[FUTURE-DEV.md](FUTURE-DEV.md)** - Roadmap and planned features
 - 📡 **[RSS-IMPORT-IMPLEMENTATION.md](RSS-IMPORT-IMPLEMENTATION.md)** - RSS import feature docs
 - 👁️ **[PODCAST-PREVIEW-FEATURE.md](PODCAST-PREVIEW-FEATURE.md)** - Preview cards feature
-- 🎧 **[PLAYER-MODAL-IMPLEMENTATION.md](PLAYER-MODAL-IMPLEMENTATION.md)** - Podcast player modal (NEW Oct 16)
+- 🎧 **[PLAYER-MODAL-IMPLEMENTATION.md](PLAYER-MODAL-IMPLEMENTATION.md)** - Podcast player modal (Oct 16)
+- 🎙️ **[SELF-HOSTED-IMPLEMENTATION-SUMMARY.md](SELF-HOSTED-IMPLEMENTATION-SUMMARY.md)** - Self-hosted platform (NEW Oct 17)
+- 📐 **[SELF-HOSTED-ARCHITECTURE-V2.md](SELF-HOSTED-ARCHITECTURE-V2.md)** - Technical architecture
+- 📖 **[SELF-HOSTED-PODCAST-GUIDE.md](SELF-HOSTED-PODCAST-GUIDE.md)** - User guide
 
 ### **Historical Documentation**
 - 📁 **[docs-archive/](docs-archive/)** - Archived development and debugging docs
 
 ---
 
-**Version**: 3.0.0  
+**Version**: 4.0.0  
 **Last Updated**: October 17, 2025  
 **Compatibility**: PHP 7.4+, Modern Browsers  
 **Status**: ✅ Production Ready - Fully Automated  
-**Features**: **Public Podcast Browser**, **Admin Management Panel**, RSS Auto-Import with Validation, Health Check, Auto-Sync Sorting, Podcast Preview Cards, **In-Browser Podcast Player**, **Live Feed Data**, Material Design UI, Persistent Storage, Cache Busting
+**Features**: **Self-Hosted Podcast Platform**, **Public Podcast Browser**, **Admin Management Panel**, Audio File Uploads, Episode Management, RSS Auto-Import with Validation, Health Check, Auto-Sync Sorting, Podcast Preview Cards, **In-Browser Podcast Player**, **Live Feed Data**, Material Design UI, Persistent Storage, Cache Busting

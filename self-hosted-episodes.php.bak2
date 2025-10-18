@@ -1,0 +1,710 @@
+<?php
+/**
+ * Self-Hosted Podcast Episode Management
+ * Add and manage episodes for self-hosted podcasts
+ */
+
+session_start();
+
+require_once __DIR__ . '/includes/SelfHostedPodcastManager.php';
+require_once __DIR__ . '/config/config.php';
+
+$manager = new SelfHostedPodcastManager();
+$message = '';
+$messageType = '';
+
+// Get podcast ID
+$podcastId = $_GET['podcast_id'] ?? '';
+
+if (empty($podcastId)) {
+    header('Location: self-hosted-podcasts.php');
+    exit;
+}
+
+// Get podcast
+$podcast = $manager->getPodcast($podcastId);
+
+if (!$podcast) {
+    $_SESSION['flash_message'] = 'Podcast not found';
+    $_SESSION['flash_type'] = 'danger';
+    header('Location: self-hosted-podcasts.php');
+    exit;
+}
+
+// Handle form submissions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? '';
+
+    switch ($action) {
+        case 'add_episode':
+            $data = [
+                'title' => $_POST['title'] ?? '',
+                'description' => $_POST['description'] ?? '',
+                'audio_url' => $_POST['audio_url'] ?? '',
+                'duration' => $_POST['duration'] ?? '0',
+                'file_size' => $_POST['file_size'] ?? '0',
+                'pub_date' => $_POST['pub_date'] ?? date('Y-m-d H:i:s'),
+                'episode_number' => $_POST['episode_number'] ?? '',
+                'season_number' => $_POST['season_number'] ?? '',
+                'episode_type' => $_POST['episode_type'] ?? 'full',
+                'explicit' => $_POST['explicit'] ?? 'no',
+                'status' => $_POST['status'] ?? 'published'
+            ];
+            $result = $manager->addEpisode($podcastId, $data, $_FILES['episode_image'] ?? null, $_FILES['audio_file'] ?? null);
+            $message = $result['message'];
+            $messageType = $result['success'] ? 'success' : 'danger';
+            break;
+
+        case 'delete_episode':
+            $episodeId = $_POST['episode_id'] ?? '';
+            $result = $manager->deleteEpisode($podcastId, $episodeId);
+            $message = $result['message'];
+            $messageType = $result['success'] ? 'success' : 'danger';
+            break;
+    }
+
+    // Store message and redirect
+    $_SESSION['flash_message'] = $message;
+    $_SESSION['flash_type'] = $messageType;
+    header('Location: ' . $_SERVER['PHP_SELF'] . '?podcast_id=' . $podcastId);
+    exit;
+}
+
+// Retrieve flash message
+if (isset($_SESSION['flash_message'])) {
+    $message = $_SESSION['flash_message'];
+    $messageType = $_SESSION['flash_type'];
+    unset($_SESSION['flash_message']);
+    unset($_SESSION['flash_type']);
+}
+
+// Get episodes
+$episodes = $manager->getEpisodes($podcastId);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Episodes - <?php echo htmlspecialchars($podcast['title']); ?></title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo ASSETS_VERSION; ?>">
+    <link rel="stylesheet" href="assets/css/components.css?v=<?php echo ASSETS_VERSION; ?>">
+    
+    <style>
+        .episode-header {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #404040;
+        }
+
+        .episode-header h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+            color: #e0e0e0;
+        }
+
+        .episode-header .podcast-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .episode-header .podcast-cover {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .episode-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .episode-item {
+            background: #2d2d2d;
+            border: 1px solid #404040;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .episode-item:hover {
+            border-color: #4CAF50;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+        }
+
+        .episode-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .episode-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            color: #e0e0e0;
+            margin: 0;
+        }
+
+        .episode-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: #9e9e9e;
+            margin-bottom: 10px;
+        }
+
+        .episode-meta i {
+            color: #4CAF50;
+            margin-right: 5px;
+        }
+
+        .episode-description {
+            color: #b0b0b0;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .episode-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .empty-episodes {
+            text-align: center;
+            padding: 40px 20px;
+            background: #2d2d2d;
+            border-radius: 8px;
+            border: 2px dashed #404040;
+        }
+
+        .empty-episodes i {
+            font-size: 3rem;
+            color: #4CAF50;
+            opacity: 0.5;
+            margin-bottom: 15px;
+        }
+
+        /* Audio Upload Styling */
+        .file-upload-wrapper {
+            position: relative;
+        }
+
+        .file-upload-wrapper .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .file-upload-display.audio-upload {
+            background: #1a1a1a;
+            border: 2px dashed #404040;
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-display.audio-upload:hover {
+            border-color: #4CAF50;
+            background: #222;
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            color: #4CAF50;
+            opacity: 0.7;
+        }
+
+        .file-upload-text {
+            flex: 1;
+        }
+
+        .file-upload-text .file-name {
+            display: block;
+            font-size: 1rem;
+            color: #e0e0e0;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .file-upload-text .file-requirements {
+            display: block;
+            font-size: 0.8rem;
+            color: #9e9e9e;
+        }
+
+        .audio-preview {
+            margin-top: 15px;
+            display: none;
+            padding: 15px;
+            background: #222;
+            border-radius: 8px;
+            border: 1px solid #404040;
+        }
+
+        .audio-preview.active {
+            display: block;
+        }
+
+        .audio-preview .audio-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #e0e0e0;
+        }
+
+        .audio-preview .audio-icon {
+            font-size: 2rem;
+            color: #4CAF50;
+        }
+
+        .audio-preview .audio-details {
+            flex: 1;
+        }
+
+        .audio-preview .audio-filename {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .audio-preview .audio-meta {
+            font-size: 0.9rem;
+            color: #9e9e9e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-podcast"></i>
+                <span><?php echo APP_NAME; ?></span>
+            </div>
+            <div class="header-actions">
+                <a href="self-hosted-podcasts.php" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Podcasts
+                </a>
+            </div>
+        </div>
+
+        <div class="episode-header">
+            <h1><i class="fas fa-headphones"></i> Episodes</h1>
+            <div class="podcast-info">
+                <?php if ($podcast['cover_image']): ?>
+                    <img src="<?php echo htmlspecialchars(COVERS_URL . '/' . $podcast['cover_image']); ?>" 
+                         alt="<?php echo htmlspecialchars($podcast['title']); ?>"
+                         class="podcast-cover">
+                <?php endif; ?>
+                <div>
+                    <h2 style="margin: 0; font-size: 1.5rem; color: #4CAF50;"><?php echo htmlspecialchars($podcast['title']); ?></h2>
+                    <p style="margin: 5px 0 0 0; color: #9e9e9e;">
+                        <i class="fas fa-user"></i> <?php echo htmlspecialchars($podcast['author']); ?>
+                        <span style="margin-left: 15px;"><i class="fas fa-list"></i> <?php echo count($episodes); ?> episodes</span>
+                    </p>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="toggleEpisodeForm()" style="margin-top: 20px;">
+                <i class="fas fa-plus"></i> <span id="toggleEpisodeText">Add New Episode</span>
+            </button>
+        </div>
+
+        <?php if ($message): ?>
+            <div class="alert alert-<?php echo $messageType; ?>" id="flashMessage">
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Add Episode Form (Collapsible) -->
+        <div id="addEpisodeForm" style="display: none; margin-bottom: 30px;">
+            <div style="background: #2d2d2d; padding: 30px; border-radius: 8px; border: 1px solid #404040;">
+                <h2 style="margin: 0 0 25px 0; font-size: 1.3rem; color: #e0e0e0; font-family: 'Oswald', sans-serif;">
+                    <i class="fas fa-plus-circle" style="color: #4CAF50;"></i> Add New Episode
+                </h2>
+                
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="add_episode">
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Episode Title <span style="color: #f44336;">*</span></label>
+                            <input type="text" name="title" required placeholder="Episode 1: Introduction" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                        </div>
+
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Description <span style="color: #f44336;">*</span></label>
+                            <textarea name="description" required placeholder="Describe what this episode is about..." rows="4" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem; resize: vertical;"></textarea>
+                        </div>
+
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">🎵 Audio File <span style="color: #f44336;">*</span> (MP3)</label>
+                            <input type="file" name="audio_file" accept="audio/mpeg,audio/mp3,.mp3" required style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0;">
+                            <small style="display: block; margin-top: 6px; color: #9e9e9e; font-size: 0.8rem;">Max 500MB • Duration will be auto-detected • Audio will be hosted on this server</small>
+                        </div>
+
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Or External Audio URL <span style="color: #9e9e9e; font-weight: 400;">(optional if file uploaded)</span></label>
+                            <input type="url" name="audio_url" placeholder="https://example.com/audio/episode1.mp3" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                            <small style="display: block; margin-top: 6px; color: #9e9e9e; font-size: 0.8rem;">Only needed if not uploading a file above</small>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Duration (HH:MM:SS or seconds)</label>
+                            <input type="text" name="duration" placeholder="00:30:00 or 1800" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                            <small style="display: block; margin-top: 6px; color: #9e9e9e; font-size: 0.8rem;">Auto-detected if uploading file</small>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">File Size (bytes)</label>
+                            <input type="number" name="file_size" placeholder="28000000" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                            <small style="display: block; margin-top: 6px; color: #9e9e9e; font-size: 0.8rem;">Auto-detected if uploading file</small>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Publication Date</label>
+                            <input type="datetime-local" name="pub_date" value="<?php echo date('Y-m-d\TH:i'); ?>" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Episode Cover <span style="color: #9e9e9e; font-weight: 400;">(optional)</span></label>
+                            <input type="file" name="episode_image" accept="image/*" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0;">
+                            <small style="display: block; margin-top: 6px; color: #9e9e9e; font-size: 0.8rem;">Inherits podcast cover if not provided</small>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Episode Number</label>
+                            <input type="number" name="episode_number" placeholder="1" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Season Number</label>
+                            <input type="number" name="season_number" placeholder="1" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Episode Type</label>
+                            <select name="episode_type" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                                <option value="full">Full</option>
+                                <option value="trailer">Trailer</option>
+                                <option value="bonus">Bonus</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Explicit Content</label>
+                            <select name="explicit" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                                <option value="clean">Clean</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e0e0e0;">Status</label>
+                            <select name="status" style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 8px; color: #e0e0e0; font-size: 0.95rem;">
+                                <option value="published">Published</option>
+                                <option value="draft">Draft</option>
+                                <option value="scheduled">Scheduled</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px; display: flex; gap: 12px; justify-content: flex-end;">
+                        <button type="button" class="btn btn-secondary" onclick="toggleEpisodeForm()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Add Episode
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <?php if (empty($episodes)): ?>
+            <div class="empty-episodes">
+                <i class="fas fa-headphones"></i>
+                <h2 style="color: #e0e0e0; margin-bottom: 10px;">No Episodes Yet</h2>
+                <p style="color: #9e9e9e; margin-bottom: 0;">Click "Add New Episode" above to get started</p>
+            </div>
+        <?php else: ?>
+            <div class="episode-list">
+                <?php foreach ($episodes as $episode): ?>
+                    <div class="episode-item">
+                        <div class="episode-item-header">
+                            <h3 class="episode-title"><?php echo htmlspecialchars($episode['title']); ?></h3>
+                            <span class="badge badge-<?php echo $episode['status'] === 'published' ? 'success' : 'warning'; ?>">
+                                <?php echo ucfirst($episode['status']); ?>
+                            </span>
+                        </div>
+                        
+                        <div class="episode-meta">
+                            <span><i class="fas fa-calendar"></i> <?php echo date('M d, Y', strtotime($episode['pub_date'])); ?></span>
+                            <?php if (!empty($episode['duration'])): ?>
+                                <span><i class="fas fa-clock"></i> <?php echo htmlspecialchars($episode['duration']); ?></span>
+                            <?php endif; ?>
+                            <?php if (!empty($episode['episode_number'])): ?>
+                                <span><i class="fas fa-hashtag"></i> Episode <?php echo htmlspecialchars($episode['episode_number']); ?></span>
+                            <?php endif; ?>
+                        </div>
+
+                        <?php if (!empty($episode['description'])): ?>
+                            <div class="episode-description">
+                                <?php echo htmlspecialchars($episode['description']); ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="episode-actions">
+                            <a href="<?php echo htmlspecialchars($episode['audio_url']); ?>" 
+                               target="_blank" 
+                               class="btn btn-sm btn-secondary">
+                                <i class="fas fa-play"></i> Play
+                            </a>
+                            <a href="<?php echo htmlspecialchars($episode['audio_url']); ?>" 
+                               download 
+                               class="btn btn-sm btn-secondary">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                            <button class="btn btn-sm btn-danger" 
+                                    onclick="deleteEpisode('<?php echo $episode['id']; ?>', '<?php echo htmlspecialchars(addslashes($episode['title'])); ?>')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Add Episode Modal -->
+    <div id="addEpisodeModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> Add New Episode</h2>
+                <button class="modal-close" onclick="closeAddEpisodeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="add_episode">
+                    
+                    <div class="form-group">
+                        <label for="title">Episode Title *</label>
+                        <input type="text" id="title" name="title" required 
+                               placeholder="Episode 1: Introduction">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description *</label>
+                        <textarea id="description" name="description" rows="4" required
+                                  placeholder="Describe what this episode is about..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="audio_file">🎵 Audio File * (MP3)</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="audio_file" name="audio_file" accept="audio/mpeg,audio/mp3,.mp3" required class="file-input">
+                            <div class="file-upload-display audio-upload">
+                                <div class="file-upload-icon">
+                                    <i class="fas fa-headphones"></i>
+                                </div>
+                                <div class="file-upload-text">
+                                    <span class="file-name">Click to upload MP3 file or drag and drop</span>
+                                    <span class="file-requirements">Max 500MB • Duration will be auto-detected</span>
+                                </div>
+                            </div>
+                            <div id="audioPreview" class="audio-preview"></div>
+                        </div>
+                        <small style="display: block; margin-top: 10px; color: #9e9e9e;">
+                            <strong>Note:</strong> Audio file will be hosted on this server. You can also provide an external URL below if preferred.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="audio_url">Or External Audio URL (optional if file uploaded)</label>
+                        <input type="url" id="audio_url" name="audio_url"
+                               placeholder="https://example.com/audio/episode1.mp3">
+                        <small>Only needed if not uploading a file above</small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="duration">Duration (HH:MM:SS or seconds)</label>
+                            <input type="text" id="duration" name="duration" 
+                                   placeholder="00:30:00 or 1800">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="file_size">File Size (bytes)</label>
+                            <input type="number" id="file_size" name="file_size" 
+                                   placeholder="28000000">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pub_date">Publication Date</label>
+                            <input type="datetime-local" id="pub_date" name="pub_date" 
+                                   value="<?php echo date('Y-m-d\TH:i'); ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select id="status" name="status">
+                                <option value="published">Published</option>
+                                <option value="draft">Draft</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="episode_number">Episode Number (optional)</label>
+                            <input type="number" id="episode_number" name="episode_number" 
+                                   placeholder="1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="season_number">Season Number (optional)</label>
+                            <input type="number" id="season_number" name="season_number" 
+                                   placeholder="1">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="episode_type">Episode Type</label>
+                            <select id="episode_type" name="episode_type">
+                                <option value="full">Full</option>
+                                <option value="trailer">Trailer</option>
+                                <option value="bonus">Bonus</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="explicit">Explicit Content</label>
+                            <select id="explicit" name="explicit">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                                <option value="clean">Clean</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeAddEpisodeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Add Episode
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const flash = document.getElementById('flashMessage');
+            if (flash) {
+                flash.style.opacity = '0';
+                setTimeout(() => flash.remove(), 300);
+            }
+        }, 5000);
+
+        function toggleEpisodeForm() {
+            const form = document.getElementById('addEpisodeForm');
+            const button = document.getElementById('toggleEpisodeText');
+            
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+                button.textContent = 'Hide Form';
+                form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                form.style.display = 'none';
+                button.textContent = 'Add New Episode';
+            }
+        }
+
+        // Audio file upload handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const audioInput = document.getElementById('audio_file');
+            const audioFileNameDisplay = document.querySelector('.audio-upload .file-name');
+            const audioPreview = document.getElementById('audioPreview');
+            const audioUrlInput = document.getElementById('audio_url');
+
+            if (audioInput) {
+                audioInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    
+                    if (file) {
+                        // Update file name
+                        audioFileNameDisplay.textContent = file.name;
+                        
+                        // Format file size
+                        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                        
+                        // Show preview
+                        audioPreview.innerHTML = `
+                            <div class="audio-info">
+                                <div class="audio-icon">
+                                    <i class="fas fa-file-audio"></i>
+                                </div>
+                                <div class="audio-details">
+                                    <div class="audio-filename">${file.name}</div>
+                                    <div class="audio-meta">${fileSizeMB} MB • MP3 Audio File</div>
+                                </div>
+                            </div>
+                        `;
+                        audioPreview.classList.add('active');
+                        
+                        // Make audio URL optional when file is selected
+                        audioUrlInput.removeAttribute('required');
+                    } else {
+                        audioFileNameDisplay.textContent = 'Click to upload MP3 file or drag and drop';
+                        audioPreview.classList.remove('active');
+                        audioPreview.innerHTML = '';
+                        
+                        // Make audio URL required again if no file
+                        audioUrlInput.setAttribute('required', 'required');
+                    }
+                });
+            }
+        });
+
+        function deleteEpisode(episodeId, title) {
+            if (confirm('Are you sure you want to delete "' + title + '"? This cannot be undone.')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.innerHTML = `
+                    <input type="hidden" name="action" value="delete_episode">
+                    <input type="hidden" name="episode_id" value="${episodeId}">
+                `;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('addEpisodeModal');
+            if (event.target === modal) {
+                closeAddEpisodeModal();
+            }
+        }
+    </script>
+</body>
+</html>

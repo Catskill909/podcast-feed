@@ -29,7 +29,7 @@ $stats = $podcastManager->getStats();
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/browse.css?v=3.0.3">
+    <link rel="stylesheet" href="assets/css/browse.css?v=3.0.6">
     <link rel="stylesheet" href="assets/css/sort-controls.css">
     <link rel="stylesheet" href="assets/css/player-modal.css">
     
@@ -56,27 +56,21 @@ $stats = $podcastManager->getStats();
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-stats">
-                    <div class="hero-stat">
-                        <div class="hero-stat-value" id="podcastCount"><?php echo $stats['active_podcasts']; ?></div>
-                        <div class="hero-stat-label">Podcasts</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-value" id="totalEpisodes">-</div>
-                        <div class="hero-stat-label">Episodes</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
+            
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-badge">
+                    <div class="stat-badge-value" id="podcastCount"><?php echo $stats['active_podcasts']; ?></div>
+                    <div class="stat-badge-label">Podcasts</div>
+                </div>
+                <div class="stat-badge">
+                    <div class="stat-badge-value" id="totalEpisodes">-</div>
+                    <div class="stat-badge-label">Episodes</div>
+                </div>
+            </div>
             
             <!-- Browse Controls -->
             <div class="browse-controls">

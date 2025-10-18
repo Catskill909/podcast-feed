@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<selfhostedpodcasts>
+  <podcast>
+    <id>shp_1760755471_68f2ff0f4c2fe</id>
+    <title><![CDATA[Old Skool Sessions]]></title>
+    <description><![CDATA[Started in 2000, Old Skool Sessions is 4 solid hours of music straight from the roots of Hip Hop.
+
+Every Saturday Night 8:00pm-12:00am EST on WJFF 90.5 FM in the Catskills or streaming live online at wjffradio.org.
+
+Hosted by show founder DJ Chucks and Selector Starkey.
+
+OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B, GOLDEN ERA (RAP), BREAKBEATS, LOFT, SLOW JAMS. SOUL, ELECTRO, LATIN,60’S-80’S POP AND EVERYTHING YA MAMA LIKES. REALLY]]></description>
+    <author><![CDATA[starkey]]></author>
+    <email>paul@rarefunk.com</email>
+    <website_url>https://oldskoolsessions.com</website_url>
+    <cover_image>shp_1760755471_68f2ff0f4c2fe.jpg</cover_image>
+    <category>Music</category>
+    <subcategory/>
+    <language>en-us</language>
+    <explicit>no</explicit>
+    <copyright><![CDATA[]]></copyright>
+    <podcast_type>episodic</podcast_type>
+    <owner_name><![CDATA[starkey]]></owner_name>
+    <owner_email>paul@rarefunk.com</owner_email>
+    <subtitle><![CDATA[]]></subtitle>
+    <keywords><![CDATA[]]></keywords>
+    <complete>no</complete>
+    <created_date>2025-10-18 02:44:31</created_date>
+    <updated_date>2025-10-18 03:02:01</updated_date>
+    <status>active</status>
+    <episodes>
+      <episode>
+        <id>ep_1760756521_68f303294f778</id>
+        <title><![CDATA[OSS sTaRkeY Hip Hop Hits and Reggae Rockers 10-11-25]]></title>
+        <description><![CDATA[Live from the WJFF Radio Catskill studios in Liberty NY]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1760755471_68f2ff0f4c2fe/ep_1760756521_68f303294a989.mp3</audio_url>
+        <duration>0</duration>
+        <file_size>263437582</file_size>
+        <pub_date>2025-10-18T03:00</pub_date>
+        <episode_number></episode_number>
+        <season_number></season_number>
+        <episode_type>full</episode_type>
+        <explicit>no</explicit>
+        <episode_image>ep_1760756521_68f303294f778_1760756543_fc92f1.jpg</episode_image>
+        <guid>ep_1760756521_68f303294f778</guid>
+        <status>published</status>
+        <created_date>2025-10-18 03:02:01</created_date>
+        <updated_date>2025-10-18 03:02:23</updated_date>
+      </episode>
+    </episodes>
+  </podcast>
+</selfhostedpodcasts>

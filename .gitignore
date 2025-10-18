@@ -6,11 +6,14 @@ config/config.local.php
 
 # Data Files (exclude from git, backup separately)
 data/podcasts.xml
+data/self-hosted-podcasts.xml
 data/backup/*.xml
 
 # Uploads (exclude from git, backup separately)
 uploads/covers/*
 !uploads/covers/.gitkeep
+uploads/audio/*
+!uploads/audio/.gitkeep
 
 # Logs
 logs/*.log

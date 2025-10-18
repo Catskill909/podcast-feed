@@ -14,3 +14,7 @@
 [2025-10-13 18:25:50] ERROR in UPDATE_ERROR: Podcast title is required
 [2025-10-13 18:25:53] ERROR in UPDATE_ERROR: Podcast title is required
 [2025-10-13 18:25:55] ERROR in UPDATE_ERROR: Podcast title is required
+[2025-10-17 23:21:24] ERROR in CREATE_SELF_HOSTED_ERROR: Image too small. Minimum size required: 1400x1400 pixels
+[2025-10-18 00:07:38] ERROR in ADD_EPISODE_ERROR: Audio file or URL is required
+[2025-10-18 00:14:00] ERROR in ADD_EPISODE_ERROR: Audio file or URL is required
+[2025-10-18 02:39:31] ERROR in DELETE_ERROR: Podcast not found

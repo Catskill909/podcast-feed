@@ -169,6 +169,9 @@ if (isset($_GET['edit'])) {
                         <button type="button" class="btn btn-secondary" onclick="showImportRssModal()">
                             <i class="fa-solid fa-rss"></i> Import from RSS
                         </button>
+                        <a href="self-hosted-podcasts.php" class="btn btn-secondary">
+                            <i class="fa-solid fa-broadcast-tower"></i> Create Self-Hosted Podcast
+                        </a>
                     </div>
                     <button type="button" class="btn btn-secondary" onclick="showHelpModal()">
                         <i class="fa-solid fa-circle-question"></i> Help
@@ -312,6 +315,11 @@ if (isset($_GET['edit'])) {
                                             <strong class="podcast-title-clickable" 
                                                 onclick="showPlayerModal('<?php echo htmlspecialchars($podcast['id']); ?>')"
                                                 title="Click to play"><?php echo htmlspecialchars($podcast['title']); ?></strong>
+                                            <?php if (!empty($podcast['is_self_hosted'])): ?>
+                                                <span class="badge badge-info" style="margin-left: 8px; font-size: 0.7rem;">
+                                                    <i class="fas fa-server"></i> Self-Hosted
+                                                </span>
+                                            <?php endif; ?>
                                         </td>
                                         <td>
                                             <button type="button" 
