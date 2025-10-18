@@ -179,6 +179,8 @@ class AudioUploader {
         });
         
         xhr.addEventListener('load', () => {
+            console.log('XHR load event - Status:', xhr.status, 'Response:', xhr.responseText);
+            
             if (xhr.status === 200) {
                 try {
                     const response = JSON.parse(xhr.responseText);
@@ -199,13 +201,22 @@ class AudioUploader {
                     } else {
                         this.showError('Upload failed: ' + response.message);
                         this.options.onUploadError(response.message);
+                        this.showZone();
+                        this.hideProgress();
                     }
                 } catch (e) {
                     this.showError('Upload failed: Invalid response');
                     this.options.onUploadError('Invalid response');
+                    this.showZone();
+                    this.hideProgress();
                 }
+            } else if (xhr.status === 413) {
+                this.showError('File too large! Server limit exceeded (413). Contact admin to increase upload limit.');
+                this.options.onUploadError('413 - File too large');
+                this.showZone();
+                this.hideProgress();
             } else {
-                this.showError('Upload failed: ' + xhr.statusText);
+                this.showError('Upload failed (Status ' + xhr.status + '): ' + xhr.statusText);
                 this.options.onUploadError(xhr.statusText);
                 this.showZone();
                 this.hideProgress();
