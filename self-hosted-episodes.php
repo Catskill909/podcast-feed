@@ -694,7 +694,7 @@ $episodes = $manager->getEpisodes($podcastId);
                     <i class="fas fa-plus-circle" style="color: #4CAF50;"></i> Add New Episode
                 </h2>
                 
-                <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="add_episode">
                     
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
