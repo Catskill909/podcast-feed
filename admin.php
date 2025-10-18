@@ -147,6 +147,7 @@ if (isset($_GET['edit'])) {
                 <nav>
                     <ul class="nav-links">
                         <li><a href="index.php"><i class="fa-solid fa-house"></i> Public Site</a></li>
+                        <li><a href="self-hosted-podcasts.php"><i class="fa-solid fa-broadcast-tower"></i> My Podcasts</a></li>
                         <li><a href="javascript:void(0)" onclick="showFeedModal()">View Feed</a></li>
                         <li><a href="javascript:void(0)" onclick="showStats()">Stats</a></li>
                         <li><a href="javascript:void(0)" onclick="logout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
