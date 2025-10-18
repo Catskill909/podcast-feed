@@ -44,6 +44,31 @@ fi
 
 echo ""
 echo "================================================"
+echo "🔧 Configuring Nginx for Large File Uploads"
+echo "================================================"
+
+# Add Nginx upload limit configuration
+if [ -f /nginx.conf ]; then
+    echo "Adding client_max_body_size to Nginx config..."
+    
+    # Check if already configured
+    if grep -q "client_max_body_size" /nginx.conf; then
+        echo "✅ Nginx already configured for large uploads"
+    else
+        # Add to http block
+        sed -i '/http {/a \    client_max_body_size 500M;\n    client_body_timeout 600s;\n    client_header_timeout 600s;' /nginx.conf
+        
+        # Reload nginx
+        echo "Reloading Nginx..."
+        nginx -s reload
+        echo "✅ Nginx configured for 500M uploads"
+    fi
+else
+    echo "⚠️  Nginx config not found at /nginx.conf"
+fi
+
+echo ""
+echo "================================================"
 echo "✅ Post-Deploy Hook Complete!"
 echo "================================================"
 echo ""
