@@ -1,6 +1,7 @@
 FROM php:8.1-apache
 
-# Install required PHP extensions
+# Install wget for healthchecks and required PHP extensions
+RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-install pdo pdo_mysql
 
 # Enable Apache mod_rewrite
