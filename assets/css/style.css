@@ -390,7 +390,7 @@ a:hover, a:focus {
 }
 
 .btn-outline {
-  color: var(--text-secondary);
+  color: #c9d1d9;
   background-color: transparent;
   border-color: var(--border-primary);
 }

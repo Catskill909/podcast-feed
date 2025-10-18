@@ -1,6 +1,6 @@
 # PodFeed Browser
 
-A complete podcast platform combining a modern directory browser with a full-featured podcast hosting system. Features RSS feed aggregation, self-hosted podcast creation, audio file management, health monitoring, in-browser audio player, and a stunning dark-themed UI.
+A complete podcast platform combining a modern directory browser with a full-featured podcast hosting system. Features RSS feed aggregation, podcast creation & hosting ("My Podcasts"), audio file management, health monitoring, in-browser audio player, and a stunning dark-themed UI.
 
 ---
 
@@ -152,7 +152,7 @@ A complete podcast platform combining a modern directory browser with a full-fea
 
 ### **Current Capabilities:**
 ✅ **Feed Aggregator** - Import and manage external podcast RSS feeds
-✅ **Podcast Hosting Platform** - Create and host your own podcasts with audio uploads
+✅ **Podcast Hosting Platform ("My Podcasts")** - Create and host your own podcasts with audio uploads
 ✅ **Podcast Player Website** - Public browsing interface with in-browser player
 ✅ **Episode Management System** - Full CRUD operations for episodes
 
@@ -222,13 +222,13 @@ git push origin main
 
 ## 🚀 Features
 
-### **🎙️ Self-Hosted Podcast Platform (NEW - October 17, 2025)** ✨✨
+### **🎙️ My Podcasts - Complete Podcast Hosting (NEW - October 17, 2025)** ✨✨
 - **Complete Podcast Creation**: Create podcasts from scratch with full metadata
-- **Audio File Uploads**: Upload and host MP3 files directly on your server
+- **Audio File Uploads**: Upload and host MP3 files directly on your server (up to 500MB)
 - **Episode Management**: Add, edit, and delete episodes with full control
 - **Cover Image Management**: Upload podcast and episode artwork
 - **iTunes Compliance**: Generates standard RSS 2.0 + iTunes namespace feeds
-- **Seamless Integration**: Self-hosted podcasts integrate with existing directory
+- **Seamless Integration**: Your podcasts integrate with existing directory
 - **RSS Feed Generator**: Each podcast gets its own public RSS feed URL
 - **Beautiful Management UI**: Dark-themed interface matching existing design
 - **Persistent Storage**: All files stored in Coolify persistent volumes
@@ -365,12 +365,12 @@ podcast-feed/
 │       └── validation.js       # Form validation
 ├── data/
 │   ├── podcasts.xml                 # Aggregated podcast directory
-│   ├── self-hosted-podcasts.xml     # Self-hosted podcasts (NEW)
+│   ├── self-hosted-podcasts.xml     # My Podcasts (self-hosted) (NEW)
 │   └── backup/                      # XML backups
 ├── uploads/
 │   ├── covers/                      # Podcast cover images
 │   └── audio/                       # Self-hosted audio files (NEW)
-├── self-hosted-podcasts.php         # Self-hosted podcast management (NEW)
+├── self-hosted-podcasts.php         # My Podcasts management page (NEW)
 ├── self-hosted-episodes.php         # Episode management page (NEW)
 ├── self-hosted-feed.php             # RSS feed generator (NEW)
 └── logs/
@@ -407,24 +407,25 @@ podcast-feed/
 
 Access the admin panel by clicking "Admin" in the header or visiting `/admin.php` directly. Password required.
 
-#### **Option 1: Create Self-Hosted Podcast** ✨ NEW
+#### **Option 1: Create Your Own Podcast ("My Podcasts")** ✨ NEW
 
-1. Click **"Create Self-Hosted Podcast"** button (green)
-2. Fill in podcast metadata:
+1. Click **"My Podcasts"** button in header
+2. Click **"Create New Podcast"**
+3. Fill in podcast metadata:
    - Basic info (title, description, author, email, website)
    - iTunes metadata (category, language, explicit flag, type)
    - Upload cover image (1400-3000px)
-3. Click **"Create Podcast"**
-4. Click **"Episodes"** button to manage episodes
-5. Add episodes:
+4. Click **"Create Podcast"**
+5. Click **"Episodes"** button to manage episodes
+6. Add episodes:
    - Upload MP3 audio files (up to 500MB)
    - Add episode metadata (title, description, duration)
    - Optional episode artwork
    - Set publication date and status
-6. Your podcast gets its own RSS feed URL
-7. Optionally import to main directory using "Import from RSS"
+7. Your podcast gets its own RSS feed URL
+8. Optionally import to main directory using "Import from RSS"
 
-**Self-Hosted Features:**
+**My Podcasts Features:**
 - Complete podcast creation from scratch
 - Audio file hosting on your server
 - Episode management (add, edit, delete)

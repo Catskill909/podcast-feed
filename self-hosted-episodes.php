@@ -947,17 +947,6 @@ $episodes = $manager->getEpisodes($podcastId);
                                         </div>
                                     </div>
                                     
-                                    <!-- Duration -->
-                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                        <div style="width: 36px; height: 36px; background: #404040; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                            <i class="fas fa-clock" style="color: #9e9e9e; font-size: 0.9rem;"></i>
-                                        </div>
-                                        <div style="min-width: 0;">
-                                            <div style="font-size: 0.75rem; color: #9e9e9e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Duration</div>
-                                            <div style="font-size: 0.9rem; color: #e0e0e0; font-weight: 500;"><?php echo $durationFormatted; ?></div>
-                                        </div>
-                                    </div>
-                                    
                                     <!-- File Size -->
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <div style="width: 36px; height: 36px; background: #404040; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">

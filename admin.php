@@ -170,7 +170,7 @@ if (isset($_GET['edit'])) {
                             <i class="fa-solid fa-rss"></i> Import from RSS
                         </button>
                         <a href="self-hosted-podcasts.php" class="btn btn-secondary">
-                            <i class="fa-solid fa-broadcast-tower"></i> Create Self-Hosted Podcast
+                            <i class="fa-solid fa-broadcast-tower"></i> My Podcasts
                         </a>
                     </div>
                     <button type="button" class="btn btn-secondary" onclick="showHelpModal()">
@@ -881,6 +881,73 @@ if (isset($_GET['edit'])) {
                             <p class="help-button-description">
                                 Auto-import from any RSS feed URL. Supports RSS 2.0, Atom, and iTunes formats. Automatically downloads cover images.
                             </p>
+                        </div>
+                        
+                        <div class="help-button-example">
+                            <button type="button" class="btn btn-secondary" disabled>
+                                <i class="fa-solid fa-broadcast-tower"></i> My Podcasts
+                            </button>
+                            <p class="help-button-description">
+                                Create and host your own podcasts! Upload audio files, manage episodes, and generate iTunes-compliant RSS feeds. Perfect for hosting your own shows.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- My Podcasts (Self-Hosted) -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">🎙️</span>
+                        My Podcasts - Host Your Own Shows
+                    </h3>
+                    <div class="help-section-content">
+                        <p><strong>What is "My Podcasts"?</strong></p>
+                        <p>Create and host complete podcasts directly on your server. Upload audio files, manage episodes, and generate professional RSS feeds for distribution to Apple Podcasts, Spotify, and other platforms.</p>
+                        
+                        <p><strong>How to Create a Podcast:</strong></p>
+                        <ol>
+                            <li>Click <strong>"My Podcasts"</strong> button in the header</li>
+                            <li>Click <strong>"Create New Podcast"</strong></li>
+                            <li>Fill in podcast details:
+                                <ul>
+                                    <li>Basic info (title, description, author, email)</li>
+                                    <li>Cover image (1400-3000px square)</li>
+                                    <li>iTunes metadata (category, language, explicit flag)</li>
+                                </ul>
+                            </li>
+                            <li>Click <strong>"Create Podcast"</strong></li>
+                        </ol>
+                        
+                        <p><strong>How to Add Episodes:</strong></p>
+                        <ol>
+                            <li>From your podcast card, click <strong>"Episodes"</strong></li>
+                            <li>Click <strong>"Add New Episode"</strong></li>
+                            <li>Upload MP3 audio file (up to 500MB)</li>
+                            <li>Add episode details (title, description, duration)</li>
+                            <li>Optional: Upload episode artwork</li>
+                            <li>Set publication date and status</li>
+                            <li>Click <strong>"Add Episode"</strong></li>
+                        </ol>
+                        
+                        <p><strong>Your RSS Feed:</strong></p>
+                        <ul>
+                            <li>Each podcast gets its own RSS feed URL</li>
+                            <li>iTunes-compliant (RSS 2.0 + iTunes namespace)</li>
+                            <li>Submit to Apple Podcasts, Spotify, etc.</li>
+                            <li>Optionally import into your main directory</li>
+                        </ul>
+                        
+                        <p><strong>Features:</strong></p>
+                        <ul>
+                            <li><strong>Audio Hosting:</strong> Upload and host MP3 files on your server</li>
+                            <li><strong>Episode Management:</strong> Add, edit, delete episodes with full control</li>
+                            <li><strong>Cover Images:</strong> Podcast and episode artwork support</li>
+                            <li><strong>iTunes Compliance:</strong> Professional RSS feeds ready for distribution</li>
+                            <li><strong>Persistent Storage:</strong> All files stored safely in persistent volumes</li>
+                        </ul>
+                        
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>💡 Pro Tip:</strong> After creating your podcast, use "Import from RSS" to add it to your main directory for easy browsing alongside your other podcasts!
                         </div>
                     </div>
                 </div>

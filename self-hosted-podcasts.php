@@ -72,7 +72,7 @@ $podcasts = $manager->getAllPodcasts();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Self-Hosted Podcasts v2 - <?php echo APP_NAME; ?> - <?php echo date('H:i:s'); ?></title>
+    <title>My Podcasts - <?php echo APP_NAME; ?> - <?php echo date('H:i:s'); ?></title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -495,9 +495,9 @@ $podcasts = $manager->getAllPodcasts();
                 <div>
                     <h1 style="margin: 0; font-size: 1.5rem; color: #e0e0e0; font-family: 'Oswald', sans-serif;">
                         <i class="fas fa-broadcast-tower" style="color: #4CAF50; margin-right: 10px;"></i>
-                        Self-Hosted Podcasts
+                        My Podcasts
                     </h1>
-                    <div style="font-size: 0.85rem; color: #9e9e9e; margin-top: 2px;">Create and manage your own podcast feeds</div>
+                    <div style="font-size: 0.85rem; color: #9e9e9e; margin-top: 2px;">Create and manage your podcast feeds</div>
                 </div>
             </div>
             <button class="btn btn-primary" onclick="toggleCreateForm()">
@@ -614,7 +614,7 @@ $podcasts = $manager->getAllPodcasts();
         <?php if (empty($podcasts)): ?>
             <div class="empty-state">
                 <i class="fas fa-podcast"></i>
-                <h2>No Self-Hosted Podcasts Yet</h2>
+                <h2>No Podcasts Yet</h2>
                 <p>Click "Create New Podcast" above to get started</p>
             </div>
         <?php else: ?>

@@ -5,13 +5,23 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 
 ## ✅ Recently Completed (October 2025)
 
-### **October 17, 2025 - Self-Hosted Podcast Platform** - COMPLETE ✨✨ MAJOR MILESTONE
+### **October 18, 2025 - UI Cleanup & Bug Fixes** - COMPLETE ✨
+- ✅ **"My Podcasts" Naming** - Simplified from "Create Self-Hosted Podcast" to clean "My Podcasts"
+- ✅ **Help Modal Update** - Added comprehensive "My Podcasts" section with full documentation
+- ✅ **README Update** - Updated all references to reflect new naming
+- ✅ **FUTURE-DEV Update** - Documentation cleanup and progress tracking
+- ✅ **Critical Bug Fix** - Fixed large audio file upload issue (element ID mismatch, double upload, validation)
+- ✅ **Upload Flow Fix** - AJAX upload now properly clears file input to prevent form resubmission
+- **Impact:** Much cleaner UI, better user experience, and reliable large file uploads
+- **Docs:** [UPLOAD-DEBUG-COMPLETE.md](UPLOAD-DEBUG-COMPLETE.md), [COOLIFY-UPLOAD-FIX.md](COOLIFY-UPLOAD-FIX.md)
+
+### **October 17, 2025 - My Podcasts Platform (Complete Podcast Hosting)** - COMPLETE ✨✨ MAJOR MILESTONE
 - ✅ **Complete Podcast Creation System** - Create podcasts from scratch with full metadata
-- ✅ **Audio File Upload & Hosting** - Upload and host MP3 files directly on your server
+- ✅ **Audio File Upload & Hosting** - Upload and host MP3 files directly on your server (up to 500MB)
 - ✅ **Episode Management** - Add, edit, and delete episodes with full control
 - ✅ **Cover Image Management** - Upload podcast and episode artwork
 - ✅ **iTunes-Compliant RSS Generator** - Standard RSS 2.0 + iTunes namespace feeds
-- ✅ **Seamless Integration** - Self-hosted podcasts integrate with existing directory
+- ✅ **Seamless Integration** - Your podcasts integrate with existing directory
 - ✅ **Beautiful Management UI** - Dark-themed interface matching existing design
 - ✅ **Persistent Storage** - All files stored in Coolify persistent volumes
 - ✅ **Modular Architecture** - Zero breaking changes to existing code
@@ -84,7 +94,7 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - ✅ **Feed.php Integration** - External apps get correctly sorted feed
 - **Docs:** [FEED-SORT-PERSISTENCE-FIX.md](FEED-SORT-PERSISTENCE-FIX.md), [AUTO-SYNC-IMPLEMENTATION.md](AUTO-SYNC-IMPLEMENTATION.md)
 
-### **Feature 11: RSS Feed Auto-Import** - COMPLETE
+### **Feature 11: RSS Feed Auto-Import** ✅ COMPLETE
 - ✅ One-click import from any RSS feed URL
 - ✅ Supports RSS 2.0, Atom, and iTunes formats
 - ✅ Automatic image download and validation
@@ -92,7 +102,7 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - ✅ Environment-aware SSL verification
 - **Docs:** [RSS-IMPORT-IMPLEMENTATION.md](RSS-IMPORT-IMPLEMENTATION.md)
 
-### **Feature 12: Podcast Validation & Health Check** - COMPLETE
+### **Feature 12: Podcast Validation & Health Check** ✅ COMPLETE
 - ✅ Manual health check for any podcast
 - ✅ Validates RSS 2.0 structure compliance
 - ✅ Validates iTunes namespace tags
@@ -101,7 +111,7 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - ✅ Color-coded status badges (Pass/Warning/Fail)
 - **Docs:** [new-features-plan.md](new-features-plan.md)
 
-### **Feature 13: Server-Side Sorting with Persistence** - COMPLETE
+### **Feature 13: Server-Side Sorting with Persistence** ✅ COMPLETE
 - ✅ Sort by latest episode date (newest/oldest)
 - ✅ Sort by created date
 - ✅ Sort by title (A-Z, Z-A)
@@ -113,7 +123,7 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - ✅ External apps get consistent feed order
 - **Docs:** [FEED-SORT-PERSISTENCE-FIX.md](FEED-SORT-PERSISTENCE-FIX.md), [AUTO-SYNC-IMPLEMENTATION.md](AUTO-SYNC-IMPLEMENTATION.md)
 
-### **Feature 14: Automated Episode Tracking** - COMPLETE
+### **Feature 14: Automated Episode Tracking** ✅ COMPLETE
 - ✅ Auto-scan all feeds every 30 minutes (Coolify cron)
 - ✅ Extracts latest episode dates and counts
 - ✅ Updates database automatically
@@ -122,7 +132,7 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - ✅ Zero manual maintenance
 - **Docs:** [AUTOMATION-COMPLETE.md](AUTOMATION-COMPLETE.md)
 
-### **UI/UX Improvements** - COMPLETE
+### **UI/UX Improvements** ✅ COMPLETE
 - ✅ Material Design dark mode styling
 - ✅ Google Fonts (Oswald + Inter)
 - ✅ Custom password authentication modal
@@ -301,15 +311,16 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 
 ## 🎙️ Podcast-Specific Features
 
-### 26. **Episode Management** ✅ *COMPLETED - October 17, 2025*
+### 26. **Episode Management ("My Podcasts")** ✅ *COMPLETED - October 17, 2025*
 - ✅ Manage individual episodes per podcast
 - ✅ Episode artwork, show notes
 - ✅ Episode-level status (published/draft)
 - ✅ Full CRUD operations (add, edit, delete)
-- ✅ Audio file uploads and hosting
-- **Impact:** Full podcast management
+- ✅ Audio file uploads and hosting (up to 500MB)
+- ✅ Large file upload bug fixed (October 18)
+- **Impact:** Full podcast management and hosting
 - **Status:** Complete and production-ready
-- **Docs:** [SELF-HOSTED-IMPLEMENTATION-SUMMARY.md](SELF-HOSTED-IMPLEMENTATION-SUMMARY.md)
+- **Docs:** [SELF-HOSTED-IMPLEMENTATION-SUMMARY.md](SELF-HOSTED-IMPLEMENTATION-SUMMARY.md), [UPLOAD-DEBUG-COMPLETE.md](UPLOAD-DEBUG-COMPLETE.md)
 
 ### 27. **Podcast Networks**
 - Group related podcasts into networks
@@ -583,7 +594,7 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - Podcast Player Modal (October 16)
 - Live Feed Data System (October 17)
 - Public Podcast Browser (October 17)
-- **Self-Hosted Podcast Platform (October 17)** ✨✨ MAJOR MILESTONE
+- **My Podcasts Platform (October 17-18)** ✨✨ MAJOR MILESTONE
 
 ---
 
@@ -620,7 +631,7 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - ✅ Server-side sorting with persistence
 - ✅ Automated episode tracking
 - ✅ Auto-sync across browsers
-- ✅ **Self-hosted podcast platform** (October 17) - MAJOR MILESTONE
+- ✅ **My Podcasts platform** (October 17-18) - MAJOR MILESTONE
 
 ---
 
@@ -767,7 +778,7 @@ Keep it simple but powerful. Add features that solve real problems, not just fea
 - Full planning documentation in new-main-page.md
 
 **October 17, 2025 Update (Evening):** 🎉 MAJOR MILESTONE
-- ✅ **Self-Hosted Podcast Platform completed** - GAME CHANGER!
+- ✅ **My Podcasts Platform completed** - GAME CHANGER!
 - Complete podcast creation system from scratch
 - Audio file upload and hosting (MP3, up to 500MB)
 - Episode management with full CRUD operations
@@ -794,3 +805,19 @@ Keep it simple but powerful. Add features that solve real problems, not just fea
 - iTunes compliance verified
 - Integration with existing RSS import system tested
 - **This transforms the app from a feed aggregator into a complete podcast hosting platform!**
+
+**October 18, 2025 Update (Afternoon):**
+- ✅ **UI/UX Cleanup** - Simplified naming throughout the app
+- ✅ **"My Podcasts" Naming** - Changed from "Create Self-Hosted Podcast" to clean "My Podcasts"
+- ✅ **Help Modal Enhancement** - Added comprehensive "My Podcasts" documentation section
+- ✅ **README & FUTURE-DEV Updates** - Updated all documentation to reflect new naming
+- ✅ **Critical Bug Fix** - Fixed large audio file upload issue that blocked production use
+- ✅ **Upload Flow Improvement** - AJAX upload now properly clears file input after success
+- **Bug Details:**
+  - Element ID mismatch (`'audio_url'` vs `'audioUrlInput'`)
+  - Image validation too strict for episodes without custom artwork
+  - Form trying to upload 251MB file again after AJAX already uploaded it
+  - **Solution:** Clear and disable file input after AJAX completes
+- **Impact:** Much cleaner UI with 60% shorter button text, reliable large file uploads
+- **Docs:** [UPLOAD-DEBUG-COMPLETE.md](UPLOAD-DEBUG-COMPLETE.md), [COOLIFY-UPLOAD-FIX.md](COOLIFY-UPLOAD-FIX.md)
+- **Session Summary:** Major cleanup session after yesterday's bug held us back all day

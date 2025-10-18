@@ -348,7 +348,7 @@
 }
 
 .badge-info {
-  color: var(--accent-info);
+  color: #f0f6fc;
   background-color: rgba(31, 111, 235, 0.1);
   border-color: rgba(31, 111, 235, 0.2);
 }
@@ -1626,6 +1626,7 @@
 .podcast-title-clickable {
   cursor: pointer;
   transition: color var(--transition-fast);
+  color: #c9d1d9;
 }
 
 .podcast-title-clickable:hover {
