@@ -313,14 +313,21 @@ if (isset($_GET['edit'])) {
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <strong class="podcast-title-clickable" 
-                                                onclick="showPlayerModal('<?php echo htmlspecialchars($podcast['id']); ?>')"
-                                                title="Click to play"><?php echo htmlspecialchars($podcast['title']); ?></strong>
-                                            <?php if (!empty($podcast['is_self_hosted'])): ?>
-                                                <span class="badge badge-info" style="margin-left: 8px; font-size: 0.7rem;">
-                                                    <i class="fas fa-server"></i> Self-Hosted
-                                                </span>
-                                            <?php endif; ?>
+                                            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+                                                <strong class="podcast-title-clickable" 
+                                                    onclick="showPlayerModal('<?php echo htmlspecialchars($podcast['id']); ?>')"
+                                                    title="Click to play"><?php echo htmlspecialchars($podcast['title']); ?></strong>
+                                                <?php if (!empty($podcast['is_self_hosted'])): ?>
+                                                    <span class="badge badge-info" style="font-size: 0.7rem; white-space: nowrap;">
+                                                        <i class="fas fa-server"></i> Hosted
+                                                    </span>
+                                                <?php endif; ?>
+                                                <?php if (!empty($podcast['is_cloned']) && $podcast['is_cloned'] === 'yes'): ?>
+                                                    <span class="badge badge-info" style="font-size: 0.7rem; white-space: nowrap;">
+                                                        <i class="fas fa-clone"></i> Cloned
+                                                    </span>
+                                                <?php endif; ?>
+                                            </div>
                                         </td>
                                         <td>
                                             <button type="button" 

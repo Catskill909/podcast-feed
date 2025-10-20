@@ -106,6 +106,7 @@ class SelfHostedXMLHandler
         $this->addElement($podcast, 'created_date', date('Y-m-d H:i:s'));
         $this->addElement($podcast, 'updated_date', date('Y-m-d H:i:s'));
         $this->addElement($podcast, 'status', 'active');
+        $this->addElement($podcast, 'is_cloned', $data['is_cloned'] ?? 'no');
         
         // Create empty episodes container
         $episodes = $this->xml->createElement('episodes');

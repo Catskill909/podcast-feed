@@ -326,7 +326,8 @@ class PodcastManager
                         'episode_count' => $shPodcast['episode_count'] ?? 0,
                         'status' => $shPodcast['status'] ?? 'active',
                         'created_date' => $shPodcast['created_date'] ?? '',
-                        'is_self_hosted' => true
+                        'is_self_hosted' => true,
+                        'is_cloned' => $shPodcast['is_cloned'] ?? 'no'
                     ];
                 }
             }
@@ -381,6 +382,7 @@ class PodcastManager
                     'episode_count' => $shPodcast['episode_count'] ?? 0,
                     'status' => $shPodcast['status'] ?? 'active',
                     'is_self_hosted' => true,
+                    'is_cloned' => $shPodcast['is_cloned'] ?? 'no',
                     'author' => $shPodcast['author'] ?? '',
                     'category' => $shPodcast['category'] ?? ''
                 ];

@@ -264,7 +264,7 @@ class PodcastFeedCloner
         }
         
         $podcastData = [
-            'title' => $feedData['title'] . ' (Cloned)',
+            'title' => $feedData['title'],
             'description' => $feedData['description'],
             'author' => $feedData['author'] ?? 'Unknown',
             'email' => $email,
@@ -272,7 +272,8 @@ class PodcastFeedCloner
             'category' => $feedData['category'] ?? 'General',
             'language' => $feedData['language'] ?? 'en-us',
             'explicit' => $feedData['explicit'] ?? 'no',
-            'podcast_type' => 'episodic'
+            'podcast_type' => 'episodic',
+            'is_cloned' => 'yes'
         ];
 
         error_log("Creating podcast with data: " . json_encode($podcastData));

@@ -66,10 +66,11 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <updated_date>2025-10-18 04:08:07</updated_date>
       </episode>
     </episodes>
+    <is_cloned>no</is_cloned>
   </podcast>
   <podcast>
     <id>shp_1760988769_68f68e61613a1</id>
-    <title><![CDATA[KPFT - Conversations w/ Michael Woodson (Cloned)]]></title>
+    <title><![CDATA[KPFT - Conversations w/ Michael Woodson]]></title>
     <description><![CDATA[Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!]]></description>
     <author><![CDATA[Dr. Michael Woodson]]></author>
     <email>podcast@localhost.local</email>
@@ -181,5 +182,6 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <updated_date>2025-10-20 20:09:32</updated_date>
       </episode>
     </episodes>
+    <is_cloned>yes</is_cloned>
   </podcast>
 </selfhostedpodcasts>
