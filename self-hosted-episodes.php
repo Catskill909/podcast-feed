@@ -470,7 +470,7 @@ $episodes = $manager->getEpisodes($podcastId);
                                     <i class="fas fa-<?php echo ($podcast['explicit'] ?? 'no') === 'yes' ? 'exclamation-triangle' : 'shield-alt'; ?>" style="color: <?php echo ($podcast['explicit'] ?? 'no') === 'yes' ? '#F44336' : '#9e9e9e'; ?>; font-size: 0.9rem;"></i>
                                 </div>
                                 <div style="min-width: 0;">
-                                    <div style="font-size: 0.7rem; color: #9e9e9e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Content</div>
+                                    <div style="font-size: 0.7rem; color: #9e9e9e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Explicit</div>
                                     <div style="font-size: 0.85rem; color: #e0e0e0; font-weight: 500;"><?php echo ucfirst($podcast['explicit'] ?? 'Clean'); ?></div>
                                 </div>
                             </div>
@@ -988,7 +988,7 @@ $episodes = $manager->getEpisodes($podcastId);
                                             <i class="fas fa-<?php echo ($episode['explicit'] ?? 'no') === 'yes' ? 'exclamation-triangle' : 'check-circle'; ?>" style="color: <?php echo ($episode['explicit'] ?? 'no') === 'yes' ? '#F44336' : '#9e9e9e'; ?>; font-size: 0.9rem;"></i>
                                         </div>
                                         <div style="min-width: 0;">
-                                            <div style="font-size: 0.75rem; color: #9e9e9e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Content</div>
+                                            <div style="font-size: 0.75rem; color: #9e9e9e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Explicit</div>
                                             <div style="font-size: 0.9rem; color: #e0e0e0; font-weight: 500;"><?php echo ucfirst($episode['explicit'] ?? 'Clean'); ?></div>
                                         </div>
                                     </div>

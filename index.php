@@ -161,13 +161,8 @@ $stats = $podcastManager->getStats();
                         <p class="player-podcast-description" id="playerPodcastDescription">Description</p>
                         <div class="player-podcast-meta">
                             <span class="badge badge-success" id="playerStatus">Active</span>
-                            <span class="badge" id="playerEpisodeCount">0 Episodes</span>
-                            <span class="badge" id="playerLatestEpisodeBadge">Latest: <span id="playerLatestEpisode">Unknown</span></span>
-                        </div>
-                        <div class="player-podcast-actions">
-                            <button class="btn btn-sm btn-outline" onclick="sharePodcast()" title="Share RSS Feed">
-                                <i class="fa-solid fa-share-nodes"></i> Share
-                            </button>
+                            <span class="badge badge-success" id="playerEpisodeCount">0 Episodes</span>
+                            <span class="badge badge-success" id="playerLatestEpisodeBadge">Latest: <span id="playerLatestEpisode">Unknown</span></span>
                         </div>
                     </div>
                 </div>
