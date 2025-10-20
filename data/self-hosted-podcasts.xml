@@ -69,15 +69,15 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
     <is_cloned>no</is_cloned>
   </podcast>
   <podcast>
-    <id>shp_1760988769_68f68e61613a1</id>
+    <id>shp_1760994399_68f6a45f5cce0</id>
     <title><![CDATA[KPFT - Conversations w/ Michael Woodson]]></title>
     <description><![CDATA[Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!]]></description>
     <author><![CDATA[Dr. Michael Woodson]]></author>
     <email>podcast@localhost.local</email>
     <website_url>https://archive.kpft.org</website_url>
-    <cover_image>shp_1760988769_68f68e61613a1.jpg</cover_image>
+    <cover_image>shp_1760994399_68f6a45f5cce0.jpg</cover_image>
     <category>Community Access</category>
-    <subcategory/>
+    <subcategory></subcategory>
     <language>en-us</language>
     <explicit>no</explicit>
     <copyright><![CDATA[]]></copyright>
@@ -87,15 +87,16 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
     <subtitle><![CDATA[]]></subtitle>
     <keywords><![CDATA[]]></keywords>
     <complete>no</complete>
-    <created_date>2025-10-20 19:32:49</created_date>
-    <updated_date>2025-10-20 19:33:03</updated_date>
+    <created_date>2025-10-20 21:06:39</created_date>
+    <updated_date>2025-10-20 21:06:53</updated_date>
     <status>active</status>
+    <is_cloned>yes</is_cloned>
     <episodes>
       <episode>
-        <id>ep_1760988771_68f68e633f6bf</id>
+        <id>ep_1760994401_68f6a46142c34</id>
         <title><![CDATA[Monday, October 20, 2025 - Report Back from No Kings Rally]]></title>
         <description><![CDATA[Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!]]></description>
-        <audio_url>http://localhost:8000/uploads/audio/shp_1760988769_68f68e61613a1/ep_1760988769_68f68e617c13c.mp3</audio_url>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1760994399_68f6a45f5cce0/ep_1760994399_68f6a45f7787e.mp3</audio_url>
         <duration>0</duration>
         <file_size>17656800</file_size>
         <pub_date>Mon, 20 Oct 2025 08:41:23 -0500</pub_date>
@@ -103,17 +104,17 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <season_number>1</season_number>
         <episode_type>full</episode_type>
         <explicit>no</explicit>
-        <episode_image/>
-        <guid>ep_1760988771_68f68e633f6bf</guid>
+        <episode_image></episode_image>
+        <guid>ep_1760994401_68f6a46142c34</guid>
         <status>published</status>
-        <created_date>2025-10-20 19:32:51</created_date>
-        <updated_date>2025-10-20 19:32:51</updated_date>
+        <created_date>2025-10-20 21:06:41</created_date>
+        <updated_date>2025-10-20 21:06:41</updated_date>
       </episode>
       <episode>
-        <id>ep_1760988773_68f68e65cc8d7</id>
+        <id>ep_1760994403_68f6a463d069a</id>
         <title><![CDATA[Monday, October 20, 2025 - Report Back from No Kings Rally]]></title>
         <description><![CDATA[Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!]]></description>
-        <audio_url>http://localhost:8000/uploads/audio/shp_1760988769_68f68e61613a1/ep_1760988771_68f68e6358dc4.mp3</audio_url>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1760994399_68f6a45f5cce0/ep_1760994401_68f6a4615ca38.mp3</audio_url>
         <duration>0</duration>
         <file_size>39565400</file_size>
         <pub_date>Mon, 20 Oct 2025 08:00:00 -0500</pub_date>
@@ -121,17 +122,17 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <season_number>1</season_number>
         <episode_type>full</episode_type>
         <explicit>no</explicit>
-        <episode_image/>
-        <guid>ep_1760988773_68f68e65cc8d7</guid>
+        <episode_image></episode_image>
+        <guid>ep_1760994403_68f6a463d069a</guid>
         <status>published</status>
-        <created_date>2025-10-20 19:32:53</created_date>
-        <updated_date>2025-10-20 19:32:53</updated_date>
+        <created_date>2025-10-20 21:06:43</created_date>
+        <updated_date>2025-10-20 21:06:43</updated_date>
       </episode>
       <episode>
-        <id>ep_1760988776_68f68e68dba75</id>
+        <id>ep_1760994407_68f6a467000c5</id>
         <title><![CDATA[Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18]]></title>
         <description><![CDATA[Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!]]></description>
-        <audio_url>http://localhost:8000/uploads/audio/shp_1760988769_68f68e61613a1/ep_1760988773_68f68e65e5f6b.mp3</audio_url>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1760994399_68f6a45f5cce0/ep_1760994403_68f6a463ea6b5.mp3</audio_url>
         <duration>0</duration>
         <file_size>57654800</file_size>
         <pub_date>Fri, 17 Oct 2025 08:00:00 -0500</pub_date>
@@ -139,17 +140,17 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <season_number>1</season_number>
         <episode_type>full</episode_type>
         <explicit>no</explicit>
-        <episode_image/>
-        <guid>ep_1760988776_68f68e68dba75</guid>
+        <episode_image></episode_image>
+        <guid>ep_1760994407_68f6a467000c5</guid>
         <status>published</status>
-        <created_date>2025-10-20 19:32:56</created_date>
-        <updated_date>2025-10-20 19:32:56</updated_date>
+        <created_date>2025-10-20 21:06:47</created_date>
+        <updated_date>2025-10-20 21:06:47</updated_date>
       </episode>
       <episode>
-        <id>ep_1760988779_68f68e6bed58d</id>
+        <id>ep_1760994410_68f6a46a29312</id>
         <title><![CDATA[Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI]]></title>
         <description><![CDATA[Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!]]></description>
-        <audio_url>http://localhost:8000/uploads/audio/shp_1760988769_68f68e61613a1/ep_1760988777_68f68e690090c.mp3</audio_url>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1760994399_68f6a45f5cce0/ep_1760994407_68f6a46719dfc.mp3</audio_url>
         <duration>0</duration>
         <file_size>57653400</file_size>
         <pub_date>Thu, 16 Oct 2025 08:00:00 -0500</pub_date>
@@ -157,31 +158,30 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <season_number>1</season_number>
         <episode_type>full</episode_type>
         <explicit>no</explicit>
-        <episode_image/>
-        <guid>ep_1760988779_68f68e6bed58d</guid>
+        <episode_image></episode_image>
+        <guid>ep_1760994410_68f6a46a29312</guid>
         <status>published</status>
-        <created_date>2025-10-20 19:32:59</created_date>
-        <updated_date>2025-10-20 19:32:59</updated_date>
+        <created_date>2025-10-20 21:06:50</created_date>
+        <updated_date>2025-10-20 21:06:50</updated_date>
       </episode>
       <episode>
-        <id>ep_1760988783_68f68e6f13d17</id>
+        <id>ep_1760994413_68f6a46d4c06a</id>
         <title><![CDATA[Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado]]></title>
-        <description><![CDATA[Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!!]]></description>
-        <audio_url>http://localhost:8000/uploads/audio/shp_1760988769_68f68e61613a1/ep_1760988780_68f68e6c12332.mp3</audio_url>
+        <description><![CDATA[Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1760994399_68f6a45f5cce0/ep_1760994410_68f6a46a42fe1.mp3</audio_url>
         <duration>0</duration>
         <file_size>57659000</file_size>
-        <pub_date>2025-10-15T13:00</pub_date>
+        <pub_date>Wed, 15 Oct 2025 08:00:00 -0500</pub_date>
         <episode_number>5</episode_number>
         <season_number>1</season_number>
         <episode_type>full</episode_type>
         <explicit>no</explicit>
-        <episode_image/>
-        <guid>ep_1760988783_68f68e6f13d17</guid>
+        <episode_image></episode_image>
+        <guid>ep_1760994413_68f6a46d4c06a</guid>
         <status>published</status>
-        <created_date>2025-10-20 19:33:03</created_date>
-        <updated_date>2025-10-20 20:09:32</updated_date>
+        <created_date>2025-10-20 21:06:53</created_date>
+        <updated_date>2025-10-20 21:06:53</updated_date>
       </episode>
     </episodes>
-    <is_cloned>yes</is_cloned>
   </podcast>
 </selfhostedpodcasts>

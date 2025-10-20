@@ -678,7 +678,7 @@ $podcasts = $manager->getAllPodcasts();
                                     <i class="fas fa-rss"></i> View Feed
                                 </button>
                                 <button class="btn btn-danger btn-sm" 
-                                        onclick="deletePodcast('<?php echo $podcast['id']; ?>', '<?php echo htmlspecialchars(addslashes($podcast['title'])); ?>')">
+                                        onclick="deletePodcast('<?php echo $podcast['id']; ?>')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -939,8 +939,10 @@ $podcasts = $manager->getAllPodcasts();
             window.open(url, '_blank');
         }
 
-        function deletePodcast(id, title) {
-            if (confirm('Are you sure you want to delete "' + title + '"? This will also delete all episodes and cannot be undone.')) {
+        function deletePodcast(id) {
+            const modal = document.getElementById('deleteModal');
+            modal.style.display = 'flex';
+            document.getElementById('confirmDeleteBtn').onclick = function() {
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.innerHTML = `
@@ -949,7 +951,11 @@ $podcasts = $manager->getAllPodcasts();
                 `;
                 document.body.appendChild(form);
                 form.submit();
-            }
+            };
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
         }
 
         // Close modal on outside click
@@ -960,5 +966,41 @@ $podcasts = $manager->getAllPodcasts();
             }
         }
     </script>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="max-width: 500px; margin: auto;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);">
+                <h2 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-trash-alt"></i>
+                    Delete Podcast
+                </h2>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                    Are you sure you want to delete this podcast?
+                </p>
+                <div style="background: #1a1a1a; padding: 15px; border-radius: 8px; border-left: 4px solid #f44336;">
+                    <p style="margin: 0; color: #ff9800;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Warning:</strong> This will permanently delete:
+                    </p>
+                    <ul style="margin: 10px 0 0 20px; color: #b0b0b0;">
+                        <li>All podcast metadata</li>
+                        <li>All episodes and audio files</li>
+                        <li>Cover images</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeDeleteModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i> Delete Podcast
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
