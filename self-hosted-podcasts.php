@@ -500,9 +500,14 @@ $podcasts = $manager->getAllPodcasts();
                     <div style="font-size: 0.85rem; color: #9e9e9e; margin-top: 2px;">Create and manage your podcast feeds</div>
                 </div>
             </div>
-            <button class="btn btn-primary" onclick="toggleCreateForm()">
-                <i class="fas fa-plus"></i> <span id="toggleButtonText">Create New Podcast</span>
-            </button>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-primary" onclick="toggleCreateForm()">
+                    <i class="fas fa-plus"></i> <span id="toggleButtonText">Create New Podcast</span>
+                </button>
+                <button class="btn btn-secondary" onclick="showCloneModal()">
+                    <i class="fas fa-clone"></i> Clone from RSS
+                </button>
+            </div>
         </div>
 
         <!-- Flash Message -->
@@ -684,8 +689,244 @@ $podcasts = $manager->getAllPodcasts();
         <?php endif; ?>
     </div>
 
+    <!-- Clone Feed Modal -->
+    <div id="cloneFeedModal" class="modal-overlay" style="display: none;">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-clone"></i> Clone Podcast from RSS Feed</h3>
+                <button type="button" class="modal-close" onclick="hideCloneModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Error Display -->
+                <div id="cloneError" class="alert alert-danger" style="display: none;">
+                    <div class="alert-icon">❌</div>
+                    <div id="cloneErrorMessage"></div>
+                </div>
+
+                <!-- Loading Display -->
+                <div id="cloneLoading" style="display: none; text-align: center; padding: 20px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #4CAF50;"></i>
+                    <p id="cloneLoadingMessage" style="margin-top: 10px; color: #9e9e9e;">Loading...</p>
+                </div>
+
+                <!-- Step 1: Enter Feed URL -->
+                <div id="cloneStep1">
+                    <div class="form-group">
+                        <label>RSS Feed URL <span style="color: #f44336;">*</span></label>
+                        <input type="text" id="cloneFeedUrlInput" class="form-input" 
+                               placeholder="https://example.com/podcast/feed.xml"
+                               onkeypress="if(event.key==='Enter') validateCloneFeed()">
+                        <small style="display: block; margin-top: 8px; color: #9e9e9e;">
+                            Enter the RSS feed URL of the podcast you want to clone
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Step 2: Preview & Options -->
+                <div id="cloneStep2" style="display: none;">
+                    <div style="background: #1a1a1a; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="margin: 0 0 15px 0; color: #4CAF50;">📊 Feed Preview</h4>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                            <div>
+                                <strong style="color: #9e9e9e;">Podcast:</strong>
+                                <div id="clonePodcastTitle" style="color: #e0e0e0;">-</div>
+                            </div>
+                            <div>
+                                <strong style="color: #9e9e9e;">Episodes:</strong>
+                                <div id="cloneEpisodeCount" style="color: #e0e0e0;">-</div>
+                            </div>
+                            <div>
+                                <strong style="color: #9e9e9e;">Total Size:</strong>
+                                <div id="cloneTotalSize" style="color: #e0e0e0;">-</div>
+                            </div>
+                            <div>
+                                <strong style="color: #9e9e9e;">Avg Episode:</strong>
+                                <div id="cloneAvgSize" style="color: #e0e0e0;">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cloneWarnings" class="alert alert-warning" style="display: none; margin-bottom: 20px;"></div>
+
+                    <div style="background: #2d2d2d; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="margin: 0 0 15px 0; color: #e0e0e0;">⚙️ Options</h4>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" id="cloneDownloadImages" checked>
+                                <span>Download episode images</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" id="cloneImportToDirectory">
+                                <span>Import to main directory after cloning</span>
+                            </label>
+                            <div>
+                                <label>Limit episodes (optional):</label>
+                                <input type="number" id="cloneLimitEpisodes" class="form-input" 
+                                       placeholder="Leave empty for all episodes" min="1" 
+                                       style="margin-top: 8px;">
+                                <small style="display: block; margin-top: 6px; color: #9e9e9e;">
+                                    Clone only the last N episodes (useful for testing)
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <div class="alert-icon">⚠️</div>
+                        <div>
+                            <strong>Warning:</strong> This will download ALL episodes to your server. 
+                            Make sure you have enough storage space. This process may take several minutes.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Progress -->
+                <div id="cloneStep3" style="display: none;">
+                    <div style="background: #1a1a1a; padding: 25px; border-radius: 8px;">
+                        <!-- Phase Indicators -->
+                        <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+                            <div id="clonePhase1" class="clone-phase">
+                                <div class="phase-icon">1</div>
+                                <div class="phase-label">Creating Podcast</div>
+                            </div>
+                            <div id="clonePhase2" class="clone-phase">
+                                <div class="phase-icon">2</div>
+                                <div class="phase-label">Cloning Episodes</div>
+                            </div>
+                        </div>
+
+                        <!-- Current Action -->
+                        <div style="margin-bottom: 20px;">
+                            <div style="color: #9e9e9e; font-size: 0.9rem; margin-bottom: 5px;">Current Action:</div>
+                            <div id="cloneCurrentAction" style="color: #e0e0e0; font-size: 1.1rem; font-weight: 500;">
+                                Initializing...
+                            </div>
+                            <div id="cloneEpisodeProgress" style="color: #9e9e9e; font-size: 0.9rem; margin-top: 5px; display: none;">
+                                Episode 0 of 0
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div style="background: #2d2d2d; border-radius: 8px; height: 30px; overflow: hidden; margin-bottom: 20px;">
+                            <div id="cloneProgressBar" style="background: linear-gradient(90deg, #4CAF50, #66BB6A); height: 100%; width: 0%; transition: width 0.3s ease; display: flex; align-items: center; justify-content: center;">
+                                <span id="cloneProgressPercent" style="color: white; font-weight: 600; font-size: 0.9rem;">0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Stats -->
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding-top: 15px; border-top: 1px solid #333;">
+                            <div>
+                                <div style="color: #9e9e9e; font-size: 0.85rem;">Time Elapsed:</div>
+                                <div id="cloneElapsedTime" style="color: #e0e0e0; font-weight: 500;">0s</div>
+                            </div>
+                            <div>
+                                <div style="color: #9e9e9e; font-size: 0.85rem;">Estimated Remaining:</div>
+                                <div id="cloneRemainingTime" style="color: #e0e0e0; font-weight: 500;">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Complete -->
+                <div id="cloneStep4" style="display: none;">
+                    <div style="text-align: center; padding: 30px;">
+                        <div style="font-size: 4rem; color: #4CAF50; margin-bottom: 20px;">✅</div>
+                        <h3 style="color: #e0e0e0; margin-bottom: 10px;">Cloning Complete!</h3>
+                        <p id="cloneCompleteTitle" style="color: #9e9e9e; margin-bottom: 25px;">
+                            Successfully cloned podcast
+                        </p>
+                        <div style="background: #1a1a1a; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                                <div>
+                                    <div style="color: #9e9e9e; font-size: 0.9rem;">Episodes Cloned:</div>
+                                    <div id="cloneCompleteEpisodes" style="color: #4CAF50; font-size: 1.5rem; font-weight: 600;">0</div>
+                                </div>
+                                <div id="cloneFailedInfo" style="display: none;">
+                                    <div style="color: #9e9e9e; font-size: 0.9rem;">Episodes Failed:</div>
+                                    <div id="cloneCompleteFailed" style="color: #f44336; font-size: 1.5rem; font-weight: 600;">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; justify-content: center;">
+                            <button id="cloneViewPodcastBtn" class="btn btn-primary">
+                                <i class="fas fa-podcast"></i> View Podcast
+                            </button>
+                            <button id="cloneManageEpisodesBtn" class="btn btn-secondary">
+                                <i class="fas fa-headphones"></i> Manage Episodes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cloneValidateButton" class="btn btn-primary btn-lg" onclick="validateCloneFeed()">
+                    <i class="fas fa-check"></i> Validate Feed
+                </button>
+                <button type="button" id="cloneStartButton" class="btn btn-primary btn-lg" onclick="startCloning()" style="display: none;">
+                    <i class="fas fa-play"></i> Start Cloning
+                </button>
+                <button type="button" id="cloneBackButton" class="btn btn-secondary btn-lg" onclick="resetCloneModal()" style="display: none;">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <button type="button" class="btn btn-secondary btn-lg" onclick="hideCloneModal()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Clone Phase Styles */
+        .clone-phase {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+        .clone-phase.active {
+            opacity: 1;
+        }
+        .clone-phase.complete {
+            opacity: 1;
+        }
+        .clone-phase.complete .phase-icon {
+            background: #4CAF50;
+        }
+        .phase-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+        .phase-label {
+            color: #e0e0e0;
+            font-size: 0.9rem;
+        }
+    </style>
 
     <script>
+        // Inline test function to verify button works
+        function showCloneModal() {
+            console.log('showCloneModal called!');
+            const modal = document.getElementById('cloneFeedModal');
+            console.log('Modal element:', modal);
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            } else {
+                console.error('Modal not found!');
+            }
+        }
+        
+        // Debug: Check if function loaded
+        console.log('showCloneModal defined:', typeof showCloneModal);
+        
         // Auto-hide flash message
         setTimeout(() => {
             const flash = document.getElementById('flashMessage');

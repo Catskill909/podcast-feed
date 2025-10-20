@@ -145,11 +145,43 @@ class SelfHostedPodcastManager
                 $this->imageUploader->deleteImage($podcast['cover_image']);
             }
 
-            // Delete episode images
+            // Delete episode images AND audio files
             if (!empty($podcast['episodes'])) {
                 foreach ($podcast['episodes'] as $episode) {
+                    // Delete episode image
                     if (!empty($episode['episode_image'])) {
                         $this->imageUploader->deleteImage($episode['episode_image']);
+                    }
+                    
+                    // Delete audio file if hosted locally
+                    if (!empty($episode['audio_url']) && strpos($episode['audio_url'], AUDIO_URL) !== false) {
+                        $this->audioUploader->deleteAudio($id, $episode['id']);
+                    }
+                }
+            }
+
+            // Delete entire podcast audio directory
+            $podcastAudioDir = UPLOADS_DIR . '/audio/' . $id;
+            if (is_dir($podcastAudioDir)) {
+                // Remove all files in directory
+                $files = glob($podcastAudioDir . '/*');
+                if ($files) {
+                    foreach ($files as $file) {
+                        if (is_file($file)) {
+                            unlink($file);
+                        }
+                    }
+                }
+                // Remove directory
+                rmdir($podcastAudioDir);
+            }
+
+            // Clean up any clone progress files
+            $progressFiles = glob(DATA_DIR . '/clone_progress_*_' . $id . '.json');
+            if ($progressFiles) {
+                foreach ($progressFiles as $file) {
+                    if (file_exists($file)) {
+                        unlink($file);
                     }
                 }
             }
