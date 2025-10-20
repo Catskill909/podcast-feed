@@ -15,12 +15,24 @@ session_start();
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../includes/PodcastFeedCloner.php';
 
+// Increase limits for long-running cloning operations
+@set_time_limit(0); // No time limit
+@ini_set('max_execution_time', '0');
+@ini_set('memory_limit', '512M'); // Increase memory for large downloads
+
+// Enable error logging to file
+$logFile = __DIR__ . '/../data/clone-debug.log';
+@ini_set('error_log', $logFile);
+@ini_set('log_errors', '1');
+error_log("=== CLONE API CALLED: " . date('Y-m-d H:i:s') . " ===");
+
 // Disable output buffering for long-running processes
-if (function_exists('apache_setenv')) {
+if (function_exists('apache_get_modules') && in_array('mod_fcgid', apache_get_modules())) {
     @apache_setenv('no-gzip', '1');
 }
 @ini_set('zlib.output_compression', 0);
 @ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
 
 header('Content-Type: application/json');
 

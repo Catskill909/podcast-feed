@@ -18,3 +18,7 @@
 [2025-10-18 00:07:38] ERROR in ADD_EPISODE_ERROR: Audio file or URL is required
 [2025-10-18 00:14:00] ERROR in ADD_EPISODE_ERROR: Audio file or URL is required
 [2025-10-18 02:39:31] ERROR in DELETE_ERROR: Podcast not found
+[2025-10-20 17:24:00] ERROR in CREATE_SELF_HOSTED_ERROR: Failed to upload image. Please try again.
+[2025-10-20 17:27:40] ERROR in CREATE_SELF_HOSTED_ERROR: Failed to upload image. Please try again.
+[2025-10-20 17:29:47] ERROR in CREATE_SELF_HOSTED_ERROR: Failed to upload image. Please try again.
+[2025-10-20 17:42:58] ERROR in CREATE_SELF_HOSTED_ERROR: Invalid email format

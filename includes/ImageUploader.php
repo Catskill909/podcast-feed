@@ -32,9 +32,19 @@ class ImageUploader
             $filename = $this->generateFilename($file, $podcastId);
             $targetPath = COVERS_DIR . '/' . $filename;
 
-            // Move uploaded file
-            if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-                throw new Exception(ERROR_MESSAGES['upload_failed']);
+            // Move uploaded file (or copy if it's a downloaded file, not an upload)
+            if (is_uploaded_file($file['tmp_name'])) {
+                // Real uploaded file
+                if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+                    throw new Exception(ERROR_MESSAGES['upload_failed']);
+                }
+            } else {
+                // Downloaded file (from cloning)
+                if (!copy($file['tmp_name'], $targetPath)) {
+                    throw new Exception('Failed to copy image file');
+                }
+                // Clean up temp file
+                @unlink($file['tmp_name']);
             }
 
             // Set proper permissions

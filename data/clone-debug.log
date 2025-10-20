@@ -1,0 +1,627 @@
+[20-Oct-2025 18:20:53 UTC] === CLONE API CALLED: 2025-10-20 18:20:53 ===
+[20-Oct-2025 18:21:00 UTC] === CLONE API CALLED: 2025-10-20 18:21:00 ===
+[20-Oct-2025 18:21:04 UTC] Attempting to download cover image from: https://confessor.kpft.org/pix/houtalwmichaewoodsohoutall_it_379.jpg
+[20-Oct-2025 18:21:05 UTC] Cover image downloaded successfully: /private/var/folders/3y/pr52cshn3plfpbdt9q0gmldr0000gn/T/podcast_image_675ol6pfm5lobZONmaG
+[20-Oct-2025 18:21:05 UTC] Creating podcast with data: {"title":"KPFT - Conversations w\/ Michael Woodson (Cloned)","description":"Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!","author":"Dr. Michael Woodson","email":"podcast@localhost.local","website_url":"https:\/\/archive.kpft.org","category":"Community Access","language":"en-us","explicit":"no","podcast_type":"episodic"}
+[20-Oct-2025 18:21:05 UTC] Create podcast result: {"success":true,"id":"shp_1760984465_68f67d91249d2","message":"Self-hosted podcast created successfully"}
+[20-Oct-2025 18:21:05 UTC] === CLONE EPISODES DEBUG ===
+[20-Oct-2025 18:21:05 UTC] Total episodes found in feed: 5
+[20-Oct-2025 18:21:05 UTC] Feed data keys: title, description, image_url, episode_count, latest_episode_date, category, feed_url, feed_type, episodes, author, email, link, language, explicit
+[20-Oct-2025 18:21:05 UTC] First episode data: {"title":"Monday, October 20, 2025 - Report Back from No Kings Rally","description":"Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!","audio_url":"https:\/\/archive.kpft.org\/mp3\/kpft_251020_084123houtalwmichaewoodsohoutall.mp3","pub_date":"Mon, 20 Oct 2025 08:41:23 -0500","image_url":"","duration":"1106","explicit":"no"}
+[20-Oct-2025 18:21:05 UTC] Starting episode 1: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 18:21:05 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_084123houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:21:07 UTC] [MANAGER] addEpisode called for podcast: shp_1760984465_68f67d91249d2
+[20-Oct-2025 18:21:07 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Monday, October 20, 2025 - Report Back from No Kings Rally
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760984465_68f67d91249d2/ep_1760984465_68f67d913eb4c.mp3
+    [duration] => 0
+    [file_size] => 17656800
+    [pub_date] => Mon, 20 Oct 2025 08:41:23 -0500
+    [status] => published
+    [episode_number] => 1
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:21:07 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:21:07 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:21:07 UTC] [MANAGER] Generated temp episode ID: ep_1760984467_68f67d93026bc
+[20-Oct-2025 18:21:07 UTC] Starting episode 2: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 18:21:07 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:21:09 UTC] Audio download failed for episode 2: Invalid file format. File must be an MP3 audio file.
+[20-Oct-2025 18:21:09 UTC] ========================================
+[20-Oct-2025 18:21:09 UTC] EPISODE CLONE FAILURE #2
+[20-Oct-2025 18:21:09 UTC] Title: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 18:21:09 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:21:09 UTC] Error: Invalid file format. File must be an MP3 audio file.
+[20-Oct-2025 18:21:09 UTC] Stack trace: #0 /Users/paulhenshaw/Desktop/podcast-feed/includes/PodcastFeedCloner.php(182): PodcastFeedCloner->cloneEpisodes('shp_1760984465_...', Array, Array)
+#1 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(138): PodcastFeedCloner->cloneFeed('https://archive...', Array)
+#2 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(49): handleStart()
+#3 {main}
+[20-Oct-2025 18:21:09 UTC] ========================================
+[20-Oct-2025 18:21:09 UTC] Starting episode 3: Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18
+[20-Oct-2025 18:21:09 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251017_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:21:12 UTC] Audio download failed for episode 3: Invalid file format. File must be an MP3 audio file.
+[20-Oct-2025 18:21:12 UTC] ========================================
+[20-Oct-2025 18:21:12 UTC] EPISODE CLONE FAILURE #3
+[20-Oct-2025 18:21:12 UTC] Title: Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18
+[20-Oct-2025 18:21:12 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251017_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:21:12 UTC] Error: Invalid file format. File must be an MP3 audio file.
+[20-Oct-2025 18:21:12 UTC] Stack trace: #0 /Users/paulhenshaw/Desktop/podcast-feed/includes/PodcastFeedCloner.php(182): PodcastFeedCloner->cloneEpisodes('shp_1760984465_...', Array, Array)
+#1 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(138): PodcastFeedCloner->cloneFeed('https://archive...', Array)
+#2 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(49): handleStart()
+#3 {main}
+[20-Oct-2025 18:21:12 UTC] ========================================
+[20-Oct-2025 18:21:12 UTC] Starting episode 4: Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI
+[20-Oct-2025 18:21:12 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251016_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:21:15 UTC] Audio download failed for episode 4: Invalid file format. File must be an MP3 audio file.
+[20-Oct-2025 18:21:15 UTC] ========================================
+[20-Oct-2025 18:21:15 UTC] EPISODE CLONE FAILURE #4
+[20-Oct-2025 18:21:15 UTC] Title: Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI
+[20-Oct-2025 18:21:15 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251016_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:21:15 UTC] Error: Invalid file format. File must be an MP3 audio file.
+[20-Oct-2025 18:21:15 UTC] Stack trace: #0 /Users/paulhenshaw/Desktop/podcast-feed/includes/PodcastFeedCloner.php(182): PodcastFeedCloner->cloneEpisodes('shp_1760984465_...', Array, Array)
+#1 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(138): PodcastFeedCloner->cloneFeed('https://archive...', Array)
+#2 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(49): handleStart()
+#3 {main}
+[20-Oct-2025 18:21:15 UTC] ========================================
+[20-Oct-2025 18:21:15 UTC] Starting episode 5: Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado
+[20-Oct-2025 18:21:15 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251015_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:21:18 UTC] Audio download failed for episode 5: Invalid file format. File must be an MP3 audio file.
+[20-Oct-2025 18:21:18 UTC] ========================================
+[20-Oct-2025 18:21:18 UTC] EPISODE CLONE FAILURE #5
+[20-Oct-2025 18:21:18 UTC] Title: Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado
+[20-Oct-2025 18:21:18 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251015_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:21:18 UTC] Error: Invalid file format. File must be an MP3 audio file.
+[20-Oct-2025 18:21:18 UTC] Stack trace: #0 /Users/paulhenshaw/Desktop/podcast-feed/includes/PodcastFeedCloner.php(182): PodcastFeedCloner->cloneEpisodes('shp_1760984465_...', Array, Array)
+#1 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(138): PodcastFeedCloner->cloneFeed('https://archive...', Array)
+#2 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(49): handleStart()
+#3 {main}
+[20-Oct-2025 18:21:18 UTC] ========================================
+[20-Oct-2025 18:22:30 UTC] === CLONE API CALLED: 2025-10-20 18:22:30 ===
+[20-Oct-2025 18:25:00 UTC] === CLONE API CALLED: 2025-10-20 18:25:00 ===
+[20-Oct-2025 18:25:06 UTC] === CLONE API CALLED: 2025-10-20 18:25:06 ===
+[20-Oct-2025 18:25:10 UTC] Attempting to download cover image from: https://confessor.kpft.org/pix/houtalwmichaewoodsohoutall_it_379.jpg
+[20-Oct-2025 18:25:11 UTC] Cover image downloaded successfully: /private/var/folders/3y/pr52cshn3plfpbdt9q0gmldr0000gn/T/podcast_image_jb9mcha143dcai3FtTR
+[20-Oct-2025 18:25:11 UTC] Creating podcast with data: {"title":"KPFT - Conversations w\/ Michael Woodson (Cloned)","description":"Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!","author":"Dr. Michael Woodson","email":"podcast@localhost.local","website_url":"https:\/\/archive.kpft.org","category":"Community Access","language":"en-us","explicit":"no","podcast_type":"episodic"}
+[20-Oct-2025 18:25:11 UTC] Create podcast result: {"success":true,"id":"shp_1760984711_68f67e874aa18","message":"Self-hosted podcast created successfully"}
+[20-Oct-2025 18:25:11 UTC] === CLONE EPISODES DEBUG ===
+[20-Oct-2025 18:25:11 UTC] Total episodes found in feed: 5
+[20-Oct-2025 18:25:11 UTC] Feed data keys: title, description, image_url, episode_count, latest_episode_date, category, feed_url, feed_type, episodes, author, email, link, language, explicit
+[20-Oct-2025 18:25:11 UTC] First episode data: {"title":"Monday, October 20, 2025 - Report Back from No Kings Rally","description":"Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!","audio_url":"https:\/\/archive.kpft.org\/mp3\/kpft_251020_084123houtalwmichaewoodsohoutall.mp3","pub_date":"Mon, 20 Oct 2025 08:41:23 -0500","image_url":"","duration":"1106","explicit":"no"}
+[20-Oct-2025 18:25:11 UTC] Starting episode 1: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 18:25:11 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_084123houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:25:13 UTC] [MANAGER] addEpisode called for podcast: shp_1760984711_68f67e874aa18
+[20-Oct-2025 18:25:13 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Monday, October 20, 2025 - Report Back from No Kings Rally
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760984711_68f67e874aa18/ep_1760984711_68f67e8765ae3.mp3
+    [duration] => 0
+    [file_size] => 17656800
+    [pub_date] => Mon, 20 Oct 2025 08:41:23 -0500
+    [status] => published
+    [episode_number] => 1
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:25:13 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:25:13 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:25:13 UTC] [MANAGER] Generated temp episode ID: ep_1760984713_68f67e892b7ed
+[20-Oct-2025 18:25:13 UTC] Starting episode 2: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 18:25:13 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:25:15 UTC] Audio download failed for episode 2: File does not appear to be a valid MP3 file.
+[20-Oct-2025 18:25:15 UTC] ========================================
+[20-Oct-2025 18:25:15 UTC] EPISODE CLONE FAILURE #2
+[20-Oct-2025 18:25:15 UTC] Title: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 18:25:15 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:25:15 UTC] Error: File does not appear to be a valid MP3 file.
+[20-Oct-2025 18:25:15 UTC] Stack trace: #0 /Users/paulhenshaw/Desktop/podcast-feed/includes/PodcastFeedCloner.php(182): PodcastFeedCloner->cloneEpisodes('shp_1760984711_...', Array, Array)
+#1 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(138): PodcastFeedCloner->cloneFeed('https://archive...', Array)
+#2 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(49): handleStart()
+#3 {main}
+[20-Oct-2025 18:25:15 UTC] ========================================
+[20-Oct-2025 18:25:15 UTC] Starting episode 3: Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18
+[20-Oct-2025 18:25:15 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251017_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:25:18 UTC] Audio download failed for episode 3: File does not appear to be a valid MP3 file.
+[20-Oct-2025 18:25:18 UTC] ========================================
+[20-Oct-2025 18:25:18 UTC] EPISODE CLONE FAILURE #3
+[20-Oct-2025 18:25:18 UTC] Title: Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18
+[20-Oct-2025 18:25:18 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251017_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:25:18 UTC] Error: File does not appear to be a valid MP3 file.
+[20-Oct-2025 18:25:18 UTC] Stack trace: #0 /Users/paulhenshaw/Desktop/podcast-feed/includes/PodcastFeedCloner.php(182): PodcastFeedCloner->cloneEpisodes('shp_1760984711_...', Array, Array)
+#1 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(138): PodcastFeedCloner->cloneFeed('https://archive...', Array)
+#2 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(49): handleStart()
+#3 {main}
+[20-Oct-2025 18:25:18 UTC] ========================================
+[20-Oct-2025 18:25:18 UTC] Starting episode 4: Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI
+[20-Oct-2025 18:25:18 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251016_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:25:21 UTC] Audio download failed for episode 4: File does not appear to be a valid MP3 file.
+[20-Oct-2025 18:25:21 UTC] ========================================
+[20-Oct-2025 18:25:21 UTC] EPISODE CLONE FAILURE #4
+[20-Oct-2025 18:25:21 UTC] Title: Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI
+[20-Oct-2025 18:25:21 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251016_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:25:21 UTC] Error: File does not appear to be a valid MP3 file.
+[20-Oct-2025 18:25:21 UTC] Stack trace: #0 /Users/paulhenshaw/Desktop/podcast-feed/includes/PodcastFeedCloner.php(182): PodcastFeedCloner->cloneEpisodes('shp_1760984711_...', Array, Array)
+#1 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(138): PodcastFeedCloner->cloneFeed('https://archive...', Array)
+#2 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(49): handleStart()
+#3 {main}
+[20-Oct-2025 18:25:21 UTC] ========================================
+[20-Oct-2025 18:25:21 UTC] Starting episode 5: Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado
+[20-Oct-2025 18:25:21 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251015_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:25:24 UTC] Audio download failed for episode 5: File does not appear to be a valid MP3 file.
+[20-Oct-2025 18:25:24 UTC] ========================================
+[20-Oct-2025 18:25:24 UTC] EPISODE CLONE FAILURE #5
+[20-Oct-2025 18:25:24 UTC] Title: Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado
+[20-Oct-2025 18:25:24 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251015_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:25:24 UTC] Error: File does not appear to be a valid MP3 file.
+[20-Oct-2025 18:25:24 UTC] Stack trace: #0 /Users/paulhenshaw/Desktop/podcast-feed/includes/PodcastFeedCloner.php(182): PodcastFeedCloner->cloneEpisodes('shp_1760984711_...', Array, Array)
+#1 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(138): PodcastFeedCloner->cloneFeed('https://archive...', Array)
+#2 /Users/paulhenshaw/Desktop/podcast-feed/api/clone-feed.php(49): handleStart()
+#3 {main}
+[20-Oct-2025 18:25:24 UTC] ========================================
+[20-Oct-2025 18:29:54 UTC] === CLONE API CALLED: 2025-10-20 18:29:54 ===
+[20-Oct-2025 18:30:00 UTC] === CLONE API CALLED: 2025-10-20 18:30:00 ===
+[20-Oct-2025 18:30:04 UTC] Attempting to download cover image from: https://confessor.kpft.org/pix/houtalwmichaewoodsohoutall_it_379.jpg
+[20-Oct-2025 18:30:05 UTC] Cover image downloaded successfully: /private/var/folders/3y/pr52cshn3plfpbdt9q0gmldr0000gn/T/podcast_image_1hata2mvase9beQ8hRQ
+[20-Oct-2025 18:30:05 UTC] Creating podcast with data: {"title":"KPFT - Conversations w\/ Michael Woodson (Cloned)","description":"Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!","author":"Dr. Michael Woodson","email":"podcast@localhost.local","website_url":"https:\/\/archive.kpft.org","category":"Community Access","language":"en-us","explicit":"no","podcast_type":"episodic"}
+[20-Oct-2025 18:30:05 UTC] Create podcast result: {"success":true,"id":"shp_1760985005_68f67fad68045","message":"Self-hosted podcast created successfully"}
+[20-Oct-2025 18:30:05 UTC] === CLONE EPISODES DEBUG ===
+[20-Oct-2025 18:30:05 UTC] Total episodes found in feed: 5
+[20-Oct-2025 18:30:05 UTC] Feed data keys: title, description, image_url, episode_count, latest_episode_date, category, feed_url, feed_type, episodes, author, email, link, language, explicit
+[20-Oct-2025 18:30:05 UTC] First episode data: {"title":"Monday, October 20, 2025 - Report Back from No Kings Rally","description":"Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!","audio_url":"https:\/\/archive.kpft.org\/mp3\/kpft_251020_084123houtalwmichaewoodsohoutall.mp3","pub_date":"Mon, 20 Oct 2025 08:41:23 -0500","image_url":"","duration":"1106","explicit":"no"}
+[20-Oct-2025 18:30:05 UTC] Starting episode 1: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 18:30:05 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_084123houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:30:07 UTC] [MANAGER] addEpisode called for podcast: shp_1760985005_68f67fad68045
+[20-Oct-2025 18:30:07 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Monday, October 20, 2025 - Report Back from No Kings Rally
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760985005_68f67fad68045/ep_1760985005_68f67fad828f2.mp3
+    [duration] => 0
+    [file_size] => 17656800
+    [pub_date] => Mon, 20 Oct 2025 08:41:23 -0500
+    [status] => published
+    [episode_number] => 1
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:30:07 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:30:07 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:30:07 UTC] [MANAGER] Generated temp episode ID: ep_1760985007_68f67faf523cb
+[20-Oct-2025 18:30:07 UTC] Starting episode 2: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 18:30:07 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:30:09 UTC] [MANAGER] addEpisode called for podcast: shp_1760985005_68f67fad68045
+[20-Oct-2025 18:30:09 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Monday, October 20, 2025 - Report Back from No Kings Rally
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760985005_68f67fad68045/ep_1760985007_68f67faf6c41e.mp3
+    [duration] => 0
+    [file_size] => 39565400
+    [pub_date] => Mon, 20 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 2
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:30:09 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:30:09 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:30:09 UTC] [MANAGER] Generated temp episode ID: ep_1760985009_68f67fb1eb1d0
+[20-Oct-2025 18:30:10 UTC] Starting episode 3: Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18
+[20-Oct-2025 18:30:10 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251017_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:30:13 UTC] [MANAGER] addEpisode called for podcast: shp_1760985005_68f67fad68045
+[20-Oct-2025 18:30:13 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760985005_68f67fad68045/ep_1760985010_68f67fb210ca4.mp3
+    [duration] => 0
+    [file_size] => 57654800
+    [pub_date] => Fri, 17 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 3
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:30:13 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:30:13 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:30:13 UTC] [MANAGER] Generated temp episode ID: ep_1760985013_68f67fb50ed2b
+[20-Oct-2025 18:30:13 UTC] Starting episode 4: Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI
+[20-Oct-2025 18:30:13 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251016_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:30:16 UTC] [MANAGER] addEpisode called for podcast: shp_1760985005_68f67fad68045
+[20-Oct-2025 18:30:16 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760985005_68f67fad68045/ep_1760985013_68f67fb5283af.mp3
+    [duration] => 0
+    [file_size] => 57653400
+    [pub_date] => Thu, 16 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 4
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:30:16 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:30:16 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:30:16 UTC] [MANAGER] Generated temp episode ID: ep_1760985016_68f67fb827be6
+[20-Oct-2025 18:30:16 UTC] Starting episode 5: Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado
+[20-Oct-2025 18:30:16 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251015_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:30:19 UTC] [MANAGER] addEpisode called for podcast: shp_1760985005_68f67fad68045
+[20-Oct-2025 18:30:19 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760985005_68f67fad68045/ep_1760985016_68f67fb840bf0.mp3
+    [duration] => 0
+    [file_size] => 57659000
+    [pub_date] => Wed, 15 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 5
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:30:19 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:30:19 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:30:19 UTC] [MANAGER] Generated temp episode ID: ep_1760985019_68f67fbb4bf2e
+[20-Oct-2025 18:40:37 UTC] === CLONE API CALLED: 2025-10-20 18:40:37 ===
+[20-Oct-2025 18:40:44 UTC] === CLONE API CALLED: 2025-10-20 18:40:44 ===
+[20-Oct-2025 18:40:48 UTC] Attempting to download cover image from: https://confessor.kpft.org/pix/houtalwmichaewoodsohoutall_it_379.jpg
+[20-Oct-2025 18:40:49 UTC] Cover image downloaded successfully: /private/var/folders/3y/pr52cshn3plfpbdt9q0gmldr0000gn/T/podcast_image_f6talaisfadk5t55JxG
+[20-Oct-2025 18:40:49 UTC] Creating podcast with data: {"title":"KPFT - Conversations w\/ Michael Woodson (Cloned)","description":"Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!","author":"Dr. Michael Woodson","email":"podcast@localhost.local","website_url":"https:\/\/archive.kpft.org","category":"Community Access","language":"en-us","explicit":"no","podcast_type":"episodic"}
+[20-Oct-2025 18:40:49 UTC] Create podcast result: {"success":true,"id":"shp_1760985649_68f682313b940","message":"Self-hosted podcast created successfully"}
+[20-Oct-2025 18:40:49 UTC] === CLONE EPISODES DEBUG ===
+[20-Oct-2025 18:40:49 UTC] Total episodes found in feed: 5
+[20-Oct-2025 18:40:49 UTC] Feed data keys: title, description, image_url, episode_count, latest_episode_date, category, feed_url, feed_type, episodes, author, email, link, language, explicit
+[20-Oct-2025 18:40:49 UTC] First episode data: {"title":"Monday, October 20, 2025 - Report Back from No Kings Rally","description":"Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!","audio_url":"https:\/\/archive.kpft.org\/mp3\/kpft_251020_084123houtalwmichaewoodsohoutall.mp3","pub_date":"Mon, 20 Oct 2025 08:41:23 -0500","image_url":"","duration":"1106","explicit":"no"}
+[20-Oct-2025 18:40:49 UTC] Starting episode 1: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 18:40:49 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_084123houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:40:51 UTC] [MANAGER] addEpisode called for podcast: shp_1760985649_68f682313b940
+[20-Oct-2025 18:40:51 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Monday, October 20, 2025 - Report Back from No Kings Rally
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760985649_68f682313b940/ep_1760985649_68f6823156700.mp3
+    [duration] => 0
+    [file_size] => 17656800
+    [pub_date] => Mon, 20 Oct 2025 08:41:23 -0500
+    [status] => published
+    [episode_number] => 1
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:40:51 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:40:51 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:40:51 UTC] [MANAGER] Generated temp episode ID: ep_1760985651_68f68233248b8
+[20-Oct-2025 18:40:51 UTC] Starting episode 2: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 18:40:51 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:40:53 UTC] [MANAGER] addEpisode called for podcast: shp_1760985649_68f682313b940
+[20-Oct-2025 18:40:53 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Monday, October 20, 2025 - Report Back from No Kings Rally
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760985649_68f682313b940/ep_1760985651_68f682333f762.mp3
+    [duration] => 0
+    [file_size] => 39565400
+    [pub_date] => Mon, 20 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 2
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:40:53 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:40:53 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:40:53 UTC] [MANAGER] Generated temp episode ID: ep_1760985653_68f68235be362
+[20-Oct-2025 18:40:53 UTC] Starting episode 3: Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18
+[20-Oct-2025 18:40:53 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251017_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:40:56 UTC] [MANAGER] addEpisode called for podcast: shp_1760985649_68f682313b940
+[20-Oct-2025 18:40:56 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760985649_68f682313b940/ep_1760985653_68f68235d6e59.mp3
+    [duration] => 0
+    [file_size] => 57654800
+    [pub_date] => Fri, 17 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 3
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:40:56 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:40:56 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:40:56 UTC] [MANAGER] Generated temp episode ID: ep_1760985656_68f68238cde2f
+[20-Oct-2025 18:40:56 UTC] Starting episode 4: Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI
+[20-Oct-2025 18:40:56 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251016_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:40:59 UTC] [MANAGER] addEpisode called for podcast: shp_1760985649_68f682313b940
+[20-Oct-2025 18:40:59 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760985649_68f682313b940/ep_1760985656_68f68238e6c69.mp3
+    [duration] => 0
+    [file_size] => 57653400
+    [pub_date] => Thu, 16 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 4
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:40:59 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:40:59 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:40:59 UTC] [MANAGER] Generated temp episode ID: ep_1760985659_68f6823be6ad3
+[20-Oct-2025 18:41:00 UTC] Starting episode 5: Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado
+[20-Oct-2025 18:41:00 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251015_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:41:03 UTC] [MANAGER] addEpisode called for podcast: shp_1760985649_68f682313b940
+[20-Oct-2025 18:41:03 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760985649_68f682313b940/ep_1760985660_68f6823c0c77c.mp3
+    [duration] => 0
+    [file_size] => 57659000
+    [pub_date] => Wed, 15 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 5
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:41:03 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:41:03 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:41:03 UTC] [MANAGER] Generated temp episode ID: ep_1760985663_68f6823f3001b
+[20-Oct-2025 18:47:04 UTC] === CLONE API CALLED: 2025-10-20 18:47:04 ===
+[20-Oct-2025 18:47:10 UTC] === CLONE API CALLED: 2025-10-20 18:47:10 ===
+[20-Oct-2025 18:47:14 UTC] Attempting to download cover image from: https://confessor.kpft.org/pix/houtalwmichaewoodsohoutall_it_379.jpg
+[20-Oct-2025 18:47:15 UTC] Cover image downloaded successfully: /private/var/folders/3y/pr52cshn3plfpbdt9q0gmldr0000gn/T/podcast_image_mi15sefjdc794DkVk53
+[20-Oct-2025 18:47:15 UTC] Creating podcast with data: {"title":"KPFT - Conversations w\/ Michael Woodson (Cloned)","description":"Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!","author":"Dr. Michael Woodson","email":"podcast@localhost.local","website_url":"https:\/\/archive.kpft.org","category":"Community Access","language":"en-us","explicit":"no","podcast_type":"episodic"}
+[20-Oct-2025 18:47:15 UTC] Create podcast result: {"success":true,"id":"shp_1760986035_68f683b35da99","message":"Self-hosted podcast created successfully"}
+[20-Oct-2025 18:47:15 UTC] === CLONE EPISODES DEBUG ===
+[20-Oct-2025 18:47:15 UTC] Total episodes found in feed: 5
+[20-Oct-2025 18:47:15 UTC] Feed data keys: title, description, image_url, episode_count, latest_episode_date, category, feed_url, feed_type, episodes, author, email, link, language, explicit
+[20-Oct-2025 18:47:15 UTC] First episode data: {"title":"Monday, October 20, 2025 - Report Back from No Kings Rally","description":"Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!","audio_url":"https:\/\/archive.kpft.org\/mp3\/kpft_251020_084123houtalwmichaewoodsohoutall.mp3","pub_date":"Mon, 20 Oct 2025 08:41:23 -0500","image_url":"","duration":"1106","explicit":"no"}
+[20-Oct-2025 18:47:15 UTC] Starting episode 1: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 18:47:15 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_084123houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:47:17 UTC] [MANAGER] addEpisode called for podcast: shp_1760986035_68f683b35da99
+[20-Oct-2025 18:47:17 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Monday, October 20, 2025 - Report Back from No Kings Rally
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760986035_68f683b35da99/ep_1760986035_68f683b3785f4.mp3
+    [duration] => 0
+    [file_size] => 17656800
+    [pub_date] => Mon, 20 Oct 2025 08:41:23 -0500
+    [status] => published
+    [episode_number] => 1
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:47:17 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:47:17 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:47:17 UTC] [MANAGER] Generated temp episode ID: ep_1760986037_68f683b541c6f
+[20-Oct-2025 18:47:17 UTC] Starting episode 2: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 18:47:17 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:47:19 UTC] [MANAGER] addEpisode called for podcast: shp_1760986035_68f683b35da99
+[20-Oct-2025 18:47:19 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Monday, October 20, 2025 - Report Back from No Kings Rally
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760986035_68f683b35da99/ep_1760986037_68f683b55bc90.mp3
+    [duration] => 0
+    [file_size] => 39565400
+    [pub_date] => Mon, 20 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 2
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:47:19 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:47:19 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:47:19 UTC] [MANAGER] Generated temp episode ID: ep_1760986039_68f683b7d79b1
+[20-Oct-2025 18:47:19 UTC] Starting episode 3: Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18
+[20-Oct-2025 18:47:19 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251017_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:47:23 UTC] [MANAGER] addEpisode called for podcast: shp_1760986035_68f683b35da99
+[20-Oct-2025 18:47:23 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760986035_68f683b35da99/ep_1760986039_68f683b7f0414.mp3
+    [duration] => 0
+    [file_size] => 57654800
+    [pub_date] => Fri, 17 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 3
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:47:23 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:47:23 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:47:23 UTC] [MANAGER] Generated temp episode ID: ep_1760986043_68f683bb0238a
+[20-Oct-2025 18:47:23 UTC] Starting episode 4: Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI
+[20-Oct-2025 18:47:23 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251016_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:47:26 UTC] [MANAGER] addEpisode called for podcast: shp_1760986035_68f683b35da99
+[20-Oct-2025 18:47:26 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760986035_68f683b35da99/ep_1760986043_68f683bb1c1e5.mp3
+    [duration] => 0
+    [file_size] => 57653400
+    [pub_date] => Thu, 16 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 4
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:47:26 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:47:26 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:47:26 UTC] [MANAGER] Generated temp episode ID: ep_1760986046_68f683be1aec9
+[20-Oct-2025 18:47:26 UTC] Starting episode 5: Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado
+[20-Oct-2025 18:47:26 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251015_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 18:47:29 UTC] [MANAGER] addEpisode called for podcast: shp_1760986035_68f683b35da99
+[20-Oct-2025 18:47:29 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760986035_68f683b35da99/ep_1760986046_68f683be33f51.mp3
+    [duration] => 0
+    [file_size] => 57659000
+    [pub_date] => Wed, 15 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 5
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 18:47:29 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 18:47:29 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 18:47:29 UTC] [MANAGER] Generated temp episode ID: ep_1760986049_68f683c128a6b
+[20-Oct-2025 19:32:37 UTC] === CLONE API CALLED: 2025-10-20 19:32:37 ===
+[20-Oct-2025 19:32:44 UTC] === CLONE API CALLED: 2025-10-20 19:32:44 ===
+[20-Oct-2025 19:32:48 UTC] Attempting to download cover image from: https://confessor.kpft.org/pix/houtalwmichaewoodsohoutall_it_379.jpg
+[20-Oct-2025 19:32:49 UTC] Cover image downloaded successfully: /private/var/folders/3y/pr52cshn3plfpbdt9q0gmldr0000gn/T/podcast_image_s5gtupnpk78oaWl1PLO
+[20-Oct-2025 19:32:49 UTC] Creating podcast with data: {"title":"KPFT - Conversations w\/ Michael Woodson (Cloned)","description":"Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!","author":"Dr. Michael Woodson","email":"podcast@localhost.local","website_url":"https:\/\/archive.kpft.org","category":"Community Access","language":"en-us","explicit":"no","podcast_type":"episodic"}
+[20-Oct-2025 19:32:49 UTC] Create podcast result: {"success":true,"id":"shp_1760988769_68f68e61613a1","message":"Self-hosted podcast created successfully"}
+[20-Oct-2025 19:32:49 UTC] === CLONE EPISODES DEBUG ===
+[20-Oct-2025 19:32:49 UTC] Total episodes found in feed: 5
+[20-Oct-2025 19:32:49 UTC] Feed data keys: title, description, image_url, episode_count, latest_episode_date, category, feed_url, feed_type, episodes, author, email, link, language, explicit
+[20-Oct-2025 19:32:49 UTC] First episode data: {"title":"Monday, October 20, 2025 - Report Back from No Kings Rally","description":"Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!","audio_url":"https:\/\/archive.kpft.org\/mp3\/kpft_251020_084123houtalwmichaewoodsohoutall.mp3","pub_date":"Mon, 20 Oct 2025 08:41:23 -0500","image_url":"","duration":"1106","explicit":"no"}
+[20-Oct-2025 19:32:49 UTC] Starting episode 1: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 19:32:49 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_084123houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 19:32:51 UTC] [MANAGER] addEpisode called for podcast: shp_1760988769_68f68e61613a1
+[20-Oct-2025 19:32:51 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Monday, October 20, 2025 - Report Back from No Kings Rally
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760988769_68f68e61613a1/ep_1760988769_68f68e617c13c.mp3
+    [duration] => 0
+    [file_size] => 17656800
+    [pub_date] => Mon, 20 Oct 2025 08:41:23 -0500
+    [status] => published
+    [episode_number] => 1
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 19:32:51 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 19:32:51 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 19:32:51 UTC] [MANAGER] Generated temp episode ID: ep_1760988771_68f68e633f63a
+[20-Oct-2025 19:32:51 UTC] Starting episode 2: Monday, October 20, 2025 - Report Back from No Kings Rally
+[20-Oct-2025 19:32:51 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251020_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 19:32:53 UTC] [MANAGER] addEpisode called for podcast: shp_1760988769_68f68e61613a1
+[20-Oct-2025 19:32:53 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Monday, October 20, 2025 - Report Back from No Kings Rally
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760988769_68f68e61613a1/ep_1760988771_68f68e6358dc4.mp3
+    [duration] => 0
+    [file_size] => 39565400
+    [pub_date] => Mon, 20 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 2
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 19:32:53 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 19:32:53 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 19:32:53 UTC] [MANAGER] Generated temp episode ID: ep_1760988773_68f68e65cc81d
+[20-Oct-2025 19:32:53 UTC] Starting episode 3: Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18
+[20-Oct-2025 19:32:53 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251017_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 19:32:56 UTC] [MANAGER] addEpisode called for podcast: shp_1760988769_68f68e61613a1
+[20-Oct-2025 19:32:56 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Friday, October 17, 2025 - About the No Kings Rally&#8211;The Whats and Wherefores of 10/18
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760988769_68f68e61613a1/ep_1760988773_68f68e65e5f6b.mp3
+    [duration] => 0
+    [file_size] => 57654800
+    [pub_date] => Fri, 17 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 3
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 19:32:56 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 19:32:56 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 19:32:56 UTC] [MANAGER] Generated temp episode ID: ep_1760988776_68f68e68dba14
+[20-Oct-2025 19:32:57 UTC] Starting episode 4: Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI
+[20-Oct-2025 19:32:57 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251016_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 19:32:59 UTC] [MANAGER] addEpisode called for podcast: shp_1760988769_68f68e61613a1
+[20-Oct-2025 19:32:59 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Thursday, October 16, 2025 -  Trump's funding of HBCU, what's behind that, verses his DEI
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760988769_68f68e61613a1/ep_1760988777_68f68e690090c.mp3
+    [duration] => 0
+    [file_size] => 57653400
+    [pub_date] => Thu, 16 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 4
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 19:32:59 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 19:32:59 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 19:32:59 UTC] [MANAGER] Generated temp episode ID: ep_1760988779_68f68e6bed4f6
+[20-Oct-2025 19:33:00 UTC] Starting episode 5: Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado
+[20-Oct-2025 19:33:00 UTC] Audio URL: https://archive.kpft.org/mp3/kpft_251015_080000houtalwmichaewoodsohoutall.mp3
+[20-Oct-2025 19:33:03 UTC] [MANAGER] addEpisode called for podcast: shp_1760988769_68f68e61613a1
+[20-Oct-2025 19:33:03 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Wednesday, October 15, 2025 - 2025 Nobel Peace Prize Recipient, Maria Corina Machado
+    [description] => Community based call in show featuring local Houston topics and you. Call (713) 526-5738 to participate!
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1760988769_68f68e61613a1/ep_1760988780_68f68e6c12332.mp3
+    [duration] => 0
+    [file_size] => 57659000
+    [pub_date] => Wed, 15 Oct 2025 08:00:00 -0500
+    [status] => published
+    [episode_number] => 5
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => no
+)
+
+[20-Oct-2025 19:33:03 UTC] [MANAGER] Image file: NO
+[20-Oct-2025 19:33:03 UTC] [MANAGER] Audio file: NO
+[20-Oct-2025 19:33:03 UTC] [MANAGER] Generated temp episode ID: ep_1760988783_68f68e6f13ca4

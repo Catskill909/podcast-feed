@@ -21,8 +21,12 @@ class PodcastAudioDownloader
     {
         $this->audioUploader = new AudioUploader();
         $this->maxFileSize = 500 * 1024 * 1024; // 500MB
-        $this->timeout = 300; // 5 minutes per file
+        $this->timeout = 600; // 10 minutes per file (for large files)
         $this->userAgent = 'PodFeed Cloner/1.0';
+        
+        // Increase PHP execution time for cloning
+        @set_time_limit(0); // No limit
+        @ini_set('max_execution_time', '0');
     }
 
     /**

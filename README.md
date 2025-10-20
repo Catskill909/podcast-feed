@@ -222,7 +222,7 @@ git push origin main
 
 ## 🚀 Features
 
-### **🎙️ My Podcasts - Complete Podcast Hosting (NEW - October 17, 2025)** ✨✨
+### **🎙️ My Podcasts - Complete Podcast Hosting (October 17, 2025)** ✨✨
 - **Complete Podcast Creation**: Create podcasts from scratch with full metadata
 - **Audio File Uploads**: Upload and host MP3 files directly on your server (up to 500MB)
 - **Episode Management**: Add, edit, and delete episodes with full control
@@ -234,6 +234,22 @@ git push origin main
 - **Persistent Storage**: All files stored in Coolify persistent volumes
 - **No Breaking Changes**: Modular architecture, zero impact on existing features
 - **~1,850 Lines of Code**: Complete system with validation and error handling
+
+### **🔄 Podcast Feed Cloning - MAJOR NEW FEATURE (October 20, 2025)** ✨✨✨
+- **Clone Entire Podcasts**: Import complete podcasts from any RSS feed URL with one click
+- **Full Audio Download & Hosting**: Downloads ALL episode audio files and hosts them locally on your server
+- **Automatic Metadata Import**: Extracts podcast title, description, author, category, and all episode data
+- **Cover Image Cloning**: Downloads and hosts podcast cover images automatically
+- **Episode Image Support**: Optionally downloads individual episode artwork
+- **Smart Validation**: Pre-clone validation shows episode count and estimated storage requirements
+- **Graceful Failure Handling**: Continues cloning even if some episodes fail, shows success/failure counts
+- **Progress Feedback**: Animated spinner with time estimates during cloning process
+- **iTunes-Compliant Output**: Generates valid RSS 2.0 + iTunes namespace feeds for cloned podcasts
+- **Complete Self-Hosting**: Transform external podcasts into fully self-hosted versions
+- **Bypass PHP Limits**: Handles large files (up to 500MB per episode) using existing upload infrastructure
+- **Optional Directory Import**: Can automatically add cloned podcasts to main directory
+- **Episode Limiting**: Option to clone only the last N episodes (useful for testing)
+- **~2,000 Lines of New Code**: Complete orchestration system with error handling and logging
 
 ### **🎨 Public Browsing Interface (October 17, 2025)** ✨
 - **Beautiful Podcast Grid**: Responsive card layout with cover images and overlays

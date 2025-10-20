@@ -953,6 +953,68 @@ if (isset($_GET['edit'])) {
                     </div>
                 </div>
 
+                <!-- Podcast Cloning Feature -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">🔄</span>
+                        Clone from RSS - Download & Host Podcasts
+                    </h3>
+                    <div class="help-section-content">
+                        <p><strong>What is Podcast Cloning?</strong></p>
+                        <p>Unlike RSS import (which links to external feeds), cloning downloads and hosts entire podcasts on your server. All audio files are stored locally, giving you full control.</p>
+                        
+                        <p><strong>How to Clone a Podcast:</strong></p>
+                        <ol>
+                            <li>Go to <strong>"My Podcasts"</strong> page</li>
+                            <li>Click <strong>"Clone from RSS"</strong> button</li>
+                            <li>Enter the RSS feed URL</li>
+                            <li>Click <strong>"Validate Feed"</strong> to preview episode count and storage needs</li>
+                            <li>Click <strong>"Start Cloning"</strong> and wait (don't close window)</li>
+                            <li>Time estimates: 5-10 episodes (1-2 min), 20-50 episodes (3-5 min), 100+ episodes (10-30 min)</li>
+                        </ol>
+                        
+                        <p><strong>What Gets Cloned:</strong></p>
+                        <ul>
+                            <li>Podcast metadata (title, description, author, category)</li>
+                            <li>Podcast cover image</li>
+                            <li>All episode audio files (up to 500MB each)</li>
+                            <li>Episode metadata (titles, descriptions, dates, durations)</li>
+                            <li>Episode images (optional)</li>
+                            <li>iTunes tags (episode numbers, seasons, explicit flags)</li>
+                        </ul>
+                        
+                        <p><strong>Technical Details:</strong></p>
+                        <ul>
+                            <li>Max file size: 500MB per episode</li>
+                            <li>Timeout: 10 minutes per file</li>
+                            <li>Error recovery: Continues if some episodes fail</li>
+                            <li>Storage: Files saved to <code>uploads/audio/[podcast_id]/</code></li>
+                            <li>RSS: Generates iTunes-compliant RSS 2.0 feed</li>
+                        </ul>
+                        
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>⚠️ Important:</strong>
+                            <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                                <li>Ensure adequate disk space before cloning</li>
+                                <li>Don't close browser window during cloning</li>
+                                <li>Only clone content you have rights to host</li>
+                                <li>Avoid multiple simultaneous clones (resource-intensive)</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>💡 Common Uses:</strong>
+                            <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                                <li>Archive podcasts before they're removed</li>
+                                <li>Create backups of your own shows</li>
+                                <li>Migrate content between hosting platforms</li>
+                                <li>Build offline podcast libraries</li>
+                                <li>Preserve educational content</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Podcast Actions -->
                 <div class="help-section">
                     <h3 class="help-section-title">

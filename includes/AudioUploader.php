@@ -52,12 +52,25 @@ class AudioUploader
             $filename = $episodeId . '.mp3';
             $filepath = $podcastDir . '/' . $filename;
 
-            // Move uploaded file
-            if (!move_uploaded_file($file['tmp_name'], $filepath)) {
-                return [
-                    'success' => false,
-                    'message' => 'Failed to move uploaded file'
-                ];
+            // Move uploaded file (or copy if it's a downloaded file, not an upload)
+            if (is_uploaded_file($file['tmp_name'])) {
+                // Real uploaded file
+                if (!move_uploaded_file($file['tmp_name'], $filepath)) {
+                    return [
+                        'success' => false,
+                        'message' => 'Failed to move uploaded file'
+                    ];
+                }
+            } else {
+                // Downloaded file (from cloning)
+                if (!copy($file['tmp_name'], $filepath)) {
+                    return [
+                        'success' => false,
+                        'message' => 'Failed to copy audio file'
+                    ];
+                }
+                // Clean up temp file
+                @unlink($file['tmp_name']);
             }
 
             // Set permissions
@@ -263,32 +276,39 @@ class AudioUploader
             ];
         }
 
-        // Check MIME type
+        // Check MIME type (be lenient for downloaded files)
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $file['tmp_name']);
         finfo_close($finfo);
 
-        if (!in_array($mimeType, $this->allowedMimeTypes)) {
+        // Accept audio/mpeg, audio/mp3, and application/octet-stream (for downloads)
+        $acceptableMimeTypes = ['audio/mpeg', 'audio/mp3', 'application/octet-stream', 'audio/x-mpeg'];
+        
+        if (!in_array($mimeType, $acceptableMimeTypes)) {
+            error_log("AudioUploader: Rejecting file with MIME type: $mimeType");
             return [
                 'valid' => false,
-                'message' => 'Invalid file format. File must be an MP3 audio file.'
+                'message' => 'Invalid file format. File must be an MP3 audio file. (Got: ' . $mimeType . ')'
             ];
         }
 
         // Check if file is actually an MP3 (magic number check)
-        $handle = fopen($file['tmp_name'], 'rb');
-        $header = fread($handle, 3);
-        fclose($handle);
+        // Skip this for downloaded files (not real uploads) - they may have different headers
+        if (is_uploaded_file($file['tmp_name'])) {
+            $handle = fopen($file['tmp_name'], 'rb');
+            $header = fread($handle, 3);
+            fclose($handle);
 
-        // Check for ID3 tag or MPEG frame sync
-        $isMP3 = (substr($header, 0, 3) === 'ID3') || 
-                 (ord($header[0]) === 0xFF && (ord($header[1]) & 0xE0) === 0xE0);
+            // Check for ID3 tag or MPEG frame sync
+            $isMP3 = (substr($header, 0, 3) === 'ID3') || 
+                     (ord($header[0]) === 0xFF && (ord($header[1]) & 0xE0) === 0xE0);
 
-        if (!$isMP3) {
-            return [
-                'valid' => false,
-                'message' => 'File does not appear to be a valid MP3 file.'
-            ];
+            if (!$isMP3) {
+                return [
+                    'valid' => false,
+                    'message' => 'File does not appear to be a valid MP3 file.'
+                ];
+            }
         }
 
         return [

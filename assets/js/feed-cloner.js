@@ -12,7 +12,7 @@ let cloneProgressInterval = null;
 function showCloneModal() {
     const modal = document.getElementById('cloneFeedModal');
     if (modal) {
-        modal.style.display = 'flex';
+        modal.classList.add('show');
         document.body.style.overflow = 'hidden';
         resetCloneModal();
     }
@@ -24,7 +24,7 @@ function showCloneModal() {
 function hideCloneModal() {
     const modal = document.getElementById('cloneFeedModal');
     if (modal) {
-        modal.style.display = 'none';
+        modal.classList.remove('show');
         document.body.style.overflow = '';
         
         // Stop progress polling if active
@@ -33,6 +33,13 @@ function hideCloneModal() {
             cloneProgressInterval = null;
         }
     }
+}
+
+/**
+ * Close and reload page
+ */
+function closeAndReload() {
+    window.location.reload();
 }
 
 /**
@@ -74,7 +81,7 @@ async function validateCloneFeed() {
         formData.append('feed_url', feedUrl);
         formData.append('action', 'validate');
         
-        const response = await fetch('/api/clone-feed.php?action=validate', {
+        const response = await fetch('api/clone-feed.php?action=validate', {
             method: 'POST',
             body: formData
         });
@@ -144,6 +151,12 @@ async function startCloning() {
     document.getElementById('cloneStep2').style.display = 'none';
     document.getElementById('cloneStep3').style.display = 'block';
     
+    // Hide all footer buttons during cloning
+    document.getElementById('cloneValidateButton').style.display = 'none';
+    document.getElementById('cloneStartButton').style.display = 'none';
+    document.getElementById('cloneBackButton').style.display = 'none';
+    document.getElementById('cloneCancelButton').style.display = 'inline-block';
+    
     try {
         const formData = new FormData();
         formData.append('feed_url', feedUrl);
@@ -154,28 +167,47 @@ async function startCloning() {
             formData.append('limit_episodes', limitEpisodes);
         }
         
-        // Start cloning (this initiates the process)
-        const response = await fetch('/api/clone-feed.php?action=start', {
+        // Get episode count for time estimate
+        const episodeCount = parseInt(document.getElementById('cloneEpisodeCount').textContent) || 5;
+        const estimatedMinutes = Math.ceil(episodeCount * 0.5); // ~30 seconds per episode
+        
+        // Update UI to show cloning is happening
+        document.getElementById('cloneCurrentAction').innerHTML = `
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; color: #4CAF50;"></i>
+                <div>
+                    <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 5px;">
+                        Cloning ${episodeCount} episodes...
+                    </div>
+                    <div style="font-size: 0.9rem; color: #9e9e9e;">
+                        This may take ${estimatedMinutes}-${estimatedMinutes + 2} minutes. Please don't close this window.
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Disable cancel button during cloning
+        document.getElementById('cloneCancelButton').disabled = true;
+        document.getElementById('cloneCancelButton').style.opacity = '0.5';
+        
+        // Start cloning (this is a BLOCKING call - it won't return until done)
+        const response = await fetch('api/clone-feed.php?action=start', {
             method: 'POST',
             body: formData
         });
         
         const result = await response.json();
         
-        if (result.job_id) {
-            cloneJobId = result.job_id;
-            // Start polling for progress
-            startProgressPolling();
-        } else if (result.success) {
-            // Completed immediately (unlikely but possible)
+        // Cloning is already complete when we get here
+        if (result.success) {
             showCloneComplete(result);
         } else {
-            showCloneError(result.message || 'Failed to start cloning');
-            document.getElementById('cloneStep3').style.display = 'none';
-            document.getElementById('cloneStep2').style.display = 'block';
+            showCloneError(result.message || 'Failed to clone podcast');
         }
         
     } catch (error) {
+        console.error('Start cloning error:', error);
+        showCloneError('Network error. Please try again.');
         console.error('Clone start error:', error);
         showCloneError('Failed to start cloning. Please try again.');
         document.getElementById('cloneStep3').style.display = 'none';
@@ -200,8 +232,10 @@ async function updateCloneProgress() {
     if (!cloneJobId) return;
     
     try {
-        const response = await fetch(`/api/clone-feed.php?action=progress&job_id=${cloneJobId}`);
+        console.log('Polling progress for job:', cloneJobId);
+        const response = await fetch(`api/clone-feed.php?action=progress&job_id=${cloneJobId}`);
         const result = await response.json();
+        console.log('Progress result:', result);
         
         if (result.success && result.progress) {
             displayProgress(result.progress);
@@ -308,6 +342,13 @@ function getActionText(progress) {
 function showCloneComplete(result) {
     document.getElementById('cloneStep3').style.display = 'none';
     document.getElementById('cloneStep4').style.display = 'block';
+    
+    // Hide all footer buttons except Close
+    document.getElementById('cloneValidateButton').style.display = 'none';
+    document.getElementById('cloneStartButton').style.display = 'none';
+    document.getElementById('cloneBackButton').style.display = 'none';
+    document.getElementById('cloneCancelButton').style.display = 'none';
+    document.getElementById('cloneCloseButton').style.display = 'inline-block';
     
     document.getElementById('cloneCompleteTitle').textContent = 
         result.podcast_title || 'Podcast cloned successfully!';

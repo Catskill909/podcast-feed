@@ -227,6 +227,39 @@ class RssFeedParser
             }
         }
         
+        // Extract episodes for cloning
+        $episodes = [];
+        foreach ($channel->item as $item) {
+            $itemItunes = (isset($namespaces['itunes'])) ? $item->children($namespaces['itunes']) : null;
+            
+            // Get audio URL from enclosure
+            $audioUrl = '';
+            if ($item->enclosure) {
+                $audioUrl = (string) $item->enclosure->attributes()->url;
+            }
+            
+            // Skip if no audio
+            if (empty($audioUrl)) {
+                continue;
+            }
+            
+            // Get episode image
+            $episodeImage = '';
+            if ($itemItunes && $itemItunes->image) {
+                $episodeImage = (string) $itemItunes->image->attributes()->href;
+            }
+            
+            $episodes[] = [
+                'title' => $this->extractText($item->title),
+                'description' => $this->extractText($item->description),
+                'audio_url' => $audioUrl,
+                'pub_date' => $this->extractText($item->pubDate),
+                'image_url' => $episodeImage,
+                'duration' => $itemItunes ? $this->extractText($itemItunes->duration) : '',
+                'explicit' => $itemItunes ? $this->extractText($itemItunes->explicit) : 'no'
+            ];
+        }
+        
         return [
             'title' => $title,
             'description' => $description,
@@ -235,7 +268,13 @@ class RssFeedParser
             'latest_episode_date' => $latestEpisodeDate,
             'category' => $category ?: 'Uncategorized',
             'feed_url' => $feedUrl,
-            'feed_type' => 'RSS 2.0'
+            'feed_type' => 'RSS 2.0',
+            'episodes' => $episodes,
+            'author' => $itunes ? $this->extractText($itunes->author) : '',
+            'email' => $this->extractText($channel->managingEditor),
+            'link' => $this->extractText($channel->link),
+            'language' => $this->extractText($channel->language),
+            'explicit' => $itunes ? $this->extractText($itunes->explicit) : 'no'
         ];
     }
     

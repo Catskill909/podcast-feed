@@ -237,18 +237,37 @@ class PodcastFeedCloner
      */
     private function createPodcast($feedData)
     {
-        // Download cover image to temp
+        // Download cover image to temp (optional - continue without if fails)
         $coverImageFile = null;
         if (!empty($feedData['image_url'])) {
-            $coverImageFile = $this->downloadImageToTemp($feedData['image_url']);
+            error_log("Attempting to download cover image from: " . $feedData['image_url']);
+            try {
+                $coverImageFile = $this->downloadImageToTemp($feedData['image_url']);
+                
+                if ($coverImageFile && isset($coverImageFile['tmp_name']) && file_exists($coverImageFile['tmp_name'])) {
+                    error_log("Cover image downloaded successfully: " . $coverImageFile['tmp_name']);
+                } else {
+                    error_log("WARNING: Cover image download failed, continuing without image");
+                    $coverImageFile = null;
+                }
+            } catch (Exception $e) {
+                error_log("WARNING: Cover image download exception: " . $e->getMessage());
+                $coverImageFile = null;
+            }
         }
 
         // Prepare podcast data
+        // Clean up email - some feeds have invalid formats
+        $email = $feedData['email'] ?? '';
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $email = 'podcast@localhost.local';
+        }
+        
         $podcastData = [
             'title' => $feedData['title'] . ' (Cloned)',
             'description' => $feedData['description'],
             'author' => $feedData['author'] ?? 'Unknown',
-            'email' => $feedData['email'] ?? 'cloned@example.com',
+            'email' => $email,
             'website_url' => $feedData['link'] ?? '',
             'category' => $feedData['category'] ?? 'General',
             'language' => $feedData['language'] ?? 'en-us',
@@ -256,8 +275,12 @@ class PodcastFeedCloner
             'podcast_type' => 'episodic'
         ];
 
+        error_log("Creating podcast with data: " . json_encode($podcastData));
+
         // Create podcast (reuse existing method)
         $result = $this->selfHostedManager->createPodcast($podcastData, $coverImageFile);
+
+        error_log("Create podcast result: " . json_encode($result));
 
         if (!$result['success']) {
             throw new Exception('Failed to create podcast: ' . $result['message']);
@@ -277,10 +300,18 @@ class PodcastFeedCloner
         $failedCount = 0;
         $failedEpisodes = [];
 
+        error_log("=== CLONE EPISODES DEBUG ===");
+        error_log("Total episodes found in feed: " . $totalEpisodes);
+        error_log("Feed data keys: " . implode(', ', array_keys($feedData)));
+        if ($totalEpisodes > 0) {
+            error_log("First episode data: " . json_encode($episodes[0]));
+        }
+
         // Apply episode limit if set
         if (!empty($options['limit_episodes']) && $options['limit_episodes'] > 0) {
             $episodes = array_slice($episodes, 0, $options['limit_episodes']);
             $totalEpisodes = count($episodes);
+            error_log("Limited to: " . $totalEpisodes . " episodes");
         }
 
         foreach ($episodes as $index => $episode) {
@@ -297,8 +328,12 @@ class PodcastFeedCloner
                     'percent' => 15 + (($episodeNumber / $totalEpisodes) * 80)
                 ]);
 
-                // Generate episode ID
+                // Generate episode ID (add small delay to prevent collisions)
+                usleep(100000); // 0.1 second delay
                 $episodeId = 'ep_' . time() . '_' . uniqid();
+                
+                error_log("Starting episode $episodeNumber: " . ($episode['title'] ?? 'Unknown'));
+                error_log("Audio URL: " . ($episode['audio_url'] ?? 'Unknown'));
 
                 // Download audio file (uses existing AudioUploader to bypass PHP limits)
                 $audioResult = $this->audioDownloader->downloadAudioFromUrl(
@@ -307,8 +342,10 @@ class PodcastFeedCloner
                     $episodeId
                 );
 
-                if (!$audioResult['success']) {
-                    throw new Exception($audioResult['message']);
+                if (!isset($audioResult['success']) || !$audioResult['success']) {
+                    $errorMsg = $audioResult['message'] ?? 'Unknown audio download error';
+                    error_log("Audio download failed for episode $episodeNumber: $errorMsg");
+                    throw new Exception($errorMsg);
                 }
 
                 // Update progress - downloading image
@@ -362,13 +399,23 @@ class PodcastFeedCloner
                 }
 
             } catch (Exception $e) {
-                error_log("Failed to clone episode {$episodeNumber}: " . $e->getMessage());
                 $failedCount++;
+                $errorMsg = $e->getMessage();
                 $failedEpisodes[] = [
-                    'episode_number' => $episodeNumber,
-                    'title' => $episode['title'] ?? 'Untitled',
-                    'error' => $e->getMessage()
+                    'episode' => $episodeNumber,
+                    'title' => $episode['title'] ?? 'Unknown',
+                    'error' => $errorMsg,
+                    'audio_url' => $episode['audio_url'] ?? 'Unknown'
                 ];
+                
+                // DETAILED ERROR LOGGING
+                error_log("========================================");
+                error_log("EPISODE CLONE FAILURE #$episodeNumber");
+                error_log("Title: " . ($episode['title'] ?? 'Unknown'));
+                error_log("Audio URL: " . ($episode['audio_url'] ?? 'Unknown'));
+                error_log("Error: " . $errorMsg);
+                error_log("Stack trace: " . $e->getTraceAsString());
+                error_log("========================================");
             }
         }
 
@@ -431,20 +478,50 @@ class PodcastFeedCloner
     private function downloadImageToTemp($imageUrl)
     {
         try {
-            $tempFile = tempnam(sys_get_temp_dir(), 'podcast_image_');
-            $imageData = file_get_contents($imageUrl);
-            
-            if ($imageData === false) {
+            if (empty($imageUrl)) {
                 return null;
             }
 
-            file_put_contents($tempFile, $imageData);
+            $tempFile = tempnam(sys_get_temp_dir(), 'podcast_image_');
+            
+            // Use cURL for better reliability
+            $ch = curl_init($imageUrl);
+            $fp = fopen($tempFile, 'wb');
+            
+            curl_setopt_array($ch, [
+                CURLOPT_FILE => $fp,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_MAXREDIRS => 5,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_USERAGENT => 'PodFeed Cloner/1.0',
+                CURLOPT_SSL_VERIFYPEER => false, // For dev/testing
+                CURLOPT_FAILONERROR => true
+            ]);
+            
+            $success = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error = curl_error($ch);
+            
+            curl_close($ch);
+            fclose($fp);
+            
+            if (!$success || $httpCode !== 200) {
+                error_log("Image download failed: HTTP $httpCode - $error - URL: $imageUrl");
+                if (file_exists($tempFile)) {
+                    unlink($tempFile);
+                }
+                return null;
+            }
+
+            // Detect image type
+            $imageInfo = getimagesize($tempFile);
+            $mimeType = $imageInfo ? $imageInfo['mime'] : 'image/jpeg';
 
             // Create file array that looks like $_FILES
             return [
                 'tmp_name' => $tempFile,
-                'name' => basename($imageUrl),
-                'type' => 'image/jpeg',
+                'name' => basename(parse_url($imageUrl, PHP_URL_PATH)) ?: 'cover.jpg',
+                'type' => $mimeType,
                 'size' => filesize($tempFile),
                 'error' => UPLOAD_ERR_OK
             ];

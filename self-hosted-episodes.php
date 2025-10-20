@@ -156,10 +156,20 @@ $episodes = $manager->getEpisodes($podcastId);
     
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo ASSETS_VERSION; ?>">
-    <link rel="stylesheet" href="assets/css/components.css?v=<?php echo ASSETS_VERSION; ?>">
-    <link rel="stylesheet" href="assets/css/upload-components.css?v=<?php echo ASSETS_VERSION; ?>">
-    <link rel="stylesheet" href="assets/css/custom-audio-player.css?v=<?php echo ASSETS_VERSION; ?>">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/components.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/upload-components.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/custom-audio-player.css?v=<?php echo time(); ?>">
+    
+    <!-- FORCE CONTAINER WIDTH -->
+    <style>
+        body .container {
+            max-width: 1200px !important;
+            margin: 0 auto !important;
+            padding: 0 1rem !important;
+            box-sizing: border-box !important;
+        }
+    </style>
     
     <style>
         .episode-header {
@@ -195,6 +205,11 @@ $episodes = $manager->getEpisodes($podcastId);
             display: flex;
             flex-direction: column;
             gap: 15px;
+            max-width: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         .episode-item {
@@ -203,6 +218,8 @@ $episodes = $manager->getEpisodes($podcastId);
             border-radius: 10px;
             padding: 20px;
             transition: all 0.3s ease;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .episode-item:hover {
@@ -875,6 +892,7 @@ $episodes = $manager->getEpisodes($podcastId);
             </div>
         </div>
 
+        <!-- Episodes Section (inside container) -->
         <?php if (empty($episodes)): ?>
             <div class="empty-episodes">
                 <i class="fas fa-headphones"></i>
@@ -906,21 +924,21 @@ $episodes = $manager->getEpisodes($podcastId);
                     $fileSize = !empty($episode['file_size']) ? $episode['file_size'] : 0;
                     $fileSizeFormatted = $fileSize > 0 ? number_format($fileSize / 1048576, 1) . ' MB' : 'N/A';
                 ?>
-                    <div class="episode-item" style="background: #2d2d2d; padding: 25px; border-radius: 12px; border: 1px solid #404040; margin-bottom: 20px;">
+                    <div class="episode-item" style="background: #2d2d2d; padding: 25px; border-radius: 12px; border: 1px solid #404040; margin-bottom: 20px; max-width: 100%; box-sizing: border-box;">
                         <!-- Episode Header with Image and Title -->
                         <div style="display: flex; gap: 20px; margin-bottom: 20px;">
                             <!-- Episode Image -->
                             <div style="flex-shrink: 0;">
                                 <img src="<?php echo htmlspecialchars($episodeImage); ?>" 
-                                     alt="<?php echo htmlspecialchars($episode['title']); ?>"
+                                     alt="<?php echo htmlspecialchars(html_entity_decode($episode['title'], ENT_QUOTES | ENT_HTML5, 'UTF-8')); ?>"
                                      style="width: 140px; height: 140px; object-fit: cover; border-radius: 10px; border: 2px solid #404040; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
                             </div>
                             
                             <!-- Title and Status -->
                             <div style="flex: 1; min-width: 0;">
                                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
-                                    <h3 style="margin: 0; font-size: 1.4rem; color: #e0e0e0; font-family: 'Oswald', sans-serif; line-height: 1.3;">
-                                        <?php echo htmlspecialchars($episode['title']); ?>
+                                    <h3 style="margin: 0; font-size: 1.4rem; color: #e0e0e0; font-family: 'Oswald', sans-serif; line-height: 1.3; word-wrap: break-word; overflow-wrap: break-word;">
+                                        <?php echo htmlspecialchars(html_entity_decode($episode['title'], ENT_QUOTES | ENT_HTML5, 'UTF-8')); ?>
                                     </h3>
                                     <span class="badge badge-<?php echo $episode['status'] === 'published' ? 'success' : 'warning'; ?>" style="margin-left: 15px; flex-shrink: 0;">
                                         <?php echo ucfirst($episode['status']); ?>
@@ -930,12 +948,12 @@ $episodes = $manager->getEpisodes($podcastId);
                                 <!-- Description -->
                                 <?php if (!empty($episode['description'])): ?>
                                     <div style="color: #b0b0b0; font-size: 0.9rem; line-height: 1.6; margin-bottom: 15px;">
-                                        <?php echo htmlspecialchars($episode['description']); ?>
+                                        <?php echo htmlspecialchars(html_entity_decode($episode['description'], ENT_QUOTES | ENT_HTML5, 'UTF-8')); ?>
                                     </div>
                                 <?php endif; ?>
                                 
                                 <!-- Metadata Grid -->
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 15px; background: #1a1a1a; border-radius: 8px; border: 1px solid #404040;">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; padding: 15px; background: #1a1a1a; border-radius: 8px; border: 1px solid #404040;">
                                     <!-- Publication Date -->
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <div style="width: 36px; height: 36px; background: #404040; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
@@ -955,17 +973,6 @@ $episodes = $manager->getEpisodes($podcastId);
                                         <div style="min-width: 0;">
                                             <div style="font-size: 0.75rem; color: #9e9e9e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">File Size</div>
                                             <div style="font-size: 0.9rem; color: #e0e0e0; font-weight: 500;"><?php echo $fileSizeFormatted; ?></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Episode Type -->
-                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                        <div style="width: 36px; height: 36px; background: #404040; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                            <i class="fas fa-tag" style="color: #9e9e9e; font-size: 0.9rem;"></i>
-                                        </div>
-                                        <div style="min-width: 0;">
-                                            <div style="font-size: 0.75rem; color: #9e9e9e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Type</div>
-                                            <div style="font-size: 0.9rem; color: #e0e0e0; font-weight: 500;"><?php echo ucfirst($episode['episode_type'] ?? 'Full'); ?></div>
                                         </div>
                                     </div>
                                     
@@ -1045,12 +1052,12 @@ $episodes = $manager->getEpisodes($podcastId);
                                     <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
                                         <div>
                                             <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #e0e0e0; font-size: 0.9rem;">Episode Title <span style="color: #f44336;">*</span></label>
-                                            <input type="text" name="title" required value="<?php echo htmlspecialchars($episode['title']); ?>" style="width: 100%; padding: 10px; background: #2d2d2d; border: 2px solid #404040; border-radius: 6px; color: #e0e0e0; font-size: 0.9rem;">
+                                            <input type="text" name="title" required value="<?php echo htmlspecialchars(html_entity_decode($episode['title'], ENT_QUOTES | ENT_HTML5, 'UTF-8')); ?>" style="width: 100%; padding: 10px; background: #2d2d2d; border: 2px solid #404040; border-radius: 6px; color: #e0e0e0; font-size: 0.9rem;">
                                         </div>
 
                                         <div>
                                             <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #e0e0e0; font-size: 0.9rem;">Description <span style="color: #f44336;">*</span></label>
-                                            <textarea name="description" required rows="3" style="width: 100%; padding: 10px; background: #2d2d2d; border: 2px solid #404040; border-radius: 6px; color: #e0e0e0; font-size: 0.9rem; resize: vertical;"><?php echo htmlspecialchars($episode['description']); ?></textarea>
+                                            <textarea name="description" required rows="3" style="width: 100%; padding: 10px; background: #2d2d2d; border: 2px solid #404040; border-radius: 6px; color: #e0e0e0; font-size: 0.9rem; resize: vertical;"><?php echo htmlspecialchars(html_entity_decode($episode['description'], ENT_QUOTES | ENT_HTML5, 'UTF-8')); ?></textarea>
                                         </div>
 
                                         <div>
@@ -1137,12 +1144,11 @@ $episodes = $manager->getEpisodes($podcastId);
                                     </div>
                                 </form>
                             </div>
-                        </div>
                     </div>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
-    </div>
+    </div><!-- Close container -->
 
     <!-- Audio Uploader Script -->
     <script src="assets/js/audio-uploader.js?v=<?php echo ASSETS_VERSION; ?>"></script>

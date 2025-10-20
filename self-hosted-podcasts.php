@@ -690,7 +690,7 @@ $podcasts = $manager->getAllPodcasts();
     </div>
 
     <!-- Clone Feed Modal -->
-    <div id="cloneFeedModal" class="modal-overlay" style="display: none;">
+    <div id="cloneFeedModal" class="modal-overlay">
         <div class="modal modal-lg">
             <div class="modal-header">
                 <h3 class="modal-title"><i class="fas fa-clone"></i> Clone Podcast from RSS Feed</h3>
@@ -712,11 +712,14 @@ $podcasts = $manager->getAllPodcasts();
                 <!-- Step 1: Enter Feed URL -->
                 <div id="cloneStep1">
                     <div class="form-group">
-                        <label>RSS Feed URL <span style="color: #f44336;">*</span></label>
-                        <input type="text" id="cloneFeedUrlInput" class="form-input" 
+                        <label style="display: block; margin-bottom: 8px; color: #e0e0e0; font-weight: 500;">
+                            RSS Feed URL <span style="color: #f44336;">*</span>
+                        </label>
+                        <input type="text" id="cloneFeedUrlInput" 
+                               style="width: 100%; padding: 12px; background: #2d2d2d; border: 1px solid #404040; border-radius: 6px; color: #e0e0e0; font-size: 14px;"
                                placeholder="https://example.com/podcast/feed.xml"
                                onkeypress="if(event.key==='Enter') validateCloneFeed()">
-                        <small style="display: block; margin-top: 8px; color: #9e9e9e;">
+                        <small style="display: block; margin-top: 8px; color: #9e9e9e; font-size: 13px;">
                             Enter the RSS feed URL of the podcast you want to clone
                         </small>
                     </div>
@@ -782,47 +785,22 @@ $podcasts = $manager->getAllPodcasts();
 
                 <!-- Step 3: Progress -->
                 <div id="cloneStep3" style="display: none;">
-                    <div style="background: #1a1a1a; padding: 25px; border-radius: 8px;">
-                        <!-- Phase Indicators -->
-                        <div style="display: flex; gap: 20px; margin-bottom: 30px;">
-                            <div id="clonePhase1" class="clone-phase">
-                                <div class="phase-icon">1</div>
-                                <div class="phase-label">Creating Podcast</div>
-                            </div>
-                            <div id="clonePhase2" class="clone-phase">
-                                <div class="phase-icon">2</div>
-                                <div class="phase-label">Cloning Episodes</div>
-                            </div>
+                    <div style="background: #1a1a1a; padding: 40px; border-radius: 8px; text-align: center;">
+                        <!-- Spinner and Message -->
+                        <div id="cloneCurrentAction" style="margin-bottom: 30px;">
+                            <!-- Will be populated by JavaScript -->
                         </div>
 
-                        <!-- Current Action -->
-                        <div style="margin-bottom: 20px;">
-                            <div style="color: #9e9e9e; font-size: 0.9rem; margin-bottom: 5px;">Current Action:</div>
-                            <div id="cloneCurrentAction" style="color: #e0e0e0; font-size: 1.1rem; font-weight: 500;">
-                                Initializing...
-                            </div>
-                            <div id="cloneEpisodeProgress" style="color: #9e9e9e; font-size: 0.9rem; margin-top: 5px; display: none;">
-                                Episode 0 of 0
-                            </div>
-                        </div>
-
-                        <!-- Progress Bar -->
-                        <div style="background: #2d2d2d; border-radius: 8px; height: 30px; overflow: hidden; margin-bottom: 20px;">
-                            <div id="cloneProgressBar" style="background: linear-gradient(90deg, #4CAF50, #66BB6A); height: 100%; width: 0%; transition: width 0.3s ease; display: flex; align-items: center; justify-content: center;">
-                                <span id="cloneProgressPercent" style="color: white; font-weight: 600; font-size: 0.9rem;">0%</span>
-                            </div>
-                        </div>
-
-                        <!-- Stats -->
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding-top: 15px; border-top: 1px solid #333;">
-                            <div>
-                                <div style="color: #9e9e9e; font-size: 0.85rem;">Time Elapsed:</div>
-                                <div id="cloneElapsedTime" style="color: #e0e0e0; font-weight: 500;">0s</div>
-                            </div>
-                            <div>
-                                <div style="color: #9e9e9e; font-size: 0.85rem;">Estimated Remaining:</div>
-                                <div id="cloneRemainingTime" style="color: #e0e0e0; font-weight: 500;">-</div>
-                            </div>
+                        <!-- Simple message -->
+                        <div style="color: #9e9e9e; font-size: 0.95rem; line-height: 1.6;">
+                            <p style="margin: 0 0 10px 0;">
+                                <i class="fas fa-info-circle" style="color: #4CAF50; margin-right: 8px;"></i>
+                                Downloading and processing all episodes
+                            </p>
+                            <p style="margin: 0;">
+                                <i class="fas fa-clock" style="color: #4CAF50; margin-right: 8px;"></i>
+                                This process will complete automatically
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -858,7 +836,7 @@ $podcasts = $manager->getAllPodcasts();
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" id="cloneModalFooter">
                 <button type="button" id="cloneValidateButton" class="btn btn-primary btn-lg" onclick="validateCloneFeed()">
                     <i class="fas fa-check"></i> Validate Feed
                 </button>
@@ -868,8 +846,11 @@ $podcasts = $manager->getAllPodcasts();
                 <button type="button" id="cloneBackButton" class="btn btn-secondary btn-lg" onclick="resetCloneModal()" style="display: none;">
                     <i class="fas fa-arrow-left"></i> Back
                 </button>
-                <button type="button" class="btn btn-secondary btn-lg" onclick="hideCloneModal()">
+                <button type="button" id="cloneCancelButton" class="btn btn-secondary btn-lg" onclick="hideCloneModal()">
                     Cancel
+                </button>
+                <button type="button" id="cloneCloseButton" class="btn btn-primary btn-lg" onclick="closeAndReload()" style="display: none;">
+                    <i class="fas fa-check"></i> Close
                 </button>
             </div>
         </div>
@@ -910,23 +891,8 @@ $podcasts = $manager->getAllPodcasts();
         }
     </style>
 
+    <script src="assets/js/feed-cloner.js?v=<?php echo ASSETS_VERSION; ?>"></script>
     <script>
-        // Inline test function to verify button works
-        function showCloneModal() {
-            console.log('showCloneModal called!');
-            const modal = document.getElementById('cloneFeedModal');
-            console.log('Modal element:', modal);
-            if (modal) {
-                modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            } else {
-                console.error('Modal not found!');
-            }
-        }
-        
-        // Debug: Check if function loaded
-        console.log('showCloneModal defined:', typeof showCloneModal);
-        
         // Auto-hide flash message
         setTimeout(() => {
             const flash = document.getElementById('flashMessage');
