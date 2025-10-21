@@ -49,8 +49,8 @@ define('BACKUP_DIR', DATA_DIR . '/backup');
 define('MAX_FILE_SIZE', 2 * 1024 * 1024); // 2MB
 define('MIN_IMAGE_WIDTH', 1400);
 define('MIN_IMAGE_HEIGHT', 1400);
-define('MAX_IMAGE_WIDTH', 2400);
-define('MAX_IMAGE_HEIGHT', 2400);
+define('MAX_IMAGE_WIDTH', 3000);
+define('MAX_IMAGE_HEIGHT', 3000);
 define('ALLOWED_EXTENSIONS', ['jpg', 'jpeg', 'png', 'gif']);
 define('ALLOWED_MIME_TYPES', ['image/jpeg', 'image/png', 'image/gif']);
 
@@ -62,7 +62,7 @@ define('ALLOWED_AUDIO_MIME_TYPES', ['audio/mpeg', 'audio/mp3']);
 // Error Messages
 define('ERROR_MESSAGES', [
     'image_too_small' => 'Image too small. Minimum size required: 1400x1400 pixels',
-    'image_too_large' => 'Image too large. Maximum size allowed: 2400x2400 pixels',
+    'image_too_large' => 'Image too large. Maximum size allowed: 3000x3000 pixels',
     'invalid_format' => 'Please upload a JPG, PNG, or GIF image',
     'file_too_large' => 'File size too large. Maximum 2MB allowed',
     'upload_failed' => 'Failed to upload image. Please try again.',

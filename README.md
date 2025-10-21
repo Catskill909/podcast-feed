@@ -481,7 +481,7 @@ Access the admin panel by clicking "Admin" in the header or visiting `/admin.php
 1. Click **"Add New Podcast"** button
 2. Enter podcast title (3-200 characters)
 3. Enter RSS feed URL (must be valid HTTP/HTTPS URL)
-4. Upload cover image (1400x1400 to 2400x2400 pixels, max 2MB)
+4. Upload cover image (1400x1400 to 3000x3000 pixels, max 2MB)
 5. Click **"Add Podcast"** to save
 
 ### **Health Check** 🏥 NEW
@@ -622,8 +622,8 @@ Modify in `config/config.php`:
 ```php
 define('MIN_IMAGE_WIDTH', 1400);
 define('MIN_IMAGE_HEIGHT', 1400);
-define('MAX_IMAGE_WIDTH', 2400);
-define('MAX_IMAGE_HEIGHT', 2400);
+define('MAX_IMAGE_WIDTH', 3000);
+define('MAX_IMAGE_HEIGHT', 3000);
 define('MAX_FILE_SIZE', 2 * 1024 * 1024); // 2MB
 ```
 
@@ -704,7 +704,7 @@ chmod 755 data/ uploads/ logs/
 ```
 Check: File size, dimensions, and MIME type
 Max size: 2MB
-Dimensions: 1400x1400 to 2400x2400 pixels
+Dimensions: 1400x1400 to 3000x3000 pixels
 Formats: JPG, PNG, GIF
 ```
 

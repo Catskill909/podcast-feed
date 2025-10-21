@@ -454,7 +454,7 @@ if (isset($_GET['edit'])) {
                             </label>
                         </div>
                         <div class="invalid-feedback"></div>
-                        <small class="form-text">1400-2400px square, max 2MB (JPG/PNG/GIF)</small>
+                        <small class="form-text">1400-3000px square, max 2MB (JPG/PNG/GIF)</small>
                         <div class="file-input-preview" id="imagePreview" style="display: none; margin-top: var(--spacing-sm);">
                             <img id="previewImage" style="max-width: 80px; max-height: 80px; border-radius: var(--border-radius);" alt="Cover preview">
                             <div id="imageInfo" style="font-size: var(--font-size-xs); color: var(--text-muted);"></div>
@@ -1292,7 +1292,7 @@ if (isset($_GET['edit'])) {
                             <strong>Dimensions:</strong>
                             <ul>
                                 <li>Minimum: 1400×1400 pixels</li>
-                                <li>Maximum: 2400×2400 pixels</li>
+                                <li>Maximum: 3000×3000 pixels</li>
                                 <li>Must be square (1:1 aspect ratio)</li>
                             </ul>
                         </div>
@@ -1409,7 +1409,7 @@ if (isset($_GET['edit'])) {
                         <div style="margin: var(--spacing-md) 0;">
                             <strong>Image Not Showing:</strong>
                             <ul>
-                                <li>Verify image meets size requirements (1400-2400px)</li>
+                                <li>Verify image meets size requirements (1400-3000px)</li>
                                 <li>Check file format (JPG, PNG, GIF, WebP only)</li>
                                 <li>Ensure file size is under 2MB</li>
                                 <li>Try re-uploading or re-importing</li>

@@ -23,15 +23,15 @@ class PodcastValidator {
                 allowedTypes: ['image/jpeg', 'image/png', 'image/gif'],
                 minWidth: 1400,
                 minHeight: 1400,
-                maxWidth: 2400,
-                maxHeight: 2400,
-                message: 'Image must be between 1400x1400 and 2400x2400 pixels, max 2MB'
+                maxWidth: 3000,
+                maxHeight: 3000,
+                message: 'Image must be between 1400x1400 and 3000x3000 pixels, max 2MB'
             }
         };
 
         this.errorMessages = {
             image_too_small: 'Image too small. Minimum size required: 1400x1400 pixels',
-            image_too_large: 'Image too large. Maximum size allowed: 2400x2400 pixels',
+            image_too_large: 'Image too large. Maximum size allowed: 3000x3000 pixels',
             invalid_format: 'Please upload a JPG, PNG, or GIF image',
             file_too_large: 'File size too large. Maximum 2MB allowed',
             invalid_url: 'Please enter a valid RSS feed URL',
