@@ -522,14 +522,24 @@ class SelfHostedPodcastManager
                 return ['valid' => false, 'message' => 'Audio file or URL is required'];
             }
 
-            // Validate URL format only if URL is provided
-            if (!filter_var($data['audio_url'], FILTER_VALIDATE_URL)) {
-                return ['valid' => false, 'message' => 'Invalid audio URL format'];
-            }
+            // Skip validation if this is already a local uploaded file (from cloning)
+            $isLocalFile = (strpos($data['audio_url'], UPLOADS_URL) === 0 || 
+                           strpos($data['audio_url'], '/uploads/audio/') !== false);
+            
+            error_log("[MANAGER] Validating audio URL: {$data['audio_url']}");
+            error_log("[MANAGER] UPLOADS_URL: " . UPLOADS_URL);
+            error_log("[MANAGER] Is local file: " . ($isLocalFile ? 'YES' : 'NO'));
+            
+            if (!$isLocalFile) {
+                // Validate URL format only if URL is provided and not local
+                if (!filter_var($data['audio_url'], FILTER_VALIDATE_URL)) {
+                    return ['valid' => false, 'message' => 'Invalid audio URL format'];
+                }
 
-            // Check if URL ends with .mp3
-            if (!preg_match('/\.mp3$/i', $data['audio_url'])) {
-                return ['valid' => false, 'message' => 'Audio URL must point to an MP3 file'];
+                // Check if URL ends with .mp3 or .m4a
+                if (!preg_match('/\.(mp3|m4a)$/i', $data['audio_url'])) {
+                    return ['valid' => false, 'message' => 'Audio URL must point to an MP3 or M4A file'];
+                }
             }
         }
         // If audio file WAS uploaded, we don't care about the URL field at all

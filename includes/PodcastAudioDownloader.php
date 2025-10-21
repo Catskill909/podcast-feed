@@ -59,9 +59,14 @@ class PodcastAudioDownloader
             }
 
             // Create file array that looks like $_FILES
+            // Detect file extension from URL
+            $urlPath = parse_url($url, PHP_URL_PATH);
+            $extension = pathinfo($urlPath, PATHINFO_EXTENSION);
+            $defaultName = 'audio.' . (in_array(strtolower($extension), ['mp3', 'm4a']) ? strtolower($extension) : 'mp3');
+            
             $fileArray = [
                 'tmp_name' => $tempFile,
-                'name' => basename(parse_url($url, PHP_URL_PATH)) ?: 'audio.mp3',
+                'name' => basename($urlPath) ?: $defaultName,
                 'type' => 'audio/mpeg',
                 'size' => filesize($tempFile),
                 'error' => UPLOAD_ERR_OK
@@ -167,11 +172,11 @@ class PodcastAudioDownloader
             ];
         }
 
-        // Check if URL ends with .mp3
-        if (!preg_match('/\.mp3$/i', parse_url($url, PHP_URL_PATH))) {
+        // Check if URL ends with .mp3 or .m4a
+        if (!preg_match('/\.(mp3|m4a)$/i', parse_url($url, PHP_URL_PATH))) {
             return [
                 'valid' => false,
-                'message' => 'URL must point to an MP3 file'
+                'message' => 'URL must point to an MP3 or M4A file'
             ];
         }
 

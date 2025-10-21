@@ -77,7 +77,7 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
     <website_url>https://archive.kpft.org</website_url>
     <cover_image>shp_1760994399_68f6a45f5cce0.jpg</cover_image>
     <category>Community Access</category>
-    <subcategory></subcategory>
+    <subcategory/>
     <language>en-us</language>
     <explicit>no</explicit>
     <copyright><![CDATA[]]></copyright>
@@ -104,7 +104,7 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <season_number>1</season_number>
         <episode_type>full</episode_type>
         <explicit>no</explicit>
-        <episode_image></episode_image>
+        <episode_image/>
         <guid>ep_1760994401_68f6a46142c34</guid>
         <status>published</status>
         <created_date>2025-10-20 21:06:41</created_date>
@@ -122,7 +122,7 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <season_number>1</season_number>
         <episode_type>full</episode_type>
         <explicit>no</explicit>
-        <episode_image></episode_image>
+        <episode_image/>
         <guid>ep_1760994403_68f6a463d069a</guid>
         <status>published</status>
         <created_date>2025-10-20 21:06:43</created_date>
@@ -140,7 +140,7 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <season_number>1</season_number>
         <episode_type>full</episode_type>
         <explicit>no</explicit>
-        <episode_image></episode_image>
+        <episode_image/>
         <guid>ep_1760994407_68f6a467000c5</guid>
         <status>published</status>
         <created_date>2025-10-20 21:06:47</created_date>
@@ -158,7 +158,7 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <season_number>1</season_number>
         <episode_type>full</episode_type>
         <explicit>no</explicit>
-        <episode_image></episode_image>
+        <episode_image/>
         <guid>ep_1760994410_68f6a46a29312</guid>
         <status>published</status>
         <created_date>2025-10-20 21:06:50</created_date>
@@ -176,11 +176,253 @@ OSS plays: CLUB CLASSICS, RAREFUNK, REGGAE, ROCK STEADY, SKA, DUB, VERSION, R&B,
         <season_number>1</season_number>
         <episode_type>full</episode_type>
         <explicit>no</explicit>
-        <episode_image></episode_image>
+        <episode_image/>
         <guid>ep_1760994413_68f6a46d4c06a</guid>
         <status>published</status>
         <created_date>2025-10-20 21:06:53</created_date>
         <updated_date>2025-10-20 21:06:53</updated_date>
+      </episode>
+    </episodes>
+  </podcast>
+  <podcast>
+    <id>shp_1761019787_68f7078b1ae6b</id>
+    <title><![CDATA[A Third of Your Life]]></title>
+    <description><![CDATA[You spend a third of your life at work. We’re all about making it better. The Rutgers School of Management and Labor Relations explores the tech, trends, and controversies that are reshaping the American workplace. Hosted by Steve Flamisch.]]></description>
+    <author><![CDATA[Rutgers School of Management and Labor Relations]]></author>
+    <email>podcast@localhost.local</email>
+    <website_url>https://smlr.rutgers.edu/</website_url>
+    <cover_image>shp_1761019787_68f7078b1ae6b.jpg</cover_image>
+    <category>Business</category>
+    <subcategory></subcategory>
+    <language>en</language>
+    <explicit>false</explicit>
+    <copyright><![CDATA[]]></copyright>
+    <podcast_type>episodic</podcast_type>
+    <owner_name><![CDATA[Rutgers School of Management and Labor Relations]]></owner_name>
+    <owner_email>podcast@localhost.local</owner_email>
+    <subtitle><![CDATA[]]></subtitle>
+    <keywords><![CDATA[]]></keywords>
+    <complete>no</complete>
+    <created_date>2025-10-21 04:09:47</created_date>
+    <updated_date>2025-10-21 04:10:06</updated_date>
+    <status>active</status>
+    <is_cloned>yes</is_cloned>
+    <episodes>
+      <episode>
+        <id>ep_1761019788_68f7078ce6ff4</id>
+        <title><![CDATA[A Ray of Sunshine and Hope]]></title>
+        <description><![CDATA[New Jersey recently became the 11th state to enact labor protections for housecleaners, nannies, and other domestic workers. New Labor organizer and SMLR alumna Jenifer Garcia takes you inside the long campaign that made it happen. Naomi R Williams, assistant professor in the Rutgers School of Management and Labor Relations, leads the discussion.]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019787_68f7078b34e50.m4a</audio_url>
+        <duration>0</duration>
+        <file_size>45240053</file_size>
+        <pub_date>Wed, 27 Mar 2024 12:47:41 GMT</pub_date>
+        <episode_number>1</episode_number>
+        <season_number>1</season_number>
+        <episode_type>full</episode_type>
+        <explicit>false</explicit>
+        <episode_image>ep_1761019788_68f7078ce6ff4.jpg</episode_image>
+        <guid>ep_1761019788_68f7078ce6ff4</guid>
+        <status>published</status>
+        <created_date>2025-10-21 04:09:48</created_date>
+        <updated_date>2025-10-21 04:09:48</updated_date>
+      </episode>
+      <episode>
+        <id>ep_1761019790_68f7078e9b956</id>
+        <title><![CDATA[Quakertown: A Juneteenth Labor and Migration Story, Part 2]]></title>
+        <description><![CDATA[A devastating fire at the Frederick Douglass School in 1913 signals the growing racism that will soon threaten the entire community of Quakertown, Texas. Danielle Phillips-Cunningham, associate professor in the Rutgers School of Management and Labor Relations, talks to Alma Clark and Dianne Randolph about the town’s legacy and their work to memorialize it.]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019789_68f7078d0cc5b.m4a</audio_url>
+        <duration>0</duration>
+        <file_size>42320267</file_size>
+        <pub_date>Wed, 28 Feb 2024 10:00:00 GMT</pub_date>
+        <episode_number>2</episode_number>
+        <season_number>1</season_number>
+        <episode_type>full</episode_type>
+        <explicit>false</explicit>
+        <episode_image>ep_1761019790_68f7078e9b956.jpg</episode_image>
+        <guid>ep_1761019790_68f7078e9b956</guid>
+        <status>published</status>
+        <created_date>2025-10-21 04:09:50</created_date>
+        <updated_date>2025-10-21 04:09:50</updated_date>
+      </episode>
+      <episode>
+        <id>ep_1761019792_68f7079048b27</id>
+        <title><![CDATA[Quakertown: A Juneteenth Labor and Migration Story, Part 1]]></title>
+        <description><![CDATA[Formerly enslaved Black Americans established their own community in Denton, Texas in the late 1800s. It grew into a socially vibrant, economically prosperous town. Danielle Phillips-Cunningham, associate professor in the Rutgers School of Management and Labor Relations, talks to Alma Clark and Dianne Randolph, who are working to preserve the town’s history.]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019790_68f7078eb539d.m4a</audio_url>
+        <duration>0</duration>
+        <file_size>38900853</file_size>
+        <pub_date>Tue, 27 Feb 2024 10:00:00 GMT</pub_date>
+        <episode_number>3</episode_number>
+        <season_number>1</season_number>
+        <episode_type>full</episode_type>
+        <explicit>false</explicit>
+        <episode_image>ep_1761019792_68f7079048b27.jpg</episode_image>
+        <guid>ep_1761019792_68f7079048b27</guid>
+        <status>published</status>
+        <created_date>2025-10-21 04:09:52</created_date>
+        <updated_date>2025-10-21 04:09:52</updated_date>
+      </episode>
+      <episode>
+        <id>ep_1761019794_68f70792123ae</id>
+        <title><![CDATA[No Degree, No Problem?]]></title>
+        <description><![CDATA[Can you really get the job you want without a college degree? Michelle Van Noy, director of the Education and Employment Research Center in the Rutgers School of Management and Labor Relations, talks to Clayton Lord (SHRM Foundation) and Jason Tyszko (U.S. Chamber of Commerce Foundation) about non-degree credentials and skills-based hiring.]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019792_68f7079062aff.m4a</audio_url>
+        <duration>0</duration>
+        <file_size>42490409</file_size>
+        <pub_date>Wed, 31 Jan 2024 10:00:00 GMT</pub_date>
+        <episode_number>4</episode_number>
+        <season_number>1</season_number>
+        <episode_type>full</episode_type>
+        <explicit>false</explicit>
+        <episode_image>ep_1761019794_68f70792123ae.jpg</episode_image>
+        <guid>ep_1761019794_68f70792123ae</guid>
+        <status>published</status>
+        <created_date>2025-10-21 04:09:54</created_date>
+        <updated_date>2025-10-21 04:09:54</updated_date>
+      </episode>
+      <episode>
+        <id>ep_1761019795_68f70793b1de0</id>
+        <title><![CDATA[The Writers Strike]]></title>
+        <description><![CDATA[Writers Guild of America, East President Lisa Takeuchi Cullen, a 1992 Rutgers alumna, takes you behind the scenes of the strike that shut down film and television productions and led to a historic new contract. Susan Schurman, Distinguished Professor in the Rutgers School of Management and Labor Relations, leads the discussion.]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019794_68f707922c5f0.m4a</audio_url>
+        <duration>0</duration>
+        <file_size>41241824</file_size>
+        <pub_date>Thu, 19 Oct 2023 09:00:00 GMT</pub_date>
+        <episode_number>5</episode_number>
+        <season_number>1</season_number>
+        <episode_type>full</episode_type>
+        <explicit>true</explicit>
+        <episode_image>ep_1761019795_68f70793b1de0.jpg</episode_image>
+        <guid>ep_1761019795_68f70793b1de0</guid>
+        <status>published</status>
+        <created_date>2025-10-21 04:09:55</created_date>
+        <updated_date>2025-10-21 04:09:55</updated_date>
+      </episode>
+      <episode>
+        <id>ep_1761019797_68f70795585bd</id>
+        <title><![CDATA[A Just Transition]]></title>
+        <description><![CDATA[How do we stop climate change without hurting the workers and communities who rely on fossil fuel jobs? Todd Vachon, assistant professor in the Rutgers School of Management and Labor Relations, shows the way in his book, “Clean Air and Good Jobs.” Les Leopold, J. Mijin Cha, and Dimitris Stevis join the discussion.]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019795_68f70793cb3c8.m4a</audio_url>
+        <duration>0</duration>
+        <file_size>39695056</file_size>
+        <pub_date>Fri, 07 Jul 2023 11:00:00 GMT</pub_date>
+        <episode_number>6</episode_number>
+        <season_number>1</season_number>
+        <episode_type>full</episode_type>
+        <explicit>false</explicit>
+        <episode_image>ep_1761019797_68f70795585bd.jpg</episode_image>
+        <guid>ep_1761019797_68f70795585bd</guid>
+        <status>published</status>
+        <created_date>2025-10-21 04:09:57</created_date>
+        <updated_date>2025-10-21 04:09:57</updated_date>
+      </episode>
+      <episode>
+        <id>ep_1761019798_68f70796a8a8b</id>
+        <title><![CDATA[All Work and Low Pay]]></title>
+        <description><![CDATA[A new report by the Rutgers Center for Women and Work reveals many of New Jersey’s Latina immigrants are struggling with low wages, non-existent benefits, no childcare, and no time off. Lead author Glenda Gracia-Rivera shares gripping stories and reveals how the Hispanic Women’s Resource Centers are helping.]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019797_68f70795713fd.m4a</audio_url>
+        <duration>0</duration>
+        <file_size>22524713</file_size>
+        <pub_date>Wed, 29 Mar 2023 09:00:48 GMT</pub_date>
+        <episode_number>7</episode_number>
+        <season_number>1</season_number>
+        <episode_type>full</episode_type>
+        <explicit>false</explicit>
+        <episode_image>ep_1761019798_68f70796a8a8b.jpg</episode_image>
+        <guid>ep_1761019798_68f70796a8a8b</guid>
+        <status>published</status>
+        <created_date>2025-10-21 04:09:58</created_date>
+        <updated_date>2025-10-21 04:09:58</updated_date>
+      </episode>
+      <episode>
+        <id>ep_1761019800_68f70798a5f27</id>
+        <title><![CDATA[A Tower of Strength]]></title>
+        <description><![CDATA[Nannie Helen Burroughs was a visionary Black educator, labor leader, and suffragist who founded the National Training School for Women and Girls in 1909. Danielle Phillips-Cunningham, associate professor in the Rutgers School of Management and Labor Relations, wants to make her a household name.]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019798_68f70796c1cd1.m4a</audio_url>
+        <duration>0</duration>
+        <file_size>58222710</file_size>
+        <pub_date>Wed, 22 Feb 2023 05:01:16 GMT</pub_date>
+        <episode_number>8</episode_number>
+        <season_number>1</season_number>
+        <episode_type>full</episode_type>
+        <explicit>false</explicit>
+        <episode_image>ep_1761019800_68f70798a5f27.jpg</episode_image>
+        <guid>ep_1761019800_68f70798a5f27</guid>
+        <status>published</status>
+        <created_date>2025-10-21 04:10:00</created_date>
+        <updated_date>2025-10-21 04:10:00</updated_date>
+      </episode>
+      <episode>
+        <id>ep_1761019802_68f7079a9646b</id>
+        <title><![CDATA[I Am a Man]]></title>
+        <description><![CDATA[William Lucy co-created the iconic slogan that rallied Black workers during the Memphis sanitation strike of 1968, and he became a leading figure in the civil rights movement and the labor movement. Francis Ryan, a labor historian in the Rutgers School of Management and Labor Relations, talks to Lucy about his career.]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019800_68f70798bf1fe.m4a</audio_url>
+        <duration>0</duration>
+        <file_size>51430119</file_size>
+        <pub_date>Wed, 25 Jan 2023 13:00:34 GMT</pub_date>
+        <episode_number>9</episode_number>
+        <season_number>1</season_number>
+        <episode_type>full</episode_type>
+        <explicit>false</explicit>
+        <episode_image>ep_1761019802_68f7079a9646b.jpg</episode_image>
+        <guid>ep_1761019802_68f7079a9646b</guid>
+        <status>published</status>
+        <created_date>2025-10-21 04:10:02</created_date>
+        <updated_date>2025-10-21 04:10:02</updated_date>
+      </episode>
+      <episode>
+        <id>ep_1761019804_68f7079c28d33</id>
+        <title><![CDATA[Workplace Relationships]]></title>
+        <description><![CDATA[Our co-workers can make or break how we feel and what we accomplish on the job. Friends, enemies, two-faced frenemies, even small talk can affect us in surprising ways. Jessica Methot, associate professor in the Rutgers School of Management and Labor Relations, untangles the complex web of workplace relationships.]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019802_68f7079aaf2b2.m4a</audio_url>
+        <duration>0</duration>
+        <file_size>34455136</file_size>
+        <pub_date>Tue, 27 Dec 2022 21:46:07 GMT</pub_date>
+        <episode_number>10</episode_number>
+        <season_number>1</season_number>
+        <episode_type>full</episode_type>
+        <explicit>false</explicit>
+        <episode_image>ep_1761019804_68f7079c28d33.jpg</episode_image>
+        <guid>ep_1761019804_68f7079c28d33</guid>
+        <status>published</status>
+        <created_date>2025-10-21 04:10:04</created_date>
+        <updated_date>2025-10-21 04:10:04</updated_date>
+      </episode>
+      <episode>
+        <id>ep_1761019805_68f7079d85ed4</id>
+        <title><![CDATA[Big Brother at Work]]></title>
+        <description><![CDATA[Do you have that odd feeling of being watched? The latest employee monitoring software tracks emails, keystrokes, and mouse clicks. It can even take webcam photos to see if you’re working. Michael Sturman, professor in the Rutgers School of Management and Labor Relations, discusses why more bosses are using it.]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019804_68f7079c41d58.m4a</audio_url>
+        <duration>0</duration>
+        <file_size>22480293</file_size>
+        <pub_date>Mon, 21 Nov 2022 10:00:19 GMT</pub_date>
+        <episode_number>11</episode_number>
+        <season_number>1</season_number>
+        <episode_type>full</episode_type>
+        <explicit>false</explicit>
+        <episode_image>ep_1761019805_68f7079d85ed4.jpg</episode_image>
+        <guid>ep_1761019805_68f7079d85ed4</guid>
+        <status>published</status>
+        <created_date>2025-10-21 04:10:05</created_date>
+        <updated_date>2025-10-21 04:10:05</updated_date>
+      </episode>
+      <episode>
+        <id>ep_1761019806_68f7079ebbfcc</id>
+        <title><![CDATA[Why Unions are Cool Again]]></title>
+        <description><![CDATA[Workers delivered historic union victories at Amazon, Apple, Chipotle, Starbucks, and Trader Joe’s. What’s next? Walmart? Another Striketober? And how will the midterms change things? Rebecca Kolins Givan, associate professor in the Rutgers School of Management and Labor Relations, analyzes the resurgent labor movement.]]></description>
+        <audio_url>http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019805_68f7079d9f048.m4a</audio_url>
+        <duration>0</duration>
+        <file_size>17767548</file_size>
+        <pub_date>Fri, 07 Oct 2022 00:30:00 GMT</pub_date>
+        <episode_number>12</episode_number>
+        <season_number>1</season_number>
+        <episode_type>full</episode_type>
+        <explicit>false</explicit>
+        <episode_image>ep_1761019806_68f7079ebbfcc.jpg</episode_image>
+        <guid>ep_1761019806_68f7079ebbfcc</guid>
+        <status>published</status>
+        <created_date>2025-10-21 04:10:06</created_date>
+        <updated_date>2025-10-21 04:10:06</updated_date>
       </episode>
     </episodes>
   </podcast>

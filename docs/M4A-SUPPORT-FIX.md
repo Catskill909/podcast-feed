@@ -106,8 +106,18 @@ To test the fix:
 ## Related Files
 
 - `includes/AudioUploader.php` - Main audio upload handler (MODIFIED)
-- `includes/PodcastAudioDownloader.php` - Downloads audio from URLs (unchanged)
+- `includes/PodcastAudioDownloader.php` - Downloads audio from URLs (MODIFIED)
+- `includes/SelfHostedPodcastManager.php` - Episode validation (MODIFIED)
 - `includes/PodcastFeedCloner.php` - Orchestrates cloning (unchanged)
+
+## Additional Fix (Oct 21, 2025)
+
+After initial deployment, discovered two additional validation checks that were blocking M4A files:
+
+1. **`SelfHostedPodcastManager.php` Line 531** - Episode data validation was checking for `.mp3` extension only
+2. **`PodcastAudioDownloader.php` Line 171** - Remote file validation was checking for `.mp3` extension only
+
+Both have been updated to accept `.(mp3|m4a)` pattern.
 
 ## Future Enhancements
 

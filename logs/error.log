@@ -22,3 +22,15 @@
 [2025-10-20 17:27:40] ERROR in CREATE_SELF_HOSTED_ERROR: Failed to upload image. Please try again.
 [2025-10-20 17:29:47] ERROR in CREATE_SELF_HOSTED_ERROR: Failed to upload image. Please try again.
 [2025-10-20 17:42:58] ERROR in CREATE_SELF_HOSTED_ERROR: Invalid email format
+[2025-10-21 03:49:22] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
+[2025-10-21 03:49:24] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
+[2025-10-21 03:49:26] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
+[2025-10-21 03:49:28] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
+[2025-10-21 03:49:29] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
+[2025-10-21 03:49:31] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
+[2025-10-21 03:49:32] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
+[2025-10-21 03:49:34] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
+[2025-10-21 03:49:36] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
+[2025-10-21 03:49:38] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
+[2025-10-21 03:49:39] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
+[2025-10-21 03:49:40] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
