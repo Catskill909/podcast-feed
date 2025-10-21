@@ -1667,6 +1667,7 @@ if (isset($_GET['edit'])) {
     </div>
 
     <!-- JavaScript -->
+    <script src="assets/js/auto-refresh.js"></script>
     <script src="assets/js/validation.js?v=<?php echo ASSETS_VERSION; ?>"></script>
     <script src="assets/js/app.js?v=<?php echo ASSETS_VERSION; ?>"></script>
     <script src="assets/js/sort-manager.js?v=<?php echo ASSETS_VERSION; ?>"></script>

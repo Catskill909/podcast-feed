@@ -34,3 +34,4 @@
 [2025-10-21 03:49:38] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
 [2025-10-21 03:49:39] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
 [2025-10-21 03:49:40] ERROR in ADD_EPISODE_ERROR: Audio URL must point to an MP3 file
+[2025-10-21 15:44:37] ERROR in METADATA_UPDATE_ERROR: Podcast not found

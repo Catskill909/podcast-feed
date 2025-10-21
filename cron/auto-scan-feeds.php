@@ -63,6 +63,19 @@ try {
         $podcastNum = $index + 1;
         log_message("[$podcastNum/{$stats['total']}] Processing: {$podcast['title']}");
         
+        // Skip self-hosted feeds (localhost URLs) - they don't need auto-scanning
+        // Self-hosted feeds are managed directly and localhost URLs fail in cron context
+        if (preg_match('/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i', $podcast['feed_url'])) {
+            $stats['skipped']++;
+            log_message("  → Skipped (self-hosted feed)");
+            
+            // Delay between feeds
+            if ($podcastNum < $stats['total']) {
+                sleep($config['delay_between_feeds']);
+            }
+            continue;
+        }
+        
         try {
             // Fetch feed metadata with timing
             $startTime = microtime(true);

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.podcastfeed.autoscan</string>
+    
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/php</string>
+        <string>/Users/paulhenshaw/Desktop/podcast-feed/cron/auto-scan-feeds.php</string>
+    </array>
+    
+    <key>WorkingDirectory</key>
+    <string>/Users/paulhenshaw/Desktop/podcast-feed</string>
+    
+    <key>StartInterval</key>
+    <integer>1800</integer>
+    
+    <key>StandardOutPath</key>
+    <string>/Users/paulhenshaw/Desktop/podcast-feed/logs/auto-scan.log</string>
+    
+    <key>StandardErrorPath</key>
+    <string>/Users/paulhenshaw/Desktop/podcast-feed/logs/auto-scan-error.log</string>
+    
+    <key>RunAtLoad</key>
+    <true/>
+    
+    <key>KeepAlive</key>
+    <false/>
+</dict>
+</plist>

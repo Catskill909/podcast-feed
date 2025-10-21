@@ -250,6 +250,7 @@ $stats = $podcastManager->getStats();
     </div>
 
     <!-- Scripts -->
+    <script src="assets/js/auto-refresh.js"></script>
     <script src="assets/js/browse.js?v=3.0.2"></script>
     <script src="assets/js/player-modal.js?v=3.0.1"></script>
     <script src="assets/js/audio-player.js?v=3.0.5"></script>

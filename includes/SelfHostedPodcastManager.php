@@ -267,6 +267,61 @@ class SelfHostedPodcastManager
     }
 
     /**
+     * Update podcast's latest episode date based on its episodes
+     * Called after adding/updating/deleting episodes
+     */
+    private function updateLatestEpisodeDate($podcastId)
+    {
+        try {
+            $episodes = $this->xmlHandler->getEpisodes($podcastId);
+            
+            if (empty($episodes)) {
+                // No episodes, clear the date
+                $this->xmlHandler->updatePodcast($podcastId, [
+                    'latest_episode_date' => '',
+                    'episode_count' => '0'
+                ]);
+                return;
+            }
+            
+            // Filter published episodes only
+            $publishedEpisodes = array_filter($episodes, function($ep) {
+                return ($ep['status'] ?? 'published') === 'published';
+            });
+            
+            if (empty($publishedEpisodes)) {
+                // No published episodes
+                $this->xmlHandler->updatePodcast($podcastId, [
+                    'latest_episode_date' => '',
+                    'episode_count' => count($episodes)
+                ]);
+                return;
+            }
+            
+            // Find latest episode date
+            $latestDate = '';
+            $latestTimestamp = 0;
+            
+            foreach ($publishedEpisodes as $episode) {
+                $timestamp = strtotime($episode['pub_date']);
+                if ($timestamp > $latestTimestamp) {
+                    $latestTimestamp = $timestamp;
+                    $latestDate = $episode['pub_date'];
+                }
+            }
+            
+            // Update podcast metadata
+            $this->xmlHandler->updatePodcast($podcastId, [
+                'latest_episode_date' => $latestDate,
+                'episode_count' => count($publishedEpisodes)
+            ]);
+            
+        } catch (Exception $e) {
+            error_log("Error updating latest episode date: " . $e->getMessage());
+        }
+    }
+
+    /**
      * Add episode to podcast
      */
     public function addEpisode($podcastId, $episodeData, $imageFile = null, $audioFile = null)
@@ -320,6 +375,9 @@ class SelfHostedPodcastManager
                 $newFilename = $this->renameImageFile($episodeData['episode_image'], $episodeId);
                 $this->xmlHandler->updateEpisode($podcastId, $episodeId, ['episode_image' => $newFilename]);
             }
+
+            // Update podcast's latest episode date
+            $this->updateLatestEpisodeDate($podcastId);
 
             $this->logOperation('ADD_EPISODE', $episodeId, $episodeData['title']);
 
@@ -402,6 +460,9 @@ class SelfHostedPodcastManager
             // Update episode
             $this->xmlHandler->updateEpisode($podcastId, $episodeId, $episodeData);
 
+            // Update podcast's latest episode date (in case pub_date changed)
+            $this->updateLatestEpisodeDate($podcastId);
+
             $this->logOperation('UPDATE_EPISODE', $episodeId, $episodeData['title']);
 
             return [
@@ -450,6 +511,9 @@ class SelfHostedPodcastManager
 
             // Delete from XML
             $this->xmlHandler->deleteEpisode($podcastId, $episodeId);
+
+            // Update podcast's latest episode date
+            $this->updateLatestEpisodeDate($podcastId);
 
             $this->logOperation('DELETE_EPISODE', $episodeId, $episode['title']);
 
