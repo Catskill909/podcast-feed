@@ -40,6 +40,9 @@ usort($publishedEpisodes, function($a, $b) {
     return strtotime($b['pub_date']) - strtotime($a['pub_date']);
 });
 
+// Get latest episode date for channel pubDate
+$latestEpisodeDate = !empty($publishedEpisodes) ? $publishedEpisodes[0]['pub_date'] : $podcast['created_date'];
+
 // Generate RSS feed
 header('Content-Type: application/rss+xml; charset=UTF-8');
 
@@ -82,7 +85,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
         <copyright><?php echo htmlspecialchars($podcast['copyright'], ENT_XML1); ?></copyright>
         <?php endif; ?>
         <lastBuildDate><?php echo formatRFC2822($podcast['updated_date']); ?></lastBuildDate>
-        <pubDate><?php echo formatRFC2822($podcast['created_date']); ?></pubDate>
+        <pubDate><?php echo formatRFC2822($latestEpisodeDate); ?></pubDate>
         <atom:link href="<?php echo htmlspecialchars(APP_URL . '/self-hosted-feed.php?id=' . $podcastId, ENT_XML1); ?>" rel="self" type="application/rss+xml"/>
         
         <!-- iTunes Tags -->

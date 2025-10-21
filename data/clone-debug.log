@@ -1483,3 +1483,329 @@
 [21-Oct-2025 04:10:06 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761019787_68f7078b1ae6b/ep_1761019805_68f7079d9f048.m4a
 [21-Oct-2025 04:10:06 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
 [21-Oct-2025 04:10:06 UTC] [MANAGER] Is local file: YES
+[21-Oct-2025 04:28:36 UTC] === CLONE API CALLED: 2025-10-21 04:28:36 ===
+[21-Oct-2025 04:28:36 UTC] [AudioUploader] Initialized with support for: mp3, m4a
+[21-Oct-2025 04:28:36 UTC] [AudioUploader] Initialized with support for: mp3, m4a
+[21-Oct-2025 04:28:39 UTC] === CLONE API CALLED: 2025-10-21 04:28:39 ===
+[21-Oct-2025 04:28:39 UTC] [AudioUploader] Initialized with support for: mp3, m4a
+[21-Oct-2025 04:28:39 UTC] [AudioUploader] Initialized with support for: mp3, m4a
+[21-Oct-2025 04:28:41 UTC] Attempting to download cover image from: https://d3t3ozftmdmh3i.cloudfront.net/production/podcast_uploaded_nologo/14613055/14613055-1665098006393-0e2880bc596bd.jpg
+[21-Oct-2025 04:28:41 UTC] Cover image downloaded successfully: /private/var/folders/3y/pr52cshn3plfpbdt9q0gmldr0000gn/T/podcast_image_luh0lks1puljb4ZboxW
+[21-Oct-2025 04:28:41 UTC] Creating podcast with data: {"title":"A Third of Your Life","description":"You spend a third of your life at work. We\u2019re all about making it better. The Rutgers School of Management and Labor Relations explores the tech, trends, and controversies that are reshaping the American workplace. Hosted by Steve Flamisch.","author":"Rutgers School of Management and Labor Relations","email":"podcast@localhost.local","website_url":"https:\/\/smlr.rutgers.edu\/","category":"Business","language":"en","explicit":"false","podcast_type":"episodic","is_cloned":"yes"}
+[21-Oct-2025 04:28:41 UTC] Create podcast result: {"success":true,"id":"shp_1761020921_68f70bf95e244","message":"Self-hosted podcast created successfully"}
+[21-Oct-2025 04:28:41 UTC] === CLONE EPISODES DEBUG ===
+[21-Oct-2025 04:28:41 UTC] Total episodes found in feed: 12
+[21-Oct-2025 04:28:41 UTC] Feed data keys: title, description, image_url, episode_count, latest_episode_date, category, feed_url, feed_type, episodes, author, email, link, language, explicit
+[21-Oct-2025 04:28:41 UTC] First episode data: {"title":"A Ray of Sunshine and Hope","description":"New Jersey recently became the 11th state to enact labor protections for housecleaners, nannies, and other domestic workers. New Labor organizer and SMLR alumna Jenifer Garcia takes you inside the long campaign that made it happen. Naomi R Williams, assistant professor in the Rutgers School of Management and Labor Relations, leads the discussion.","audio_url":"https:\/\/anchor.fm\/s\/57b2571c\/podcast\/play\/84613600\/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2024-2-27%2F372367946-44100-2-d811b5d157f44.m4a","pub_date":"Wed, 27 Mar 2024 12:47:41 GMT","image_url":"https:\/\/d3t3ozftmdmh3i.cloudfront.net\/production\/podcast_uploaded_nologo\/14613055\/14613055-1665098006393-0e2880bc596bd.jpg","duration":"00:46:37","explicit":"false"}
+[21-Oct-2025 04:28:41 UTC] Starting episode 1: A Ray of Sunshine and Hope
+[21-Oct-2025 04:28:41 UTC] Audio URL: https://anchor.fm/s/57b2571c/podcast/play/84613600/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2024-2-27%2F372367946-44100-2-d811b5d157f44.m4a
+[21-Oct-2025 04:28:43 UTC] [AudioUploader] Accepted file with MIME type: audio/x-m4a, extension: m4a
+[21-Oct-2025 04:28:43 UTC] [AudioUploader] Saving audio file: ep_1761020921_68f70bf978300.m4a (extension: m4a)
+[21-Oct-2025 04:28:43 UTC] [MANAGER] addEpisode called for podcast: shp_1761020921_68f70bf95e244
+[21-Oct-2025 04:28:43 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => A Ray of Sunshine and Hope
+    [description] => New Jersey recently became the 11th state to enact labor protections for housecleaners, nannies, and other domestic workers. New Labor organizer and SMLR alumna Jenifer Garcia takes you inside the long campaign that made it happen. Naomi R Williams, assistant professor in the Rutgers School of Management and Labor Relations, leads the discussion.
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020921_68f70bf978300.m4a
+    [duration] => 0
+    [file_size] => 45240053
+    [pub_date] => Wed, 27 Mar 2024 12:47:41 GMT
+    [status] => published
+    [episode_number] => 1
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => false
+)
+
+[21-Oct-2025 04:28:43 UTC] [MANAGER] Image file: YES
+[21-Oct-2025 04:28:43 UTC] [MANAGER] Audio file: NO
+[21-Oct-2025 04:28:43 UTC] [MANAGER] Generated temp episode ID: ep_1761020923_68f70bfb64d04
+[21-Oct-2025 04:28:43 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020921_68f70bf978300.m4a
+[21-Oct-2025 04:28:43 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
+[21-Oct-2025 04:28:43 UTC] [MANAGER] Is local file: YES
+[21-Oct-2025 04:28:43 UTC] Starting episode 2: Quakertown: A Juneteenth Labor and Migration Story, Part 2
+[21-Oct-2025 04:28:43 UTC] Audio URL: https://anchor.fm/s/57b2571c/podcast/play/83230327/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2024-1-26%2F368875720-44100-2-1d4dae1b131ca.m4a
+[21-Oct-2025 04:28:44 UTC] [AudioUploader] Accepted file with MIME type: audio/x-m4a, extension: m4a
+[21-Oct-2025 04:28:44 UTC] [AudioUploader] Saving audio file: ep_1761020923_68f70bfb80202.m4a (extension: m4a)
+[21-Oct-2025 04:28:45 UTC] [MANAGER] addEpisode called for podcast: shp_1761020921_68f70bf95e244
+[21-Oct-2025 04:28:45 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Quakertown: A Juneteenth Labor and Migration Story, Part 2
+    [description] => A devastating fire at the Frederick Douglass School in 1913 signals the growing racism that will soon threaten the entire community of Quakertown, Texas. Danielle Phillips-Cunningham, associate professor in the Rutgers School of Management and Labor Relations, talks to Alma Clark and Dianne Randolph about the town’s legacy and their work to memorialize it.
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020923_68f70bfb80202.m4a
+    [duration] => 0
+    [file_size] => 42320267
+    [pub_date] => Wed, 28 Feb 2024 10:00:00 GMT
+    [status] => published
+    [episode_number] => 2
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => false
+)
+
+[21-Oct-2025 04:28:45 UTC] [MANAGER] Image file: YES
+[21-Oct-2025 04:28:45 UTC] [MANAGER] Audio file: NO
+[21-Oct-2025 04:28:45 UTC] [MANAGER] Generated temp episode ID: ep_1761020925_68f70bfd2d464
+[21-Oct-2025 04:28:45 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020923_68f70bfb80202.m4a
+[21-Oct-2025 04:28:45 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
+[21-Oct-2025 04:28:45 UTC] [MANAGER] Is local file: YES
+[21-Oct-2025 04:28:45 UTC] Starting episode 3: Quakertown: A Juneteenth Labor and Migration Story, Part 1
+[21-Oct-2025 04:28:45 UTC] Audio URL: https://anchor.fm/s/57b2571c/podcast/play/83181420/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2024-1-25%2F368752597-44100-2-7dd52c4ec3c8f.m4a
+[21-Oct-2025 04:28:46 UTC] [AudioUploader] Accepted file with MIME type: audio/x-m4a, extension: m4a
+[21-Oct-2025 04:28:46 UTC] [AudioUploader] Saving audio file: ep_1761020925_68f70bfd477eb.m4a (extension: m4a)
+[21-Oct-2025 04:28:46 UTC] [MANAGER] addEpisode called for podcast: shp_1761020921_68f70bf95e244
+[21-Oct-2025 04:28:46 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Quakertown: A Juneteenth Labor and Migration Story, Part 1
+    [description] => Formerly enslaved Black Americans established their own community in Denton, Texas in the late 1800s. It grew into a socially vibrant, economically prosperous town. Danielle Phillips-Cunningham, associate professor in the Rutgers School of Management and Labor Relations, talks to Alma Clark and Dianne Randolph, who are working to preserve the town’s history.
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020925_68f70bfd477eb.m4a
+    [duration] => 0
+    [file_size] => 38900853
+    [pub_date] => Tue, 27 Feb 2024 10:00:00 GMT
+    [status] => published
+    [episode_number] => 3
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => false
+)
+
+[21-Oct-2025 04:28:46 UTC] [MANAGER] Image file: YES
+[21-Oct-2025 04:28:46 UTC] [MANAGER] Audio file: NO
+[21-Oct-2025 04:28:46 UTC] [MANAGER] Generated temp episode ID: ep_1761020926_68f70bfee4734
+[21-Oct-2025 04:28:46 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020925_68f70bfd477eb.m4a
+[21-Oct-2025 04:28:46 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
+[21-Oct-2025 04:28:46 UTC] [MANAGER] Is local file: YES
+[21-Oct-2025 04:28:47 UTC] Starting episode 4: No Degree, No Problem?
+[21-Oct-2025 04:28:47 UTC] Audio URL: https://anchor.fm/s/57b2571c/podcast/play/81880415/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2024-0-28%2F365217830-44100-2-3b7f3e907e6b5.m4a
+[21-Oct-2025 04:28:48 UTC] [AudioUploader] Accepted file with MIME type: audio/x-m4a, extension: m4a
+[21-Oct-2025 04:28:48 UTC] [AudioUploader] Saving audio file: ep_1761020927_68f70bff0a4e5.m4a (extension: m4a)
+[21-Oct-2025 04:28:48 UTC] [MANAGER] addEpisode called for podcast: shp_1761020921_68f70bf95e244
+[21-Oct-2025 04:28:48 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => No Degree, No Problem?
+    [description] => Can you really get the job you want without a college degree? Michelle Van Noy, director of the Education and Employment Research Center in the Rutgers School of Management and Labor Relations, talks to Clayton Lord (SHRM Foundation) and Jason Tyszko (U.S. Chamber of Commerce Foundation) about non-degree credentials and skills-based hiring.
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020927_68f70bff0a4e5.m4a
+    [duration] => 0
+    [file_size] => 42490409
+    [pub_date] => Wed, 31 Jan 2024 10:00:00 GMT
+    [status] => published
+    [episode_number] => 4
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => false
+)
+
+[21-Oct-2025 04:28:48 UTC] [MANAGER] Image file: YES
+[21-Oct-2025 04:28:48 UTC] [MANAGER] Audio file: NO
+[21-Oct-2025 04:28:48 UTC] [MANAGER] Generated temp episode ID: ep_1761020928_68f70c00a47b9
+[21-Oct-2025 04:28:48 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020927_68f70bff0a4e5.m4a
+[21-Oct-2025 04:28:48 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
+[21-Oct-2025 04:28:48 UTC] [MANAGER] Is local file: YES
+[21-Oct-2025 04:28:48 UTC] Starting episode 5: The Writers Strike
+[21-Oct-2025 04:28:48 UTC] Audio URL: https://anchor.fm/s/57b2571c/podcast/play/77408193/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2023-9-18%2F351738277-44100-2-b9b0ceaf62a7f.m4a
+[21-Oct-2025 04:28:50 UTC] [AudioUploader] Accepted file with MIME type: audio/x-m4a, extension: m4a
+[21-Oct-2025 04:28:50 UTC] [AudioUploader] Saving audio file: ep_1761020928_68f70c00bf4ed.m4a (extension: m4a)
+[21-Oct-2025 04:28:50 UTC] [MANAGER] addEpisode called for podcast: shp_1761020921_68f70bf95e244
+[21-Oct-2025 04:28:50 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => The Writers Strike
+    [description] => Writers Guild of America, East President Lisa Takeuchi Cullen, a 1992 Rutgers alumna, takes you behind the scenes of the strike that shut down film and television productions and led to a historic new contract. Susan Schurman, Distinguished Professor in the Rutgers School of Management and Labor Relations, leads the discussion.
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020928_68f70c00bf4ed.m4a
+    [duration] => 0
+    [file_size] => 41241824
+    [pub_date] => Thu, 19 Oct 2023 09:00:00 GMT
+    [status] => published
+    [episode_number] => 5
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => true
+)
+
+[21-Oct-2025 04:28:50 UTC] [MANAGER] Image file: YES
+[21-Oct-2025 04:28:50 UTC] [MANAGER] Audio file: NO
+[21-Oct-2025 04:28:50 UTC] [MANAGER] Generated temp episode ID: ep_1761020930_68f70c028c8f3
+[21-Oct-2025 04:28:50 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020928_68f70c00bf4ed.m4a
+[21-Oct-2025 04:28:50 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
+[21-Oct-2025 04:28:50 UTC] [MANAGER] Is local file: YES
+[21-Oct-2025 04:28:50 UTC] Starting episode 6: A Just Transition
+[21-Oct-2025 04:28:50 UTC] Audio URL: https://anchor.fm/s/57b2571c/podcast/play/73033079/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2023-6-5%2F338128731-44100-2-422b402e3ceab.m4a
+[21-Oct-2025 04:28:52 UTC] [AudioUploader] Accepted file with MIME type: audio/x-m4a, extension: m4a
+[21-Oct-2025 04:28:52 UTC] [AudioUploader] Saving audio file: ep_1761020930_68f70c02a6c88.m4a (extension: m4a)
+[21-Oct-2025 04:28:52 UTC] [MANAGER] addEpisode called for podcast: shp_1761020921_68f70bf95e244
+[21-Oct-2025 04:28:52 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => A Just Transition
+    [description] => How do we stop climate change without hurting the workers and communities who rely on fossil fuel jobs? Todd Vachon, assistant professor in the Rutgers School of Management and Labor Relations, shows the way in his book, “Clean Air and Good Jobs.” Les Leopold, J. Mijin Cha, and Dimitris Stevis join the discussion.
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020930_68f70c02a6c88.m4a
+    [duration] => 0
+    [file_size] => 39695056
+    [pub_date] => Fri, 07 Jul 2023 11:00:00 GMT
+    [status] => published
+    [episode_number] => 6
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => false
+)
+
+[21-Oct-2025 04:28:52 UTC] [MANAGER] Image file: YES
+[21-Oct-2025 04:28:52 UTC] [MANAGER] Audio file: NO
+[21-Oct-2025 04:28:52 UTC] [MANAGER] Generated temp episode ID: ep_1761020932_68f70c0449bfc
+[21-Oct-2025 04:28:52 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020930_68f70c02a6c88.m4a
+[21-Oct-2025 04:28:52 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
+[21-Oct-2025 04:28:52 UTC] [MANAGER] Is local file: YES
+[21-Oct-2025 04:28:52 UTC] Starting episode 7: All Work and Low Pay
+[21-Oct-2025 04:28:52 UTC] Audio URL: https://anchor.fm/s/57b2571c/podcast/play/67257555/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2023-2-25%2F320141773-44100-2-ff8ca3d520cbb.m4a
+[21-Oct-2025 04:28:53 UTC] [AudioUploader] Accepted file with MIME type: audio/x-m4a, extension: m4a
+[21-Oct-2025 04:28:53 UTC] [AudioUploader] Saving audio file: ep_1761020932_68f70c04645b7.m4a (extension: m4a)
+[21-Oct-2025 04:28:53 UTC] [MANAGER] addEpisode called for podcast: shp_1761020921_68f70bf95e244
+[21-Oct-2025 04:28:53 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => All Work and Low Pay
+    [description] => A new report by the Rutgers Center for Women and Work reveals many of New Jersey’s Latina immigrants are struggling with low wages, non-existent benefits, no childcare, and no time off. Lead author Glenda Gracia-Rivera shares gripping stories and reveals how the Hispanic Women’s Resource Centers are helping.
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020932_68f70c04645b7.m4a
+    [duration] => 0
+    [file_size] => 22524713
+    [pub_date] => Wed, 29 Mar 2023 09:00:48 GMT
+    [status] => published
+    [episode_number] => 7
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => false
+)
+
+[21-Oct-2025 04:28:53 UTC] [MANAGER] Image file: YES
+[21-Oct-2025 04:28:53 UTC] [MANAGER] Audio file: NO
+[21-Oct-2025 04:28:53 UTC] [MANAGER] Generated temp episode ID: ep_1761020933_68f70c05aad80
+[21-Oct-2025 04:28:53 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020932_68f70c04645b7.m4a
+[21-Oct-2025 04:28:53 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
+[21-Oct-2025 04:28:53 UTC] [MANAGER] Is local file: YES
+[21-Oct-2025 04:28:53 UTC] Starting episode 8: A Tower of Strength
+[21-Oct-2025 04:28:53 UTC] Audio URL: https://anchor.fm/s/57b2571c/podcast/play/65234892/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2023-1-18%2F313449229-44100-2-688bba4d6a723.m4a
+[21-Oct-2025 04:28:55 UTC] [AudioUploader] Accepted file with MIME type: audio/x-m4a, extension: m4a
+[21-Oct-2025 04:28:55 UTC] [AudioUploader] Saving audio file: ep_1761020933_68f70c05c54a7.m4a (extension: m4a)
+[21-Oct-2025 04:28:55 UTC] [MANAGER] addEpisode called for podcast: shp_1761020921_68f70bf95e244
+[21-Oct-2025 04:28:55 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => A Tower of Strength
+    [description] => Nannie Helen Burroughs was a visionary Black educator, labor leader, and suffragist who founded the National Training School for Women and Girls in 1909. Danielle Phillips-Cunningham, associate professor in the Rutgers School of Management and Labor Relations, wants to make her a household name.
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020933_68f70c05c54a7.m4a
+    [duration] => 0
+    [file_size] => 58222710
+    [pub_date] => Wed, 22 Feb 2023 05:01:16 GMT
+    [status] => published
+    [episode_number] => 8
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => false
+)
+
+[21-Oct-2025 04:28:55 UTC] [MANAGER] Image file: YES
+[21-Oct-2025 04:28:55 UTC] [MANAGER] Audio file: NO
+[21-Oct-2025 04:28:55 UTC] [MANAGER] Generated temp episode ID: ep_1761020935_68f70c07d388a
+[21-Oct-2025 04:28:55 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020933_68f70c05c54a7.m4a
+[21-Oct-2025 04:28:55 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
+[21-Oct-2025 04:28:55 UTC] [MANAGER] Is local file: YES
+[21-Oct-2025 04:28:55 UTC] Starting episode 9: I Am a Man
+[21-Oct-2025 04:28:55 UTC] Audio URL: https://anchor.fm/s/57b2571c/podcast/play/63937404/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2023-0-24%2F309042696-44100-2-a6e3f1d0dcd2b.m4a
+[21-Oct-2025 04:28:59 UTC] [AudioUploader] Accepted file with MIME type: audio/x-m4a, extension: m4a
+[21-Oct-2025 04:28:59 UTC] [AudioUploader] Saving audio file: ep_1761020935_68f70c07f14ed.m4a (extension: m4a)
+[21-Oct-2025 04:28:59 UTC] [MANAGER] addEpisode called for podcast: shp_1761020921_68f70bf95e244
+[21-Oct-2025 04:28:59 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => I Am a Man
+    [description] => William Lucy co-created the iconic slogan that rallied Black workers during the Memphis sanitation strike of 1968, and he became a leading figure in the civil rights movement and the labor movement. Francis Ryan, a labor historian in the Rutgers School of Management and Labor Relations, talks to Lucy about his career.
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020935_68f70c07f14ed.m4a
+    [duration] => 0
+    [file_size] => 51430119
+    [pub_date] => Wed, 25 Jan 2023 13:00:34 GMT
+    [status] => published
+    [episode_number] => 9
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => false
+)
+
+[21-Oct-2025 04:28:59 UTC] [MANAGER] Image file: YES
+[21-Oct-2025 04:28:59 UTC] [MANAGER] Audio file: NO
+[21-Oct-2025 04:28:59 UTC] [MANAGER] Generated temp episode ID: ep_1761020939_68f70c0be63e2
+[21-Oct-2025 04:28:59 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020935_68f70c07f14ed.m4a
+[21-Oct-2025 04:28:59 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
+[21-Oct-2025 04:28:59 UTC] [MANAGER] Is local file: YES
+[21-Oct-2025 04:29:00 UTC] Starting episode 10: Workplace Relationships
+[21-Oct-2025 04:29:00 UTC] Audio URL: https://anchor.fm/s/57b2571c/podcast/play/62754581/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2022-11-27%2F304982384-44100-2-42c96c7e1254a.m4a
+[21-Oct-2025 04:29:01 UTC] [AudioUploader] Accepted file with MIME type: audio/x-m4a, extension: m4a
+[21-Oct-2025 04:29:01 UTC] [AudioUploader] Saving audio file: ep_1761020940_68f70c0c0c254.m4a (extension: m4a)
+[21-Oct-2025 04:29:01 UTC] [MANAGER] addEpisode called for podcast: shp_1761020921_68f70bf95e244
+[21-Oct-2025 04:29:01 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Workplace Relationships
+    [description] => Our co-workers can make or break how we feel and what we accomplish on the job. Friends, enemies, two-faced frenemies, even small talk can affect us in surprising ways. Jessica Methot, associate professor in the Rutgers School of Management and Labor Relations, untangles the complex web of workplace relationships.
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020940_68f70c0c0c254.m4a
+    [duration] => 0
+    [file_size] => 34455136
+    [pub_date] => Tue, 27 Dec 2022 21:46:07 GMT
+    [status] => published
+    [episode_number] => 10
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => false
+)
+
+[21-Oct-2025 04:29:01 UTC] [MANAGER] Image file: YES
+[21-Oct-2025 04:29:01 UTC] [MANAGER] Audio file: NO
+[21-Oct-2025 04:29:01 UTC] [MANAGER] Generated temp episode ID: ep_1761020941_68f70c0d77184
+[21-Oct-2025 04:29:01 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020940_68f70c0c0c254.m4a
+[21-Oct-2025 04:29:01 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
+[21-Oct-2025 04:29:01 UTC] [MANAGER] Is local file: YES
+[21-Oct-2025 04:29:01 UTC] Starting episode 11: Big Brother at Work
+[21-Oct-2025 04:29:01 UTC] Audio URL: https://anchor.fm/s/57b2571c/podcast/play/60949466/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2022-10-20%2F298254429-44100-2-5cceff466f947.m4a
+[21-Oct-2025 04:29:02 UTC] [AudioUploader] Accepted file with MIME type: audio/x-m4a, extension: m4a
+[21-Oct-2025 04:29:02 UTC] [AudioUploader] Saving audio file: ep_1761020941_68f70c0d907cc.m4a (extension: m4a)
+[21-Oct-2025 04:29:02 UTC] [MANAGER] addEpisode called for podcast: shp_1761020921_68f70bf95e244
+[21-Oct-2025 04:29:02 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Big Brother at Work
+    [description] => Do you have that odd feeling of being watched? The latest employee monitoring software tracks emails, keystrokes, and mouse clicks. It can even take webcam photos to see if you’re working. Michael Sturman, professor in the Rutgers School of Management and Labor Relations, discusses why more bosses are using it.
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020941_68f70c0d907cc.m4a
+    [duration] => 0
+    [file_size] => 22480293
+    [pub_date] => Mon, 21 Nov 2022 10:00:19 GMT
+    [status] => published
+    [episode_number] => 11
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => false
+)
+
+[21-Oct-2025 04:29:02 UTC] [MANAGER] Image file: YES
+[21-Oct-2025 04:29:02 UTC] [MANAGER] Audio file: NO
+[21-Oct-2025 04:29:02 UTC] [MANAGER] Generated temp episode ID: ep_1761020942_68f70c0ed821b
+[21-Oct-2025 04:29:02 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020941_68f70c0d907cc.m4a
+[21-Oct-2025 04:29:02 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
+[21-Oct-2025 04:29:02 UTC] [MANAGER] Is local file: YES
+[21-Oct-2025 04:29:02 UTC] Starting episode 12: Why Unions are Cool Again
+[21-Oct-2025 04:29:02 UTC] Audio URL: https://anchor.fm/s/57b2571c/podcast/play/58684349/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2022-9-6%2F289708194-44100-2-10d4656e029bb.m4a
+[21-Oct-2025 04:29:03 UTC] [AudioUploader] Accepted file with MIME type: audio/x-m4a, extension: m4a
+[21-Oct-2025 04:29:03 UTC] [AudioUploader] Saving audio file: ep_1761020942_68f70c0ef294f.m4a (extension: m4a)
+[21-Oct-2025 04:29:04 UTC] [MANAGER] addEpisode called for podcast: shp_1761020921_68f70bf95e244
+[21-Oct-2025 04:29:04 UTC] [MANAGER] Episode data received: Array
+(
+    [title] => Why Unions are Cool Again
+    [description] => Workers delivered historic union victories at Amazon, Apple, Chipotle, Starbucks, and Trader Joe’s. What’s next? Walmart? Another Striketober? And how will the midterms change things? Rebecca Kolins Givan, associate professor in the Rutgers School of Management and Labor Relations, analyzes the resurgent labor movement.
+    [audio_url] => http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020942_68f70c0ef294f.m4a
+    [duration] => 0
+    [file_size] => 17767548
+    [pub_date] => Fri, 07 Oct 2022 00:30:00 GMT
+    [status] => published
+    [episode_number] => 12
+    [season_number] => 1
+    [episode_type] => full
+    [explicit] => false
+)
+
+[21-Oct-2025 04:29:04 UTC] [MANAGER] Image file: YES
+[21-Oct-2025 04:29:04 UTC] [MANAGER] Audio file: NO
+[21-Oct-2025 04:29:04 UTC] [MANAGER] Generated temp episode ID: ep_1761020944_68f70c1024eb8
+[21-Oct-2025 04:29:04 UTC] [MANAGER] Validating audio URL: http://localhost:8000/uploads/audio/shp_1761020921_68f70bf95e244/ep_1761020942_68f70c0ef294f.m4a
+[21-Oct-2025 04:29:04 UTC] [MANAGER] UPLOADS_URL: http://localhost:8000/uploads
+[21-Oct-2025 04:29:04 UTC] [MANAGER] Is local file: YES

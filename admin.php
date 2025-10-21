@@ -992,6 +992,7 @@ if (isset($_GET['edit'])) {
                         
                         <p><strong>Technical Details:</strong></p>
                         <ul>
+                            <li>Supported formats: MP3 and M4A (works with Anchor.fm/Spotify podcasts)</li>
                             <li>Max file size: 500MB per episode</li>
                             <li>Timeout: 10 minutes per file</li>
                             <li>Error recovery: Continues if some episodes fail</li>

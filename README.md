@@ -1,6 +1,6 @@
 # PodFeed Browser
 
-A complete podcast platform combining a modern directory browser with a full-featured podcast hosting system. Features RSS feed aggregation, podcast creation & hosting ("My Podcasts"), audio file management, health monitoring, in-browser audio player, and a stunning dark-themed UI.
+A complete podcast platform combining a modern directory browser with a full-featured podcast hosting system. Features RSS feed aggregation, podcast creation & hosting ("My Podcasts"), audio file management (MP3 & M4A), health monitoring, in-browser audio player, and a stunning dark-themed UI.
 
 ---
 

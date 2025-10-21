@@ -372,13 +372,28 @@ class PodcastManager
             
             // Convert self-hosted podcasts to match RSS podcast format
             foreach ($selfHostedPodcasts as $shPodcast) {
+                // Get latest episode date from episodes, not podcast updated_date
+                $latestEpisodeDate = $shPodcast['latest_episode_date'] ?? null;
+                
+                // If not set, calculate from episodes
+                if (!$latestEpisodeDate) {
+                    $episodes = $selfHostedManager->getEpisodes($shPodcast['id']);
+                    if (!empty($episodes)) {
+                        // Sort by pub_date descending
+                        usort($episodes, function($a, $b) {
+                            return strtotime($b['pub_date']) - strtotime($a['pub_date']);
+                        });
+                        $latestEpisodeDate = $episodes[0]['pub_date'] ?? '';
+                    }
+                }
+                
                 $podcasts[] = [
                     'id' => $shPodcast['id'],
                     'title' => $shPodcast['title'],
                     'feed_url' => APP_URL . '/self-hosted-feed.php?id=' . $shPodcast['id'],
                     'description' => $shPodcast['description'] ?? '',
                     'cover_image' => $shPodcast['cover_image'] ?? '',
-                    'latest_episode_date' => $shPodcast['updated_date'] ?? '',
+                    'latest_episode_date' => $latestEpisodeDate ?? $shPodcast['created_date'] ?? '',
                     'episode_count' => $shPodcast['episode_count'] ?? 0,
                     'status' => $shPodcast['status'] ?? 'active',
                     'is_self_hosted' => true,

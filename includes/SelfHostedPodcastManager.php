@@ -205,6 +205,20 @@ class SelfHostedPodcastManager
     }
 
     /**
+     * Update podcast metadata (for cloning)
+     */
+    public function updatePodcastMetadata($id, $metadata)
+    {
+        try {
+            $this->xmlHandler->updatePodcast($id, $metadata);
+            return ['success' => true];
+        } catch (Exception $e) {
+            $this->logError('UPDATE_METADATA_ERROR', $e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
      * Get single podcast
      */
     public function getPodcast($id)

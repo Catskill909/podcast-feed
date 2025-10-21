@@ -5,6 +5,14 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 
 ## ✅ Recently Completed (October 2025)
 
+### **October 21, 2025 - M4A Audio Format Support** - COMPLETE ✨
+- ✅ **M4A File Support** - Added full support for M4A audio files (Anchor.fm/Spotify podcasts)
+- ✅ **Multi-Format Validation** - Updated AudioUploader, PodcastAudioDownloader, and SelfHostedPodcastManager
+- ✅ **Smart Validation** - Skips URL validation for already-uploaded local files during cloning
+- ✅ **Format Detection** - Automatic extension detection and preservation (MP3 or M4A)
+- **Impact:** Can now clone podcasts from Anchor.fm, Spotify, and other M4A-based platforms
+- **Docs:** [M4A-SUPPORT-FIX.md](docs/M4A-SUPPORT-FIX.md)
+
 ### **October 18, 2025 - UI Cleanup & Bug Fixes** - COMPLETE ✨
 - ✅ **"My Podcasts" Naming** - Simplified from "Create Self-Hosted Podcast" to clean "My Podcasts"
 - ✅ **Help Modal Update** - Added comprehensive "My Podcasts" section with full documentation
@@ -17,7 +25,7 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 
 ### **October 17, 2025 - My Podcasts Platform (Complete Podcast Hosting)** - COMPLETE ✨✨ MAJOR MILESTONE
 - ✅ **Complete Podcast Creation System** - Create podcasts from scratch with full metadata
-- ✅ **Audio File Upload & Hosting** - Upload and host MP3 files directly on your server (up to 500MB)
+- ✅ **Audio File Upload & Hosting** - Upload and host MP3 and M4A files directly on your server (up to 500MB)
 - ✅ **Episode Management** - Add, edit, and delete episodes with full control
 - ✅ **Cover Image Management** - Upload podcast and episode artwork
 - ✅ **iTunes-Compliant RSS Generator** - Standard RSS 2.0 + iTunes namespace feeds

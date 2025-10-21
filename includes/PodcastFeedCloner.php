@@ -188,6 +188,13 @@ class PodcastFeedCloner
                 'percent' => 95
             ]);
 
+            // Update podcast metadata with actual latest episode date from feed
+            if (!empty($feedData['latest_episode_date'])) {
+                $this->selfHostedManager->updatePodcastMetadata($podcastId, [
+                    'latest_episode_date' => $feedData['latest_episode_date']
+                ]);
+            }
+
             $feedUrl = APP_URL . "/self-hosted-feed.php?id=" . $podcastId;
 
             // Optional: Import to main directory
