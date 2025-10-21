@@ -1,7 +1,7 @@
 <?php
 /**
  * AudioUploader Class
- * Handles MP3 audio file uploads for self-hosted podcasts
+ * Handles MP3 and M4A audio file uploads for self-hosted podcasts
  * Works in both local development and Coolify production
  */
 
@@ -10,8 +10,8 @@ class AudioUploader
     private $audioDir;
     private $audioUrl;
     private $maxFileSize;
-    private $allowedMimeTypes = ['audio/mpeg', 'audio/mp3'];
-    private $allowedExtensions = ['mp3'];
+    private $allowedMimeTypes = ['audio/mpeg', 'audio/mp3', 'audio/x-m4a', 'audio/mp4', 'audio/m4a'];
+    private $allowedExtensions = ['mp3', 'm4a'];
 
     public function __construct()
     {
@@ -21,6 +21,8 @@ class AudioUploader
         
         // Max file size: 500MB (configurable)
         $this->maxFileSize = 500 * 1024 * 1024;
+        
+        error_log('[AudioUploader] Initialized with support for: ' . implode(', ', $this->allowedExtensions));
         
         // Ensure audio directory exists
         $this->ensureDirectoryExists();
@@ -48,9 +50,15 @@ class AudioUploader
                 chmod($podcastDir, 0755);
             }
 
-            // Generate filename
-            $filename = $episodeId . '.mp3';
+            // Generate filename with correct extension
+            $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            if (!in_array($extension, $this->allowedExtensions)) {
+                $extension = 'mp3'; // Default to mp3 if unknown
+            }
+            $filename = $episodeId . '.' . $extension;
             $filepath = $podcastDir . '/' . $filename;
+            
+            error_log("[AudioUploader] Saving audio file: $filename (extension: $extension)");
 
             // Move uploaded file (or copy if it's a downloaded file, not an upload)
             if (is_uploaded_file($file['tmp_name'])) {
@@ -77,7 +85,7 @@ class AudioUploader
             chmod($filepath, 0644);
 
             // Get audio info
-            $audioInfo = $this->getAudioInfo($podcastId, $episodeId);
+            $audioInfo = $this->getAudioInfo($podcastId, $episodeId, $extension);
 
             return [
                 'success' => true,
@@ -99,10 +107,23 @@ class AudioUploader
     /**
      * Delete audio file
      */
-    public function deleteAudio($podcastId, $episodeId)
+    public function deleteAudio($podcastId, $episodeId, $extension = 'mp3')
     {
         try {
-            $filepath = $this->audioDir . '/' . $podcastId . '/' . $episodeId . '.mp3';
+            // Try to find the file with any supported extension
+            $filepath = null;
+            foreach ($this->allowedExtensions as $ext) {
+                $testPath = $this->audioDir . '/' . $podcastId . '/' . $episodeId . '.' . $ext;
+                if (file_exists($testPath)) {
+                    $filepath = $testPath;
+                    break;
+                }
+            }
+            
+            if (!$filepath) {
+                // Fallback to provided extension
+                $filepath = $this->audioDir . '/' . $podcastId . '/' . $episodeId . '.' . $extension;
+            }
             
             if (file_exists($filepath)) {
                 unlink($filepath);
@@ -134,9 +155,25 @@ class AudioUploader
     /**
      * Get audio file information
      */
-    public function getAudioInfo($podcastId, $episodeId)
+    public function getAudioInfo($podcastId, $episodeId, $extension = 'mp3')
     {
-        $filepath = $this->audioDir . '/' . $podcastId . '/' . $episodeId . '.mp3';
+        // Try to find the file with any supported extension
+        $filepath = null;
+        $actualExtension = $extension;
+        
+        foreach ($this->allowedExtensions as $ext) {
+            $testPath = $this->audioDir . '/' . $podcastId . '/' . $episodeId . '.' . $ext;
+            if (file_exists($testPath)) {
+                $filepath = $testPath;
+                $actualExtension = $ext;
+                break;
+            }
+        }
+        
+        if (!$filepath) {
+            // Fallback to provided extension
+            $filepath = $this->audioDir . '/' . $podcastId . '/' . $episodeId . '.' . $extension;
+        }
         
         if (!file_exists($filepath)) {
             return null;
@@ -146,10 +183,11 @@ class AudioUploader
             'exists' => true,
             'file_size' => filesize($filepath),
             'file_size_formatted' => $this->formatFileSize(filesize($filepath)),
-            'url' => $this->audioUrl . '/' . $podcastId . '/' . $episodeId . '.mp3',
+            'url' => $this->audioUrl . '/' . $podcastId . '/' . $episodeId . '.' . $actualExtension,
             'path' => $filepath,
             'duration' => 0,
-            'duration_formatted' => '00:00:00'
+            'duration_formatted' => '00:00:00',
+            'extension' => $actualExtension
         ];
 
         // Try to get duration (basic method - works without external libraries)
@@ -270,9 +308,10 @@ class AudioUploader
         // Check file extension
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         if (!in_array($extension, $this->allowedExtensions)) {
+            error_log("[AudioUploader] Invalid extension: $extension (allowed: " . implode(', ', $this->allowedExtensions) . ")");
             return [
                 'valid' => false,
-                'message' => 'Invalid file type. Only MP3 files are allowed.'
+                'message' => 'Invalid file type. Only MP3 and M4A files are allowed.'
             ];
         }
 
@@ -281,32 +320,48 @@ class AudioUploader
         $mimeType = finfo_file($finfo, $file['tmp_name']);
         finfo_close($finfo);
 
-        // Accept audio/mpeg, audio/mp3, and application/octet-stream (for downloads)
-        $acceptableMimeTypes = ['audio/mpeg', 'audio/mp3', 'application/octet-stream', 'audio/x-mpeg'];
+        // Accept various audio MIME types including M4A
+        $acceptableMimeTypes = [
+            'audio/mpeg',           // MP3
+            'audio/mp3',            // MP3 (alternative)
+            'audio/x-mpeg',         // MP3 (alternative)
+            'audio/x-m4a',          // M4A
+            'audio/mp4',            // M4A (alternative)
+            'audio/m4a',            // M4A (alternative)
+            'application/octet-stream', // Generic binary (for downloads)
+            'video/mp4'             // M4A sometimes detected as video/mp4
+        ];
         
         if (!in_array($mimeType, $acceptableMimeTypes)) {
-            error_log("AudioUploader: Rejecting file with MIME type: $mimeType");
+            error_log("[AudioUploader] Rejecting file with MIME type: $mimeType (filename: {$file['name']})");
             return [
                 'valid' => false,
-                'message' => 'Invalid file format. File must be an MP3 audio file. (Got: ' . $mimeType . ')'
+                'message' => 'Invalid file format. File must be an MP3 or M4A audio file. (Got: ' . $mimeType . ')'
             ];
         }
+        
+        error_log("[AudioUploader] Accepted file with MIME type: $mimeType, extension: $extension");
 
-        // Check if file is actually an MP3 (magic number check)
+        // Check if file is actually an MP3 or M4A (magic number check)
         // Skip this for downloaded files (not real uploads) - they may have different headers
         if (is_uploaded_file($file['tmp_name'])) {
             $handle = fopen($file['tmp_name'], 'rb');
-            $header = fread($handle, 3);
+            $header = fread($handle, 12);
             fclose($handle);
 
-            // Check for ID3 tag or MPEG frame sync
+            // Check for MP3: ID3 tag or MPEG frame sync
             $isMP3 = (substr($header, 0, 3) === 'ID3') || 
                      (ord($header[0]) === 0xFF && (ord($header[1]) & 0xE0) === 0xE0);
+            
+            // Check for M4A: ftyp box signature
+            $isM4A = (substr($header, 4, 4) === 'ftyp') ||
+                     (substr($header, 4, 4) === 'M4A ');
 
-            if (!$isMP3) {
+            if (!$isMP3 && !$isM4A) {
+                error_log("[AudioUploader] File header check failed. First 12 bytes: " . bin2hex($header));
                 return [
                     'valid' => false,
-                    'message' => 'File does not appear to be a valid MP3 file.'
+                    'message' => 'File does not appear to be a valid MP3 or M4A file.'
                 ];
             }
         }
@@ -329,10 +384,17 @@ class AudioUploader
             // Create .htaccess for security
             $htaccess = $this->audioDir . '/.htaccess';
             $htaccessContent = <<<EOT
-# Allow MP3 downloads
-<FilesMatch "\\.mp3$">
-    Header set Content-Type "audio/mpeg"
+# Allow MP3 and M4A downloads
+<FilesMatch "\.(mp3|m4a)$">
     Header set Accept-Ranges "bytes"
+</FilesMatch>
+
+<FilesMatch "\.mp3$">
+    Header set Content-Type "audio/mpeg"
+</FilesMatch>
+
+<FilesMatch "\.m4a$">
+    Header set Content-Type "audio/x-m4a"
 </FilesMatch>
 
 # Prevent directory listing
@@ -388,7 +450,7 @@ EOT;
             );
 
             foreach ($iterator as $file) {
-                if ($file->isFile() && $file->getExtension() === 'mp3') {
+                if ($file->isFile() && in_array($file->getExtension(), $this->allowedExtensions)) {
                     $totalSize += $file->getSize();
                     $fileCount++;
                 }
