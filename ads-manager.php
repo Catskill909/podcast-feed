@@ -104,27 +104,18 @@ $settings = $manager->getSettings();
                         <label>
                             <i class="fas fa-clock"></i> Rotation Duration
                         </label>
-                        <div class="slider-container">
-                            <div class="slider-wrapper">
-                                <input type="range" 
-                                       class="duration-slider" 
-                                       id="durationSlider" 
-                                       min="5" 
-                                       max="60" 
-                                       step="5" 
-                                       value="<?php echo $settings['web_ads_rotation_duration']; ?>">
-                                <div class="slider-marks">
-                                    <span class="slider-mark">5s</span>
-                                    <span class="slider-mark">15s</span>
-                                    <span class="slider-mark">30s</span>
-                                    <span class="slider-mark">45s</span>
-                                    <span class="slider-mark">60s</span>
-                                </div>
-                            </div>
-                            <div class="duration-value" id="durationValue">
+                        <div class="stepper-control">
+                            <button class="stepper-btn" onclick="adjustDuration('rotation', -5)" aria-label="Decrease rotation duration">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="stepper-value" id="rotationValue" data-value="<?php echo $settings['web_ads_rotation_duration']; ?>">
                                 <?php echo $settings['web_ads_rotation_duration']; ?>s
                             </div>
+                            <button class="stepper-btn" onclick="adjustDuration('rotation', 5)" aria-label="Increase rotation duration">
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
                         </div>
+                        <div class="stepper-range">5s - 60s</div>
                     </div>
 
                     <!-- Fade Duration -->
@@ -132,27 +123,18 @@ $settings = $manager->getSettings();
                         <label>
                             <i class="fas fa-adjust"></i> Fade Duration
                         </label>
-                        <div class="slider-container">
-                            <div class="slider-wrapper">
-                                <input type="range" 
-                                       class="duration-slider" 
-                                       id="fadeSlider" 
-                                       min="0.5" 
-                                       max="3" 
-                                       step="0.5" 
-                                       value="1.2">
-                                <div class="slider-marks">
-                                    <span class="slider-mark">0.5s</span>
-                                    <span class="slider-mark">1s</span>
-                                    <span class="slider-mark">1.5s</span>
-                                    <span class="slider-mark">2s</span>
-                                    <span class="slider-mark">3s</span>
-                                </div>
+                        <div class="stepper-control">
+                            <button class="stepper-btn" onclick="adjustDuration('fade', -0.5)" aria-label="Decrease fade duration">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="stepper-value" id="fadeValue" data-value="<?php echo ($settings['web_ads_fade_duration'] ?? 1.2); ?>">
+                                <?php echo ($settings['web_ads_fade_duration'] ?? 1.2); ?>s
                             </div>
-                            <div class="duration-value" id="fadeValue">
-                                1.2s
-                            </div>
+                            <button class="stepper-btn" onclick="adjustDuration('fade', 0.5)" aria-label="Increase fade duration">
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
                         </div>
+                        <div class="stepper-range">0.5s - 3s</div>
                     </div>
                 </div>
             </div>
@@ -365,15 +347,13 @@ $settings = $manager->getSettings();
                 <label>
                     <i class="fas fa-rss"></i> Mobile Ads RSS Feed URL
                 </label>
-                <div class="feed-url-input-group">
-                    <input type="text" 
-                           id="feedUrl" 
-                           value="<?php echo APP_URL; ?>/mobile-ads-feed.php" 
-                           readonly>
-                    <button class="btn btn-primary" onclick="copyFeedUrl()">
-                        <i class="fas fa-copy"></i> Copy
-                    </button>
-                </div>
+                <a href="<?php echo APP_URL; ?>/mobile-ads-feed.php" 
+                   class="feed-url-link" 
+                   target="_blank" 
+                   rel="noopener noreferrer">
+                    <i class="fas fa-external-link-alt"></i>
+                    <?php echo APP_URL; ?>/mobile-ads-feed.php
+                </a>
             </div>
         </div>
     </div>

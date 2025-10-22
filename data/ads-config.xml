@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <adsconfig>
   <settings>
-    <web_ads_enabled>0</web_ads_enabled>
+    <web_ads_enabled>1</web_ads_enabled>
     <mobile_ads_enabled>1</mobile_ads_enabled>
     <web_ads_rotation_duration>5</web_ads_rotation_duration>
+    <web_ads_fade_duration>1.2</web_ads_fade_duration>
   </settings>
   <webads>
     <ad>
@@ -15,18 +16,20 @@
       <click_url>https://google.com</click_url>
     </ad>
     <ad>
-      <id>wad_1761142305_68f8e621c1d20</id>
-      <filename>web_ad_1761142305_68f8e621c1c5a.png</filename>
-      <filepath>/Users/paulhenshaw/Desktop/podcast-feed/config/../uploads/ads/web/web_ad_1761142305_68f8e621c1c5a.png</filepath>
-      <display_order>1</display_order>
-      <created_at>2025-10-22 14:11:45</created_at>
+      <id>wad_1761152705_68f90ec19b9e6</id>
+      <filename>web_ad_1761152705_68f90ec19b7e6.gif</filename>
+      <filepath>/Users/paulhenshaw/Desktop/podcast-feed/config/../uploads/ads/web/web_ad_1761152705_68f90ec19b7e6.gif</filepath>
+      <click_url/>
+      <display_order>2</display_order>
+      <created_at>2025-10-22 17:05:05</created_at>
     </ad>
     <ad>
-      <id>wad_1761142748_68f8e7dccabf2</id>
-      <filename>web_ad_1761142748_68f8e7dcca9d9.png</filename>
-      <filepath>/Users/paulhenshaw/Desktop/podcast-feed/config/../uploads/ads/web/web_ad_1761142748_68f8e7dcca9d9.png</filepath>
+      <id>wad_1761152794_68f90f1acb9cd</id>
+      <filename>web_ad_1761152794_68f90f1acb80b.gif</filename>
+      <filepath>/Users/paulhenshaw/Desktop/podcast-feed/config/../uploads/ads/web/web_ad_1761152794_68f90f1acb80b.gif</filepath>
+      <click_url/>
       <display_order>2</display_order>
-      <created_at>2025-10-22 14:19:08</created_at>
+      <created_at>2025-10-22 17:06:34</created_at>
     </ad>
   </webads>
   <mobileads>
@@ -59,6 +62,15 @@
       <dimensions>728x90</dimensions>
       <display_order>3</display_order>
       <created_at>2025-10-22 14:35:57</created_at>
+    </ad>
+    <ad>
+      <id>mad_1761152809_68f90f2963ee8</id>
+      <filename>mobile_ad_1761152809_68f90f2963cbf.gif</filename>
+      <filepath>/Users/paulhenshaw/Desktop/podcast-feed/config/../uploads/ads/mobile/mobile_ad_1761152809_68f90f2963cbf.gif</filepath>
+      <dimensions>728x90</dimensions>
+      <click_url/>
+      <display_order>4</display_order>
+      <created_at>2025-10-22 17:06:49</created_at>
     </ad>
   </mobileads>
 </adsconfig>

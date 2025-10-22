@@ -40,6 +40,13 @@ try {
                 $settings['web_ads_rotation_duration'] = (string)$duration;
             }
             
+            if (isset($_POST['web_ads_fade_duration'])) {
+                $fadeDuration = (float)$_POST['web_ads_fade_duration'];
+                if ($fadeDuration < 0.5) $fadeDuration = 0.5;
+                if ($fadeDuration > 3) $fadeDuration = 3;
+                $settings['web_ads_fade_duration'] = (string)$fadeDuration;
+            }
+            
             $result = $manager->updateSettings($settings);
             break;
             

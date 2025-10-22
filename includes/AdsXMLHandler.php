@@ -31,6 +31,7 @@ class AdsXMLHandler
             $this->addElement($settings, 'web_ads_enabled', '0', $xml);
             $this->addElement($settings, 'mobile_ads_enabled', '0', $xml);
             $this->addElement($settings, 'web_ads_rotation_duration', '10', $xml);
+            $this->addElement($settings, 'web_ads_fade_duration', '1.2', $xml);
             $root->appendChild($settings);
             
             // Web ads section
@@ -312,7 +313,8 @@ class AdsXMLHandler
         return [
             'web_ads_enabled' => $this->getSetting('web_ads_enabled') === '1',
             'mobile_ads_enabled' => $this->getSetting('mobile_ads_enabled') === '1',
-            'web_ads_rotation_duration' => (int)$this->getSetting('web_ads_rotation_duration')
+            'web_ads_rotation_duration' => (int)$this->getSetting('web_ads_rotation_duration'),
+            'web_ads_fade_duration' => (float)($this->getSetting('web_ads_fade_duration') ?: 1.2)
         ];
     }
 

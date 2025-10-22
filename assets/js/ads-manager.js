@@ -255,35 +255,60 @@ async function updateAdOrder(adType) {
 }
 
 /**
- * Initialize duration slider
+ * Initialize duration controls
  */
 function initializeDurationSlider() {
-    // Rotation duration slider
-    const slider = document.getElementById('durationSlider');
-    const valueDisplay = document.getElementById('durationValue');
+    // Initialize current fade duration from the page
+    const fadeValueEl = document.getElementById('fadeValue');
     
-    if (slider && valueDisplay) {
-        slider.addEventListener('input', function() {
-            valueDisplay.textContent = this.value + 's';
-        });
+    if (fadeValueEl) {
+        currentFadeDuration = parseFloat(fadeValueEl.dataset.value);
+        updateFadeDuration(currentFadeDuration);
+    }
+}
+
+/**
+ * Adjust duration values with stepper buttons
+ */
+async function adjustDuration(type, change) {
+    if (type === 'rotation') {
+        const valueEl = document.getElementById('rotationValue');
+        let currentValue = parseInt(valueEl.dataset.value);
+        let newValue = currentValue + change;
         
-        slider.addEventListener('change', async function() {
-            await updateSetting('web_ads_rotation_duration', this.value);
+        // Clamp between 5 and 60
+        newValue = Math.max(5, Math.min(60, newValue));
+        
+        if (newValue !== currentValue) {
+            valueEl.dataset.value = newValue;
+            valueEl.textContent = newValue + 's';
+            
+            // Save to settings
+            await updateSetting('web_ads_rotation_duration', newValue);
+            
             // Restart rotation with new duration
             startWebAdRotation();
-        });
-    }
-
-    // Fade duration slider
-    const fadeSlider = document.getElementById('fadeSlider');
-    const fadeValueDisplay = document.getElementById('fadeValue');
-    
-    if (fadeSlider && fadeValueDisplay) {
-        fadeSlider.addEventListener('input', function() {
-            fadeValueDisplay.textContent = this.value + 's';
-            currentFadeDuration = parseFloat(this.value);
+        }
+    } else if (type === 'fade') {
+        const valueEl = document.getElementById('fadeValue');
+        let currentValue = parseFloat(valueEl.dataset.value);
+        let newValue = currentValue + change;
+        
+        // Clamp between 0.5 and 3
+        newValue = Math.max(0.5, Math.min(3, newValue));
+        // Round to 1 decimal place
+        newValue = Math.round(newValue * 10) / 10;
+        
+        if (newValue !== currentValue) {
+            valueEl.dataset.value = newValue;
+            valueEl.textContent = newValue + 's';
+            
+            currentFadeDuration = newValue;
             updateFadeDuration(currentFadeDuration);
-        });
+            
+            // Save to settings
+            await updateSetting('web_ads_fade_duration', newValue);
+        }
     }
 }
 
@@ -327,7 +352,7 @@ async function updateSetting(key, value) {
             console.error('Failed to update setting:', result.message);
         }
     } catch (error) {
-        console.error('Setting update error:', error);
+        console.error('✗ Setting update error:', error);
     }
 }
 
@@ -348,11 +373,22 @@ function startWebAdRotation() {
         return;
     }
     
-    const duration = parseInt(document.getElementById('durationSlider').value) * 1000;
+    const rotationValueEl = document.getElementById('rotationValue');
+    const fadeValueEl = document.getElementById('fadeValue');
     
+    // Rotation duration is how long each ad displays (in seconds)
+    const rotationDuration = parseInt(rotationValueEl.dataset.value);
+    // Fade duration is how long the transition takes (in seconds)
+    const fadeDuration = parseFloat(fadeValueEl.dataset.value);
+    
+    // Total interval = rotation duration (display time) in milliseconds
+    const intervalMs = rotationDuration * 1000;
+    
+    // First ad is already active from PHP, start at index 0
     currentWebAdIndex = 0;
     
-    webAdRotationInterval = setInterval(() => {
+    // Rotate to next ad function
+    const rotateAd = () => {
         // Hide current ad
         previewAds[currentWebAdIndex].classList.remove('active');
         
@@ -361,7 +397,10 @@ function startWebAdRotation() {
         
         // Show next ad
         previewAds[currentWebAdIndex].classList.add('active');
-    }, duration);
+    };
+    
+    // Start rotation interval - first rotation happens after intervalMs
+    webAdRotationInterval = setInterval(rotateAd, intervalMs);
 }
 
 /**
@@ -419,32 +458,6 @@ async function saveAdUrl() {
     } catch (error) {
         showErrorModal('Failed to update URL. Please try again.');
         console.error('URL update error:', error);
-    }
-}
-
-/**
- * Copy feed URL to clipboard
- */
-function copyFeedUrl() {
-    const feedUrlInput = document.getElementById('feedUrl');
-    feedUrlInput.select();
-    feedUrlInput.setSelectionRange(0, 99999); // For mobile devices
-    
-    try {
-        document.execCommand('copy');
-        
-        // Visual feedback
-        const btn = event.target.closest('.btn');
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-        btn.style.background = '#4CAF50';
-        
-        setTimeout(() => {
-            btn.innerHTML = originalHTML;
-            btn.style.background = '';
-        }, 2000);
-    } catch (err) {
-        console.error('Failed to copy:', err);
     }
 }
 
