@@ -3,7 +3,7 @@
   <settings>
     <web_ads_enabled>1</web_ads_enabled>
     <mobile_ads_enabled>1</mobile_ads_enabled>
-    <web_ads_rotation_duration>5</web_ads_rotation_duration>
+    <web_ads_rotation_duration>10</web_ads_rotation_duration>
     <web_ads_fade_duration>1.2</web_ads_fade_duration>
   </settings>
   <webads>
