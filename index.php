@@ -32,6 +32,7 @@ $stats = $podcastManager->getStats();
     <link rel="stylesheet" href="assets/css/browse.css?v=3.0.6">
     <link rel="stylesheet" href="assets/css/sort-controls.css">
     <link rel="stylesheet" href="assets/css/player-modal.css">
+    <link rel="stylesheet" href="assets/css/web-banner.css?v=<?php echo time(); ?>">
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
@@ -60,17 +61,31 @@ $stats = $podcastManager->getStats();
     <main class="main-content">
         <div class="container">
             
-            <!-- Stats Bar -->
-            <div class="stats-bar">
-                <div class="stat-badge">
-                    <div class="stat-badge-value" id="podcastCount"><?php echo $stats['active_podcasts']; ?></div>
-                    <div class="stat-badge-label">Podcasts</div>
-                </div>
-                <div class="stat-badge">
-                    <div class="stat-badge-value" id="totalEpisodes">-</div>
-                    <div class="stat-badge-label">Episodes</div>
+            <!-- Web Banner Ad -->
+            <?php
+            require_once __DIR__ . '/includes/AdsManager.php';
+            $adsManager = new AdsManager();
+            $adsSettings = $adsManager->getSettings();
+            $webAds = $adsManager->getWebAds();
+            
+            if ($adsSettings['web_ads_enabled'] && !empty($webAds)):
+            ?>
+            <div class="web-banner-container">
+                <div class="web-banner-ads" id="webBannerAds">
+                    <?php foreach ($webAds as $index => $ad): ?>
+                        <div class="web-banner-ad <?php echo $index === 0 ? 'active' : ''; ?>" data-ad-id="<?php echo $ad['id']; ?>">
+                            <?php if (!empty($ad['click_url'])): ?>
+                                <a href="<?php echo htmlspecialchars($ad['click_url']); ?>" target="_blank" rel="noopener noreferrer">
+                                    <img src="<?php echo htmlspecialchars($ad['url']); ?>" alt="Advertisement">
+                                </a>
+                            <?php else: ?>
+                                <img src="<?php echo htmlspecialchars($ad['url']); ?>" alt="Advertisement">
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
+            <?php endif; ?>
             
             <!-- Browse Controls -->
             <div class="browse-controls">
@@ -86,6 +101,19 @@ $stats = $podcastManager->getStats();
                 </div>
                 
                 <div class="browse-filters">
+                    <!-- Stats Badges -->
+                    <div class="stat-badge-inline">
+                        <i class="fa-solid fa-podcast"></i>
+                        <span class="stat-value" id="podcastCount"><?php echo $stats['active_podcasts']; ?></span>
+                        <span class="stat-label">Podcasts</span>
+                    </div>
+                    <div class="stat-badge-inline">
+                        <i class="fa-solid fa-headphones"></i>
+                        <span class="stat-value" id="totalEpisodes">-</span>
+                        <span class="stat-label">Episodes</span>
+                    </div>
+                    
+                    <!-- Sort Controls -->
                     <div class="sort-controls">
                         <button type="button" id="browseSortButton" class="sort-button" aria-haspopup="true" aria-expanded="false">
                             <span style="display: flex; align-items: center; gap: var(--spacing-sm);">
@@ -254,6 +282,31 @@ $stats = $podcastManager->getStats();
     <script src="assets/js/browse.js?v=3.0.2"></script>
     <script src="assets/js/player-modal.js?v=3.0.1"></script>
     <script src="assets/js/audio-player.js?v=3.0.5"></script>
+    
+    <!-- Web Banner Rotation Script -->
+    <script>
+    (function() {
+        const bannerContainer = document.getElementById('webBannerAds');
+        if (!bannerContainer) return;
+        
+        const banners = bannerContainer.querySelectorAll('.web-banner-ad');
+        if (banners.length <= 1) return; // No rotation needed for 0 or 1 ads
+        
+        let currentIndex = 0;
+        const rotationDuration = <?php echo isset($adsSettings['web_ads_rotation_duration']) ? $adsSettings['web_ads_rotation_duration'] : 10; ?> * 1000;
+        
+        setInterval(() => {
+            // Hide current banner
+            banners[currentIndex].classList.remove('active');
+            
+            // Move to next banner
+            currentIndex = (currentIndex + 1) % banners.length;
+            
+            // Show next banner
+            banners[currentIndex].classList.add('active');
+        }, rotationDuration);
+    })();
+    </script>
 </body>
 
 </html>
