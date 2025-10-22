@@ -251,6 +251,22 @@ git push origin main
 - **Episode Limiting**: Option to clone only the last N episodes (useful for testing)
 - **~2,000 Lines of New Code**: Complete orchestration system with error handling and logging
 
+### **📢 Banner Ads Management System (October 22, 2025)** ✨✨✨
+- **Complete Ad Management**: Upload, manage, and display banner advertisements
+- **Three Ad Types**: Web banners (728x90), phone banners (320x50), tablet banners (728x90)
+- **Live Preview**: Real-time banner rotation preview with configurable timing
+- **Drag-and-Drop Upload**: Easy file upload with strict dimension validation
+- **URL Management**: Add destination URLs to banners via clean modal interface
+- **Clickable Banners**: Banners link to destination URLs, open in new tab
+- **Front-End Integration**: Rotating banner display on public homepage
+- **RSS Feed**: Mobile banner feed for app consumption with click tracking
+- **Drag-to-Reorder**: Sortable.js integration for easy reordering
+- **On/Off Toggles**: Enable/disable web and mobile ads independently
+- **Configurable Rotation**: Adjust rotation duration (5-60s) and fade duration (0.5-3s)
+- **Material Design UI**: Beautiful dark-themed interface with smooth animations
+- **Production Ready**: Uses same patterns as existing features, Coolify-compatible
+- **~3,600 Lines of Code**: Complete system with admin interface, public display, and RSS feed
+
 ### **🎨 Public Browsing Interface (October 17, 2025)** ✨
 - **Beautiful Podcast Grid**: Responsive card layout with cover images and overlays
 - **Hover Effects**: Smooth animations with play button overlay on hover
@@ -350,9 +366,11 @@ git push origin main
 
 ```
 podcast-feed/
-├── index.php                    # Public podcast browser (NEW)
+├── index.php                    # Public podcast browser
 ├── admin.php                    # Admin management interface
 ├── feed.php                     # RSS XML output endpoint
+├── ads-manager.php              # Banner ads management (NEW)
+├── mobile-ads-feed.php          # Mobile ads RSS feed (NEW)
 ├── login.php                    # Placeholder login page
 ├── README.md                    # This file
 ├── config/
@@ -362,33 +380,49 @@ podcast-feed/
 │   ├── PodcastManager.php              # Core CRUD operations
 │   ├── XMLHandler.php                  # XML file management
 │   ├── ImageUploader.php               # Image upload handling
-│   ├── AudioUploader.php               # Audio file upload handling (NEW)
+│   ├── AudioUploader.php               # Audio file upload handling
 │   ├── RssImportValidator.php          # RSS feed validation
-│   ├── SelfHostedPodcastManager.php    # Self-hosted podcast logic (NEW)
-│   ├── SelfHostedXMLHandler.php        # Self-hosted XML operations (NEW)
+│   ├── SelfHostedPodcastManager.php    # Self-hosted podcast logic
+│   ├── SelfHostedXMLHandler.php        # Self-hosted XML operations
+│   ├── AdsManager.php                  # Ads business logic (NEW)
+│   ├── AdsXMLHandler.php               # Ads XML operations (NEW)
+│   ├── AdsImageUploader.php            # Ads image upload (NEW)
 │   └── functions.php                   # Utility functions
+├── api/
+│   ├── upload-ad.php                   # Ad upload endpoint (NEW)
+│   ├── delete-ad.php                   # Ad deletion endpoint (NEW)
+│   ├── update-ad-settings.php          # Ad settings endpoint (NEW)
+│   ├── update-ad-url.php               # Ad URL endpoint (NEW)
+│   └── get-ad-data.php                 # Ad data endpoint (NEW)
 ├── assets/
 │   ├── css/
 │   │   ├── style.css           # Main dark theme styles
 │   │   ├── components.css      # UI components
-│   │   ├── browse.css          # Public browse page styles (NEW)
-│   │   └── player-modal.css    # Audio player modal styles
+│   │   ├── browse.css          # Public browse page styles
+│   │   ├── player-modal.css    # Audio player modal styles
+│   │   ├── ads-manager.css     # Ads manager styles (NEW)
+│   │   └── web-banner.css      # Front-end banner styles (NEW)
 │   └── js/
 │       ├── app.js              # Admin application logic
-│       ├── browse.js           # Public browse page logic (NEW)
+│       ├── browse.js           # Public browse page logic
 │       ├── player-modal.js     # Player modal functionality
 │       ├── audio-player.js     # Audio playback controls
+│       ├── ads-manager.js      # Ads manager logic (NEW)
 │       └── validation.js       # Form validation
 ├── data/
 │   ├── podcasts.xml                 # Aggregated podcast directory
-│   ├── self-hosted-podcasts.xml     # My Podcasts (self-hosted) (NEW)
+│   ├── self-hosted-podcasts.xml     # My Podcasts (self-hosted)
+│   ├── ads-config.xml               # Banner ads configuration (NEW)
 │   └── backup/                      # XML backups
 ├── uploads/
 │   ├── covers/                      # Podcast cover images
-│   └── audio/                       # Self-hosted audio files (NEW)
-├── self-hosted-podcasts.php         # My Podcasts management page (NEW)
-├── self-hosted-episodes.php         # Episode management page (NEW)
-├── self-hosted-feed.php             # RSS feed generator (NEW)
+│   ├── audio/                       # Self-hosted audio files
+│   └── ads/                         # Banner ad images (NEW)
+│       ├── web/                     # Web banners (728x90)
+│       └── mobile/                  # Mobile banners (320x50, 728x90)
+├── self-hosted-podcasts.php         # My Podcasts management page
+├── self-hosted-episodes.php         # Episode management page
+├── self-hosted-feed.php             # RSS feed generator
 └── logs/
     ├── error.log                    # Error logging
     └── operations.log               # Activity logging
@@ -571,6 +605,42 @@ Access the admin panel by clicking "Admin" in the header or visiting `/admin.php
 - **Toggle Status**: Click status badge to activate/deactivate
 - **View Feed**: Click feed URL to see RSS XML
 - **Stats**: Click "Stats" in navigation for directory statistics
+
+### **Banner Ads Management** 📢 (October 22, 2025)
+
+**Access:** Click "Ads Manager" in admin panel or visit `/ads-manager.php`
+
+#### **Upload Banners:**
+1. **Web Banners (728x90px)**:
+   - Drag image to upload zone or click to browse
+   - System validates exact dimensions
+   - Appears in live preview and public homepage
+   
+2. **Mobile Banners**:
+   - **Phone (320x50px)**: Small mobile banners
+   - **Tablet (728x90px)**: Larger mobile banners
+   - Included in RSS feed for mobile app
+
+#### **Manage Banners:**
+- **Add URLs**: Click "Add URL" button, enter destination URL in modal
+- **Reorder**: Drag ad cards to change rotation sequence
+- **Delete**: Click X button, confirm deletion
+- **Toggle On/Off**: Enable/disable web or mobile ads
+- **Adjust Timing**: 
+  - Rotation Duration: 5-60 seconds
+  - Fade Duration: 0.5-3 seconds
+
+#### **Front-End Display:**
+- Banner appears under header on `index.php`
+- Rotates automatically based on settings
+- Clickable if URL is set
+- Only shows when enabled
+
+#### **Mobile RSS Feed:**
+- URL: `https://your-domain.com/mobile-ads-feed.php`
+- Copy from ads manager interface
+- Use in mobile/tablet apps
+- Includes dimensions, URLs, display order
 
 ## 📡 RSS Feed URLs
 

@@ -900,6 +900,15 @@ if (isset($_GET['edit'])) {
                                 Create and host your own podcasts! Upload audio files, manage episodes, and generate iTunes-compliant RSS feeds. Perfect for hosting your own shows.
                             </p>
                         </div>
+                        
+                        <div class="help-button-example">
+                            <button type="button" class="btn btn-secondary" disabled>
+                                <i class="fa-solid fa-ad"></i> Ads Manager
+                            </button>
+                            <p class="help-button-description">
+                                Upload and manage banner advertisements. Display rotating banners on your homepage and serve ads to mobile apps via RSS feed. Full monetization system with URL tracking.
+                            </p>
+                        </div>
                     </div>
                 </div>
                 
@@ -1019,6 +1028,106 @@ if (isset($_GET['edit'])) {
                                 <li>Migrate content between hosting platforms</li>
                                 <li>Build offline podcast libraries</li>
                                 <li>Preserve educational content</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banner Ads Manager -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">📢</span>
+                        Banner Ads Manager - Monetize Your Platform
+                    </h3>
+                    <div class="help-section-content">
+                        <p><strong>What is the Ads Manager?</strong></p>
+                        <p>Upload and manage banner advertisements for your web app and mobile feed. Display rotating banners on your homepage and serve ads to mobile apps via RSS feed.</p>
+                        
+                        <p><strong>How to Access:</strong></p>
+                        <ul>
+                            <li>Click <strong>"Ads Manager"</strong> button in the header</li>
+                            <li>Or visit <code>/ads-manager.php</code> directly</li>
+                        </ul>
+                        
+                        <p><strong>Three Ad Types:</strong></p>
+                        <ul>
+                            <li><strong>Web Banners (728x90px)</strong> - Display on homepage with rotation</li>
+                            <li><strong>Phone Banners (320x50px)</strong> - Small mobile banners for apps</li>
+                            <li><strong>Tablet Banners (728x90px)</strong> - Larger mobile banners for tablets</li>
+                        </ul>
+                        
+                        <p><strong>How to Upload Banners:</strong></p>
+                        <ol>
+                            <li>Go to Ads Manager page</li>
+                            <li>Choose section (Web, Phone, or Tablet)</li>
+                            <li>Drag image to upload zone or click to browse</li>
+                            <li>System validates exact dimensions automatically</li>
+                            <li>Banner appears in grid and live preview</li>
+                        </ol>
+                        
+                        <p><strong>Add Destination URLs:</strong></p>
+                        <ol>
+                            <li>Click <strong>"Add URL"</strong> button on any banner card</li>
+                            <li>Enter destination URL in modal (e.g., https://example.com/landing-page)</li>
+                            <li>Click <strong>"Save URL"</strong></li>
+                            <li>Banner becomes clickable, opens in new tab</li>
+                            <li>Button changes to <strong>"Edit URL"</strong> for future updates</li>
+                        </ol>
+                        
+                        <p><strong>Manage Banners:</strong></p>
+                        <ul>
+                            <li><strong>Reorder</strong> - Drag banner cards to change rotation sequence</li>
+                            <li><strong>Delete</strong> - Click X button, confirm deletion</li>
+                            <li><strong>Toggle On/Off</strong> - Enable/disable web or mobile ads independently</li>
+                            <li><strong>Adjust Timing</strong> - Set rotation duration (5-60s) and fade duration (0.5-3s)</li>
+                        </ul>
+                        
+                        <p><strong>Live Preview:</strong></p>
+                        <ul>
+                            <li>See exactly how banners will rotate on your site</li>
+                            <li>Preview updates in real-time as you adjust settings</li>
+                            <li>Click banners to test destination URLs</li>
+                            <li>Single ad detection (no rotation for 0-1 ads)</li>
+                        </ul>
+                        
+                        <p><strong>Front-End Display:</strong></p>
+                        <ul>
+                            <li>Banner appears under header on public homepage (index.php)</li>
+                            <li>Rotates automatically based on your settings</li>
+                            <li>Clickable if URL is set</li>
+                            <li>Only shows when enabled in Ads Manager</li>
+                            <li>Responsive design (scales on mobile)</li>
+                        </ul>
+                        
+                        <p><strong>Mobile RSS Feed:</strong></p>
+                        <ul>
+                            <li>URL: <code>https://your-domain.com/mobile-ads-feed.php</code></li>
+                            <li>Copy URL from Ads Manager interface</li>
+                            <li>Use in mobile/tablet apps for ad consumption</li>
+                            <li>Includes dimensions, URLs, and display order</li>
+                            <li>Standard RSS 2.0 format with custom ads namespace</li>
+                        </ul>
+                        
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>📏 Image Requirements:</strong>
+                            <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                                <li><strong>Web:</strong> Exactly 728x90 pixels</li>
+                                <li><strong>Phone:</strong> Exactly 320x50 pixels</li>
+                                <li><strong>Tablet:</strong> Exactly 728x90 pixels</li>
+                                <li><strong>Formats:</strong> PNG, JPG, or GIF</li>
+                                <li><strong>Validation:</strong> System rejects wrong dimensions with clear error message</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>💡 Best Practices:</strong>
+                            <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                                <li>Use high-quality images with clear call-to-action</li>
+                                <li>Test URLs before adding to ensure they work</li>
+                                <li>Keep rotation duration reasonable (10-15 seconds recommended)</li>
+                                <li>Use 3-5 banners for good variety without overwhelming</li>
+                                <li>Monitor click-through rates to optimize performance</li>
+                                <li>Update banners regularly to keep content fresh</li>
                             </ul>
                         </div>
                     </div>
