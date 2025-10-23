@@ -56,6 +56,9 @@
    ============================================ */
 
 .player-modal-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   padding: var(--spacing-lg) var(--spacing-xl);
   border-bottom: 1px solid var(--border-secondary);
   background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
@@ -91,9 +94,9 @@
 }
 
 .player-modal-close {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-primary);
-  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
   font-size: 20px;
   cursor: pointer;
   padding: 0;
@@ -107,9 +110,9 @@
 }
 
 .player-modal-close:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--border-focus);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
   transform: rotate(90deg);
 }
 

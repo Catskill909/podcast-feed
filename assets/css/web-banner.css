@@ -94,6 +94,7 @@
         aspect-ratio: 728 / 90;
     }
     
+    /* Make badges more compact on tablets */
     .stat-badge-inline {
         padding: 8px 12px;
         gap: 6px;
@@ -105,5 +106,42 @@
     
     .stat-badge-inline .stat-label {
         font-size: 0.85rem;
+    }
+}
+
+/* Phone-specific: Make badges fit on one line */
+@media (max-width: 480px) {
+    .stat-badge-inline {
+        padding: 6px 8px;
+        gap: 4px;
+        margin-bottom: 0;
+    }
+    
+    .stat-badge-inline i {
+        font-size: 0.875rem;
+    }
+    
+    .stat-badge-inline .stat-value {
+        font-size: 0.875rem;
+    }
+    
+    .stat-badge-inline .stat-label {
+        font-size: 0.75rem;
+    }
+}
+
+/* Very small phones: Allow wrapping if needed */
+@media (max-width: 360px) {
+    .browse-filters {
+        gap: 4px !important;
+    }
+    
+    .stat-badge-inline {
+        padding: 5px 6px;
+        gap: 3px;
+    }
+    
+    .stat-badge-inline .stat-label {
+        font-size: 0.7rem;
     }
 }

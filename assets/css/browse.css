@@ -514,8 +514,10 @@
   }
 
   .browse-filters {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-xs);
   }
 
   .browse-sort {
@@ -554,6 +556,17 @@
 
   .hero-stat-label {
     font-size: var(--font-size-xs);
+  }
+
+  /* Sticky search on mobile */
+  .browse-controls {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-primary);
+    padding: var(--spacing-md) 0;
+    margin-bottom: var(--spacing-lg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   .podcasts-grid {

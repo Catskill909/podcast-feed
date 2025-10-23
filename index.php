@@ -29,9 +29,9 @@ $stats = $podcastManager->getStats();
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/browse.css?v=3.0.6">
-    <link rel="stylesheet" href="assets/css/sort-controls.css">
-    <link rel="stylesheet" href="assets/css/player-modal.css">
+    <link rel="stylesheet" href="assets/css/browse.css?v=3.0.8">
+    <link rel="stylesheet" href="assets/css/sort-controls.css?v=3.0.1">
+    <link rel="stylesheet" href="assets/css/player-modal.css?v=3.0.3">
     <link rel="stylesheet" href="assets/css/web-banner.css?v=<?php echo time(); ?>">
     
     <!-- Favicon -->
@@ -280,7 +280,7 @@ $stats = $podcastManager->getStats();
     <!-- Scripts -->
     <script src="assets/js/auto-refresh.js"></script>
     <script src="assets/js/browse.js?v=3.0.2"></script>
-    <script src="assets/js/player-modal.js?v=3.0.1"></script>
+    <script src="assets/js/player-modal.js?v=3.0.2"></script>
     <script src="assets/js/audio-player.js?v=3.0.5"></script>
     
     <!-- Web Banner Rotation Script -->

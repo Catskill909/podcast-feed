@@ -76,6 +76,9 @@ class PodcastPlayerModal {
             sortSelect.value = 'newest';
         }
 
+        // CRITICAL: Clear old content BEFORE showing modal to prevent ghost content
+        this.clearModalContent();
+
         // Show modal
         modal.classList.add('show');
         document.body.style.overflow = 'hidden';
@@ -113,6 +116,45 @@ class PodcastPlayerModal {
         this.currentPodcast = null;
         this.episodes = [];
         this.filteredEpisodes = [];
+    }
+
+    /**
+     * Clear modal content to prevent ghost content from previous podcast
+     */
+    clearModalContent() {
+        // Clear podcast info
+        const titleEl = document.getElementById('playerModalPodcastTitle');
+        if (titleEl) titleEl.textContent = 'Loading...';
+        
+        const coverEl = document.getElementById('playerPodcastCover');
+        if (coverEl) coverEl.src = '';
+        
+        const nameEl = document.getElementById('playerPodcastName');
+        if (nameEl) nameEl.textContent = 'Loading...';
+        
+        const descEl = document.getElementById('playerPodcastDescription');
+        if (descEl) descEl.textContent = '';
+        
+        const countEl = document.getElementById('playerEpisodeCount');
+        if (countEl) countEl.textContent = '0 Episodes';
+        
+        const latestEl = document.getElementById('playerLatestEpisode');
+        if (latestEl) latestEl.textContent = 'Unknown';
+        
+        // Clear episodes list
+        const listEl = document.getElementById('playerEpisodesList');
+        if (listEl) {
+            listEl.innerHTML = `
+                <div class="player-loading">
+                    <div class="spinner"></div>
+                    <p>Loading episodes...</p>
+                </div>
+            `;
+        }
+        
+        // Clear search
+        const searchInput = document.getElementById('playerEpisodeSearch');
+        if (searchInput) searchInput.value = '';
     }
 
     /**

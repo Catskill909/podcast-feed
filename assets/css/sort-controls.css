@@ -173,7 +173,12 @@
   }
 }
 
+/* Phone-specific: Compact layout and bottom sheet */
 @media (max-width: 480px) {
+  .sort-controls {
+    margin-bottom: 0;
+  }
+
   /* Bottom sheet style for mobile */
   .sort-dropdown.show {
     position: fixed;
