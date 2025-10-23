@@ -10,7 +10,7 @@ header('Content-Type: application/xml; charset=utf-8');
 
 $manager = new AdsManager();
 $settings = $manager->getSettings();
-$mobileAds = $manager->getMobileAds();
+$mobileAds = $manager->getEnabledMobileAds();
 
 // Check if mobile ads are enabled
 $adsEnabled = $settings['mobile_ads_enabled'];

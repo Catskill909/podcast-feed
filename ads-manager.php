@@ -81,8 +81,17 @@ $settings = $manager->getSettings();
                             <p>Upload ads to see preview</p>
                         </div>
                     <?php else: ?>
-                        <?php foreach ($webAds as $index => $ad): ?>
-                            <div class="preview-ad <?php echo $index === 0 ? 'active' : ''; ?>" data-ad-id="<?php echo $ad['id']; ?>">
+                        <?php 
+                        $enabledWebAds = array_filter($webAds, function($ad) { return $ad['enabled']; });
+                        $firstEnabled = true;
+                        foreach ($webAds as $ad): 
+                            $isEnabled = $ad['enabled'];
+                            $showActive = $isEnabled && $firstEnabled;
+                            if ($isEnabled) $firstEnabled = false;
+                        ?>
+                            <div class="preview-ad <?php echo $showActive ? 'active' : ''; ?>" 
+                                 data-ad-id="<?php echo $ad['id']; ?>"
+                                 style="<?php echo !$isEnabled ? 'display: none;' : ''; ?>">
                                 <?php if (!empty($ad['click_url'])): ?>
                                     <a href="<?php echo htmlspecialchars($ad['click_url']); ?>" target="_blank" rel="noopener noreferrer">
                                         <img src="<?php echo htmlspecialchars($ad['url']); ?>" alt="Web Ad">
@@ -158,7 +167,7 @@ $settings = $manager->getSettings();
                     </div>
                 <?php else: ?>
                     <?php foreach ($webAds as $ad): ?>
-                        <div class="ad-item" data-ad-id="<?php echo $ad['id']; ?>">
+                        <div class="ad-item" data-ad-id="<?php echo $ad['id']; ?>" style="opacity: <?php echo $ad['enabled'] ? '1' : '0.5'; ?>">
                             <div class="drag-handle">
                                 <i class="fas fa-grip-vertical"></i>
                                 <span>Drag to reorder</span>
@@ -186,9 +195,21 @@ $settings = $manager->getSettings();
                                         <?php echo !empty($ad['click_url']) ? 'Edit URL' : 'Add URL'; ?>
                                     </button>
                                 </div>
-                                <div class="ad-date">
-                                    <i class="fas fa-calendar"></i>
-                                    <?php echo date('M j, Y', strtotime($ad['created_at'])); ?>
+                                <div class="ad-date-row">
+                                    <div class="ad-date">
+                                        <i class="fas fa-calendar"></i>
+                                        <?php echo date('M j, Y', strtotime($ad['created_at'])); ?>
+                                    </div>
+                                    <div class="ad-toggle-container">
+                                        <label class="ad-toggle-switch">
+                                            <input type="checkbox" 
+                                                   class="ad-enabled-toggle" 
+                                                   data-ad-id="<?php echo $ad['id']; ?>"
+                                                   data-ad-type="web"
+                                                   <?php echo $ad['enabled'] ? 'checked' : ''; ?>>
+                                            <span class="ad-toggle-slider"></span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -241,7 +262,7 @@ $settings = $manager->getSettings();
                 </div>
                 <div class="ads-grid" id="phoneAdsGrid">
                     <?php foreach ($phoneAds as $ad): ?>
-                        <div class="ad-item" data-ad-id="<?php echo $ad['id']; ?>" data-device="phone">
+                        <div class="ad-item" data-ad-id="<?php echo $ad['id']; ?>" data-device="phone" style="opacity: <?php echo $ad['enabled'] ? '1' : '0.5'; ?>">
                             <div class="drag-handle">
                                 <i class="fas fa-grip-vertical"></i>
                                 <span>Drag to reorder</span>
@@ -269,9 +290,21 @@ $settings = $manager->getSettings();
                                         <?php echo !empty($ad['click_url']) ? 'Edit URL' : 'Add URL'; ?>
                                     </button>
                                 </div>
-                                <div class="ad-date">
-                                    <i class="fas fa-calendar"></i>
-                                    <?php echo date('M j, Y', strtotime($ad['created_at'])); ?>
+                                <div class="ad-date-row">
+                                    <div class="ad-date">
+                                        <i class="fas fa-calendar"></i>
+                                        <?php echo date('M j, Y', strtotime($ad['created_at'])); ?>
+                                    </div>
+                                    <div class="ad-toggle-container">
+                                        <label class="ad-toggle-switch">
+                                            <input type="checkbox" 
+                                                   class="ad-enabled-toggle" 
+                                                   data-ad-id="<?php echo $ad['id']; ?>"
+                                                   data-ad-type="mobile"
+                                                   <?php echo $ad['enabled'] ? 'checked' : ''; ?>>
+                                            <span class="ad-toggle-slider"></span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -294,7 +327,7 @@ $settings = $manager->getSettings();
                 </div>
                 <div class="ads-grid" id="tabletAdsGrid">
                     <?php foreach ($tabletAds as $ad): ?>
-                        <div class="ad-item" data-ad-id="<?php echo $ad['id']; ?>" data-device="tablet">
+                        <div class="ad-item" data-ad-id="<?php echo $ad['id']; ?>" data-device="tablet" style="opacity: <?php echo $ad['enabled'] ? '1' : '0.5'; ?>">
                             <div class="drag-handle">
                                 <i class="fas fa-grip-vertical"></i>
                                 <span>Drag to reorder</span>
@@ -322,9 +355,21 @@ $settings = $manager->getSettings();
                                         <?php echo !empty($ad['click_url']) ? 'Edit URL' : 'Add URL'; ?>
                                     </button>
                                 </div>
-                                <div class="ad-date">
-                                    <i class="fas fa-calendar"></i>
-                                    <?php echo date('M j, Y', strtotime($ad['created_at'])); ?>
+                                <div class="ad-date-row">
+                                    <div class="ad-date">
+                                        <i class="fas fa-calendar"></i>
+                                        <?php echo date('M j, Y', strtotime($ad['created_at'])); ?>
+                                    </div>
+                                    <div class="ad-toggle-container">
+                                        <label class="ad-toggle-switch">
+                                            <input type="checkbox" 
+                                                   class="ad-enabled-toggle" 
+                                                   data-ad-id="<?php echo $ad['id']; ?>"
+                                                   data-ad-type="mobile"
+                                                   <?php echo $ad['enabled'] ? 'checked' : ''; ?>>
+                                            <span class="ad-toggle-slider"></span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

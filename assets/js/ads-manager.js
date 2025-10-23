@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeSortable();
     initializeDurationSlider();
     initializeToggles();
+    initializeAdToggles();
     startWebAdRotation();
 });
 
@@ -496,3 +497,106 @@ document.addEventListener('click', function(e) {
         e.target.classList.remove('active');
     }
 });
+
+/**
+ * Initialize individual ad toggle switches
+ */
+function initializeAdToggles() {
+    const toggles = document.querySelectorAll('.ad-enabled-toggle');
+    
+    toggles.forEach(toggle => {
+        toggle.addEventListener('change', async function() {
+            const adId = this.dataset.adId;
+            const adType = this.dataset.adType;
+            const isEnabled = this.checked;
+            
+            // Disable toggle during request
+            this.disabled = true;
+            
+            try {
+                const response = await fetch('api/toggle-ad-enabled.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ad_id: adId,
+                        ad_type: adType
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Update toggle state to match server response
+                    this.checked = result.enabled;
+                    
+                    // Update preview visibility for web ads
+                    if (adType === 'web') {
+                        updateWebPreview();
+                    }
+                    
+                    // Show visual feedback
+                    const adItem = this.closest('.ad-item');
+                    if (adItem) {
+                        if (result.enabled) {
+                            adItem.style.opacity = '1';
+                        } else {
+                            adItem.style.opacity = '0.5';
+                        }
+                    }
+                } else {
+                    // Revert toggle on error
+                    this.checked = !isEnabled;
+                    showErrorModal(result.message || 'Failed to toggle ad state');
+                }
+            } catch (error) {
+                // Revert toggle on error
+                this.checked = !isEnabled;
+                showErrorModal('Failed to toggle ad state. Please try again.');
+                console.error('Toggle error:', error);
+            } finally {
+                // Re-enable toggle
+                this.disabled = false;
+            }
+        });
+    });
+}
+
+/**
+ * Update web ad preview to show only enabled ads
+ */
+function updateWebPreview() {
+    // Stop current rotation
+    if (webAdRotationInterval) {
+        clearInterval(webAdRotationInterval);
+    }
+    
+    // Get all enabled web ads
+    const allPreviewAds = document.querySelectorAll('.preview-ad');
+    const enabledAds = [];
+    
+    allPreviewAds.forEach(previewAd => {
+        const adId = previewAd.dataset.adId;
+        const toggle = document.querySelector(`.ad-enabled-toggle[data-ad-id="${adId}"][data-ad-type="web"]`);
+        
+        if (toggle && toggle.checked) {
+            enabledAds.push(previewAd);
+            previewAd.style.display = 'block';
+        } else {
+            previewAd.style.display = 'none';
+            previewAd.classList.remove('active');
+        }
+    });
+    
+    // Show first enabled ad
+    if (enabledAds.length > 0) {
+        enabledAds[0].classList.add('active');
+        currentWebAdIndex = 0;
+        
+        // Restart rotation if there are multiple enabled ads
+        if (enabledAds.length > 1) {
+            startWebAdRotation();
+        }
+    }
+}

@@ -255,4 +255,26 @@ class AdsManager
     {
         return $this->imageUploader->getRequiredDimensions($type);
     }
+
+    /**
+     * Get enabled web ads only (for preview and front page)
+     */
+    public function getEnabledWebAds(): array
+    {
+        $ads = $this->getWebAds();
+        return array_filter($ads, function($ad) {
+            return $ad['enabled'] === true;
+        });
+    }
+
+    /**
+     * Get enabled mobile ads only (for RSS feed)
+     */
+    public function getEnabledMobileAds(): array
+    {
+        $ads = $this->getMobileAds();
+        return array_filter($ads, function($ad) {
+            return $ad['enabled'] === true;
+        });
+    }
 }

@@ -108,6 +108,7 @@ class AdsXMLHandler
         $this->addElement($ad, 'filename', $filename);
         $this->addElement($ad, 'filepath', $filepath);
         $this->addElement($ad, 'click_url', '');
+        $this->addElement($ad, 'enabled', '1');
         $this->addElement($ad, 'display_order', $this->getNextDisplayOrder('web'));
         $this->addElement($ad, 'created_at', date('Y-m-d H:i:s'));
         
@@ -135,6 +136,7 @@ class AdsXMLHandler
         $this->addElement($ad, 'filepath', $filepath);
         $this->addElement($ad, 'dimensions', $dimensions);
         $this->addElement($ad, 'click_url', '');
+        $this->addElement($ad, 'enabled', '1');
         $this->addElement($ad, 'display_order', $this->getNextDisplayOrder('mobile'));
         $this->addElement($ad, 'created_at', date('Y-m-d H:i:s'));
         
@@ -173,12 +175,14 @@ class AdsXMLHandler
             if (!$clickUrlNode) {
                 $clickUrlNode = $ad->getElementsByTagName('url')->item(0);
             }
+            $enabledNode = $ad->getElementsByTagName('enabled')->item(0);
             $result[] = [
                 'id' => $ad->getElementsByTagName('id')->item(0)->nodeValue,
                 'filename' => $ad->getElementsByTagName('filename')->item(0)->nodeValue,
                 'filepath' => $ad->getElementsByTagName('filepath')->item(0)->nodeValue,
                 'url' => APP_URL . '/uploads/ads/web/' . $ad->getElementsByTagName('filename')->item(0)->nodeValue,
                 'click_url' => $clickUrlNode ? $clickUrlNode->nodeValue : '',
+                'enabled' => $enabledNode ? ($enabledNode->nodeValue === '1') : true,
                 'display_order' => $ad->getElementsByTagName('display_order')->item(0)->nodeValue,
                 'created_at' => $ad->getElementsByTagName('created_at')->item(0)->nodeValue
             ];
@@ -209,6 +213,7 @@ class AdsXMLHandler
             if (!$clickUrlNode) {
                 $clickUrlNode = $ad->getElementsByTagName('url')->item(0);
             }
+            $enabledNode = $ad->getElementsByTagName('enabled')->item(0);
             $filename = $ad->getElementsByTagName('filename')->item(0)->nodeValue;
             $result[] = [
                 'id' => $ad->getElementsByTagName('id')->item(0)->nodeValue,
@@ -217,6 +222,7 @@ class AdsXMLHandler
                 'url' => APP_URL . '/uploads/ads/mobile/' . $filename,
                 'dimensions' => $dimensionsNode ? $dimensionsNode->nodeValue : '320x50',
                 'click_url' => $clickUrlNode ? $clickUrlNode->nodeValue : '',
+                'enabled' => $enabledNode ? ($enabledNode->nodeValue === '1') : true,
                 'display_order' => $ad->getElementsByTagName('display_order')->item(0)->nodeValue,
                 'created_at' => $ad->getElementsByTagName('created_at')->item(0)->nodeValue
             ];
@@ -382,6 +388,38 @@ class AdsXMLHandler
                     $urlElement->nodeValue = $url;
                 } else {
                     $this->addElement($ad, 'click_url', $url);
+                }
+                $this->saveXML();
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    /**
+     * Toggle ad enabled state
+     */
+    public function toggleAdEnabled($adId, $adType)
+    {
+        $root = $this->xml->documentElement;
+        $adsSection = $adType === 'web' ? 
+            $root->getElementsByTagName('webads')->item(0) : 
+            $root->getElementsByTagName('mobileads')->item(0);
+        
+        $ads = $adsSection->getElementsByTagName('ad');
+        
+        foreach ($ads as $ad) {
+            $id = $ad->getElementsByTagName('id')->item(0)->nodeValue;
+            if ($id === $adId) {
+                $enabledElement = $ad->getElementsByTagName('enabled')->item(0);
+                if ($enabledElement) {
+                    // Toggle the value
+                    $currentValue = $enabledElement->nodeValue;
+                    $enabledElement->nodeValue = $currentValue === '1' ? '0' : '1';
+                } else {
+                    // Add enabled element if it doesn't exist (backward compatibility)
+                    $this->addElement($ad, 'enabled', '1');
                 }
                 $this->saveXML();
                 return true;
