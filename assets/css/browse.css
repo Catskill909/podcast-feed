@@ -507,7 +507,6 @@
   .browse-controls {
     flex-direction: column;
     gap: var(--spacing-md);
-    padding: 0 var(--spacing-sm);
   }
 
   .browse-search {
@@ -519,6 +518,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: var(--spacing-sm);
+    padding: 0 var(--spacing-sm);
   }
 
   .browse-sort {
@@ -561,13 +561,21 @@
 
   /* Sticky search on mobile - ONLY the search bar */
   .browse-search {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--bg-primary);
-    padding: var(--spacing-md) 0;
-    margin-bottom: var(--spacing-md);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    background: var(--bg-primary) !important;
+    padding: var(--spacing-md) var(--spacing-sm) !important;
+    margin-bottom: var(--spacing-md) !important;
+    margin-left: calc(-1 * var(--spacing-sm)) !important;
+    margin-right: calc(-1 * var(--spacing-sm)) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    width: calc(100% + 2 * var(--spacing-sm)) !important;
+  }
+
+  /* Add padding to browse-controls on mobile */
+  .browse-controls {
+    padding: 0 var(--spacing-sm);
   }
 
   .podcasts-grid {

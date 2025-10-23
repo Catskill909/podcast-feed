@@ -29,7 +29,7 @@ $stats = $podcastManager->getStats();
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/browse.css?v=3.1.0">
+    <link rel="stylesheet" href="assets/css/browse.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/sort-controls.css?v=3.0.1">
     <link rel="stylesheet" href="assets/css/player-modal.css?v=3.0.3">
     <link rel="stylesheet" href="assets/css/web-banner.css?v=<?php echo time(); ?>">
