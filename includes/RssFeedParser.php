@@ -90,12 +90,21 @@ class RssFeedParser
     /**
      * Fetch feed content using cURL with caching
      */
-    private function fetchFeedContent($url)
+    private function fetchFeedContent($url, $bustCache = false)
     {
-        // Try cache first
-        $cached = $this->getCachedFeed($url);
-        if ($cached !== false) {
-            return $cached;
+        // Try cache first (unless cache busting is requested)
+        if (!$bustCache) {
+            $cached = $this->getCachedFeed($url);
+            if ($cached !== false) {
+                return $cached;
+            }
+        }
+        
+        // Add cache-busting timestamp to URL if requested
+        $fetchUrl = $url;
+        if ($bustCache) {
+            $separator = (strpos($url, '?') === false) ? '?' : '&';
+            $fetchUrl = $url . $separator . '_t=' . time();
         }
         
         $ch = curl_init();
@@ -104,7 +113,7 @@ class RssFeedParser
         $sslVerify = (defined('ENVIRONMENT') && ENVIRONMENT === 'production');
         
         curl_setopt_array($ch, [
-            CURLOPT_URL => $url,
+            CURLOPT_URL => $fetchUrl,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_MAXREDIRS => 5,
@@ -113,6 +122,11 @@ class RssFeedParser
             CURLOPT_USERAGENT => $this->userAgent,
             CURLOPT_SSL_VERIFYPEER => $sslVerify,
             CURLOPT_ENCODING => '', // Accept all encodings
+            CURLOPT_HTTPHEADER => [
+                'Cache-Control: no-cache, no-store, must-revalidate',
+                'Pragma: no-cache',
+                'Expires: 0'
+            ],
         ]);
         
         $content = curl_exec($ch);
@@ -451,10 +465,10 @@ class RssFeedParser
      * Fetch only metadata from a feed (quick check for latest episode)
      * This is a lightweight version that only gets what we need for sorting
      */
-    public function fetchFeedMetadata($url)
+    public function fetchFeedMetadata($url, $bustCache = false)
     {
         try {
-            $xmlContent = $this->fetchFeedContent($url);
+            $xmlContent = $this->fetchFeedContent($url, $bustCache);
             if (!$xmlContent) {
                 return [
                     'success' => false,
