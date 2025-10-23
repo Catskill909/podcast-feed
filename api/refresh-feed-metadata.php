@@ -33,8 +33,9 @@ try {
         throw new Exception('Podcast not found');
     }
     
-    // Fetch feed metadata
+    // Fetch feed metadata (clear cache first for fresh data)
     $parser = new RssFeedParser();
+    $parser->clearCache($podcast['feed_url']); // Force fresh fetch, bypass 1-hour cache
     $result = $parser->fetchFeedMetadata($podcast['feed_url']);
     
     if (!$result['success']) {

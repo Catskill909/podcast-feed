@@ -438,6 +438,16 @@ class RssFeedParser
     }
     
     /**
+     * Clear cache for a specific feed URL
+     */
+    public function clearCache($url) {
+        $cacheFile = sys_get_temp_dir() . '/feed_cache_' . md5($url);
+        if (file_exists($cacheFile)) {
+            unlink($cacheFile);
+        }
+    }
+    
+    /**
      * Fetch only metadata from a feed (quick check for latest episode)
      * This is a lightweight version that only gets what we need for sorting
      */
