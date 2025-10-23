@@ -33,10 +33,55 @@ try {
         throw new Exception('Podcast not found');
     }
     
-    // Fetch feed metadata with aggressive cache busting
-    $parser = new RssFeedParser();
-    $parser->clearCache($podcast['feed_url']); // Clear local cache file
-    $result = $parser->fetchFeedMetadata($podcast['feed_url'], true); // Force fresh fetch with timestamp
+    // Fetch feed using same method as "View Feed" - simple and reliable
+    $feedUrl = $podcast['feed_url'];
+    $separator = (strpos($feedUrl, '?') === false) ? '?' : '&';
+    $cacheBustUrl = $feedUrl . $separator . '_t=' . time();
+    
+    $context = stream_context_create([
+        'http' => [
+            'timeout' => 10,
+            'header' => "Cache-Control: no-cache\r\nPragma: no-cache\r\n"
+        ]
+    ]);
+    
+    $xmlContent = @file_get_contents($cacheBustUrl, false, $context);
+    
+    if ($xmlContent === false) {
+        throw new Exception('Failed to fetch feed from source');
+    }
+    
+    // Parse the XML to get latest episode date
+    libxml_use_internal_errors(true);
+    $xml = simplexml_load_string($xmlContent);
+    
+    if ($xml === false) {
+        throw new Exception('Invalid XML in feed');
+    }
+    
+    // Get latest episode date from first item
+    $latestEpisodeDate = null;
+    $episodeCount = 0;
+    
+    if ($xml->channel && $xml->channel->item) {
+        $episodeCount = count($xml->channel->item);
+        
+        // Get first item's pubDate
+        $firstItem = $xml->channel->item[0];
+        if ($firstItem->pubDate) {
+            $pubDate = (string)$firstItem->pubDate;
+            $timestamp = strtotime($pubDate);
+            if ($timestamp) {
+                $latestEpisodeDate = date('Y-m-d H:i:s', $timestamp);
+            }
+        }
+    }
+    
+    $result = [
+        'success' => true,
+        'latest_episode_date' => $latestEpisodeDate,
+        'episode_count' => $episodeCount
+    ];
     
     if (!$result['success']) {
         throw new Exception($result['error'] ?? 'Failed to fetch feed metadata');

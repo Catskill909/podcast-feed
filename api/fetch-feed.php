@@ -45,17 +45,23 @@ if ($isLocalFeed) {
         exit;
     }
 } else {
-    // Fetch external feed via HTTP
+    // Fetch external feed via HTTP with cache-busting
+    $separator = (strpos($feedUrl, '?') === false) ? '?' : '&';
+    $cacheBustUrl = $feedUrl . $separator . '_t=' . time() . '&_nocache=1';
+    
     $context = stream_context_create([
         'http' => [
             'timeout' => 10,
             'user_agent' => 'PodFeed Builder/1.0',
             'follow_location' => true,
-            'max_redirects' => 3
+            'max_redirects' => 3,
+            'header' => "Cache-Control: no-cache, no-store, must-revalidate\r\n" .
+                       "Pragma: no-cache\r\n" .
+                       "Expires: 0\r\n"
         ]
     ]);
 
-    $feedContent = @file_get_contents($feedUrl, false, $context);
+    $feedContent = @file_get_contents($cacheBustUrl, false, $context);
 
     if ($feedContent === false) {
         http_response_code(502);

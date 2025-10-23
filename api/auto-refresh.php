@@ -38,7 +38,6 @@ try {
     // Get all podcasts
     $podcastManager = new PodcastManager();
     $podcasts = $podcastManager->getAllPodcasts();
-    $parser = new RssFeedParser();
     
     $stats = [
         'total' => 0,
@@ -57,7 +56,55 @@ try {
         $stats['total']++;
         
         try {
-            $result = $parser->fetchFeedMetadata($podcast['feed_url']);
+            // Use simple direct fetch (same as View Feed and manual refresh)
+            $feedUrl = $podcast['feed_url'];
+            $separator = (strpos($feedUrl, '?') === false) ? '?' : '&';
+            $cacheBustUrl = $feedUrl . $separator . '_t=' . time();
+            
+            $context = stream_context_create([
+                'http' => [
+                    'timeout' => 10,
+                    'header' => "Cache-Control: no-cache\r\nPragma: no-cache\r\n"
+                ]
+            ]);
+            
+            $xmlContent = @file_get_contents($cacheBustUrl, false, $context);
+            
+            if ($xmlContent === false) {
+                $stats['errors']++;
+                continue;
+            }
+            
+            // Parse XML
+            libxml_use_internal_errors(true);
+            $xml = simplexml_load_string($xmlContent);
+            
+            if ($xml === false) {
+                $stats['errors']++;
+                continue;
+            }
+            
+            // Get latest episode date
+            $latestEpisodeDate = null;
+            $episodeCount = 0;
+            
+            if ($xml->channel && $xml->channel->item) {
+                $episodeCount = count($xml->channel->item);
+                $firstItem = $xml->channel->item[0];
+                if ($firstItem->pubDate) {
+                    $pubDate = (string)$firstItem->pubDate;
+                    $timestamp = strtotime($pubDate);
+                    if ($timestamp) {
+                        $latestEpisodeDate = date('Y-m-d H:i:s', $timestamp);
+                    }
+                }
+            }
+            
+            $result = [
+                'success' => true,
+                'latest_episode_date' => $latestEpisodeDate,
+                'episode_count' => $episodeCount
+            ];
             
             if ($result['success']) {
                 // Check if data changed
