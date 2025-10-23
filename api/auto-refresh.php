@@ -2,7 +2,7 @@
 /**
  * Browser-Based Auto-Refresh API
  * Triggered when users visit the site - no cron needed
- * Only refreshes if last refresh was > 30 minutes ago
+ * Only refreshes if last refresh was > 5 minutes ago
  */
 
 header('Content-Type: application/json');
@@ -12,7 +12,7 @@ require_once __DIR__ . '/../includes/RssFeedParser.php';
 
 try {
     $lastRefreshFile = __DIR__ . '/../data/last-auto-refresh.txt';
-    $refreshInterval = 1800; // 30 minutes in seconds
+    $refreshInterval = 300; // 5 minutes in seconds (changed from 1800/30min)
     
     // Check if we need to refresh
     $shouldRefresh = true;
