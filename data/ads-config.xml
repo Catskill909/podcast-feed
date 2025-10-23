@@ -14,7 +14,7 @@
       <display_order>0</display_order>
       <created_at>2025-10-22 14:11:39</created_at>
       <click_url>https://google.com</click_url>
-      <enabled>1</enabled>
+      <enabled>0</enabled>
     </ad>
     <ad>
       <id>wad_1761152705_68f90ec19b9e6</id>
@@ -31,6 +31,7 @@
       <click_url/>
       <display_order>2</display_order>
       <created_at>2025-10-22 17:06:34</created_at>
+      <enabled>1</enabled>
     </ad>
   </webads>
   <mobileads>

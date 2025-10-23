@@ -367,7 +367,9 @@ function startWebAdRotation() {
     }
     
     const previewContainer = document.getElementById('webPreviewContainer');
-    const previewAds = previewContainer.querySelectorAll('.preview-ad');
+    // Only get VISIBLE enabled ads (not hidden disabled ones)
+    const allPreviewAds = previewContainer.querySelectorAll('.preview-ad');
+    const previewAds = Array.from(allPreviewAds).filter(ad => ad.style.display !== 'none');
     
     // No rotation needed for 0 or 1 ads
     if (previewAds.length <= 1) {

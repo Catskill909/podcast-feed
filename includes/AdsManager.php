@@ -262,9 +262,11 @@ class AdsManager
     public function getEnabledWebAds(): array
     {
         $ads = $this->getWebAds();
-        return array_filter($ads, function($ad) {
+        $filtered = array_filter($ads, function($ad) {
             return $ad['enabled'] === true;
         });
+        // Reset array keys so first enabled ad is at index 0
+        return array_values($filtered);
     }
 
     /**
@@ -273,8 +275,10 @@ class AdsManager
     public function getEnabledMobileAds(): array
     {
         $ads = $this->getMobileAds();
-        return array_filter($ads, function($ad) {
+        $filtered = array_filter($ads, function($ad) {
             return $ad['enabled'] === true;
         });
+        // Reset array keys so first enabled ad is at index 0
+        return array_values($filtered);
     }
 }

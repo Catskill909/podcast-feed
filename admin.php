@@ -1076,10 +1076,19 @@ if (isset($_GET['edit'])) {
                         
                         <p><strong>Manage Banners:</strong></p>
                         <ul>
-                            <li><strong>Reorder</strong> - Drag banner cards to change rotation sequence</li>
                             <li><strong>Delete</strong> - Click X button, confirm deletion</li>
-                            <li><strong>Toggle On/Off</strong> - Enable/disable web or mobile ads independently</li>
+                            <li><strong>Section Toggle</strong> - Enable/disable entire web or mobile ad sections</li>
+                            <li><strong>Individual Toggle</strong> - Enable/disable each ad individually (toggle on date row)</li>
                             <li><strong>Adjust Timing</strong> - Set rotation duration (5-60s) and fade duration (0.5-3s)</li>
+                        </ul>
+                        
+                        <p><strong>Per-Ad Enable/Disable:</strong></p>
+                        <ul>
+                            <li>Each banner has its own toggle switch (bottom right, on date row)</li>
+                            <li>Toggle ON (green) = Ad appears in preview and feeds</li>
+                            <li>Toggle OFF (gray) = Ad is hidden, shown at 50% opacity in manager</li>
+                            <li>Changes are instant - preview updates in real-time</li>
+                            <li>Only enabled ads appear in mobile RSS feed</li>
                         </ul>
                         
                         <p><strong>Live Preview:</strong></p>

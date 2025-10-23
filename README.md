@@ -4,6 +4,21 @@ A complete podcast platform combining a modern directory browser with a full-fea
 
 ---
 
+## 🆕 Recent Updates (October 23, 2025)
+
+### **Individual Ad Toggles & Sync Improvements**
+- ✅ **Per-Ad Enable/Disable**: Individual toggle switches for each banner ad
+  - Toggle on date row (bottom right) for granular control
+  - Visual feedback: disabled ads show at 50% opacity
+  - Real-time preview updates when toggling web ads
+  - Only enabled ads appear in preview, front page, and RSS feed
+- ✅ **Auto-Refresh Cooldown Reduced**: Changed from 30 minutes to 5 minutes
+  - New episodes appear within 5 minutes instead of 30 minutes
+- ✅ **Manual Refresh Cache Bypass**: Manual refresh button (🔄) now bypasses cache
+  - Always fetches fresh data from RSS feed for immediate updates
+
+---
+
 ## ⚠️ CRITICAL: DEVELOPMENT DISCIPLINE - READ FIRST
 
 **These principles MUST be followed on every task. They prevent hours of wasted effort:**
@@ -623,9 +638,12 @@ Access the admin panel by clicking "Admin" in the header or visiting `/admin.php
 
 #### **Manage Banners:**
 - **Add URLs**: Click "Add URL" button, enter destination URL in modal
-- **Reorder**: Drag ad cards to change rotation sequence
 - **Delete**: Click X button, confirm deletion
-- **Toggle On/Off**: Enable/disable web or mobile ads
+- **Section Toggle**: Enable/disable entire web or mobile ad sections
+- **Individual Toggle**: Enable/disable each ad individually (toggle on date row)
+  - Toggle ON (green) = Ad appears in preview and feeds
+  - Toggle OFF (gray) = Ad is hidden, shown at 50% opacity
+  - Changes are instant - preview updates in real-time
 - **Adjust Timing**: 
   - Rotation Duration: 5-60 seconds
   - Fade Duration: 0.5-3 seconds

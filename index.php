@@ -66,7 +66,7 @@ $stats = $podcastManager->getStats();
             require_once __DIR__ . '/includes/AdsManager.php';
             $adsManager = new AdsManager();
             $adsSettings = $adsManager->getSettings();
-            $webAds = $adsManager->getWebAds();
+            $webAds = $adsManager->getEnabledWebAds(); // Only get enabled ads
             
             if ($adsSettings['web_ads_enabled'] && !empty($webAds)):
             ?>

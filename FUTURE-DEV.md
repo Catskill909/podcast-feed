@@ -5,6 +5,22 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 
 ## ✅ Recently Completed (October 2025)
 
+### **October 23, 2025 - Individual Ad Toggles & Sync Improvements** - COMPLETE ✨
+- ✅ **Per-Ad Enable/Disable** - Individual toggle switches for each banner ad
+  - Toggle on date row (bottom right) for each ad card
+  - Visual feedback: disabled ads show at 50% opacity
+  - Real-time preview updates when toggling web ads
+  - Only enabled ads appear in preview, front page, and RSS feed
+- ✅ **Auto-Refresh Cooldown Reduced** - Changed from 30 minutes to 5 minutes
+  - New episodes appear within 5 minutes instead of 30 minutes
+  - Better user experience with more frequent updates
+- ✅ **Manual Refresh Cache Bypass** - Manual refresh button (🔄) now bypasses cache
+  - Always fetches fresh data from RSS feed
+  - Auto-refresh uses cache for performance
+  - Manual refresh for immediate updates
+- **Impact:** Granular control over individual ads, faster episode updates, reliable manual refresh
+- **Files Modified:** 7 files (AdsXMLHandler.php, AdsManager.php, ads-manager.php, ads-manager.css, ads-manager.js, mobile-ads-feed.php, toggle-ad-enabled.php)
+
 ### **October 22, 2025 - Banner Ads Management System** - COMPLETE ✨✨✨ MAJOR MILESTONE
 - ✅ **Complete Ad Management** - Upload, manage, and display banner advertisements
 - ✅ **Three Ad Types** - Web banners (728x90), phone banners (320x50), tablet banners (728x90)
@@ -14,8 +30,7 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - ✅ **Clickable Banners** - Banners link to destination URLs, open in new tab
 - ✅ **Front-End Integration** - Rotating banner display on public homepage
 - ✅ **RSS Feed** - Mobile banner feed for app consumption with click tracking
-- ✅ **Drag-to-Reorder** - Sortable.js integration for easy reordering
-- ✅ **On/Off Toggles** - Enable/disable web and mobile ads independently
+- ✅ **Section Toggles** - Enable/disable entire web or mobile ad sections
 - ✅ **Configurable Rotation** - Adjust rotation duration (5-60s) and fade duration (0.5-3s)
 - ✅ **Material Design UI** - Beautiful dark-themed interface with smooth animations
 - ✅ **Production Ready** - Uses same patterns as existing features, Coolify-compatible
@@ -187,19 +202,27 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - Bulk export to CSV
 - **Impact:** Saves time when managing many podcasts
 
-### 3. **Quick Filters**
+### 3. **Banner Ads - Drag-to-Reorder**
+- Drag banner cards to change rotation sequence
+- Visual feedback during drag operation
+- Save order automatically
+- Sortable.js integration (already included in project)
+- **Impact:** Easy control over ad rotation order without manual numbering
+- **Status:** Planned - Sortable.js is ready, just needs implementation
+
+### 4. **Quick Filters**
 - Filter by status (active/inactive)
 - Filter by date added
 - Search by description content
 - **Impact:** Easier navigation of large podcast lists
 
-### 4. **Feed Preview in Flutter Format**
+### 5. **Feed Preview in Flutter Format**
 - Show how the feed will look in your Flutter app
 - Card-based preview with images
 - Test different layouts
 - **Impact:** See exactly what users will see
 
-### 5. **Podcast Categories/Tags**
+### 6. **Podcast Categories/Tags**
 - Add categories (News, Comedy, Tech, etc.)
 - Multiple tags per podcast
 - Filter by category
