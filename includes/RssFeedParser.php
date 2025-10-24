@@ -10,7 +10,7 @@ class RssFeedParser
 {
     private $timeout = 3; // seconds (reduced for faster failures)
     private $userAgent = 'PodFeed Builder/1.0';
-    private $cacheTime = 3600; // Cache results for 1 hour
+    private $cacheTime = 300; // Cache results for 5 minutes (matches auto-refresh interval)
 
     /**
      * Get cached feed data if available

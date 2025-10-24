@@ -34,6 +34,70 @@ $stats = $podcastManager->getStats();
     <link rel="stylesheet" href="assets/css/player-modal.css?v=3.0.3">
     <link rel="stylesheet" href="assets/css/web-banner.css?v=<?php echo time(); ?>">
     
+    <!-- CRITICAL MOBILE CSS - INLINE TO BYPASS CACHE -->
+    <style>
+        /* Touch device detection and fixes */
+        @media (pointer: coarse) {
+            .podcast-card:hover {
+                transform: none !important;
+                box-shadow: none !important;
+                border-color: #30363d !important;
+            }
+            .podcast-card:hover .podcast-card-cover img {
+                transform: none !important;
+            }
+            .podcast-card:hover .podcast-card-play-overlay {
+                opacity: 0 !important;
+            }
+            .podcast-card:hover .podcast-card-play-icon {
+                transform: scale(0.8) !important;
+            }
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            /* Prevent text selection */
+            .podcast-card,
+            .podcast-card-title-overlay,
+            .podcast-card-description,
+            .podcast-card-info {
+                -webkit-user-select: none !important;
+                user-select: none !important;
+                -webkit-tap-highlight-color: transparent !important;
+                touch-action: manipulation !important;
+            }
+            
+            /* Scale cards down to show peek */
+            .podcast-card {
+                transform: scale(0.88) !important;
+            }
+            .podcast-card:hover {
+                transform: scale(0.88) !important;
+            }
+            
+            /* Larger badges - FIXED PX SIZES */
+            .podcast-card-badge {
+                top: 8px !important;
+                right: 8px !important;
+                font-size: 15px !important;
+                padding: 8px 14px !important;
+                min-height: 32px !important;
+            }
+            .podcast-card-new-badge {
+                top: 8px !important;
+                left: 8px !important;
+                font-size: 15px !important;
+                padding: 8px 14px !important;
+                min-height: 32px !important;
+            }
+            
+            /* Grid padding */
+            .podcasts-grid {
+                padding: 0 var(--spacing-lg) !important;
+            }
+        }
+    </style>
+    
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
 </head>
