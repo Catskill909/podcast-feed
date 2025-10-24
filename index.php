@@ -27,12 +27,133 @@ $stats = $podcastManager->getStats();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/components.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/browse.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/sort-controls.css?v=3.0.1">
-    <link rel="stylesheet" href="assets/css/player-modal.css?v=3.0.3">
+    <link rel="stylesheet" href="assets/css/sort-controls.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/player-modal.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/web-banner.css?v=<?php echo time(); ?>">
+    
+    <!-- CRITICAL MOBILE CSS - Inline to override ALL external stylesheets -->
+    <style>
+        /* Disable ALL hover effects on touch devices */
+        @media (hover: none) and (pointer: coarse), (max-width: 768px) {
+            /* Disable ALL hover pseudo-classes */
+            *:hover {
+                background-color: inherit !important;
+                transform: none !important;
+                box-shadow: inherit !important;
+                border-color: inherit !important;
+                opacity: inherit !important;
+                color: inherit !important;
+            }
+            
+            /* Podcast cards - disable hover completely */
+            .podcast-card:hover {
+                transform: none !important;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+                border-color: var(--border-primary) !important;
+            }
+            
+            .podcast-card:hover .podcast-card-cover img {
+                transform: none !important;
+            }
+            
+            .podcast-card-play-overlay {
+                display: none !important;
+                opacity: 0 !important;
+            }
+            
+            .podcast-card:hover .podcast-card-play-overlay {
+                display: none !important;
+                opacity: 0 !important;
+            }
+            
+            /* Disable text selection and blue tap highlight */
+            .podcast-card,
+            .podcast-card *,
+            .stat-badge-inline,
+            .stat-badge-inline *,
+            .sort-button,
+            .sort-option,
+            button,
+            a {
+                -webkit-user-select: none !important;
+                user-select: none !important;
+                -webkit-tap-highlight-color: transparent !important;
+                -webkit-touch-callout: none !important;
+                tap-highlight-color: transparent !important;
+            }
+            
+            /* Make badges LARGE and touch-friendly - FIXED PX SIZES */
+            .podcast-card-badge {
+                font-size: 18px !important;
+                padding: 12px 18px !important;
+                min-height: 44px !important;
+                font-weight: 700 !important;
+                line-height: 1.2 !important;
+            }
+            
+            .podcast-card-new-badge {
+                font-size: 18px !important;
+                padding: 12px 18px !important;
+                min-height: 44px !important;
+                font-weight: 700 !important;
+                line-height: 1.2 !important;
+            }
+            
+            .stat-badge-inline {
+                font-size: 16px !important;
+                padding: 10px 16px !important;
+                min-height: 40px !important;
+            }
+            
+            /* Sort button - larger touch target */
+            .sort-button {
+                min-height: 48px !important;
+                padding: 12px 16px !important;
+            }
+        }
+        
+        /* PHONE ONLY - Add horizontal padding for peek effect */
+        @media (max-width: 480px) {
+            /* Override root font-size reduction */
+            html {
+                font-size: 16px !important;
+            }
+            
+            /* Single column grid with padding for peek */
+            .podcasts-grid {
+                grid-template-columns: 1fr !important;
+                gap: 24px !important;
+                padding: 0 32px !important;
+                overflow-x: visible !important;
+            }
+            
+            /* Scale cards to show peek */
+            .podcast-card {
+                transform: scale(0.88) !important;
+                margin: 0 !important;
+            }
+            
+            .podcast-card:hover {
+                transform: scale(0.88) !important;
+            }
+            
+            /* EXTRA LARGE badges on phones */
+            .podcast-card-badge {
+                font-size: 20px !important;
+                padding: 14px 20px !important;
+                min-height: 48px !important;
+            }
+            
+            .podcast-card-new-badge {
+                font-size: 20px !important;
+                padding: 14px 20px !important;
+                min-height: 48px !important;
+            }
+        }
+    </style>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
