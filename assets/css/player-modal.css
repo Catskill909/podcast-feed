@@ -617,21 +617,21 @@ select#playerEpisodeSort.form-control {
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
-  position: relative;
   user-select: none;
   -webkit-user-select: none;
+  text-overflow: ellipsis;
 }
 
 .audio-player-title.scrolling {
-  animation: scroll-title 15s linear infinite;
+  animation: scroll-title 20s linear infinite;
 }
 
 @keyframes scroll-title {
   0% {
-    transform: translateX(0%);
+    text-indent: 0;
   }
   100% {
-    transform: translateX(-50%);
+    text-indent: -100%;
   }
 }
 
