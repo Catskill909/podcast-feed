@@ -493,7 +493,19 @@ class AudioPlayer {
 
         const titleEl = document.getElementById('currentEpisodeTitle');
         if (titleEl) {
-            titleEl.textContent = this.currentEpisode.title;
+            // Wrap title in span for scrolling animation
+            const titleText = this.currentEpisode.title;
+            titleEl.innerHTML = `<span class="audio-player-title-text">${titleText}</span>`;
+            
+            // Check if text overflows and needs scrolling - ONLY scroll if overflow
+            setTimeout(() => {
+                const textSpan = titleEl.querySelector('.audio-player-title-text');
+                if (textSpan && textSpan.scrollWidth > titleEl.clientWidth) {
+                    textSpan.classList.add('needs-scroll');
+                } else if (textSpan) {
+                    textSpan.classList.remove('needs-scroll');
+                }
+            }, 100);
         }
 
         // Update mini player if visible

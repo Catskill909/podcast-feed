@@ -97,10 +97,10 @@
 }
 
 .player-modal-close {
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: rgba(255, 255, 255, 1);
-  font-size: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 20px;
   cursor: pointer;
   padding: 0;
   border-radius: 50%;
@@ -108,17 +108,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  width: 40px;
+  height: 40px;
 }
 
 .player-modal-close:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
   color: #ffffff;
-  transform: rotate(90deg) scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transform: rotate(90deg);
 }
 
 .player-icon {
@@ -612,24 +610,50 @@ select#playerEpisodeSort.form-control {
   margin-left: var(--spacing-md);
   flex: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
+  position: relative;
+}
+
+.audio-player-title-text {
+  display: inline-block;
   white-space: nowrap;
+  animation: none;
+  padding-right: 0;
+}
+
+.audio-player-title-text.needs-scroll {
+  animation: scroll-text 15s linear infinite;
+  padding-right: 50px;
+}
+
+@keyframes scroll-text {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 .audio-player-close {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  font-size: var(--font-size-xl);
+  font-size: 18px;
   padding: var(--spacing-xs);
   border-radius: var(--border-radius);
   transition: all var(--transition-fast);
+  min-width: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .audio-player-close:hover {
-  color: var(--text-primary);
-  background: var(--bg-hover);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* ============================================
@@ -865,13 +889,7 @@ select#playerEpisodeSort.form-control {
     max-height: 95vh;
   }
 
-  /* Larger close button on tablet */
-  .player-modal-close {
-    width: 52px;
-    height: 52px;
-    font-size: 26px;
-    border-width: 2px;
-  }
+  /* Keep modal close button same size on tablet */
 
   .player-podcast-info {
     grid-template-columns: 1fr;
@@ -964,14 +982,7 @@ select#playerEpisodeSort.form-control {
     border-radius: 0;
   }
 
-  /* Even larger close button on mobile */
-  .player-modal-close {
-    width: 56px;
-    height: 56px;
-    font-size: 28px;
-    border-width: 2px;
-    background: rgba(255, 255, 255, 0.2);
-  }
+  /* Keep modal close button same size on mobile */
 
   /* Enhanced header separation on mobile */
   .player-modal-header {
