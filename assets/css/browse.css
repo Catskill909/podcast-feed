@@ -609,44 +609,55 @@
     display: none !important;
   }
   
-  /* Prevent text selection and blue highlights on mobile */
+  /* Prevent text selection and tap highlights on mobile */
   .podcast-card,
   .podcast-card *,
+  .podcast-card-cover,
+  .podcast-card-overlay,
   .podcast-card-title-overlay,
   .podcast-card-description,
-  .podcast-card-info {
+  .podcast-card-info,
+  .podcast-card-meta {
     -webkit-user-select: none !important;
     user-select: none !important;
-    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
     -webkit-touch-callout: none !important;
+    touch-action: manipulation !important;
   }
   
-  /* Larger badges for mobile readability */
+  /* Disable active/focus state transforms and outlines on mobile */
+  .podcast-card:active,
+  .podcast-card:focus {
+    transform: none !important;
+    outline: none !important;
+  }
+  
+  /* Slightly larger badges for mobile readability */
   .podcast-card-badge {
-    font-size: 18px !important;
-    padding: 12px 18px !important;
-    min-height: 44px !important;
-    font-weight: 700 !important;
+    font-size: 13px !important;
+    padding: 8px 12px !important;
+    min-height: 32px !important;
+    font-weight: 600 !important;
   }
   
   .podcast-card-new-badge {
-    font-size: 18px !important;
-    padding: 12px 18px !important;
-    min-height: 44px !important;
-    font-weight: 700 !important;
+    font-size: 13px !important;
+    padding: 8px 12px !important;
+    min-height: 32px !important;
+    font-weight: 600 !important;
   }
   
   /* Stat badges in header */
   .stat-badge-inline {
-    font-size: 16px !important;
-    padding: 10px 16px !important;
-    min-height: 40px !important;
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+    min-height: 36px !important;
   }
   
   /* Sort button touch target */
   .sort-button {
-    min-height: 48px !important;
-    padding: 12px 16px !important;
+    min-height: 44px !important;
+    padding: 10px 14px !important;
   }
 }
 
@@ -696,38 +707,38 @@
     padding: 0 var(--spacing-sm);
   }
 
-  /* Single column grid with padding for peek effect */
+  /* Single column grid with subtle padding for peek effect */
   .podcasts-grid {
     grid-template-columns: 1fr !important;
-    gap: 24px !important;
-    padding: 0 32px !important;
+    gap: 20px !important;
+    padding: 0 16px !important;
   }
 
-  /* Scale cards to show peek of next/previous card */
+  /* Slight scale to show subtle peek of next/previous card */
   .podcast-card {
-    transform: scale(0.88) !important;
+    transform: scale(0.97) !important;
   }
   
   /* Override any hover transforms on mobile */
   .podcast-card:hover {
-    transform: scale(0.88) !important;
+    transform: scale(0.97) !important;
   }
 
-  /* EXTRA LARGE badges on phones - Fixed px sizes */
+  /* Moderately larger badges on phones */
   .podcast-card-badge {
     top: 8px;
     right: 8px;
-    font-size: 20px !important;
-    padding: 14px 20px !important;
-    min-height: 48px !important;
+    font-size: 14px !important;
+    padding: 8px 14px !important;
+    min-height: 36px !important;
   }
 
   .podcast-card-new-badge {
     top: 8px;
     left: 8px;
-    font-size: 20px !important;
-    padding: 14px 20px !important;
-    min-height: 48px !important;
+    font-size: 14px !important;
+    padding: 8px 14px !important;
+    min-height: 36px !important;
   }
 }
 
