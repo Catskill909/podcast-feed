@@ -493,13 +493,20 @@ class AudioPlayer {
 
         const titleEl = document.getElementById('currentEpisodeTitle');
         if (titleEl) {
-            titleEl.textContent = this.currentEpisode.title;
+            const title = this.currentEpisode.title;
+            
+            // First set text normally to measure
+            titleEl.textContent = title;
+            titleEl.classList.remove('scrolling');
             
             // Check if text needs scrolling after render
             setTimeout(() => {
                 if (titleEl.scrollWidth > titleEl.clientWidth) {
+                    // Duplicate text for seamless scrolling
+                    titleEl.textContent = title + '   •   ' + title + '   •   ' + title;
                     titleEl.classList.add('scrolling');
                 } else {
+                    titleEl.textContent = title;
                     titleEl.classList.remove('scrolling');
                 }
             }, 100);
