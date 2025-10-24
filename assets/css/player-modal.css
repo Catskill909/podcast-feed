@@ -610,27 +610,22 @@ select#playerEpisodeSort.form-control {
   margin-left: var(--spacing-md);
   flex: 1;
   overflow: hidden;
-  position: relative;
-}
-
-.audio-player-title-text {
-  display: inline-block;
   white-space: nowrap;
-  animation: none;
-  padding-right: 0;
+  position: relative;
+  mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%);
 }
 
-.audio-player-title-text.needs-scroll {
-  animation: scroll-text 15s linear infinite;
-  padding-right: 50px;
+.audio-player-title.scrolling {
+  animation: marquee 12s linear infinite;
 }
 
-@keyframes scroll-text {
+@keyframes marquee {
   0% {
-    transform: translateX(0);
+    text-indent: 0;
   }
   100% {
-    transform: translateX(-100%);
+    text-indent: -50%;
   }
 }
 

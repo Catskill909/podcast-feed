@@ -493,17 +493,14 @@ class AudioPlayer {
 
         const titleEl = document.getElementById('currentEpisodeTitle');
         if (titleEl) {
-            // Wrap title in span for scrolling animation
-            const titleText = this.currentEpisode.title;
-            titleEl.innerHTML = `<span class="audio-player-title-text">${titleText}</span>`;
+            titleEl.textContent = this.currentEpisode.title;
             
-            // Check if text overflows and needs scrolling - ONLY scroll if overflow
+            // Check if text needs scrolling after render
             setTimeout(() => {
-                const textSpan = titleEl.querySelector('.audio-player-title-text');
-                if (textSpan && textSpan.scrollWidth > titleEl.clientWidth) {
-                    textSpan.classList.add('needs-scroll');
-                } else if (textSpan) {
-                    textSpan.classList.remove('needs-scroll');
+                if (titleEl.scrollWidth > titleEl.clientWidth) {
+                    titleEl.classList.add('scrolling');
+                } else {
+                    titleEl.classList.remove('scrolling');
                 }
             }, 100);
         }
