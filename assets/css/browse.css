@@ -162,6 +162,10 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .podcast-card:hover {
@@ -175,11 +179,11 @@
 }
 
 /* Disable hover effects on touch devices */
-@media (hover: none) {
+@media (pointer: coarse) {
   .podcast-card:hover {
-    transform: none;
-    box-shadow: none;
-    border-color: var(--border-primary);
+    transform: none !important;
+    box-shadow: none !important;
+    border-color: var(--border-primary) !important;
   }
 }
 
@@ -207,9 +211,9 @@
 }
 
 /* Disable image scale on touch devices */
-@media (hover: none) {
+@media (pointer: coarse) {
   .podcast-card:hover .podcast-card-cover img {
-    transform: none;
+    transform: none !important;
   }
 }
 
@@ -244,9 +248,9 @@
 }
 
 /* Disable play overlay on touch devices */
-@media (hover: none) {
+@media (pointer: coarse) {
   .podcast-card:hover .podcast-card-play-overlay {
-    opacity: 0;
+    opacity: 0 !important;
   }
 }
 
@@ -275,9 +279,9 @@
 }
 
 /* Disable play icon animation on touch devices */
-@media (hover: none) {
+@media (pointer: coarse) {
   .podcast-card:hover .podcast-card-play-icon {
-    transform: scale(0.8);
+    transform: scale(0.8) !important;
   }
 }
 
@@ -325,6 +329,8 @@
   gap: var(--spacing-xs);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   z-index: 10;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .podcast-card-badge i {
@@ -347,6 +353,8 @@
   box-shadow: 0 2px 8px rgba(35, 134, 54, 0.4);
   z-index: 10;
   animation: pulse 2s ease-in-out infinite;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 @keyframes pulse {
@@ -570,19 +578,27 @@
 
 /* Tablet optimizations */
 @media (max-width: 768px) and (min-width: 481px) {
-  /* Larger badges for better readability on tablets */
+  /* Larger badges for better readability on tablets - USE PX NOT REM */
   .podcast-card-badge {
-    font-size: 0.875rem !important;
-    padding: 0.5rem 0.75rem !important;
+    font-size: 14px !important;
+    padding: 8px 12px !important;
   }
 
   .podcast-card-new-badge {
-    font-size: 0.875rem !important;
-    padding: 0.5rem 0.75rem !important;
+    font-size: 14px !important;
+    padding: 8px 12px !important;
   }
 }
 
 @media (max-width: 480px) {
+  /* Prevent text selection and copy menu on mobile */
+  .podcast-card-title-overlay,
+  .podcast-card-description,
+  .podcast-card-info {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
   .hero-section {
     padding: var(--spacing-sm) 0;
   }
@@ -629,24 +645,31 @@
     padding: 0 var(--spacing-lg);
   }
 
-  /* Scale down cards to show peek of next card */
+  /* Scale down cards MORE to show peek of next card */
   .podcast-card {
-    transform: scale(0.95);
+    transform: scale(0.88) !important;
+  }
+  
+  /* Override any hover transforms on mobile */
+  .podcast-card:hover {
+    transform: scale(0.88) !important;
   }
 
-  /* Larger badges for better readability on mobile */
+  /* MUCH LARGER badges for mobile - USE PX NOT REM to avoid root font-size scaling */
   .podcast-card-badge {
-    top: var(--spacing-sm);
-    right: var(--spacing-sm);
-    font-size: 0.875rem !important; /* Much larger for mobile readability */
-    padding: 0.5rem 0.75rem !important;
+    top: 8px;
+    right: 8px;
+    font-size: 15px !important; /* Fixed px size, not affected by root font-size */
+    padding: 8px 14px !important;
+    min-height: 32px; /* Ensure touch-friendly size */
   }
 
   .podcast-card-new-badge {
-    top: var(--spacing-sm);
-    left: var(--spacing-sm);
-    font-size: 0.875rem !important; /* Much larger for mobile readability */
-    padding: 0.5rem 0.75rem !important;
+    top: 8px;
+    left: 8px;
+    font-size: 15px !important; /* Fixed px size, not affected by root font-size */
+    padding: 8px 14px !important;
+    min-height: 32px; /* Ensure touch-friendly size */
   }
 }
 

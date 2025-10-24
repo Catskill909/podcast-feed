@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile CSS Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #0d1117;
+            color: white;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .pass {
+            background: #238636;
+        }
+        .fail {
+            background: #da3633;
+        }
+        .info {
+            background: #1f6feb;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mobile CSS Debug Test</h1>
+    
+    <div class="test-section">
+        <h2>Device Detection</h2>
+        <div class="test-result info">
+            <strong>Screen Width:</strong> <span id="screenWidth"></span>px
+        </div>
+        <div class="test-result info">
+            <strong>Viewport Width:</strong> <span id="viewportWidth"></span>px
+        </div>
+        <div class="test-result info">
+            <strong>User Agent:</strong> <span id="userAgent"></span>
+        </div>
+        <div class="test-result info">
+            <strong>Pointer Type:</strong> <span id="pointerType"></span>
+        </div>
+        <div class="test-result info">
+            <strong>Hover Capability:</strong> <span id="hoverCapability"></span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Media Query Tests</h2>
+        <div class="test-result" id="maxWidth480"></div>
+        <div class="test-result" id="pointerCoarse"></div>
+        <div class="test-result" id="hoverNone"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>CSS File Cache</h2>
+        <div class="test-result info">
+            <strong>Browse.css URL:</strong><br>
+            <span id="cssUrl"></span>
+        </div>
+        <button onclick="location.reload(true)" style="padding: 10px 20px; margin-top: 10px; background: #238636; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Hard Reload (Clear Cache)
+        </button>
+    </div>
+
+    <script>
+        // Device info
+        document.getElementById('screenWidth').textContent = screen.width;
+        document.getElementById('viewportWidth').textContent = window.innerWidth;
+        document.getElementById('userAgent').textContent = navigator.userAgent;
+        
+        // Pointer type
+        const pointerType = matchMedia('(pointer: coarse)').matches ? 'coarse (touch)' : 
+                           matchMedia('(pointer: fine)').matches ? 'fine (mouse)' : 'none';
+        document.getElementById('pointerType').textContent = pointerType;
+        
+        // Hover capability
+        const hoverCap = matchMedia('(hover: hover)').matches ? 'yes (can hover)' : 
+                        matchMedia('(hover: none)').matches ? 'no (touch only)' : 'unknown';
+        document.getElementById('hoverCapability').textContent = hoverCap;
+
+        // Media query tests
+        function testMediaQuery(id, query, description) {
+            const matches = matchMedia(query).matches;
+            const el = document.getElementById(id);
+            el.className = 'test-result ' + (matches ? 'pass' : 'fail');
+            el.innerHTML = `<strong>${description}:</strong> ${matches ? 'MATCHES ✓' : 'NO MATCH ✗'}`;
+        }
+
+        testMediaQuery('maxWidth480', '(max-width: 480px)', '@media (max-width: 480px)');
+        testMediaQuery('pointerCoarse', '(pointer: coarse)', '@media (pointer: coarse)');
+        testMediaQuery('hoverNone', '(hover: none)', '@media (hover: none)');
+
+        // CSS URL
+        const cssLink = document.createElement('link');
+        cssLink.href = 'assets/css/browse.css?v=' + Date.now();
+        document.getElementById('cssUrl').textContent = cssLink.href;
+    </script>
+</body>
+</html>
