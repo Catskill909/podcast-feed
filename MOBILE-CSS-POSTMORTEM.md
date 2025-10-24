@@ -2,7 +2,8 @@
 
 **Date:** October 24, 2025  
 **Time Spent:** ~4+ hours  
-**Status:** ACTUALLY FIXED (CSS cascade order issue)
+**Status:** ✅ FIXED (Clean solution implemented)  
+**Final Commit:** `78362aa` - Clean mobile CSS
 
 ---
 
@@ -282,3 +283,29 @@ This shows actual viewport width browser sees.
 **Badge sizes:**
 - Desktop: 12px (0.75rem)
 - Mobile: 18px (fixed px)
+
+---
+
+## FINAL CLEAN SOLUTION (Commit 78362aa)
+
+After discovering we were testing the wrong Coolify project, we cleaned up everything:
+
+### **What We Kept:**
+1. **browse.css mobile rules** (lines 595-732) - ONE source of truth
+2. **sort-controls.css fixes** - Hover rules wrapped in `@media (hover: hover) and (pointer: fine)`
+
+### **What We Removed:**
+- 120 lines of duplicate inline CSS from index.php
+- Nuclear `!important` overrides (kept only necessary ones)
+- Debugging documentation files
+
+### **Net Result:**
+- **-251 lines of code** (removed duplicates)
+- **+32 lines of clean fixes** (enhanced browse.css)
+- All mobile CSS in ONE place (browse.css)
+- Clean, maintainable, no duplicates
+
+### **Why It Works:**
+`sort-controls.css` hover rules now only apply to `(hover: hover) and (pointer: fine)` devices, so they won't override mobile fixes or trigger on touch screens.
+
+**See:** `MOBILE-CSS-CLEAN-FIX.md` for complete documentation of the final solution.
