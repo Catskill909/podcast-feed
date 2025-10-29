@@ -5,9 +5,29 @@
  */
 
 require_once __DIR__ . '/includes/PodcastManager.php';
+require_once __DIR__ . '/includes/MenuManager.php';
 
 $podcastManager = new PodcastManager();
 $stats = $podcastManager->getStats();
+
+// Load menu configuration with fallback
+try {
+    $menuManager = new MenuManager();
+    $branding = $menuManager->getBranding();
+    $menuItems = $menuManager->getMenuItems(true); // Active only
+} catch (Exception $e) {
+    // Fallback to default menu if MenuManager fails
+    $branding = [
+        'site_title' => 'Podcast Browser',
+        'logo_type' => 'icon',
+        'logo_icon' => 'fa-podcast',
+        'logo_image' => ''
+    ];
+    $menuItems = [
+        ['label' => 'Browse', 'url' => 'index.php', 'icon_type' => 'none', 'icon_value' => '', 'target' => '_self'],
+        ['label' => 'Admin', 'url' => 'admin.php', 'icon_type' => 'fa', 'icon_value' => 'fa-lock', 'target' => '_self']
+    ];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,13 +64,35 @@ $stats = $podcastManager->getStats();
         <div class="container">
             <div class="header-content">
                 <a href="index.php" class="logo">
-                    <i class="fa-solid fa-podcast logo-icon"></i>
-                    <span>Podcast Browser</span>
+                    <?php if ($branding['logo_type'] === 'image' && !empty($branding['logo_image'])): ?>
+                        <img src="<?php echo htmlspecialchars($branding['logo_image']); ?>" 
+                             alt="Logo" class="logo-icon" style="width: 32px; height: 32px; object-fit: contain;">
+                    <?php else: ?>
+                        <i class="fa-solid <?php echo htmlspecialchars($branding['logo_icon']); ?> logo-icon"></i>
+                    <?php endif; ?>
+                    <span><?php echo htmlspecialchars($branding['site_title']); ?></span>
                 </a>
                 <nav>
                     <ul class="nav-links">
-                        <li><a href="index.php" class="active">Browse</a></li>
-                        <li><a href="admin.php"><i class="fa-solid fa-lock"></i> Admin</a></li>
+                        <?php 
+                        $currentPage = basename($_SERVER['PHP_SELF']);
+                        foreach ($menuItems as $item): 
+                            $isActive = ($currentPage === basename($item['url']));
+                        ?>
+                            <li>
+                                <a href="<?php echo htmlspecialchars($item['url']); ?>" 
+                                   <?php echo $item['target'] === '_blank' ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
+                                   <?php echo $isActive ? 'class="active"' : ''; ?>>
+                                    <?php if ($item['icon_type'] === 'fa' && !empty($item['icon_value'])): ?>
+                                        <i class="fa-solid <?php echo htmlspecialchars($item['icon_value']); ?>"></i>
+                                    <?php elseif ($item['icon_type'] === 'image' && !empty($item['icon_value'])): ?>
+                                        <img src="<?php echo htmlspecialchars($item['icon_value']); ?>" 
+                                             alt="" style="width: 16px; height: 16px; object-fit: contain; vertical-align: middle;">
+                                    <?php endif; ?>
+                                    <?php echo htmlspecialchars($item['label']); ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </nav>
             </div>

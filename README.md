@@ -282,6 +282,21 @@ git push origin main
 - **Production Ready**: Uses same patterns as existing features, Coolify-compatible
 - **~3,600 Lines of Code**: Complete system with admin interface, public display, and RSS feed
 
+### **🎨 Custom Menu Manager (October 29, 2025)** ✨✨✨
+- **Site Branding Customization**: Change site title and logo (Font Awesome icon or custom image)
+- **Dynamic Menu Management**: Add, edit, delete, and reorder navigation menu items
+- **Icon Support**: Font Awesome icons or custom image uploads for menu items
+- **Drag-to-Reorder**: Sortable.js integration for easy menu reordering
+- **Visibility Toggles**: Enable/disable menu items without deleting them
+- **Link Behavior**: Configure links to open in same window or new tab
+- **URL Flexibility**: Support for relative URLs, absolute URLs, and anchor links
+- **Live Preview**: See branding and menu changes before saving
+- **Active State Detection**: Automatically highlights current page in menu
+- **Material Design UI**: Beautiful dark-themed interface matching existing design
+- **Zero Breaking Changes**: Falls back to default menu if system fails
+- **Production Ready**: Auto-detects local vs production, uses APP_URL for assets
+- **~2,340 Lines of Code**: Complete system with admin interface and public integration
+
 ### **🎨 Public Browsing Interface (October 17, 2025)** ✨
 - **Beautiful Podcast Grid**: Responsive card layout with cover images and overlays
 - **Hover Effects**: Smooth animations with play button overlay on hover
@@ -384,8 +399,9 @@ podcast-feed/
 ├── index.php                    # Public podcast browser
 ├── admin.php                    # Admin management interface
 ├── feed.php                     # RSS XML output endpoint
-├── ads-manager.php              # Banner ads management (NEW)
-├── mobile-ads-feed.php          # Mobile ads RSS feed (NEW)
+├── ads-manager.php              # Banner ads management
+├── menu-manager.php             # Custom menu manager (NEW)
+├── mobile-ads-feed.php          # Mobile ads RSS feed
 ├── login.php                    # Placeholder login page
 ├── README.md                    # This file
 ├── config/
@@ -399,42 +415,53 @@ podcast-feed/
 │   ├── RssImportValidator.php          # RSS feed validation
 │   ├── SelfHostedPodcastManager.php    # Self-hosted podcast logic
 │   ├── SelfHostedXMLHandler.php        # Self-hosted XML operations
-│   ├── AdsManager.php                  # Ads business logic (NEW)
-│   ├── AdsXMLHandler.php               # Ads XML operations (NEW)
-│   ├── AdsImageUploader.php            # Ads image upload (NEW)
+│   ├── AdsManager.php                  # Ads business logic
+│   ├── AdsXMLHandler.php               # Ads XML operations
+│   ├── AdsImageUploader.php            # Ads image upload
+│   ├── MenuManager.php                 # Menu business logic (NEW)
+│   ├── MenuXMLHandler.php              # Menu XML operations (NEW)
 │   └── functions.php                   # Utility functions
 ├── api/
-│   ├── upload-ad.php                   # Ad upload endpoint (NEW)
-│   ├── delete-ad.php                   # Ad deletion endpoint (NEW)
-│   ├── update-ad-settings.php          # Ad settings endpoint (NEW)
-│   ├── update-ad-url.php               # Ad URL endpoint (NEW)
-│   └── get-ad-data.php                 # Ad data endpoint (NEW)
+│   ├── upload-ad.php                   # Ad upload endpoint
+│   ├── delete-ad.php                   # Ad deletion endpoint
+│   ├── update-ad-settings.php          # Ad settings endpoint
+│   ├── update-ad-url.php               # Ad URL endpoint
+│   ├── get-ad-data.php                 # Ad data endpoint
+│   ├── save-menu-branding.php          # Menu branding endpoint (NEW)
+│   ├── save-menu-item.php              # Menu item save endpoint (NEW)
+│   ├── delete-menu-item.php            # Menu item delete endpoint (NEW)
+│   ├── reorder-menu-items.php          # Menu reorder endpoint (NEW)
+│   └── toggle-menu-item.php            # Menu toggle endpoint (NEW)
 ├── assets/
 │   ├── css/
 │   │   ├── style.css           # Main dark theme styles
 │   │   ├── components.css      # UI components
 │   │   ├── browse.css          # Public browse page styles
 │   │   ├── player-modal.css    # Audio player modal styles
-│   │   ├── ads-manager.css     # Ads manager styles (NEW)
-│   │   └── web-banner.css      # Front-end banner styles (NEW)
+│   │   ├── ads-manager.css     # Ads manager styles
+│   │   ├── menu-manager.css    # Menu manager styles (NEW)
+│   │   └── web-banner.css      # Front-end banner styles
 │   └── js/
 │       ├── app.js              # Admin application logic
 │       ├── browse.js           # Public browse page logic
 │       ├── player-modal.js     # Player modal functionality
 │       ├── audio-player.js     # Audio playback controls
-│       ├── ads-manager.js      # Ads manager logic (NEW)
+│       ├── ads-manager.js      # Ads manager logic
+│       ├── menu-manager.js     # Menu manager logic (NEW)
 │       └── validation.js       # Form validation
 ├── data/
 │   ├── podcasts.xml                 # Aggregated podcast directory
 │   ├── self-hosted-podcasts.xml     # My Podcasts (self-hosted)
-│   ├── ads-config.xml               # Banner ads configuration (NEW)
+│   ├── ads-config.xml               # Banner ads configuration
+│   ├── menu-config.xml              # Menu configuration (NEW)
 │   └── backup/                      # XML backups
 ├── uploads/
 │   ├── covers/                      # Podcast cover images
 │   ├── audio/                       # Self-hosted audio files
-│   └── ads/                         # Banner ad images (NEW)
-│       ├── web/                     # Web banners (728x90)
-│       └── mobile/                  # Mobile banners (320x50, 728x90)
+│   ├── ads/                         # Banner ad images
+│   │   ├── web/                     # Web banners (728x90)
+│   │   └── mobile/                  # Mobile banners (320x50, 728x90)
+│   └── menu/                        # Menu logos and icons (NEW)
 ├── self-hosted-podcasts.php         # My Podcasts management page
 ├── self-hosted-episodes.php         # Episode management page
 ├── self-hosted-feed.php             # RSS feed generator
@@ -659,6 +686,38 @@ Access the admin panel by clicking "Admin" in the header or visiting `/admin.php
 - Copy from ads manager interface
 - Use in mobile/tablet apps
 - Includes dimensions, URLs, display order
+
+### **Custom Menu Manager** 🎨 (October 29, 2025)
+
+**Access:** Click "Menu" in admin panel or visit `/menu-manager.php`
+
+#### **Customize Site Branding:**
+1. **Site Title**: Change the site name (e.g., "My Podcast Network")
+2. **Logo Type**: Choose between:
+   - **Font Awesome Icon**: Enter class like `fa-microphone`, `fa-headphones`
+   - **Custom Image**: Upload PNG/JPG/SVG (max 2MB, recommended 64x64px)
+3. **Live Preview**: See changes before saving
+4. Click **"Save Branding"**
+
+#### **Manage Menu Items:**
+- **Add Item**: Click "+ Add Menu Item"
+  - Enter label (e.g., "About Us")
+  - Enter URL (relative like `/about.php` or full URL)
+  - Choose icon (none, Font Awesome, or custom image)
+  - Set link behavior (same window or new tab)
+  - Preview before saving
+- **Reorder**: Drag items by grip handle (⋮⋮) to reorder
+- **Toggle**: Enable/disable items without deleting (toggle switch)
+- **Edit**: Click edit icon to modify item
+- **Delete**: Click trash icon to remove (with confirmation)
+
+#### **Features:**
+- Changes appear instantly on public site
+- Active page automatically highlighted in menu
+- Disabled items hidden from public (50% opacity in admin)
+- Supports relative URLs, absolute URLs, and anchor links
+- Menu order saves automatically on drag
+- Falls back to default menu if system fails
 
 ## 📡 RSS Feed URLs
 

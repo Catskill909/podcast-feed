@@ -149,6 +149,7 @@ if (isset($_GET['edit'])) {
                         <li><a href="index.php"><i class="fa-solid fa-house"></i> Public Site</a></li>
                         <li><a href="self-hosted-podcasts.php"><i class="fa-solid fa-broadcast-tower"></i> My Podcasts</a></li>
                         <li><a href="ads-manager.php"><i class="fa-solid fa-ad"></i> Ads Manager</a></li>
+                        <li><a href="menu-manager.php"><i class="fa-solid fa-bars"></i> Menu</a></li>
                         <li><a href="javascript:void(0)" onclick="showFeedModal()">View Feed</a></li>
                         <li><a href="javascript:void(0)" onclick="showStats()">Stats</a></li>
                         <li><a href="javascript:void(0)" onclick="logout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
@@ -1137,6 +1138,74 @@ if (isset($_GET['edit'])) {
                                 <li>Use 3-5 banners for good variety without overwhelming</li>
                                 <li>Monitor click-through rates to optimize performance</li>
                                 <li>Update banners regularly to keep content fresh</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Menu Manager -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">🎨</span>
+                        Custom Menu Manager - Customize Your Site
+                    </h3>
+                    <div class="help-section-content">
+                        <p><strong>What is the Menu Manager?</strong></p>
+                        <p>Customize your site branding and navigation menu. Change the site title, logo, and add/remove menu items with full control over appearance and behavior.</p>
+                        
+                        <p><strong>How to Access:</strong></p>
+                        <ul>
+                            <li>Click <strong>"Menu"</strong> button in the header</li>
+                            <li>Or visit <code>/menu-manager.php</code> directly</li>
+                        </ul>
+                        
+                        <p><strong>Customize Site Branding:</strong></p>
+                        <ol>
+                            <li>Enter your site title (e.g., "My Podcast Network")</li>
+                            <li>Choose logo type:
+                                <ul>
+                                    <li><strong>Font Awesome Icon</strong> - Enter class like <code>fa-microphone</code> or <code>fa-headphones</code></li>
+                                    <li><strong>Custom Image</strong> - Upload PNG/JPG/SVG (max 2MB, recommended 64x64px)</li>
+                                </ul>
+                            </li>
+                            <li>Preview changes in real-time</li>
+                            <li>Click <strong>"Save Branding"</strong></li>
+                        </ol>
+                        
+                        <p><strong>Manage Menu Items:</strong></p>
+                        <ul>
+                            <li><strong>Add Item</strong> - Click "+ Add Menu Item"
+                                <ul>
+                                    <li>Enter label (e.g., "About Us")</li>
+                                    <li>Enter URL (relative like <code>/about.php</code> or full URL)</li>
+                                    <li>Choose icon (none, Font Awesome, or custom image)</li>
+                                    <li>Set link behavior (same window or new tab)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Reorder</strong> - Drag items by grip handle (⋮⋮) to reorder</li>
+                            <li><strong>Toggle</strong> - Enable/disable items without deleting (toggle switch)</li>
+                            <li><strong>Edit</strong> - Click edit icon to modify item</li>
+                            <li><strong>Delete</strong> - Click trash icon to remove (with confirmation)</li>
+                        </ul>
+                        
+                        <p><strong>Features:</strong></p>
+                        <ul>
+                            <li>Changes appear instantly on public site</li>
+                            <li>Active page automatically highlighted in menu</li>
+                            <li>Disabled items hidden from public (50% opacity in admin)</li>
+                            <li>Supports relative URLs, absolute URLs, and anchor links</li>
+                            <li>Menu order saves automatically on drag</li>
+                            <li>Falls back to default menu if system fails</li>
+                        </ul>
+                        
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>💡 Pro Tips:</strong>
+                            <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                                <li>Use Font Awesome icons for consistent look (browse icons at fontawesome.com)</li>
+                                <li>Keep menu items to 5-7 for best UX</li>
+                                <li>Use relative URLs for internal pages (faster, no domain changes needed)</li>
+                                <li>Test menu on mobile devices after making changes</li>
+                                <li>Disable items instead of deleting to easily re-enable later</li>
                             </ul>
                         </div>
                     </div>

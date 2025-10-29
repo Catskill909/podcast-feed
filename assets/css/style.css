@@ -194,12 +194,30 @@ a:hover, a:focus {
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius);
   transition: all var(--transition-base);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-decoration: none !important;
 }
 
-.nav-links a:hover, .nav-links a.active {
+.nav-links a:hover {
   color: #ffffff;
   background-color: var(--bg-hover);
-  text-decoration: none;
+  text-decoration: none !important;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.nav-links a:focus {
+  text-decoration: none !important;
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+.nav-links a.active {
+  color: #ffffff;
+  background-color: var(--bg-hover);
+  text-decoration: none !important;
+  border-color: var(--accent-primary);
 }
 
 /* Main Content Area */
