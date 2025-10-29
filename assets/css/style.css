@@ -186,6 +186,7 @@ a:hover, a:focus {
   align-items: center;
   gap: var(--spacing-lg);
   list-style: none;
+  flex-wrap: wrap;
 }
 
 .nav-links a {
@@ -197,6 +198,10 @@ a:hover, a:focus {
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   text-decoration: none !important;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .nav-links a:hover {
@@ -664,6 +669,21 @@ textarea.form-control {
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .nav-links {
+    gap: var(--spacing-sm);
+  }
+  
+  .nav-links a {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.9rem;
+  }
+  
+  .nav-links a i {
+    font-size: 0.85rem;
+  }
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 0 var(--spacing-sm);
@@ -672,6 +692,16 @@ textarea.form-control {
   .header-content {
     flex-direction: column;
     text-align: center;
+  }
+  
+  .nav-links {
+    justify-content: center;
+    gap: var(--spacing-xs);
+  }
+  
+  .nav-links a {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.85rem;
   }
   
   .content-header {
