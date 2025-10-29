@@ -139,7 +139,10 @@ class PodcastPlayerModal {
         if (titleEl) titleEl.textContent = 'Loading...';
         
         const coverEl = document.getElementById('playerPodcastCover');
-        if (coverEl) coverEl.src = '';
+        if (coverEl) {
+            coverEl.src = '';
+            coverEl.style.display = 'none';
+        }
         
         const nameEl = document.getElementById('playerPodcastName');
         if (nameEl) nameEl.textContent = 'Loading...';
@@ -216,12 +219,23 @@ class PodcastPlayerModal {
         // Update cover image
         const coverEl = document.getElementById('playerPodcastCover');
         if (coverEl) {
-            if (podcast.cover_url) {
-                coverEl.src = podcast.cover_url;
-                coverEl.alt = podcast.title;
+            coverEl.style.display = 'none';
+            coverEl.onload = () => {
                 coverEl.style.display = 'block';
-            } else {
+            };
+            coverEl.onerror = () => {
                 coverEl.style.display = 'none';
+            };
+
+            if (podcast.cover_url) {
+                if (coverEl.src !== podcast.cover_url) {
+                    coverEl.src = podcast.cover_url;
+                } else if (coverEl.complete) {
+                    coverEl.style.display = 'block';
+                }
+                coverEl.alt = podcast.title;
+            } else {
+                coverEl.removeAttribute('src');
             }
         }
 
