@@ -79,6 +79,12 @@ class PodcastPlayerModal {
         // CRITICAL: Clear old content BEFORE showing modal to prevent ghost content
         this.clearModalContent();
 
+        // Reset scroll position to top
+        const modalBody = modal.querySelector('.player-modal-body');
+        if (modalBody) {
+            modalBody.scrollTop = 0;
+        }
+
         // Show modal
         modal.classList.add('show');
         document.body.style.overflow = 'hidden';
@@ -98,6 +104,12 @@ class PodcastPlayerModal {
         if (modal) {
             modal.classList.remove('show');
             document.body.style.overflow = '';
+            
+            // Reset scroll position to top
+            const modalBody = modal.querySelector('.player-modal-body');
+            if (modalBody) {
+                modalBody.scrollTop = 0;
+            }
         }
 
         // STOP all audio when closing modal
