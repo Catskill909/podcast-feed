@@ -110,6 +110,31 @@ class AudioPlayer {
 
         // Save state
         this.savePlaybackState();
+
+        // Emit analytics event for episode started
+        this.emitEpisodeStartedEvent();
+    }
+    
+    /**
+     * Emit episode started event for analytics
+     */
+    emitEpisodeStartedEvent() {
+        if (!this.currentEpisode) return;
+        
+        const podcast = window.playerModal?.currentPodcast;
+        if (!podcast) return;
+
+        const event = new CustomEvent('audio:episodeStarted', {
+            detail: {
+                episode: this.currentEpisode,
+                podcast: {
+                    id: podcast.id,
+                    title: podcast.title
+                }
+            }
+        });
+
+        window.dispatchEvent(event);
     }
     
     /**

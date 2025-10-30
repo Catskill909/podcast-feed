@@ -129,6 +129,7 @@ if (isset($_GET['edit'])) {
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/sort-controls.css">
     <link rel="stylesheet" href="assets/css/player-modal.css">
+    <link rel="stylesheet" href="assets/css/analytics.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
     
     <!-- Simple Password Protection - ALWAYS ACTIVE -->
@@ -147,7 +148,6 @@ if (isset($_GET['edit'])) {
                 <nav>
                     <ul class="nav-links">
                         <li><a href="index.php"><i class="fa-solid fa-house"></i> Public Site</a></li>
-                        <li><a href="self-hosted-podcasts.php"><i class="fa-solid fa-broadcast-tower"></i> My Podcasts</a></li>
                         <li><a href="ads-manager.php"><i class="fa-solid fa-ad"></i> Ads Manager</a></li>
                         <li><a href="menu-manager.php"><i class="fa-solid fa-bars"></i> Menu</a></li>
                         <li><a href="javascript:void(0)" onclick="showFeedModal()">View Feed</a></li>
@@ -169,9 +169,9 @@ if (isset($_GET['edit'])) {
                         <button type="button" class="btn btn-primary" onclick="showAddModal()">
                             <i class="fa-solid fa-plus"></i> Add New Podcast
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="showImportRssModal()">
+                        <a href="javascript:void(0)" class="btn btn-secondary" onclick="showImportRssModal()">
                             <i class="fa-solid fa-rss"></i> Import from RSS
-                        </button>
+                        </a>
                         <a href="self-hosted-podcasts.php" class="btn btn-secondary">
                             <i class="fa-solid fa-broadcast-tower"></i> My Podcasts
                         </a>
@@ -537,7 +537,7 @@ if (isset($_GET['edit'])) {
 
     <!-- Stats Modal -->
     <div class="modal-overlay" id="statsModal">
-        <div class="modal modal-lg">
+        <div class="modal modal-xl">
             <div class="modal-header">
                 <h3 class="modal-title">📊 Directory Statistics</h3>
                 <button type="button" class="modal-close" onclick="hideStatsModal()">&times;</button>
@@ -546,7 +546,7 @@ if (isset($_GET['edit'])) {
                 <div class="stats-modal-content">
                     <!-- Overview Section -->
                     <div class="stats-section">
-                        <h4 class="stats-section-title">Overview</h4>
+                        <h4 class="stats-section-title">Directory Overview</h4>
                         <div class="stats-cards-grid">
                             <div class="stats-modal-card">
                                 <div class="stats-modal-card-icon">📊</div>
@@ -571,10 +571,45 @@ if (isset($_GET['edit'])) {
                             </div>
                         </div>
                     </div>
+
+                    <!-- Analytics Section -->
+                    <div class="analytics-section">
+                        <h4 class="analytics-section-title">
+                            <i class="fa-solid fa-chart-line"></i>
+                            Engagement Analytics
+                        </h4>
+
+                        <!-- Analytics Controls -->
+                        <div class="analytics-controls">
+                            <!-- Time Range Selector -->
+                            <div class="analytics-time-range">
+                                <button class="analytics-time-range-btn active" data-range="7d">7 Days</button>
+                                <button class="analytics-time-range-btn" data-range="30d">30 Days</button>
+                                <button class="analytics-time-range-btn" data-range="90d">90 Days</button>
+                                <button class="analytics-time-range-btn" data-range="all">All Time</button>
+                            </div>
+
+                            <!-- Podcast Filter -->
+                            <div class="analytics-podcast-filter">
+                                <label class="analytics-podcast-filter-label" for="analyticsPodcastFilter">
+                                    <i class="fa-solid fa-filter"></i> Filter by Podcast:
+                                </label>
+                                <select id="analyticsPodcastFilter" class="analytics-podcast-select">
+                                    <option value="">All Podcasts</option>
+                                    <!-- Populated by JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Analytics Content (populated by JavaScript) -->
+                        <div id="analyticsContent">
+                            <div class="analytics-loading">
+                                <div class="spinner"></div>
+                                <p>Loading analytics...</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="hideStatsModal()">Close</button>
             </div>
         </div>
     </div>
@@ -1208,6 +1243,50 @@ if (isset($_GET['edit'])) {
                                 <li>Disable items instead of deleting to easily re-enable later</li>
                             </ul>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Engagement Analytics -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">📊</span>
+                        Engagement Analytics - Track Your Audience
+                    </h3>
+                    <div class="help-section-content">
+                        <p><strong>What is Engagement Analytics?</strong></p>
+                        <p>Monitor how your audience interacts with your podcasts. Track plays and downloads from the public player with beautiful visualizations and detailed metrics.</p>
+                        
+                        <p><strong>Key Features:</strong></p>
+                        <ul>
+                            <li><strong>Overview Metrics:</strong> Total plays, downloads, unique listeners, and download conversion rate</li>
+                            <li><strong>Interactive Charts:</strong> Daily trend visualization with Chart.js (7d, 30d, 90d, all-time views)</li>
+                            <li><strong>Top Content:</strong> Top 10 episodes and podcasts ranked by engagement</li>
+                            <li><strong>Podcast Filtering:</strong> Use the dropdown to view analytics for individual podcasts</li>
+                            <li><strong>Privacy-Focused:</strong> No personal information collected, random session IDs only</li>
+                        </ul>
+                        
+                        <p><strong>How It Works:</strong></p>
+                        <ul>
+                            <li>Analytics are tracked only from the public player on <code>index.php</code></li>
+                            <li>Each episode is counted once per session (prevents duplicate tracking)</li>
+                            <li>Sessions rotate every 24 hours for accurate unique listener counts</li>
+                            <li>Play button, download button, and next/previous controls all trigger tracking</li>
+                        </ul>
+                        
+                        <p><strong>Accessing Analytics:</strong></p>
+                        <ol>
+                            <li>Click the <strong>"Stats"</strong> button in the admin panel</li>
+                            <li>Scroll down to the <strong>"Engagement Analytics"</strong> section</li>
+                            <li>Select a time range (7 days, 30 days, 90 days, or all time)</li>
+                            <li>Optionally filter by podcast using the dropdown</li>
+                        </ol>
+                        
+                        <p><strong>What Gets Tracked:</strong></p>
+                        <ul>
+                            <li><strong>Plays:</strong> When someone clicks play on an episode (including next/previous navigation)</li>
+                            <li><strong>Downloads:</strong> When someone clicks the download button</li>
+                            <li><strong>Unique Listeners:</strong> Approximate count based on session IDs</li>
+                        </ul>
                     </div>
                 </div>
 
@@ -1855,12 +1934,14 @@ if (isset($_GET['edit'])) {
     </div>
 
     <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="assets/js/auto-refresh.js"></script>
     <script src="assets/js/validation.js?v=<?php echo ASSETS_VERSION; ?>"></script>
     <script src="assets/js/app.js?v=<?php echo ASSETS_VERSION; ?>"></script>
     <script src="assets/js/sort-manager.js?v=<?php echo ASSETS_VERSION; ?>"></script>
     <script src="assets/js/player-modal.js?v=<?php echo ASSETS_VERSION; ?>"></script>
     <script src="assets/js/audio-player.js?v=3.0.5"></script>
+    <script src="assets/js/analytics-dashboard.js?v=1.0.0"></script>
 </body>
 
 </html>

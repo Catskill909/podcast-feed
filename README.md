@@ -4,9 +4,22 @@ A complete podcast platform combining a modern directory browser with a full-fea
 
 ---
 
-## 🆕 Recent Updates (October 23, 2025)
+## 🆕 Recent Updates (October 30, 2025)
 
-### **Individual Ad Toggles & Sync Improvements**
+### **📊 Engagement Analytics System** ✨✨✨
+- ✅ **Complete Analytics Tracking**: Track plays and downloads from the public player
+  - Session-based deduplication (one count per episode per session)
+  - Tracks play button, download button, and next/previous navigation
+  - 24-hour session rotation for accurate unique listener counts
+- ✅ **Beautiful Analytics Dashboard**: Integrated into Stats modal in admin panel
+  - Overview cards: Total plays, downloads, unique listeners, download rate
+  - Interactive trend chart with Chart.js (7-day, 30-day, 90-day, all-time views)
+  - Top 10 episodes and podcasts tables with detailed metrics
+  - Podcast filter dropdown to view stats for individual podcasts
+- ✅ **Privacy-Focused**: No PII collected, session IDs are random UUIDs
+- ✅ **Performance Optimized**: Client-side deduplication, rate limiting, XML storage
+
+### **Individual Ad Toggles & Sync Improvements** (October 23, 2025)
 - ✅ **Per-Ad Enable/Disable**: Individual toggle switches for each banner ad
   - Toggle on date row (bottom right) for granular control
   - Visual feedback: disabled ads show at 50% opacity
@@ -296,6 +309,20 @@ git push origin main
 - **Zero Breaking Changes**: Falls back to default menu if system fails
 - **Production Ready**: Auto-detects local vs production, uses APP_URL for assets
 - **~2,340 Lines of Code**: Complete system with admin interface and public integration
+
+### **📊 Engagement Analytics (October 30, 2025)** ✨✨✨
+- **Comprehensive Tracking**: Monitor plays and downloads from the public player
+- **Session-Based Deduplication**: One count per episode per session (prevents duplicate tracking)
+- **Privacy-Focused**: No PII collected, random UUID session IDs, 24-hour rotation
+- **Beautiful Dashboard**: Integrated into Stats modal with Chart.js visualizations
+- **Overview Metrics**: Total plays, downloads, unique listeners, download conversion rate
+- **Interactive Charts**: Line chart showing daily trends (7d, 30d, 90d, all-time)
+- **Top Content Tables**: Top 10 episodes and podcasts ranked by engagement
+- **Podcast Filtering**: Dropdown to view analytics for individual podcasts
+- **Rate Limiting**: 50 events/minute per session to prevent abuse
+- **XML Storage**: Lightweight file-based persistence matching app architecture
+- **Automatic Cleanup**: Configurable data retention (default: 365 days)
+- **~2,100 Lines of Code**: Complete tracking, aggregation, and visualization system
 
 ### **🎨 Public Browsing Interface (October 17, 2025)** ✨
 - **Beautiful Podcast Grid**: Responsive card layout with cover images and overlays

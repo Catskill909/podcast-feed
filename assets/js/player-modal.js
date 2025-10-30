@@ -635,6 +635,23 @@ class PodcastPlayerModal {
      * Download episode
      */
     downloadEpisode(audioUrl, title) {
+        // Find the episode by audio URL
+        const episode = this.episodes.find(ep => ep.audio_url === audioUrl);
+        
+        // Emit analytics event before download
+        if (episode && this.currentPodcast) {
+            const event = new CustomEvent('audio:episodeDownloaded', {
+                detail: {
+                    episode: episode,
+                    podcast: {
+                        id: this.currentPodcast.id,
+                        title: this.currentPodcast.title
+                    }
+                }
+            });
+            window.dispatchEvent(event);
+        }
+
         const link = document.createElement('a');
         link.href = audioUrl;
         link.download = `${title}.mp3`;
