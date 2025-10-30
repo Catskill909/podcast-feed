@@ -948,6 +948,26 @@ if (isset($_GET['edit'])) {
                     </div>
                 </div>
                 
+                <!-- Live Streaming Player Modal -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">📻</span>
+                        Live Streaming Player Modal
+                    </h3>
+                    <div class="help-section-content">
+                        <p>Launch your live radio stream in a dedicated modal without sending visitors away from the directory.</p>
+                        <ul>
+                            <li>Add a standard menu item in <strong>Menu Manager</strong> that points to <code>streaming-audio-player.html</code> (relative or full URL).</li>
+                            <li>When users click the link on the public site, the streaming player loads inside a polished overlay with keyboard and screen-reader support.</li>
+                            <li>Closing the modal (X button, Escape key, or overlay click) automatically pauses playback so audio never continues in the background.</li>
+                            <li>The same player page (<code>/streaming-audio-player.html</code>) can be shared directly or embedded elsewhere if you need an external landing page.</li>
+                        </ul>
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>💡 Tip:</strong> Use Menu Manager icons (e.g., <code>fa-tower-broadcast</code>) and custom labels like “Live Audio” or “Listen Live” to match your station branding.
+                        </div>
+                    </div>
+                </div>
+
                 <!-- My Podcasts (Self-Hosted) -->
                 <div class="help-section">
                     <h3 class="help-section-title">

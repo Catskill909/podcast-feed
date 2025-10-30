@@ -19,6 +19,14 @@ A complete podcast platform combining a modern directory browser with a full-fea
 - ✅ **Privacy-Focused**: No PII collected, session IDs are random UUIDs
 - ✅ **Performance Optimized**: Client-side deduplication, rate limiting, XML storage
 
+### **🎧 Live Streaming Player Modal** (October 30, 2025)
+- ✅ **One-Click Live Audio**: Any menu link pointing to `streaming-audio-player.html` opens a gorgeous modal overlay without leaving the page
+- ✅ **Standalone Player Page**: `streaming-audio-player.html` hosts the full streaming UI for direct embeds or external sharing
+- ✅ **Modal Controls**: Close button pauses playback automatically, with polished styling and focus trap
+- ✅ **Menu Manager Friendly**: Works with standard menu items—no custom code required, just drop in the URL
+- ✅ **Shared Styling**: New `streaming-modal.css` harmonizes with the dark UI; player reuses the main font stack and theming
+- ✅ **Docs Updated**: README and FUTURE-DEV now reference the streaming player so future enhancements have a home
+
 ### **Individual Ad Toggles & Sync Improvements** (October 23, 2025)
 - ✅ **Per-Ad Enable/Disable**: Individual toggle switches for each banner ad
   - Toggle on date row (bottom right) for granular control
@@ -335,6 +343,12 @@ git push origin main
 - **No Password Required**: Public-facing interface for end users
 - **Staggered Animations**: Beautiful fade-in effects on page load
 
+### **📻 Live Streaming Player Modal (October 30, 2025)** ✨
+- **Menu-Triggered Overlay**: Any nav item linking to `streaming-audio-player.html` launches a full-screen modal with the live radio experience
+- **Iframe-Based**: Modal wraps the dedicated player page so the same UI can live on its own or in the overlay
+- **Smooth Focus Handling**: Escape key, overlay click, or close button all dismiss the modal and stop playback instantly
+- **Reusable Player Shell**: Standalone page can be embedded externally or linked directly for partner stations
+
 ### **🔐 Admin Management Panel**
 - **Full CRUD Operations**: Create, Read, Update, Delete podcast entries
 - **RSS Feed Auto-Import** ✨: Import podcasts from any RSS feed with one click
@@ -467,6 +481,7 @@ podcast-feed/
 │   │   ├── player-modal.css    # Audio player modal styles
 │   │   ├── ads-manager.css     # Ads manager styles
 │   │   ├── menu-manager.css    # Menu manager styles (NEW)
+│   │   ├── streaming-modal.css # Live stream modal styling (NEW)
 │   │   └── web-banner.css      # Front-end banner styles
 │   └── js/
 │       ├── app.js              # Admin application logic
@@ -475,6 +490,8 @@ podcast-feed/
 │       ├── audio-player.js     # Audio playback controls
 │       ├── ads-manager.js      # Ads manager logic
 │       ├── menu-manager.js     # Menu manager logic (NEW)
+│       ├── streaming-audio-player.js # Live streaming player logic (NEW)
+│       └── streaming-modal.js  # Front-end modal controller (NEW)
 │       └── validation.js       # Form validation
 ├── data/
 │   ├── podcasts.xml                 # Aggregated podcast directory
@@ -492,6 +509,7 @@ podcast-feed/
 ├── self-hosted-podcasts.php         # My Podcasts management page
 ├── self-hosted-episodes.php         # Episode management page
 ├── self-hosted-feed.php             # RSS feed generator
+├── streaming-audio-player.html      # Standalone live streaming player (NEW)
 └── logs/
     ├── error.log                    # Error logging
     └── operations.log               # Activity logging

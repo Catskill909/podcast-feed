@@ -382,6 +382,22 @@
               <li>Includes download buttons and keyboard shortcuts.</li>
             </ul>
           </article>
+
+          <article class="feature-card">
+            <div class="feature-header">
+              <span class="feature-icon"><i class="fa-solid fa-tower-broadcast"></i></span>
+              <h3 class="feature-title">Live Streaming Player Modal</h3>
+            </div>
+            <p class="feature-description">
+              Launch the streaming audio experience in a dedicated overlay by linking to the shared player page from any navigation item.
+            </p>
+            <ul class="feature-list">
+              <li>Menu items that point to <code>streaming-audio-player.html</code> open the live player without leaving the page.</li>
+              <li>Overlay traps focus, supports Escape/overlay close, and pauses playback automatically when dismissed.</li>
+              <li>Standalone player page doubles as an embeddable/live landing page for partner sites.</li>
+              <li>Modal styling matches the dark UI with responsive layout and accessible controls.</li>
+            </ul>
+          </article>
         </div>
       </section>
 
@@ -560,6 +576,22 @@
                   Manage banner inventory, rotation speeds, and mobile ad RSS feeds with instant previews.
                 </p>
               </div>
+            </div>
+          </section>
+
+          <section class="help-section">
+            <h3 class="help-section-title">
+              <span class="help-section-icon">📻</span>
+              Live Streaming Player Modal
+            </h3>
+            <div class="help-section-content">
+              <p>Serve live radio without leaving the catalog by letting the streaming player open inside a dedicated overlay.</p>
+              <ul>
+                <li>Create or edit a menu item in Menu Manager and set its URL to <code>streaming-audio-player.html</code> (relative or absolute).</li>
+                <li>When visitors click the link on <code>index.php</code>, the modal loads the player iframe, keeping the directory visible in the background.</li>
+                <li>Closing the modal via the X button, overlay click, or Escape key pauses playback automatically so audio never persists offscreen.</li>
+                <li>Link <code>/streaming-audio-player.html</code> directly if you need an external landing page or embed target—the modal and standalone view use the same UI.</li>
+              </ul>
             </div>
           </section>
 

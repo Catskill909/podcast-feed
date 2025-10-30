@@ -1,0 +1,94 @@
+:root {
+    --streaming-modal-overlay: rgba(0, 0, 0, 0.75);
+    --streaming-modal-border: rgba(255, 255, 255, 0.08);
+}
+
+.streaming-modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--streaming-modal-overlay);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 200ms ease, visibility 200ms ease;
+    z-index: 9999;
+    padding: clamp(16px, 3vw, 32px);
+}
+
+.streaming-modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+
+.streaming-modal {
+    position: relative;
+    width: min(860px, 100%);
+    height: min(620px, 100%);
+    border-radius: 22px;
+    border: 1px solid var(--streaming-modal-border);
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45);
+    background: rgba(8, 12, 18, 0.92);
+    padding: clamp(12px, 2vw, 20px);
+    display: flex;
+}
+
+.streaming-modal iframe {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 18px;
+    background: transparent;
+}
+
+.streaming-modal-close {
+    position: absolute;
+    top: clamp(10px, 2vw, 16px);
+    right: clamp(10px, 2vw, 16px);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    background: linear-gradient(155deg, rgba(35, 134, 54, 0.38), rgba(12, 18, 26, 0.92));
+    color: #ffffff;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 150ms ease, background 150ms ease, box-shadow 150ms ease;
+    box-shadow: 0 6px 18px rgba(35, 134, 54, 0.28);
+}
+
+.streaming-modal-close:hover,
+.streaming-modal-close:focus-visible {
+    transform: translateY(-1px) scale(1.04);
+    background: linear-gradient(155deg, rgba(52, 195, 82, 0.5), rgba(22, 32, 44, 0.95));
+    box-shadow: 0 8px 22px rgba(35, 134, 54, 0.32);
+    outline: none;
+}
+
+.streaming-modal-close:active {
+    transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+    .streaming-modal {
+        width: min(100%, 520px);
+        border-radius: 18px;
+    }
+
+    .streaming-modal-close {
+        top: 12px;
+        right: 12px;
+        width: 34px;
+        height: 34px;
+        font-size: 17px;
+    }
+}

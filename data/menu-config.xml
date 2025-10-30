@@ -11,8 +11,8 @@
       <id>1</id>
       <label>Browse</label>
       <url>http://localhost:8000</url>
-      <icon_type>none</icon_type>
-      <icon_value/>
+      <icon_type>fa</icon_type>
+      <icon_value>fa-desktop</icon_value>
       <target>_self</target>
       <order>1</order>
       <active>1</active>
@@ -24,7 +24,7 @@
       <icon_type>fa</icon_type>
       <icon_value>fa-lock</icon_value>
       <target>_self</target>
-      <order>3</order>
+      <order>4</order>
       <active>1</active>
     </item>
     <item>
@@ -34,6 +34,16 @@
       <icon_type>fa</icon_type>
       <icon_value>fa-desktop</icon_value>
       <target>_blank</target>
+      <order>3</order>
+      <active>1</active>
+    </item>
+    <item>
+      <id>4</id>
+      <label>Live Audio</label>
+      <url>https://streaming-audio-player.html</url>
+      <icon_type>fa</icon_type>
+      <icon_value>fa-radio</icon_value>
+      <target>_self</target>
       <order>2</order>
       <active>1</active>
     </item>

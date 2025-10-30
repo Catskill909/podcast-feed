@@ -23,6 +23,16 @@ Transform this XML feed maker into a powerful, feature-rich podcast directory ma
 - **Impact:** Complete engagement analytics with beautiful radio-station style dashboard
 - **Docs:** [analytics.md](analytics.md) - Complete implementation plan
 
+### **October 30, 2025 - Live Streaming Player Modal** - COMPLETE ✨
+- ✅ **Modal Launcher** - Any menu item pointing at `streaming-audio-player.html` opens the dedicated player inside a polished overlay
+- ✅ **Shared Player Shell** - `streaming-audio-player.html` doubles as a standalone page for direct links and embeds
+- ✅ **Playback Safeguards** - Close, overlay click, or Escape stops the audio and releases focus
+- ✅ **Menu Manager Friendly** - Works with standard menu items; no custom code required beyond the URL
+- ✅ **Styling Package** - New `streaming-modal.css` + `streaming-modal.js` deliver the experience while keeping CSS isolated
+- ✅ **Docs Updated** - README + roadmap updated so future enhancements track against this baseline
+- **Impact:** Seamless live radio launch from the front page without navigating away
+- **Files:** index.php, assets/css/streaming-modal.css, assets/js/streaming-modal.js, assets/js/streaming-audio-player.js, streaming-audio-player.html
+
 ### **October 29, 2025 - Custom Menu Manager** - COMPLETE ✨✨✨ MAJOR FEATURE
 - ✅ **Site Branding Customization** - Change site title and logo (Font Awesome icon or custom image)
 - ✅ **Dynamic Menu Management** - Add, edit, delete, and reorder navigation menu items

@@ -658,4 +658,13 @@
     document.addEventListener('DOMContentLoaded', () => {
         initPlayer();
     });
+
+    window.addEventListener('message', (event) => {
+        if (event.data?.type === 'STREAMING_MODAL_CLOSE') {
+            const instance = window.StreamingPlayer?.instance;
+            if (instance) {
+                instance.pause();
+            }
+        }
+    });
 })();

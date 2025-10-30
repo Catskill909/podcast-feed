@@ -53,6 +53,7 @@ try {
     <link rel="stylesheet" href="assets/css/sort-controls.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/player-modal.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/web-banner.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/streaming-modal.css?v=<?php echo time(); ?>">
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
@@ -203,6 +204,16 @@ try {
         </div>
     </footer>
 
+    <!-- Streaming Player Modal -->
+    <div class="streaming-modal-overlay" id="streamingModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="streamingModalTitle">
+        <div class="streaming-modal">
+            <button type="button" class="streaming-modal-close" id="streamingModalClose" aria-label="Close streaming player">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <iframe id="streamingModalFrame" title="Streaming audio player" allow="autoplay"></iframe>
+        </div>
+    </div>
+
     <!-- Player Modal (Reused from existing implementation) -->
     <div class="player-modal-overlay" id="playerModal">
         <div class="player-modal">
@@ -325,6 +336,7 @@ try {
     <script src="assets/js/player-modal.js?v=3.0.2"></script>
     <script src="assets/js/audio-player.js?v=3.0.5"></script>
     <script src="assets/js/analytics-tracker.js?v=1.0.0"></script>
+    <script src="assets/js/streaming-modal.js?v=1.0.0"></script>
     
     <!-- Web Banner Rotation Script -->
     <script>
