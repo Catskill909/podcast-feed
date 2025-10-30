@@ -116,7 +116,9 @@ class AnalyticsDashboard {
         let optionsHTML = '<option value="">All Podcasts</option>';
         podcasts.forEach(podcast => {
             const selected = podcast.podcastId === this.currentPodcastId ? 'selected' : '';
-            optionsHTML += `<option value="${this.escapeHtml(podcast.podcastId)}" ${selected}>${this.escapeHtml(podcast.podcastTitle)}</option>`;
+            const safeId = this.escapeHtml(String(podcast.podcastId));
+            const safeTitle = this.sanitizeText(podcast.podcastTitle);
+            optionsHTML += `<option value="${safeId}" ${selected}>${safeTitle}</option>`;
         });
 
         select.innerHTML = optionsHTML;
@@ -274,6 +276,24 @@ class AnalyticsDashboard {
      * Render top episodes table
      */
     renderTopEpisodesTable(episodes) {
+        const rows = episodes.map((ep, index) => {
+            const safeEpisodeTitle = this.sanitizeText(ep.episodeTitle);
+            const safePodcastTitle = this.sanitizeText(ep.podcastTitle);
+
+            return `
+                <tr>
+                    <td class="analytics-table-rank">${index + 1}</td>
+                    <td class="analytics-table-title-cell">
+                        <div class="analytics-table-episode-title">${safeEpisodeTitle}</div>
+                        <div class="analytics-table-podcast-title">${safePodcastTitle}</div>
+                    </td>
+                    <td class="analytics-table-stat plays">${this.formatNumber(ep.plays)}</td>
+                    <td class="analytics-table-stat downloads">${this.formatNumber(ep.downloads)}</td>
+                    <td class="analytics-table-stat listeners">${this.formatNumber(ep.uniqueListeners)}</td>
+                </tr>
+            `;
+        }).join('');
+
         return `
             <div class="analytics-table-container">
                 <div class="analytics-table-header">
@@ -290,18 +310,7 @@ class AnalyticsDashboard {
                         </tr>
                     </thead>
                     <tbody>
-                        ${episodes.map((ep, index) => `
-                            <tr>
-                                <td class="analytics-table-rank">${index + 1}</td>
-                                <td class="analytics-table-title-cell">
-                                    <div class="analytics-table-episode-title">${this.escapeHtml(ep.episodeTitle)}</div>
-                                    <div class="analytics-table-podcast-title">${this.escapeHtml(ep.podcastTitle)}</div>
-                                </td>
-                                <td class="analytics-table-stat plays">${this.formatNumber(ep.plays)}</td>
-                                <td class="analytics-table-stat downloads">${this.formatNumber(ep.downloads)}</td>
-                                <td class="analytics-table-stat listeners">${this.formatNumber(ep.uniqueListeners)}</td>
-                            </tr>
-                        `).join('')}
+                        ${rows}
                     </tbody>
                 </table>
             </div>
@@ -312,6 +321,22 @@ class AnalyticsDashboard {
      * Render top podcasts table
      */
     renderTopPodcastsTable(podcasts) {
+        const rows = podcasts.map((podcast, index) => {
+            const safePodcastTitle = this.sanitizeText(podcast.podcastTitle);
+
+            return `
+                <tr>
+                    <td class="analytics-table-rank">${index + 1}</td>
+                    <td class="analytics-table-title-cell">
+                        <div class="analytics-table-episode-title">${safePodcastTitle}</div>
+                    </td>
+                    <td class="analytics-table-stat plays">${this.formatNumber(podcast.plays)}</td>
+                    <td class="analytics-table-stat downloads">${this.formatNumber(podcast.downloads)}</td>
+                    <td class="analytics-table-stat">${podcast.episodeCount}</td>
+                </tr>
+            `;
+        }).join('');
+
         return `
             <div class="analytics-table-container">
                 <div class="analytics-table-header">
@@ -328,17 +353,7 @@ class AnalyticsDashboard {
                         </tr>
                     </thead>
                     <tbody>
-                        ${podcasts.map((podcast, index) => `
-                            <tr>
-                                <td class="analytics-table-rank">${index + 1}</td>
-                                <td class="analytics-table-title-cell">
-                                    <div class="analytics-table-episode-title">${this.escapeHtml(podcast.podcastTitle)}</div>
-                                </td>
-                                <td class="analytics-table-stat plays">${this.formatNumber(podcast.plays)}</td>
-                                <td class="analytics-table-stat downloads">${this.formatNumber(podcast.downloads)}</td>
-                                <td class="analytics-table-stat">${podcast.episodeCount}</td>
-                            </tr>
-                        `).join('')}
+                        ${rows}
                     </tbody>
                 </table>
             </div>
@@ -506,9 +521,25 @@ class AnalyticsDashboard {
             <div class="analytics-empty-state">
                 <div class="analytics-empty-icon">⚠️</div>
                 <h5 class="analytics-empty-title">Error Loading Analytics</h5>
-                <p class="analytics-empty-description">${this.escapeHtml(message)}</p>
+                <p class="analytics-empty-description">${this.sanitizeText(message)}</p>
             </div>
         `;
+    }
+
+    /**
+     * Decode HTML entities and escape result for safe rendering
+     */
+    sanitizeText(text) {
+        return this.escapeHtml(this.decodeHtml(text ?? ''));
+    }
+
+    /**
+     * Decode HTML entities
+     */
+    decodeHtml(text) {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = text ?? '';
+        return textarea.value;
     }
 
     /**
