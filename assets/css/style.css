@@ -213,6 +213,11 @@ a:hover, a:focus {
 }
 
 .nav-links a:focus {
+  outline: none;
+  text-decoration: none !important;
+}
+
+.nav-links a:focus-visible {
   text-decoration: none !important;
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;

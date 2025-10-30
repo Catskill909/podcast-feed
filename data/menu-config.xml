@@ -10,7 +10,7 @@
     <item>
       <id>1</id>
       <label>Browse</label>
-      <url>index.php</url>
+      <url>http://localhost:8000</url>
       <icon_type>none</icon_type>
       <icon_value/>
       <target>_self</target>
