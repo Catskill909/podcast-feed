@@ -198,7 +198,7 @@ try {
     <footer style="background: var(--bg-secondary); border-top: 1px solid var(--border-primary); padding: var(--spacing-xl) 0; margin-top: var(--spacing-xxl); text-align: center;">
         <div class="container">
             <p style="color: var(--text-muted); margin: 0; font-size: var(--font-size-sm);">
-                &copy; <?php echo date('Y'); ?> Podcast Browser. All rights reserved.
+                &copy; <?php echo date('Y'); ?> Built and designed by <a href="https://starkey.digital" target="_blank" rel="noopener">starkey.digital</a>
             </p>
         </div>
     </footer>

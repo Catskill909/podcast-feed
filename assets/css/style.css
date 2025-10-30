@@ -162,7 +162,6 @@ a:hover, a:focus {
   font-weight: 700;
   color: var(--text-primary);
   text-decoration: none;
-  text-transform: uppercase;
   letter-spacing: 1px;
 }
 
