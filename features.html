@@ -18,6 +18,7 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="assets/css/style.css?v=20251030" />
+    <link rel="stylesheet" href="assets/css/components.css?v=20251030" />
     <style>
       :root {
         --feature-gradient: linear-gradient(135deg, rgba(35, 134, 54, 0.12), rgba(31, 111, 235, 0.12));
@@ -37,6 +38,15 @@
       .hero h1 {
         font-size: clamp(2.5rem, 4vw, 3.5rem);
         letter-spacing: 1px;
+      }
+
+      .hero-subtitle {
+        font-size: clamp(1.5rem, 2.5vw, 2rem);
+        font-weight: 500;
+        color: var(--text-secondary);
+        letter-spacing: 0.5px;
+        margin-bottom: var(--spacing-md);
+        text-transform: none;
       }
 
       .hero p {
@@ -102,6 +112,10 @@
         display: grid;
         gap: var(--spacing-xl);
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+
+      .features-grid.core-grid {
+        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
       }
 
       .feature-card {
@@ -178,23 +192,6 @@
         text-transform: none;
       }
 
-      .feature-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--spacing-sm);
-        margin-bottom: var(--spacing-md);
-      }
-
-      .feature-meta span {
-        font-size: var(--font-size-xs);
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--text-muted);
-        background: rgba(88, 166, 255, 0.08);
-        border: 1px solid rgba(88, 166, 255, 0.25);
-        padding: 0.25rem 0.6rem;
-        border-radius: 999px;
-      }
 
       .feature-description {
         color: var(--text-secondary);
@@ -280,13 +277,21 @@
   <body>
     <header class="hero">
       <div class="container">
-        <h1>Every Feature You Need to Own Your Podcast Platform</h1>
+        <h1>PodFeed Studio</h1>
+        <h2 class="hero-subtitle">Every Feature You Need to Own Your Podcast Platform</h2>
         <p>
           PodFeed Builder has evolved into a full-stack podcast hosting and distribution suite. Explore the systems that power our dark-mode, material design platform — from cloning entire podcasts to tracking every listen in real time.
         </p>
         <div class="hero-actions">
           <a href="index.php"><i class="fa-solid fa-podcast"></i> Launch App</a>
-          <a class="secondary" href="README.md"><i class="fa-solid fa-book"></i> View Full Documentation</a>
+              <a
+            class="secondary"
+            href="javascript:void(0)"
+            role="button"
+            onclick="showHelpModal()"
+            aria-haspopup="dialog"
+            aria-controls="helpModal"
+          ><i class="fa-solid fa-circle-question"></i> View Full Documentation</a>
         </div>
       </div>
     </header>
@@ -297,15 +302,11 @@
         <p class="section-intro">
           Crafted for creators who want total control. These flagship systems deliver full podcast hosting, rich playback experiences, and a public-facing catalog that looks stunning on every screen.
         </p>
-        <div class="features-grid">
+        <div class="features-grid core-grid">
           <article class="feature-card">
             <div class="feature-header">
               <span class="feature-icon"><i class="fa-solid fa-microphone-lines"></i></span>
               <h3 class="feature-title">My Podcasts — Complete Hosting</h3>
-            </div>
-            <div class="feature-meta">
-              <span>October 17, 2025</span>
-              <span>~1,850 Lines</span>
             </div>
             <p class="feature-description">
               Build podcasts from scratch with a dark-mode admin that mirrors the rest of the platform — no external services required.
@@ -323,10 +324,6 @@
               <span class="feature-icon"><i class="fa-solid fa-clone"></i></span>
               <h3 class="feature-title">Podcast Feed Cloning</h3>
             </div>
-            <div class="feature-meta">
-              <span>October 20, 2025</span>
-              <span>Full Self-Hosting</span>
-            </div>
             <p class="feature-description">
               Convert any external RSS feed into a self-hosted podcast archive with resilient background processing and progress feedback.
             </p>
@@ -340,12 +337,24 @@
 
           <article class="feature-card">
             <div class="feature-header">
-              <span class="feature-icon"><i class="fa-solid fa-grid-2"></i></span>
-              <h3 class="feature-title">Public Browsing Interface</h3>
+              <span class="feature-icon"><i class="fa-solid fa-rss"></i></span>
+              <h3 class="feature-title">RSS Feed Auto-Import</h3>
             </div>
-            <div class="feature-meta">
-              <span>October 17, 2025</span>
-              <span>Responsive UI</span>
+            <p class="feature-description">
+              Bring external podcasts into the directory instantly with a validation-first import flow tuned for RSS 2.0 and iTunes compliance.
+            </p>
+            <ul class="feature-list">
+              <li>Accepts RSS 2.0, Atom, and iTunes feeds with environment-aware SSL handling.</li>
+              <li>Runs preflight validation for structure, required tags, and cover image availability.</li>
+              <li>Auto-downloads artwork and metadata while letting you preview and edit before saving.</li>
+              <li>Integrates with health checks and sorting so aggregated shows appear everywhere seamlessly.</li>
+            </ul>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-header">
+              <span class="feature-icon"><i class="fa-solid fa-globe"></i></span>
+              <h3 class="feature-title">Public Browsing Interface</h3>
             </div>
             <p class="feature-description">
               A cinematic, hover-driven podcast gallery that invites exploration while staying buttery-smooth on mobile.
@@ -362,10 +371,6 @@
             <div class="feature-header">
               <span class="feature-icon"><i class="fa-solid fa-headphones"></i></span>
               <h3 class="feature-title">Podcast Player Modal</h3>
-            </div>
-            <div class="feature-meta">
-              <span>October 16, 2025</span>
-              <span>Material Design</span>
             </div>
             <p class="feature-description">
               Rich playback controls, blazing-fast episode browsing, and a premium listening experience in the browser.
@@ -391,10 +396,6 @@
               <span class="feature-icon"><i class="fa-solid fa-rectangle-ad"></i></span>
               <h3 class="feature-title">Banner Ads Management System</h3>
             </div>
-            <div class="feature-meta">
-              <span>October 22, 2025</span>
-              <span>~3,600 Lines</span>
-            </div>
             <p class="feature-description">
               A full monetization pipeline with live previews, toggles, and RSS integration for mobile ad feeds.
             </p>
@@ -411,10 +412,6 @@
               <span class="feature-icon"><i class="fa-solid fa-compass-drafting"></i></span>
               <h3 class="feature-title">Custom Menu Manager</h3>
             </div>
-            <div class="feature-meta">
-              <span>October 29, 2025</span>
-              <span>Brand Control</span>
-            </div>
             <p class="feature-description">
               Curate your site navigation with fine-grained control, iconography, and instant previews — no code edits needed.
             </p>
@@ -430,10 +427,6 @@
             <div class="feature-header">
               <span class="feature-icon"><i class="fa-solid fa-chart-pie"></i></span>
               <h3 class="feature-title">Engagement Analytics Dashboard</h3>
-            </div>
-            <div class="feature-meta">
-              <span>October 30, 2025</span>
-              <span>11 New Files</span>
             </div>
             <p class="feature-description">
               Real-time insight into plays, downloads, and listener trends through a radio-station inspired analytics cockpit.
@@ -459,10 +452,6 @@
               <span class="feature-icon"><i class="fa-solid fa-rotate"></i></span>
               <h3 class="feature-title">Auto-Refresh & Sync Enhancements</h3>
             </div>
-            <div class="feature-meta">
-              <span>October 23, 2025</span>
-              <span>Performance Wins</span>
-            </div>
             <p class="feature-description">
               Faster updates across the board — from background polling to manual refresh workflows — without sacrificing cache efficiency.
             </p>
@@ -478,10 +467,6 @@
             <div class="feature-header">
               <span class="feature-icon"><i class="fa-solid fa-database"></i></span>
               <h3 class="feature-title">Live Feed Data System</h3>
-            </div>
-            <div class="feature-meta">
-              <span>October 17, 2025</span>
-              <span>One Source of Truth</span>
             </div>
             <p class="feature-description">
               Keeps modals fresh, feeds reliable, and cached views speedy by treating RSS as the definitive record.
@@ -499,10 +484,6 @@
               <span class="feature-icon"><i class="fa-solid fa-check-shield"></i></span>
               <h3 class="feature-title">RSS Validation & Health Checks</h3>
             </div>
-            <div class="feature-meta">
-              <span>October 15, 2025</span>
-              <span>Import Confidence</span>
-            </div>
             <p class="feature-description">
               Safeguard data quality before anything hits production with meticulous validation flows and actionable feedback.
             </p>
@@ -517,10 +498,170 @@
       </section>
     </main>
 
+    <div class="modal-overlay" id="helpModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal modal-lg" role="document">
+        <div class="modal-header">
+          <h3 class="modal-title"><i class="fa-solid fa-circle-question"></i> PodFeed Builder · Help &amp; Guide</h3>
+          <button type="button" class="modal-close" onclick="hideHelpModal()" aria-label="Close help modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <section class="help-section">
+            <h3 class="help-section-title">
+              <span class="help-section-icon">🚀</span>
+              Quick Start
+            </h3>
+            <div class="help-section-content">
+              <p>Welcome to PodFeed Builder! Choose your workflow:</p>
+              <ul>
+                <li><strong>Quick Import:</strong> Use <em>Import from RSS</em> to auto-extract podcast metadata in seconds.</li>
+                <li><strong>Manual Entry:</strong> Add podcasts from scratch with custom details using <em>Add New Podcast</em>.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="help-section">
+            <h3 class="help-section-title">
+              <span class="help-section-icon">🎬</span>
+              Core Actions
+            </h3>
+            <div class="help-section-content">
+              <div class="help-button-example">
+                <button type="button" class="btn btn-primary" disabled>
+                  <i class="fa-solid fa-plus"></i> Add New Podcast
+                </button>
+                <p class="help-button-description">
+                  Manually add a podcast with title, feed URL, cover art, and description.
+                </p>
+              </div>
+
+              <div class="help-button-example">
+                <button type="button" class="btn btn-secondary" disabled>
+                  <i class="fa-solid fa-rss"></i> Import from RSS
+                </button>
+                <p class="help-button-description">
+                  Auto-import from any RSS feed, including cover image downloads and validation checks.
+                </p>
+              </div>
+
+              <div class="help-button-example">
+                <button type="button" class="btn btn-secondary" disabled>
+                  <i class="fa-solid fa-broadcast-tower"></i> My Podcasts
+                </button>
+                <p class="help-button-description">
+                  Host your own shows with audio uploads, episode management, and iTunes-compliant feeds.
+                </p>
+              </div>
+
+              <div class="help-button-example">
+                <button type="button" class="btn btn-secondary" disabled>
+                  <i class="fa-solid fa-ad"></i> Ads Manager
+                </button>
+                <p class="help-button-description">
+                  Manage banner inventory, rotation speeds, and mobile ad RSS feeds with instant previews.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section class="help-section">
+            <h3 class="help-section-title">
+              <span class="help-section-icon">🎙️</span>
+              My Podcasts · Host Your Own Shows
+            </h3>
+            <div class="help-section-content">
+              <p><strong>Create a Podcast:</strong></p>
+              <ol>
+                <li>Open the <em>My Podcasts</em> workspace and choose <em>Create New Podcast</em>.</li>
+                <li>Complete metadata: title, description, author, email, and cover art (1400–3000px square).</li>
+                <li>Select categories, language, and explicit flags for distribution.</li>
+                <li>Save to generate a ready-to-publish RSS feed.</li>
+              </ol>
+
+              <p><strong>Add Episodes:</strong></p>
+              <ol>
+                <li>From your podcast card, click <em>Episodes</em>.</li>
+                <li>Upload MP3 or M4A audio (up to 500MB) and optional episode artwork.</li>
+                <li>Set duration, publication date, and status, then publish.</li>
+              </ol>
+
+              <p><strong>Why It Matters:</strong> Own your infrastructure end-to-end with persistent storage, rich metadata, and seamless integration with the main directory.</p>
+            </div>
+          </section>
+
+          <section class="help-section">
+            <h3 class="help-section-title">
+              <span class="help-section-icon">📊</span>
+              Engagement Analytics
+            </h3>
+            <div class="help-section-content">
+              <ul>
+                <li>Track unique plays and downloads with privacy-friendly session IDs.</li>
+                <li>Visualize trends over 7, 30, 90 days, or all time using Chart.js dashboards.</li>
+                <li>Identify top-performing podcasts and episodes instantly.</li>
+                <li>Control retention policy (default 365 days) stored in lightweight XML.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="help-section">
+            <h3 class="help-section-title">
+              <span class="help-section-icon">🛡️</span>
+              Reliability &amp; Validation
+            </h3>
+            <div class="help-section-content">
+              <ul>
+                <li>Auto-refresh every five minutes keeps podcast data fresh.</li>
+                <li>Manual refresh bypasses cache for instant updates.</li>
+                <li>RSS health checks cover structure, iTunes namespace, cover image, and response time.</li>
+                <li>Color-coded alerts ensure you know when action is required.</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-lg" onclick="hideHelpModal()">Close</button>
+          <a class="btn btn-primary btn-lg" href="README.md">
+            <i class="fa-solid fa-book"></i> Open README
+          </a>
+        </div>
+      </div>
+    </div>
+
     <footer>
       <div class="container">
-        Need deeper implementation notes? Dive into <a href="FUTURE-DEV.md">Future Dev</a> or the <a href="docs/">Docs archive</a> for full technical retrospectives.
+        &copy; 2025 Built and designed by <a href="https://starkey.digital" target="_blank" rel="noopener">starkey.digital</a>.
       </div>
     </footer>
+
+    <script>
+      function showHelpModal() {
+        const modal = document.getElementById('helpModal');
+        if (!modal) return;
+        modal.classList.add('show');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function hideHelpModal() {
+        const modal = document.getElementById('helpModal');
+        if (!modal) return;
+        modal.classList.remove('show');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          hideHelpModal();
+        }
+      });
+
+      document.addEventListener('click', (event) => {
+        const modal = document.getElementById('helpModal');
+        if (event.target === modal) {
+          hideHelpModal();
+        }
+      });
+    </script>
   </body>
 </html>
