@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WPFW Live Stream Player</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css?v=1">
+    <link rel="stylesheet" href="assets/css/components.css?v=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/streaming-audio-player.css?v=1">
+</head>
+<body>
+    <div class="streaming-player-shell">
+        <div
+            class="streaming-player"
+            id="streamingPlayer"
+            data-stream-endpoint="api/streaming/fetch-stream-url.php"
+            data-metadata-endpoint="api/streaming/fetch-metadata.php"
+            data-metadata-interval="15000"
+            data-placeholder-artwork="https://confessor.wpfwfm.org/pix/WPFW.png"
+        >
+            <header class="player-header">
+                <div class="player-header__logo">
+                    <img src="https://starkey.digital/wp-content/uploads/2025/10/wpfwLogo.png" alt="WPFW Logo" class="player-logo" id="stationLogo" loading="lazy">
+                </div>
+                <div class="player-header__status" aria-live="polite">
+                    <span class="live-indicator" aria-hidden="true"></span>
+                    <span class="live-label">Live</span>
+                </div>
+            </header>
+
+            <main class="player-main">
+                <section class="player-artwork" aria-hidden="true">
+                    <div class="artwork-frame">
+                        <img
+                            src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                            alt="WPFW Station Artwork"
+                            class="artwork-image"
+                            id="stationArtwork"
+                            loading="lazy"
+                        >
+                    </div>
+                </section>
+
+                <section class="player-metadata" aria-live="polite">
+                    <div class="show-details" id="currentShow">
+                        <div class="show-details__row">
+                            <span class="show-details__label">Show</span>
+                            <span class="show-details__value" id="showName">—</span>
+                        </div>
+                        <div class="show-details__row">
+                            <span class="show-details__label">Hosts</span>
+                            <span class="show-details__value" id="showHosts">—</span>
+                        </div>
+                        <div class="show-details__row">
+                            <span class="show-details__label">On Air</span>
+                            <span class="show-details__value" id="showSchedule">—</span>
+                        </div>
+                        <div class="show-details__row pledge" id="pledgeRow" hidden>
+                            <span class="show-details__label">Support</span>
+                            <a class="show-details__value pledge-link" id="pledgeLink" href="#" target="_blank" rel="noopener">Donate</a>
+                        </div>
+                    </div>
+
+                    <div class="next-show" id="nextShow">
+                        <span class="next-show__label">Up Next</span>
+                        <div class="next-show__content">
+                            <span class="next-show__title" id="nextShowName">—</span>
+                            <span class="next-show__time" id="nextShowTime">—</span>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="player-footer">
+                <div class="player-controls" role="group" aria-label="Stream Controls">
+                    <div class="player-play-group">
+                        <button class="player-control__button player-control__button--primary player-control__button--icon" id="playPauseButton" aria-label="Play stream">
+                            <i class="fa-solid fa-play player-control__icon" id="playPauseIcon" aria-hidden="true"></i>
+                            <span class="player-control__spinner" id="playPauseSpinner" aria-hidden="true"></span>
+                            <span class="sr-only" id="playPauseAssist">Play</span>
+                        </button>
+                    </div>
+
+                    <div class="player-nowplaying" id="nowPlayingSummary" aria-live="polite" hidden>
+                        <div class="player-nowplaying__row">
+                            <span class="player-nowplaying__label">Song Title:</span>
+                            <span class="player-nowplaying__value" id="nowPlayingSong">—</span>
+                        </div>
+                        <div class="player-nowplaying__row">
+                            <span class="player-nowplaying__label">Song Artist:</span>
+                            <span class="player-nowplaying__value" id="nowPlayingSummaryArtist">—</span>
+                        </div>
+                    </div>
+
+                    <button class="player-volume__mute" id="muteButton" aria-label="Mute stream">
+                        <i class="fa-solid fa-volume-high" id="volumeIcon" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </footer>
+
+            <audio id="liveAudio" preload="none"></audio>
+
+            <div
+                class="player-error-modal"
+                id="playerErrorModal"
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="playerErrorTitle"
+                hidden
+            >
+                <div class="player-error-modal__content" role="document">
+                    <div class="player-error-modal__icon" aria-hidden="true">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h2 class="player-error-modal__title" id="playerErrorTitle">Stream unavailable</h2>
+                    <p class="player-error-modal__message" id="playerErrorMessage">We’re having trouble connecting to the live stream. Please try again.</p>
+                    <div class="player-error-modal__actions">
+                        <button type="button" class="player-error-modal__button player-error-modal__button--primary" id="playerErrorRetry">
+                            Try again
+                        </button>
+                        <button type="button" class="player-error-modal__button" id="playerErrorClose">
+                            Dismiss
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/streaming-audio-player.js?v=1" defer></script>
+</body>
+</html>
