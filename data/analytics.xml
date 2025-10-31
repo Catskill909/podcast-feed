@@ -7,4 +7,7 @@
     <metric type="play" podcast_id="pod_1760648737_68f15e21015e6" episode_id="ep_p7q4la" count="1" unique_visitors="1" created="2025-10-30T13:33:32+00:00" episode_title="Shelf Life  - Sunday, October 19, 2025" podcast_title="WJFF - Shelf Life" audio_url="https://archive.wjffradio.org/mp3/wjff_251019_120000shelflife.mp3" last_updated="2025-10-30T13:33:32+00:00" session_ids="26ffb920-e7d5-4899-8bbf-f27940dc67fc"/>
     <metric type="download" podcast_id="pod_1760976544_68f65ea0bee3d" episode_id="ep_13sahs" count="1" unique_visitors="1" created="2025-10-30T13:33:39+00:00" episode_title="Labor Exchange - Minimum wage in Boulder County with Alejandra Beatty" podcast_title="The Labor Exchange on KGNU" audio_url="https://mcdn.podbean.com/mf/web/3tsewhasyut76x9h/2025-10-27_Labor_Exchange62ier.mp3" last_updated="2025-10-30T13:33:39+00:00" session_ids="26ffb920-e7d5-4899-8bbf-f27940dc67fc"/>
   </day>
+  <day date="2025-10-31">
+    <metric type="play" podcast_id="pod_1760045825_68e82b0116958" episode_id="ep_aovyuo" count="1" unique_visitors="1" created="2025-10-31T00:41:12+00:00" episode_title="Ep. 417 - David DiGilio - The Terminal List: Dark Wolf" podcast_title="3rd &amp;amp; Fairfax: The WGAW Podcast" audio_url="https://traffic.libsyn.com/secure/3rdandfairfax/WGAW0417.mp3?dest-id=275333" last_updated="2025-10-31T00:41:12+00:00" session_ids="26ffb920-e7d5-4899-8bbf-f27940dc67fc"/>
+  </day>
 </analytics>
