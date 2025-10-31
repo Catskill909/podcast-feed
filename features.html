@@ -168,6 +168,10 @@
         border-color: var(--feature-hover-border);
       }
 
+      .modal-help {
+        max-height: min(90vh, 880px);
+      }
+
       .feature-header {
         display: flex;
         align-items: flex-start;
@@ -515,13 +519,14 @@
     </main>
 
     <div class="modal-overlay" id="helpModal" aria-hidden="true" role="dialog" aria-modal="true">
-      <div class="modal modal-lg" role="document">
+      <div class="modal modal-lg modal-help" role="document">
         <div class="modal-header">
           <h3 class="modal-title"><i class="fa-solid fa-circle-question"></i> PodFeed Builder · Help &amp; Guide</h3>
           <button type="button" class="modal-close" onclick="hideHelpModal()" aria-label="Close help modal">&times;</button>
         </div>
         <div class="modal-body">
-          <section class="help-section">
+          <!-- Quick Start -->
+          <div class="help-section">
             <h3 class="help-section-title">
               <span class="help-section-icon">🚀</span>
               Quick Start
@@ -529,16 +534,17 @@
             <div class="help-section-content">
               <p>Welcome to PodFeed Builder! Choose your workflow:</p>
               <ul>
-                <li><strong>Quick Import:</strong> Use <em>Import from RSS</em> to auto-extract podcast metadata in seconds.</li>
-                <li><strong>Manual Entry:</strong> Add podcasts from scratch with custom details using <em>Add New Podcast</em>.</li>
+                <li><strong>Quick Import:</strong> Have an existing RSS feed? Use "Import from RSS" to auto-extract all details in seconds.</li>
+                <li><strong>Manual Entry:</strong> Add podcasts from scratch with custom details using "Add New Podcast".</li>
               </ul>
             </div>
-          </section>
+          </div>
 
-          <section class="help-section">
+          <!-- Main Actions -->
+          <div class="help-section">
             <h3 class="help-section-title">
               <span class="help-section-icon">🎬</span>
-              Core Actions
+              Main Actions
             </h3>
             <div class="help-section-content">
               <div class="help-button-example">
@@ -546,7 +552,16 @@
                   <i class="fa-solid fa-plus"></i> Add New Podcast
                 </button>
                 <p class="help-button-description">
-                  Manually add a podcast with title, feed URL, cover art, and description.
+                  Manually add a podcast with custom details. Required: Title, Feed URL. Optional: Cover image, Description.
+                </p>
+              </div>
+
+              <div class="help-button-example">
+                <button type="button" class="btn btn-info" disabled>
+                  <i class="fa-solid fa-circle-question"></i> Help
+                </button>
+                <p class="help-button-description">
+                  View this help guide anytime. Access all documentation and feature explanations.
                 </p>
               </div>
 
@@ -555,7 +570,7 @@
                   <i class="fa-solid fa-rss"></i> Import from RSS
                 </button>
                 <p class="help-button-description">
-                  Auto-import from any RSS feed, including cover image downloads and validation checks.
+                  Auto-import from any RSS feed URL. Supports RSS 2.0, Atom, and iTunes formats. Automatically downloads cover images.
                 </p>
               </div>
 
@@ -564,7 +579,7 @@
                   <i class="fa-solid fa-broadcast-tower"></i> My Podcasts
                 </button>
                 <p class="help-button-description">
-                  Host your own shows with audio uploads, episode management, and iTunes-compliant feeds.
+                  Create and host your own podcasts! Upload audio files, manage episodes, and generate iTunes-compliant RSS feeds. Perfect for hosting your own shows.
                 </p>
               </div>
 
@@ -573,97 +588,285 @@
                   <i class="fa-solid fa-ad"></i> Ads Manager
                 </button>
                 <p class="help-button-description">
-                  Manage banner inventory, rotation speeds, and mobile ad RSS feeds with instant previews.
+                  Upload and manage banner advertisements. Display rotating banners on your homepage and serve ads to mobile apps via RSS feed. Full monetization system with URL tracking.
                 </p>
               </div>
             </div>
-          </section>
+          </div>
 
-          <section class="help-section">
+          <!-- Live Streaming Player Modal -->
+          <div class="help-section">
             <h3 class="help-section-title">
               <span class="help-section-icon">📻</span>
               Live Streaming Player Modal
             </h3>
             <div class="help-section-content">
-              <p>Serve live radio without leaving the catalog by letting the streaming player open inside a dedicated overlay.</p>
+              <p>Launch your live radio stream in a dedicated modal without sending visitors away from the directory.</p>
               <ul>
-                <li>Create or edit a menu item in Menu Manager and set its URL to <code>streaming-audio-player.html</code> (relative or absolute).</li>
-                <li>When visitors click the link on <code>index.php</code>, the modal loads the player iframe, keeping the directory visible in the background.</li>
-                <li>Closing the modal via the X button, overlay click, or Escape key pauses playback automatically so audio never persists offscreen.</li>
-                <li>Link <code>/streaming-audio-player.html</code> directly if you need an external landing page or embed target—the modal and standalone view use the same UI.</li>
+                <li>Add a standard menu item in <strong>Menu Manager</strong> that points to <code>streaming-audio-player.html</code> (relative or full URL).</li>
+                <li>When users click the link on the public site, the streaming player loads inside a polished overlay with keyboard and screen-reader support.</li>
+                <li>Closing the modal (X button, Escape key, or overlay click) automatically pauses playback so audio never continues in the background.</li>
+                <li>The same player page (<code>/streaming-audio-player.html</code>) can be shared directly or embedded elsewhere if you need an external landing page.</li>
               </ul>
+              <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                <strong>💡 Tip:</strong> Use Menu Manager icons (e.g., <code>fa-tower-broadcast</code>) and custom labels like “Live Audio” or “Listen Live” to match your station branding.
+              </div>
             </div>
-          </section>
+          </div>
 
-          <section class="help-section">
+          <!-- My Podcasts (Self-Hosted) -->
+          <div class="help-section">
             <h3 class="help-section-title">
               <span class="help-section-icon">🎙️</span>
-              My Podcasts · Host Your Own Shows
+              My Podcasts - Host Your Own Shows
             </h3>
             <div class="help-section-content">
-              <p><strong>Create a Podcast:</strong></p>
+              <p><strong>What is "My Podcasts"?</strong></p>
+              <p>Create and host complete podcasts directly on your server. Upload audio files, manage episodes, and generate professional RSS feeds for distribution to Apple Podcasts, Spotify, and other platforms.</p>
+
+              <p><strong>How to Create a Podcast:</strong></p>
               <ol>
-                <li>Open the <em>My Podcasts</em> workspace and choose <em>Create New Podcast</em>.</li>
-                <li>Complete metadata: title, description, author, email, and cover art (1400–3000px square).</li>
-                <li>Select categories, language, and explicit flags for distribution.</li>
-                <li>Save to generate a ready-to-publish RSS feed.</li>
+                <li>Click <strong>"My Podcasts"</strong> button in the header</li>
+                <li>Click <strong>"Create New Podcast"</strong></li>
+                <li>Fill in podcast details:
+                  <ul>
+                    <li>Basic info (title, description, author, email)</li>
+                    <li>Cover image (1400-3000px square)</li>
+                    <li>iTunes metadata (category, language, explicit flag)</li>
+                  </ul>
+                </li>
+                <li>Click <strong>"Create Podcast"</strong></li>
               </ol>
 
-              <p><strong>Add Episodes:</strong></p>
+              <p><strong>How to Add Episodes:</strong></p>
               <ol>
-                <li>From your podcast card, click <em>Episodes</em>.</li>
-                <li>Upload MP3 or M4A audio (up to 500MB) and optional episode artwork.</li>
-                <li>Set duration, publication date, and status, then publish.</li>
+                <li>From your podcast card, click <strong>"Episodes"</strong></li>
+                <li>Click <strong>"Add New Episode"</strong></li>
+                <li>Upload MP3 audio file (up to 500MB)</li>
+                <li>Add episode details (title, description, duration)</li>
+                <li>Optional: Upload episode artwork</li>
+                <li>Set publication date and status</li>
+                <li>Click <strong>"Add Episode"</strong></li>
               </ol>
 
-              <p><strong>Why It Matters:</strong> Own your infrastructure end-to-end with persistent storage, rich metadata, and seamless integration with the main directory.</p>
+              <p><strong>Your RSS Feed:</strong></p>
+              <ul>
+                <li>Each podcast gets its own RSS feed URL</li>
+                <li>iTunes-compliant (RSS 2.0 + iTunes namespace)</li>
+                <li>Submit to Apple Podcasts, Spotify, etc.</li>
+                <li>Optionally import into your main directory</li>
+              </ul>
+
+              <p><strong>Features:</strong></p>
+              <ul>
+                <li><strong>Audio Hosting:</strong> Upload and host MP3 files on your server</li>
+                <li><strong>Episode Management:</strong> Add, edit, delete episodes with full control</li>
+                <li><strong>Cover Images:</strong> Podcast and episode artwork support</li>
+                <li><strong>iTunes Compliance:</strong> Professional RSS feeds ready for distribution</li>
+                <li><strong>Persistent Storage:</strong> All files stored safely in persistent volumes</li>
+              </ul>
+
+              <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                <strong>💡 Pro Tip:</strong> After creating your podcast, use "Import from RSS" to add it to your main directory for easy browsing alongside your other podcasts!
+              </div>
             </div>
-          </section>
+          </div>
 
-          <section class="help-section">
+          <!-- Podcast Cloning Feature -->
+          <div class="help-section">
+            <h3 class="help-section-title">
+              <span class="help-section-icon">🔄</span>
+              Clone from RSS - Download &amp; Host Podcasts
+            </h3>
+            <div class="help-section-content">
+              <p><strong>What is Podcast Cloning?</strong></p>
+              <p>Unlike RSS import (which links to external feeds), cloning downloads and hosts entire podcasts on your server. All audio files are stored locally, giving you full control.</p>
+
+              <p><strong>How to Clone a Podcast:</strong></p>
+              <ol>
+                <li>Go to <strong>"My Podcasts"</strong> page</li>
+                <li>Click <strong>"Clone from RSS"</strong> button</li>
+                <li>Enter the RSS feed URL</li>
+                <li>Click <strong>"Validate Feed"</strong> to preview episode count and storage needs</li>
+                <li>Click <strong>"Start Cloning"</strong> and wait (don't close window)</li>
+                <li>Time estimates: 5-10 episodes (1-2 min), 20-50 episodes (3-5 min), 100+ episodes (10-30 min)</li>
+              </ol>
+
+              <p><strong>What Gets Cloned:</strong></p>
+              <ul>
+                <li>Podcast metadata (title, description, author, category)</li>
+                <li>Podcast cover image</li>
+                <li>All episode audio files (up to 500MB each)</li>
+                <li>Episode metadata (titles, descriptions, dates, durations)</li>
+                <li>Episode images (optional)</li>
+                <li>iTunes tags (episode numbers, seasons, explicit flags)</li>
+              </ul>
+
+              <p><strong>Technical Details:</strong></p>
+              <ul>
+                <li>Supported formats: MP3 and M4A (works with Anchor.fm/Spotify podcasts)</li>
+                <li>Max file size: 500MB per episode</li>
+                <li>Timeout: 10 minutes per file</li>
+                <li>Error recovery: Continues if some episodes fail</li>
+                <li>Storage: Files saved to <code>uploads/audio/[podcast_id]/</code></li>
+                <li>RSS: Generates iTunes-compliant RSS 2.0 feed</li>
+              </ul>
+
+              <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                <strong>⚠️ Important:</strong>
+                <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                  <li>Ensure adequate disk space before cloning</li>
+                  <li>Don't close browser window during cloning</li>
+                  <li>Only clone content you have rights to host</li>
+                  <li>Avoid multiple simultaneous clones (resource-intensive)</li>
+                </ul>
+              </div>
+
+              <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                <strong>💡 Common Uses:</strong>
+                <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                  <li>Archive podcasts before they're removed</li>
+                  <li>Create backups of your own shows</li>
+                  <li>Migrate content between hosting platforms</li>
+                  <li>Build offline podcast libraries</li>
+                  <li>Preserve educational content</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Banner Ads Manager -->
+          <div class="help-section">
+            <h3 class="help-section-title">
+              <span class="help-section-icon">📢</span>
+              Banner Ads Manager - Monetize Your Platform
+            </h3>
+            <div class="help-section-content">
+              <p><strong>What is the Ads Manager?</strong></p>
+              <p>Upload and manage banner advertisements for your web app and mobile feed. Display rotating banners on your homepage and serve ads to mobile apps via RSS feed.</p>
+
+              <p><strong>How to Access:</strong></p>
+              <ul>
+                <li>Click <strong>"Ads Manager"</strong> button in the header</li>
+                <li>Or visit <code>/ads-manager.php</code> directly</li>
+              </ul>
+
+              <p><strong>Three Ad Types:</strong></p>
+              <ul>
+                <li><strong>Web Banners (728x90px)</strong> - Display on homepage with rotation</li>
+                <li><strong>Phone Banners (320x50px)</strong> - Small mobile banners for apps</li>
+                <li><strong>Tablet Banners (728x90px)</strong> - Larger mobile banners for tablets</li>
+              </ul>
+
+              <p><strong>How to Upload Banners:</strong></p>
+              <ol>
+                <li>Go to Ads Manager page</li>
+                <li>Choose section (Web, Phone, or Tablet)</li>
+                <li>Drag image to upload zone or click to browse</li>
+                <li>System validates exact dimensions automatically</li>
+                <li>Banner appears in grid and live preview</li>
+              </ol>
+
+              <p><strong>Add Destination URLs:</strong></p>
+              <ol>
+                <li>Click <strong>"Add URL"</strong> button on any banner card</li>
+                <li>Enter destination URL in modal (e.g., https://example.com/landing-page)</li>
+                <li>Click <strong>"Save URL"</strong></li>
+                <li>Banner becomes clickable, opens in new tab</li>
+                <li>Button changes to <strong>"Edit URL"</strong> for future updates</li>
+              </ol>
+
+              <p><strong>Manage Banners:</strong></p>
+              <ul>
+                <li><strong>Delete</strong> - Click X button, confirm deletion</li>
+                <li><strong>Section Toggle</strong> - Enable/disable entire web or mobile ad sections</li>
+                <li><strong>Individual Toggle</strong> - Enable/disable each ad individually (toggle on date row)</li>
+                <li><strong>Adjust Timing</strong> - Set rotation duration (5-60s) and fade duration (0.5-3s)</li>
+              </ul>
+
+              <p><strong>Per-Ad Enable/Disable:</strong></p>
+              <ul>
+                <li>Each banner has its own toggle switch (bottom right, on date row)</li>
+                <li>Toggle ON (green) = Ad appears in preview and feeds</li>
+                <li>Toggle OFF (gray) = Ad is hidden, shown at 50% opacity in manager</li>
+                <li>Changes are instant - preview updates in real-time</li>
+                <li>Only enabled ads appear in mobile RSS feed</li>
+              </ul>
+
+              <p><strong>Live Preview:</strong></p>
+              <ul>
+                <li>See exactly how banners will rotate on your site</li>
+                <li>Preview updates in real-time as you adjust settings</li>
+                <li>Click banners to test destination URLs</li>
+                <li>Single ad detection (no rotation for 0-1 ads)</li>
+              </ul>
+
+              <p><strong>Front-End Display:</strong></p>
+              <ul>
+                <li>Banner appears under header on public homepage (index.php)</li>
+                <li>Rotates automatically based on your settings</li>
+                <li>Clickable if URL is set</li>
+                <li>Only shows when enabled in Ads Manager</li>
+                <li>Responsive design (scales on mobile)</li>
+              </ul>
+
+              <p><strong>Mobile RSS Feed:</strong></p>
+              <ul>
+                <li>URL: <code>https://your-domain.com/mobile-ads-feed.php</code></li>
+                <li>Copy URL from Ads Manager interface</li>
+                <li>Use in mobile/tablet apps for ad consumption</li>
+                <li>Includes dimensions, URLs, and display order</li>
+                <li>Standard RSS 2.0 format with custom ads namespace</li>
+              </ul>
+
+              <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                <strong>📏 Image Requirements:</strong>
+                <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                  <li><strong>Web:</strong> Exactly 728x90 pixels</li>
+                  <li><strong>Phone:</strong> Exactly 320x50 pixels</li>
+                  <li><strong>Tablet:</strong> Exactly 728x90 pixels</li>
+                  <li><strong>Formats:</strong> PNG, JPG, or GIF</li>
+                  <li><strong>Validation:</strong> System rejects wrong dimensions with clear error message</li>
+                </ul>
+              </div>
+
+              <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                <strong>💡 Tip:</strong> Use Menu Manager icons (e.g., <code>fa-ad</code>) and custom labels like “Sponsored” or “Advertise Here” to match your branding.
+              </div>
+            </div>
+          </div>
+
+          <!-- Engagement Analytics -->
+          <div class="help-section">
             <h3 class="help-section-title">
               <span class="help-section-icon">📊</span>
-              Engagement Analytics
+              Engagement Analytics - Track Your Audience
             </h3>
             <div class="help-section-content">
-              <ul>
-                <li>Track unique plays and downloads with privacy-friendly session IDs.</li>
-                <li>Visualize trends over 7, 30, 90 days, or all time using Chart.js dashboards.</li>
-                <li>Identify top-performing podcasts and episodes instantly.</li>
-                <li>Control retention policy (default 365 days) stored in lightweight XML.</li>
-              </ul>
-            </div>
-          </section>
+              <p><strong>What is Engagement Analytics?</strong></p>
+              <p>Monitor how your audience interacts with your podcasts. Track plays and downloads from the public player with beautiful visualizations and detailed metrics.</p>
 
-          <section class="help-section">
-            <h3 class="help-section-title">
-              <span class="help-section-icon">🛡️</span>
-              Reliability &amp; Validation
-            </h3>
-            <div class="help-section-content">
+              <p><strong>Key Features:</strong></p>
               <ul>
-                <li>Auto-refresh every five minutes keeps podcast data fresh.</li>
-                <li>Manual refresh bypasses cache for instant updates.</li>
-                <li>RSS health checks cover structure, iTunes namespace, cover image, and response time.</li>
-                <li>Color-coded alerts ensure you know when action is required.</li>
+                <li><strong>Overview Metrics:</strong> Total plays, downloads, unique listeners, and download conversion rate</li>
+                <li><strong>Interactive Charts:</strong> Daily trend visualization with Chart.js (7d, 30d, 90d, all-time views)</li>
+                <li><strong>Top Content:</strong> Top 10 episodes and podcasts ranked by engagement</li>
+                <li><strong>Podcast Filtering:</strong> Use the dropdown to view analytics for individual podcasts</li>
+                <li><strong>Privacy-Focused:</strong> No personal information collected, random session IDs only</li>
+              </ul>
+
+              <p><strong>How It Works:</strong></p>
+              <ul>
+                <li>Analytics are tracked only from the public player on <code>index.php</code></li>
+                <li>Each episode is counted once per session (prevents duplicate tracking)</li>
+                <li>Sessions rotate every 24 hours for accurate unique listener counts</li>
+                <li>Play button, download button, and next/previous controls all trigger tracking</li>
               </ul>
             </div>
-          </section>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary btn-lg" onclick="hideHelpModal()">Close</button>
-          <a class="btn btn-primary btn-lg" href="README.md">
-            <i class="fa-solid fa-book"></i> Open README
-          </a>
+          </div>
         </div>
       </div>
     </div>
-
-    <footer>
-      <div class="container">
-        &copy; 2025 - Built and designed by <a href="https://starkey.digital" target="_blank" rel="noopener">starkey.digital</a>
-      </div>
-    </footer>
 
     <script>
       function showHelpModal() {

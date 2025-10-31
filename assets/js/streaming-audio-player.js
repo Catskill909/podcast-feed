@@ -483,11 +483,13 @@
             }
 
             if (this.showNameEl) {
-                this.showNameEl.textContent = this.decodeHtml(current.show || '—');
+                const showName = this.decodeHtml(current.show || '—');
+                this.setMarqueeText(this.showNameEl, showName);
             }
 
             if (this.showHostsEl) {
-                this.showHostsEl.textContent = this.decodeHtml(current.hosts || '—');
+                const hosts = this.decodeHtml(current.hosts || '—');
+                this.setMarqueeText(this.showHostsEl, hosts);
             }
 
             if (this.showScheduleEl) {
@@ -506,12 +508,13 @@
 
         updateNextInfo(next) {
             if (this.nextShowNameEl) {
-                this.nextShowNameEl.textContent = this.decodeHtml(next.title || '—');
+                const nextTitle = this.decodeHtml(next.title || '—');
+                this.setMarqueeText(this.nextShowNameEl, nextTitle);
             }
 
             if (this.nextShowTimeEl) {
-                const schedule = this.formatSchedule(next.start, next.end);
-                this.nextShowTimeEl.textContent = schedule || '—';
+                const schedule = this.formatSchedule(next.start, next.end) || '—';
+                this.setMarqueeText(this.nextShowTimeEl, schedule);
             }
         }
 
