@@ -692,6 +692,28 @@
     justify-content: center;
   }
 
+  /* MOBILE-ONLY: Make controls wrap so nowplaying goes below */
+  .player-controls {
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+
+  .player-play-group {
+    order: 0;
+    flex: 0 0 auto;
+  }
+
+  .player-nowplaying {
+    display: flex !important;
+    order: 2;
+    flex: 0 0 100%;
+  }
+
+  .player-volume__mute {
+    order: 1;
+    margin-left: auto;
+  }
+
   .player-volume {
     flex-direction: column;
     align-items: stretch;
