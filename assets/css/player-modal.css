@@ -1032,8 +1032,54 @@ select#playerEpisodeSort.form-control {
     height: 40px;
   }
 
-  /* Prevent speed control from wrapping */
+  /* MOBILE-ONLY: Reorder audio player bar to put song info below controls */
+  .audio-player-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  /* Move song info to the end (bottom) */
+  .audio-player-info {
+    order: 4;
+    margin-bottom: 0;
+    margin-top: var(--spacing-sm);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .audio-player-label {
+    font-size: 10px;
+  }
+
+  .audio-player-title {
+    font-size: var(--font-size-sm);
+    white-space: normal;
+    line-height: 1.4;
+  }
+
+  .audio-player-close {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+  }
+
+  /* Progress bar stays at top */
+  .audio-player-progress {
+    order: 1;
+    margin-bottom: 0;
+  }
+
+  /* Controls in middle */
+  .audio-player-controls {
+    order: 2;
+    margin-bottom: 0;
+  }
+
+  /* Extras (volume/speed) below controls */
   .audio-player-extras {
+    order: 3;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
