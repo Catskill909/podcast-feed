@@ -1961,6 +1961,15 @@ if (isset($_GET['edit'])) {
     <script src="assets/js/sort-manager.js?v=<?php echo ASSETS_VERSION; ?>"></script>
     <script src="assets/js/player-modal.js?v=<?php echo ASSETS_VERSION; ?>"></script>
     <script src="assets/js/audio-player.js?v=3.0.5"></script>
+    
+    <script>
+    // Make all podcasts available to JavaScript for analytics dropdown
+    // This ensures the dropdown shows ALL podcasts, not just those with analytics data
+    window.ALL_PODCASTS_FOR_FILTER = <?php echo json_encode(array_map(function($p) {
+        return ['id' => $p['id'], 'title' => $p['title']];
+    }, $podcasts)); ?>;
+    </script>
+    
     <script src="assets/js/analytics-dashboard.js?v=1.0.0"></script>
 </body>
 

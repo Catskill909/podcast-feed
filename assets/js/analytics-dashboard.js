@@ -109,15 +109,16 @@ class AnalyticsDashboard {
         const select = document.getElementById('analyticsPodcastFilter');
         if (!select) return;
 
-        // Get unique podcasts from top podcasts list
-        const podcasts = data.topPodcasts || [];
+        // Use ALL podcasts from directory (not just those with analytics data)
+        // This ensures podcasts with 0 plays/downloads still appear in the dropdown
+        const podcasts = window.ALL_PODCASTS_FOR_FILTER || [];
         
         // Build options HTML
         let optionsHTML = '<option value="">All Podcasts</option>';
         podcasts.forEach(podcast => {
-            const selected = podcast.podcastId === this.currentPodcastId ? 'selected' : '';
-            const safeId = this.escapeHtml(String(podcast.podcastId));
-            const safeTitle = this.sanitizeText(podcast.podcastTitle);
+            const selected = podcast.id === this.currentPodcastId ? 'selected' : '';
+            const safeId = this.escapeHtml(String(podcast.id));
+            const safeTitle = this.sanitizeText(podcast.title);
             optionsHTML += `<option value="${safeId}" ${selected}>${safeTitle}</option>`;
         });
 
