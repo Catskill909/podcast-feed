@@ -458,6 +458,7 @@ class XMLHandler
             $rssRoot = $rss->createElement('rss');
             $rssRoot->setAttribute('version', '2.0');
             $rssRoot->setAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom');
+            $rssRoot->setAttribute('xmlns:podfeed', 'http://podfeed.studio/xmlns');
 
             // Channel element
             $channel = $rss->createElement('channel');
@@ -504,6 +505,25 @@ class XMLHandler
                         $pubDate = isset($podcast['created_date']) ? date('r', strtotime($podcast['created_date'])) : date('r');
                     }
                     $item->appendChild($rss->createElement('pubDate', $pubDate));
+
+                    // Add episode count
+                    if (isset($podcast['episode_count'])) {
+                        $item->appendChild($rss->createElement('podfeed:episodeCount', $podcast['episode_count']));
+                    }
+
+                    // Add isNew flag and date information
+                    if (!empty($podcast['latest_episode_date'])) {
+                        $isNew = $this->isNewEpisode($podcast['latest_episode_date']) ? 'true' : 'false';
+                        $item->appendChild($rss->createElement('podfeed:isNew', $isNew));
+                        
+                        // Add relative date
+                        $relativeDate = $this->formatRelativeDate($podcast['latest_episode_date']);
+                        $item->appendChild($rss->createElement('podfeed:relativeDate', $relativeDate));
+                        
+                        // Add ISO 8601 date for easy parsing
+                        $isoDate = date('Y-m-d', strtotime($podcast['latest_episode_date']));
+                        $item->appendChild($rss->createElement('podfeed:latestEpisodeDate', $isoDate));
+                    }
 
                     // Add cover image as enclosure
                     if (!empty($podcast['cover_image'])) {
@@ -566,6 +586,7 @@ class XMLHandler
             $rssRoot = $rss->createElement('rss');
             $rssRoot->setAttribute('version', '2.0');
             $rssRoot->setAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom');
+            $rssRoot->setAttribute('xmlns:podfeed', 'http://podfeed.studio/xmlns');
 
             // Channel element
             $channel = $rss->createElement('channel');
@@ -613,6 +634,25 @@ class XMLHandler
                         $pubDate = isset($podcast['created_date']) ? date('r', strtotime($podcast['created_date'])) : date('r');
                     }
                     $item->appendChild($rss->createElement('pubDate', $pubDate));
+
+                    // Add episode count
+                    if (isset($podcast['episode_count'])) {
+                        $item->appendChild($rss->createElement('podfeed:episodeCount', $podcast['episode_count']));
+                    }
+
+                    // Add isNew flag and date information
+                    if (!empty($podcast['latest_episode_date'])) {
+                        $isNew = $this->isNewEpisode($podcast['latest_episode_date']) ? 'true' : 'false';
+                        $item->appendChild($rss->createElement('podfeed:isNew', $isNew));
+                        
+                        // Add relative date
+                        $relativeDate = $this->formatRelativeDate($podcast['latest_episode_date']);
+                        $item->appendChild($rss->createElement('podfeed:relativeDate', $relativeDate));
+                        
+                        // Add ISO 8601 date for easy parsing
+                        $isoDate = date('Y-m-d', strtotime($podcast['latest_episode_date']));
+                        $item->appendChild($rss->createElement('podfeed:latestEpisodeDate', $isoDate));
+                    }
 
                     // Add cover image as enclosure
                     if (!empty($podcast['cover_image'])) {
@@ -710,5 +750,62 @@ class XMLHandler
         });
         
         return $podcasts;
+    }
+
+    /**
+     * Format date as relative time (Today, Yesterday, X days ago, etc.)
+     * Matches the logic in browse.js for consistency
+     */
+    private function formatRelativeDate($dateString)
+    {
+        if (empty($dateString)) {
+            return 'Unknown';
+        }
+        
+        try {
+            $date = new DateTime($dateString);
+            $now = new DateTime();
+            
+            // Reset to midnight for accurate day comparison
+            $dateOnly = new DateTime($date->format('Y-m-d'));
+            $nowOnly = new DateTime($now->format('Y-m-d'));
+            
+            $diff = $nowOnly->diff($dateOnly);
+            $diffDays = (int)$diff->format('%a'); // Absolute days (unsigned)
+            
+            if ($diffDays === 0) return 'Today';
+            if ($diffDays === 1) return 'Yesterday';
+            if ($diffDays < 7) return $diffDays . ' days ago';
+            if ($diffDays < 30) {
+                $weeks = floor($diffDays / 7);
+                return $weeks . ' week' . ($weeks !== 1 ? 's' : '') . ' ago';
+            }
+            
+            return $date->format('M j, Y');
+        } catch (Exception $e) {
+            return $dateString;
+        }
+    }
+
+    /**
+     * Check if episode is new (within last 7 days)
+     * Matches the logic in browse.js
+     */
+    private function isNewEpisode($dateString)
+    {
+        if (empty($dateString)) {
+            return false;
+        }
+        
+        try {
+            $episodeDate = new DateTime($dateString);
+            $now = new DateTime();
+            $diff = $now->diff($episodeDate);
+            $diffDays = (int)$diff->format('%a');
+            
+            return $diffDays <= 7;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }
