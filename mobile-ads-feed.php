@@ -23,7 +23,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
         <title>Mobile Banner Ads</title>
         <description>Banner advertisements for mobile app</description>
         <link><?php echo htmlspecialchars(APP_URL); ?></link>
-        <lastBuildDate><?php echo date('r'); ?></lastBuildDate>
+        <lastBuildDate><?php $utcDate = new DateTime('now', new DateTimeZone('UTC')); echo $utcDate->format('r'); ?></lastBuildDate>
         <ads:enabled><?php echo $adsEnabled ? 'true' : 'false'; ?></ads:enabled>
         
         <?php if ($adsEnabled && !empty($mobileAds)): ?>

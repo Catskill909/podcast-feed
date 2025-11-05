@@ -56,8 +56,8 @@ define('ERROR_MESSAGES', [
     'duplicate_entry' => 'A podcast with this title or feed URL already exists'
 ]);
 
-// Timezone
-date_default_timezone_set(getenv('TIMEZONE') ?: 'UTC');
+// Timezone - EST/EDT for accurate relative date calculations
+date_default_timezone_set(getenv('TIMEZONE') ?: 'America/New_York');
 
 // Error Reporting - PRODUCTION SETTINGS
 error_reporting((int)(getenv('ERROR_REPORTING') ?: 0));

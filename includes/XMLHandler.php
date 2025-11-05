@@ -475,7 +475,9 @@ class XMLHandler
             $atomLink->setAttribute('type', 'application/rss+xml');
             $channel->appendChild($atomLink);
 
-            $channel->appendChild($rss->createElement('lastBuildDate', date('r')));
+            // Force UTC for RSS feed timestamps (RSS 2.0 standard)
+            $utcDate = new DateTime('now', new DateTimeZone('UTC'));
+            $channel->appendChild($rss->createElement('lastBuildDate', $utcDate->format('r')));
             $channel->appendChild($rss->createElement('generator', APP_NAME . ' v' . APP_VERSION));
 
             // Add podcast items (sorted)
@@ -603,7 +605,9 @@ class XMLHandler
             $atomLink->setAttribute('type', 'application/rss+xml');
             $channel->appendChild($atomLink);
 
-            $channel->appendChild($rss->createElement('lastBuildDate', date('r')));
+            // Force UTC for RSS feed timestamps (RSS 2.0 standard)
+            $utcDate = new DateTime('now', new DateTimeZone('UTC'));
+            $channel->appendChild($rss->createElement('lastBuildDate', $utcDate->format('r')));
             $channel->appendChild($rss->createElement('generator', APP_NAME . ' v' . APP_VERSION));
 
             // Sort podcasts
