@@ -258,14 +258,50 @@
       }
 
       footer {
+        margin-top: var(--spacing-xxl);
         padding: var(--spacing-xl) 0 var(--spacing-xxl);
         text-align: center;
         color: var(--text-muted);
         font-size: var(--font-size-sm);
+        border-top: 1px solid var(--border-primary);
+        background: linear-gradient(180deg, rgba(88, 166, 255, 0.08), rgba(46, 160, 67, 0.08));
       }
 
-      footer a {
-        color: var(--text-link);
+      .footer-credit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-sm);
+        padding: 0.9rem 1.9rem;
+        border-radius: var(--border-radius-lg);
+        border: 1px solid var(--border-primary);
+        background: rgba(15, 23, 42, 0.45);
+        box-shadow: var(--box-shadow);
+        color: var(--text-secondary);
+        font-size: var(--font-size-md);
+        letter-spacing: 0.03em;
+        backdrop-filter: blur(8px);
+        text-transform: none;
+      }
+
+      .footer-credit a {
+        color: var(--accent-primary);
+        font-weight: 600;
+        text-decoration: none;
+        letter-spacing: 0.04em;
+      }
+
+      .footer-credit a:hover {
+        color: #58a6ff;
+        text-decoration: underline;
+      }
+
+      @media (max-width: 640px) {
+        .footer-credit {
+          flex-wrap: wrap;
+          row-gap: var(--spacing-xs);
+          padding: 0.85rem 1.5rem;
+        }
       }
 
       @media (max-width: 768px) {
@@ -868,6 +904,15 @@
         </div>
       </div>
     </div>
+
+    <footer>
+      <div class="container">
+        <p class="footer-credit">
+          <span>© 2025 - Built and designed by</span>
+          <a href="https://starkey.digital" target="_blank" rel="noopener noreferrer">starkey.digital</a>
+        </p>
+      </div>
+    </footer>
 
     <script>
       function showHelpModal() {
