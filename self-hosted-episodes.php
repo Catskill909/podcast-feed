@@ -146,6 +146,18 @@ if (isset($_SESSION['flash_message'])) {
 
 // Get episodes
 $episodes = $manager->getEpisodes($podcastId);
+
+/**
+ * Escape string for use in JavaScript (onclick attributes, etc.)
+ */
+function escapeJs($text) {
+    if (empty($text)) return '';
+    return str_replace(
+        ['\\', "'", '"', "\n", "\r", "\t"],
+        ['\\\\', "\\'", '\\"', '\\n', '\\r', '\\t'],
+        $text
+    );
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -1034,7 +1046,7 @@ $episodes = $manager->getEpisodes($podcastId);
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
                                 <button class="btn btn-sm btn-danger" 
-                                        onclick="deleteEpisode('<?php echo $episode['id']; ?>', '<?php echo htmlspecialchars(addslashes($episode['title'])); ?>')">
+                                        onclick="deleteEpisode('<?php echo $episode['id']; ?>', '<?php echo escapeJs($episode['title']); ?>')">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
                             </div>

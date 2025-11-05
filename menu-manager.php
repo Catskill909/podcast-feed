@@ -11,6 +11,18 @@ require_once __DIR__ . '/includes/MenuManager.php';
 $manager = new MenuManager();
 $branding = $manager->getBranding();
 $menuItems = $manager->getMenuItems();
+
+/**
+ * Escape string for use in JavaScript (onclick attributes, etc.)
+ */
+function escapeJs($text) {
+    if (empty($text)) return '';
+    return str_replace(
+        ['\\', "'", '"', "\n", "\r", "\t"],
+        ['\\\\', "\\'", '\\"', '\\n', '\\r', '\\t'],
+        $text
+    );
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -208,7 +220,7 @@ $menuItems = $manager->getMenuItems();
                                 <button class="btn-icon" onclick="editMenuItem('<?php echo $item['id']; ?>')" title="Edit Menu Item">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn-icon btn-danger" onclick="deleteMenuItem('<?php echo $item['id']; ?>', '<?php echo htmlspecialchars($item['label']); ?>')" title="Delete Menu Item">
+                                <button class="btn-icon btn-danger" onclick="deleteMenuItem('<?php echo $item['id']; ?>', '<?php echo escapeJs($item['label']); ?>')" title="Delete Menu Item">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>

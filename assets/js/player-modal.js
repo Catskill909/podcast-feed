@@ -549,7 +549,7 @@ class PodcastPlayerModal {
                 </div>
                 <div class="player-episode-actions">
                     <button class="player-episode-action-btn" 
-                            onclick="playerModal.downloadEpisode('${this.escapeHtml(episode.audio_url)}', '${this.escapeHtml(episode.title)}')"
+                            onclick="playerModal.downloadEpisode('${this.escapeJs(episode.audio_url)}', '${this.escapeJs(episode.title)}')"
                             title="Download MP3">
                         <i class="fa-solid fa-download"></i>
                     </button>
@@ -750,6 +750,21 @@ class PodcastPlayerModal {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    /**
+     * Escape JavaScript strings for use in onclick attributes
+     * Handles quotes, apostrophes, backslashes, and newlines
+     */
+    escapeJs(text) {
+        if (!text) return '';
+        return text
+            .replace(/\\/g, '\\\\')   // Escape backslashes first
+            .replace(/'/g, "\\'")     // Escape single quotes
+            .replace(/"/g, '\\"')     // Escape double quotes
+            .replace(/\n/g, '\\n')    // Escape newlines
+            .replace(/\r/g, '\\r')    // Escape carriage returns
+            .replace(/\t/g, '\\t');   // Escape tabs
     }
 
     /**

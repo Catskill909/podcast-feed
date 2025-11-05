@@ -108,6 +108,19 @@ $editPodcast = null;
 if (isset($_GET['edit'])) {
     $editPodcast = $podcastManager->getPodcast($_GET['edit']);
 }
+
+/**
+ * Escape string for use in JavaScript (onclick attributes, etc.)
+ * Handles quotes, apostrophes, backslashes, and newlines
+ */
+function escapeJs($text) {
+    if (empty($text)) return '';
+    return str_replace(
+        ['\\', "'", '"', "\n", "\r", "\t"],
+        ['\\\\', "\\'", '\\"', '\\n', '\\r', '\\t'],
+        $text
+    );
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -334,7 +347,7 @@ if (isset($_GET['edit'])) {
                                         <td>
                                             <button type="button" 
                                                 class="btn btn-outline btn-sm"
-                                                onclick="showPodcastFeedModal('<?php echo htmlspecialchars($podcast['feed_url']); ?>', '<?php echo htmlspecialchars($podcast['title']); ?>'); return false;"
+                                                onclick="showPodcastFeedModal('<?php echo escapeJs($podcast['feed_url']); ?>', '<?php echo escapeJs($podcast['title']); ?>'); return false;"
                                                 title="<?php echo htmlspecialchars($podcast['feed_url']); ?>">
                                                 <i class="fa-solid fa-rss"></i> View Feed
                                             </button>
@@ -343,7 +356,7 @@ if (isset($_GET['edit'])) {
                                             <button type="button" 
                                                 class="badge badge-<?php echo $podcast['status'] === 'active' ? 'success' : 'danger'; ?> badge-clickable tooltip"
                                                 data-tooltip="Change Status"
-                                                onclick="showStatusModal('<?php echo htmlspecialchars($podcast['id']); ?>', '<?php echo htmlspecialchars($podcast['title']); ?>', '<?php echo $podcast['status']; ?>')">
+                                                onclick="showStatusModal('<?php echo escapeJs($podcast['id']); ?>', '<?php echo escapeJs($podcast['title']); ?>', '<?php echo $podcast['status']; ?>')">
                                                 <?php echo $podcast['status'] === 'active' ? '✓ Active' : '✕ Inactive'; ?>
                                             </button>
                                         </td>
@@ -383,7 +396,7 @@ if (isset($_GET['edit'])) {
                                                 </button>
                                                 <button type="button" class="btn btn-outline btn-sm tooltip"
                                                     data-tooltip="Check Health"
-                                                    onclick="checkPodcastHealth('<?php echo htmlspecialchars($podcast['id']); ?>', '<?php echo htmlspecialchars($podcast['title']); ?>')">
+                                                    onclick="checkPodcastHealth('<?php echo escapeJs($podcast['id']); ?>', '<?php echo escapeJs($podcast['title']); ?>')">
                                                     <i class="fa-solid fa-heart-pulse"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-outline btn-sm tooltip"
@@ -393,7 +406,7 @@ if (isset($_GET['edit'])) {
                                                 </button>
                                                 <button type="button" class="btn btn-danger btn-sm tooltip"
                                                     data-tooltip="Delete Podcast"
-                                                    onclick="deletePodcast('<?php echo htmlspecialchars($podcast['id']); ?>', '<?php echo htmlspecialchars($podcast['title']); ?>')">
+                                                    onclick="deletePodcast('<?php echo escapeJs($podcast['id']); ?>', '<?php echo escapeJs($podcast['title']); ?>')">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
                                             </div>
