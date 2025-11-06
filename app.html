@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PodFeed Studio App · Feature Highlights</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Oswald:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      :root {
+        --bg-primary: #0d1117;
+        --bg-secondary: #161b22;
+        --bg-card: #1c2128;
+        --bg-tertiary: #21262d;
+        --text-primary: #e6edf3;
+        --text-secondary: #7d8590;
+        --accent-primary: #238636;
+        --accent-secondary: #1f6feb;
+        --border-primary: rgba(48, 54, 61, 0.8);
+        --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        --box-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.4);
+        --border-radius: 8px;
+        --border-radius-lg: 12px;
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 16px;
+        --spacing-lg: 24px;
+        --spacing-xl: 32px;
+        --spacing-xxl: 48px;
+        --font-size-lg: 1.125rem;
+        --font-size-xl: 1.25rem;
+        --font-size-xxl: 1.5rem;
+        --transition-base: 0.2s ease;
+        --feature-gradient: linear-gradient(135deg, rgba(35, 134, 54, 0.12), rgba(31, 111, 235, 0.12));
+        --feature-border: rgba(88, 166, 255, 0.25);
+        --feature-hover-border: rgba(88, 166, 255, 0.45);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.6;
+        background-attachment: fixed;
+      }
+
+      .gallery-launch-wrapper {
+        display: flex;
+        justify-content: center;
+        margin: calc(var(--spacing-xl) * -0.25) 0 var(--spacing-xxl);
+      }
+
+      .gallery-launch-button {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: 0.95rem 2.75rem;
+        border: 0;
+        border-radius: 999px;
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #fff;
+        cursor: pointer;
+        background: linear-gradient(135deg, rgba(31, 111, 235, 0.95), rgba(35, 134, 54, 0.95));
+        box-shadow: 0 18px 38px rgba(31, 111, 235, 0.32);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .gallery-launch-button i {
+        font-size: 1.1rem;
+      }
+
+      .gallery-launch-button:hover {
+        transform: translateY(-4px) scale(1.01);
+        box-shadow: 0 22px 46px rgba(46, 160, 67, 0.38);
+      }
+
+      .gallery-launch-button:focus-visible {
+        outline: 3px solid rgba(46, 160, 67, 0.6);
+        outline-offset: 4px;
+      }
+
+      .gallery-modal-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--spacing-lg);
+        background: rgba(13, 17, 23, 0.82);
+        backdrop-filter: blur(12px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+        z-index: 999;
+      }
+
+      .gallery-modal-overlay.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .gallery-modal {
+        width: min(1080px, 100%);
+        max-height: min(90vh, 920px);
+        background: var(--bg-secondary);
+        border-radius: 20px;
+        border: 1px solid rgba(88, 166, 255, 0.25);
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .gallery-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-md);
+        border-bottom: 1px solid rgba(88, 166, 255, 0.15);
+      }
+
+      .gallery-modal-title {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.45rem;
+        letter-spacing: 0.02em;
+      }
+
+      .gallery-close {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        font-size: 1.65rem;
+        cursor: pointer;
+        line-height: 1;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        border-radius: 8px;
+        transition: background 0.18s ease, color 0.18s ease;
+      }
+
+      .gallery-close:hover,
+      .gallery-close:focus-visible {
+        background: rgba(88, 166, 255, 0.1);
+        color: #58a6ff;
+        outline: none;
+      }
+
+      .gallery-modal-body {
+        flex: 1;
+        display: grid;
+        grid-template-columns: minmax(180px, 240px) 1fr;
+        gap: var(--spacing-lg);
+        padding: var(--spacing-xl);
+        min-height: 0;
+      }
+
+      .gallery-thumbnails {
+        display: grid;
+        gap: var(--spacing-sm);
+        overflow-y: auto;
+        padding-right: 6px;
+      }
+
+      .gallery-thumbnail-button {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 0;
+        padding-bottom: 190%;
+        border: 1px solid transparent;
+        border-radius: 18px;
+        overflow: hidden;
+        background: var(--bg-tertiary);
+        cursor: pointer;
+        transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .gallery-thumbnail-button img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .gallery-thumbnail-button:hover img,
+      .gallery-thumbnail-button:focus-visible img {
+        transform: scale(1.05);
+      }
+
+      .gallery-thumbnail-button.is-active {
+        border-color: rgba(46, 160, 67, 0.8);
+        box-shadow: 0 12px 26px rgba(46, 160, 67, 0.28);
+      }
+
+      .gallery-main {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        min-height: 0;
+      }
+
+      .gallery-main-image {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(140deg, rgba(88, 166, 255, 0.08), rgba(46, 160, 67, 0.08));
+        border-radius: 24px;
+        border: 1px solid rgba(88, 166, 255, 0.15);
+        padding: var(--spacing-lg);
+        min-height: 0;
+      }
+
+      .gallery-main-image img {
+        max-height: 100%;
+        max-width: 100%;
+        border-radius: 18px;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+        object-fit: contain;
+      }
+
+      .gallery-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--spacing-lg);
+      }
+
+      .gallery-counter {
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: rgba(88, 166, 255, 0.85);
+        text-transform: uppercase;
+      }
+
+      .gallery-caption {
+        flex: 1;
+        color: var(--text-secondary);
+        letter-spacing: 0.02em;
+        font-size: 0.95rem;
+      }
+
+      .gallery-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+      }
+
+      .gallery-nav {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        border: 1px solid rgba(88, 166, 255, 0.25);
+        background: rgba(88, 166, 255, 0.15);
+        color: #58a6ff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .gallery-nav[data-direction="next"] {
+        background: rgba(35, 134, 54, 0.18);
+        border-color: rgba(46, 160, 67, 0.4);
+        color: rgba(198, 255, 215, 0.9);
+      }
+
+      .gallery-nav:hover,
+      .gallery-nav:focus-visible {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(88, 166, 255, 0.25);
+        background: rgba(88, 166, 255, 0.3);
+        outline: none;
+      }
+
+      .gallery-nav[data-direction="next"]:hover,
+      .gallery-nav[data-direction="next"]:focus-visible {
+        box-shadow: 0 12px 24px rgba(46, 160, 67, 0.3);
+        background: rgba(46, 160, 67, 0.32);
+      }
+
+      .gallery-modal-overlay::-webkit-scrollbar,
+      .gallery-thumbnails::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .gallery-thumbnails::-webkit-scrollbar-thumb {
+        background: rgba(88, 166, 255, 0.4);
+        border-radius: 4px;
+      }
+
+      @media (max-width: 1024px) {
+        .gallery-modal-body {
+          grid-template-columns: 1fr;
+          gap: var(--spacing-md);
+        }
+
+        .gallery-thumbnails {
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: minmax(110px, 1fr);
+          overflow-x: auto;
+          overflow-y: hidden;
+          padding-bottom: var(--spacing-sm);
+        }
+
+        .gallery-thumbnail-button {
+          padding-bottom: 220%;
+        }
+
+        .gallery-meta {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--spacing-sm);
+        }
+
+        .gallery-actions {
+          align-self: stretch;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .gallery-modal {
+          border-radius: 16px;
+        }
+
+        .gallery-modal-header {
+          padding: var(--spacing-md) var(--spacing-lg) var(--spacing-sm);
+        }
+
+        .gallery-modal-body {
+          padding: var(--spacing-lg);
+        }
+
+        .gallery-main-image {
+          padding: var(--spacing-md);
+        }
+
+        .gallery-launch-wrapper {
+          margin: var(--spacing-lg) 0 var(--spacing-xl);
+        }
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 var(--spacing-lg);
+      }
+
+      .hero {
+        padding: var(--spacing-xxl) 0 var(--spacing-xl);
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(2.5rem, 4vw, 3.5rem);
+        letter-spacing: 1px;
+        margin-bottom: var(--spacing-md);
+      }
+
+      .hero-subtitle {
+        font-size: clamp(1.5rem, 2.5vw, 2rem);
+        font-weight: 500;
+        color: var(--text-secondary);
+        letter-spacing: 0.5px;
+        margin-bottom: var(--spacing-md);
+        text-transform: none;
+      }
+
+      .hero p {
+        max-width: 760px;
+        margin: var(--spacing-md) auto var(--spacing-xl);
+        color: var(--text-secondary);
+        font-size: var(--font-size-lg);
+      }
+
+      .feature-section {
+        margin-bottom: var(--spacing-xxl);
+      }
+
+      .feature-section h2 {
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(1.75rem, 3vw, 2.5rem);
+        margin-bottom: var(--spacing-lg);
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        background: linear-gradient(90deg, #58a6ff, #2ea043);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+
+      .feature-section p.section-intro {
+        margin-bottom: var(--spacing-xl);
+        color: var(--text-secondary);
+        max-width: 720px;
+      }
+
+      .features-grid {
+        display: grid;
+        gap: var(--spacing-xl);
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+
+      .features-grid.core-grid {
+        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      }
+
+      .feature-card {
+        position: relative;
+        overflow: hidden;
+        background: var(--bg-card);
+        border-radius: var(--border-radius-lg);
+        border: 1px solid var(--border-primary);
+        padding: var(--spacing-xl);
+        box-shadow: var(--box-shadow);
+        transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+        animation: fadeUp 0.6s ease both;
+      }
+
+      .feature-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--feature-gradient);
+        opacity: 0.6;
+        transition: opacity var(--transition-base);
+        pointer-events: none;
+      }
+
+      .feature-card::after {
+        content: "";
+        position: absolute;
+        inset: 1px;
+        border-radius: calc(var(--border-radius-lg) - 2px);
+        border: 1px solid transparent;
+        transition: border-color var(--transition-base);
+      }
+
+      .feature-card > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--box-shadow-lg);
+        border-color: var(--feature-hover-border);
+      }
+
+      .feature-card:hover::before {
+        opacity: 0.9;
+      }
+
+      .feature-card:hover::after {
+        border-color: var(--feature-hover-border);
+      }
+
+      .feature-header {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .feature-icon {
+        width: 48px;
+        height: 48px;
+        display: grid;
+        place-items: center;
+        background: rgba(88, 166, 255, 0.12);
+        color: #79c0ff;
+        border-radius: 14px;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+      }
+
+      .feature-title {
+        margin: 0;
+        font-family: 'Oswald', sans-serif;
+        font-size: var(--font-size-xxl);
+        text-transform: none;
+      }
+
+      .feature-description {
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-md);
+      }
+
+      .feature-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .feature-list li {
+        padding-left: var(--spacing-lg);
+        margin-bottom: var(--spacing-sm);
+        position: relative;
+        color: var(--text-secondary);
+      }
+
+      .feature-list li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--accent-primary);
+        font-weight: bold;
+      }
+
+      .site-footer {
+        margin-top: var(--spacing-xxl);
+        padding: var(--spacing-xxl) 0;
+        border-top: 1px solid var(--border-primary);
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        background:
+          radial-gradient(circle at top, rgba(88, 166, 255, 0.18), transparent 45%),
+          linear-gradient(180deg, rgba(33, 38, 45, 0), rgba(33, 38, 45, 0.85));
+      }
+
+      .site-footer p {
+        margin: var(--spacing-sm) 0;
+      }
+
+      .site-footer a {
+        color: var(--text-primary);
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        transition: color var(--transition-base);
+      }
+
+      .site-footer a::after {
+        content: "\f35d";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        font-size: 0.8rem;
+        opacity: 0.7;
+        transition: transform var(--transition-base), opacity var(--transition-base);
+      }
+
+      .site-footer a:hover {
+        color: #58a6ff;
+      }
+
+      .site-footer a:hover::after {
+        transform: translateX(3px);
+        opacity: 1;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .features-grid,
+        .features-grid.core-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="hero">
+        <h1>📱 PodFeed Studio App</h1>
+        <div class="hero-subtitle">Feature Highlights</div>
+        <p>
+          A beautiful, cross-platform podcast application built with Flutter.
+        </p>
+      </div>
+
+      <div class="gallery-launch-wrapper">
+        <button type="button" class="gallery-launch-button" id="openGalleryButton">
+          <i class="fa-solid fa-images"></i>
+          Gallery
+        </button>
+      </div>
+
+      <!-- Audio & Playback -->
+      <section class="feature-section">
+        <h2>🎧 Audio & Playback</h2>
+        <p class="section-intro">
+          Professional-grade audio playback with background support, offline download, lockscreen controls, and intelligent progress tracking.
+        </p>
+        <div class="features-grid core-grid">
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-play-circle"></i></div>
+              <h3 class="feature-title">Background Audio</h3>
+            </div>
+            <p class="feature-description">
+              True background playback with full system integration.
+            </p>
+            <ul class="feature-list">
+              <li>Continues playing when app is minimized or screen locked</li>
+              <li>Lockscreen and notification controls (play, pause, skip, seek)</li>
+              <li>Rich metadata displayed (title, artist, artwork, position)</li>
+              <li>Hardware/media button support (headphones, car, Bluetooth)</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-history"></i></div>
+              <h3 class="feature-title">Resume Playback</h3>
+            </div>
+            <p class="feature-description">
+              Never lose your place with automatic position tracking.
+            </p>
+            <ul class="feature-list">
+              <li>Automatic progress saving every 5 seconds while playing</li>
+              <li>Auto-saves on pause/stop</li>
+              <li>90-day retention in local database</li>
+              <li>95% completion threshold marks episodes as "played"</li>
+              <li>Seamless resume without interrupting dialogs</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-moon"></i></div>
+              <h3 class="feature-title">Sleep Timer</h3>
+            </div>
+            <p class="feature-description">
+              Auto-stop playback after custom duration with beautiful UI.
+            </p>
+            <ul class="feature-list">
+              <li>Customizable 1-120 minutes countdown</li>
+              <li>Circular timer display with animated progress ring</li>
+              <li>Preset buttons: 15, 30, 60 minutes</li>
+              <li>Pause/resume and extend running timer</li>
+              <li>Visible on player, mini-player, and image overlay</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-sliders-h"></i></div>
+              <h3 class="feature-title">Audio Scrubber</h3>
+            </div>
+            <p class="feature-description">
+              Precise playback control with real-time updates.
+            </p>
+            <ul class="feature-list">
+              <li>Drag to any position in episode</li>
+              <li>10-second rewind, 30-second forward controls</li>
+              <li>Accurate audio duration from actual MP3 files</li>
+              <li>Real-time progress updates with green/gray indicators</li>
+              <li>Spotify-style progress bar on mini-player</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- User Experience -->
+      <section class="feature-section">
+        <h2>📱 User Experience</h2>
+        <p class="section-intro">
+          Polished, intuitive interface with Spotify-inspired design and smart state synchronization.
+        </p>
+        <div class="features-grid core-grid">
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
+              <h3 class="feature-title">Persistent Mini-Player</h3>
+            </div>
+            <p class="feature-description">
+              Always-visible playback controls that persist across sessions.
+            </p>
+            <ul class="feature-list">
+              <li>Appears at bottom when episode is loaded</li>
+              <li>Episode artwork (56x56px) with rounded corners</li>
+              <li>Auto-scrolling title for long episode names</li>
+              <li>Large 48px play/pause button</li>
+              <li>Tap to open full player screen</li>
+              <li>Sleep timer indicator when active</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-th-large"></i></div>
+              <h3 class="feature-title">Spotify-Style Cards</h3>
+            </div>
+            <p class="feature-description">
+              Consistent, beautiful episode cards across all tabs.
+            </p>
+            <ul class="feature-list">
+              <li>80x80px episode images with border and shadow</li>
+              <li>Title turns GREEN when episode is playing</li>
+              <li>Progress bars: GREEN for played, GRAY for remaining</li>
+              <li>Time remaining inline ("15 min left")</li>
+              <li>Green waveform icon when actively playing</li>
+              <li>32px play/pause button in bottom-right corner</li>
+              <li>Action buttons: Favorite, Download, Share</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-sync-alt"></i></div>
+              <h3 class="feature-title">Smart State Sync</h3>
+            </div>
+            <p class="feature-description">
+              All controls stay perfectly synchronized across all screens.
+            </p>
+            <ul class="feature-list">
+              <li>Real-time updates across Episodes, Favorites, Downloads</li>
+              <li>Smart play/pause logic (pause current, resume paused, navigate to different)</li>
+              <li>Visual indicators synced (green title, waveform, progress)</li>
+              <li>Progress tracking updates every 5 seconds</li>
+              <li>Unified navigation with bottom-slide animation</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-arrows-alt-v"></i></div>
+              <h3 class="feature-title">Collapsing App Bar</h3>
+            </div>
+            <p class="feature-description">
+              Spotify-style scroll-triggered app bar on podcast detail screen.
+            </p>
+            <ul class="feature-list">
+              <li>Appears after ~200px scroll</li>
+              <li>Dynamic background using podcast's dominant color</li>
+              <li>Smooth fade-in/out animation (200ms)</li>
+              <li>Status bar protection (content never hides)</li>
+              <li>Smart back button management</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-wifi"></i></div>
+              <h3 class="feature-title">Global Offline Banner</h3>
+            </div>
+            <p class="feature-description">
+              Instant offline detection with retry functionality.
+            </p>
+            <ul class="feature-list">
+              <li>Shows immediately on app launch if offline</li>
+              <li>Appears on all main screens (Home, Detail, Player)</li>
+              <li>WiFi-off icon with red accent</li>
+              <li>Retry button for manual connection recheck</li>
+              <li>No race conditions or delays</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-redo"></i></div>
+              <h3 class="feature-title">Pull-to-Refresh</h3>
+            </div>
+            <p class="feature-description">
+              Always get the latest episodes with manual refresh.
+            </p>
+            <ul class="feature-list">
+              <li>Available on all main screens</li>
+              <li>Bypasses 30-minute cache</li>
+              <li>Smooth animation with loading indicator</li>
+              <li>Automatic background refresh on app launch</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Content & Discovery -->
+      <section class="feature-section">
+        <h2>🎙️ Content & Discovery</h2>
+        <p class="section-intro">
+          Dynamic podcast directory with rich metadata and responsive grid layout.
+        </p>
+        <div class="features-grid core-grid">
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-server"></i></div>
+              <h3 class="feature-title">Dynamic Directory Feed</h3>
+            </div>
+            <p class="feature-description">
+              Server-managed podcast list loaded from https://podcast.supersoul.top/feed.php
+            </p>
+            <ul class="feature-list">
+              <li>No app updates needed to add/remove podcasts</li>
+              <li>Responsive grid layout (2-4 columns based on screen size)</li>
+              <li>On-demand fetching (individual podcasts loaded when tapped)</li>
+              <li>30-minute cache freshness</li>
+              <li>Graceful error handling</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-tags"></i></div>
+              <h3 class="feature-title">Rich Metadata</h3>
+            </div>
+            <p class="feature-description">
+              Beautiful podcast cards with comprehensive information.
+            </p>
+            <ul class="feature-list">
+              <li>Episode counts with podcast icon badge</li>
+              <li>"NEW" badges (green) for recent podcasts</li>
+              <li>Relative dates with clock icon</li>
+              <li>Cover images with gradient overlay</li>
+              <li>Clean HTML text parsing (all entities decoded)</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-share-alt"></i></div>
+              <h3 class="feature-title">Episode Sharing</h3>
+            </div>
+            <p class="feature-description">
+              Native sharing functionality with rich metadata.
+            </p>
+            <ul class="feature-list">
+              <li>Share with title, description, and artwork</li>
+              <li>Share button on episode cards and player screen</li>
+              <li>System share sheet integration</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-broadcast-tower"></i></div>
+              <h3 class="feature-title">API Integrations</h3>
+            </div>
+            <p class="feature-description">
+              WordPress API and XML podcast feeds.
+            </p>
+            <ul class="feature-list">
+              <li>Radio icon in top-right of home screen</li>
+              <li>WordPress API integration with grid layout</li>
+              <li>WebView integration with custom dark theme CSS</li>
+              <li>XML RSS feed for various authenticated podcast feedss</li>
+              <li>Pull-to-refresh and external link handling</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Downloads & Favorites -->
+      <section class="feature-section">
+        <h2>📥 Downloads & Favorites</h2>
+        <p class="section-intro">
+          Full offline support with real HTTP downloads and persistent favorites system.
+        </p>
+        <div class="features-grid core-grid">
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-download"></i></div>
+              <h3 class="feature-title">Real HTTP Downloads</h3>
+            </div>
+            <p class="feature-description">
+              Actual file downloads with progress tracking and offline playback.
+            </p>
+            <ul class="feature-list">
+              <li>Real-time 0-100% progress indicators</li>
+              <li>Confirmation dialog before starting</li>
+              <li>Progress modal with circular indicator</li>
+              <li>Completion modal with "View All" button</li>
+              <li>File validation after download</li>
+              <li>Retry capability for failed downloads</li>
+              <li>Offline playback in airplane mode</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-folder"></i></div>
+              <h3 class="feature-title">Downloads Tab</h3>
+            </div>
+            <p class="feature-description">
+              Dedicated tab for managing offline episodes.
+            </p>
+            <ul class="feature-list">
+              <li>Spotify-style cards (80x80 images)</li>
+              <li>Progress bars for playback tracking</li>
+              <li>Action buttons: Favorite, Share, Delete</li>
+              <li>File size and duration display</li>
+              <li>Real-time state synchronization</li>
+              <li>Smart audio loading (local files vs streaming)</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-heart"></i></div>
+              <h3 class="feature-title">Favorites System</h3>
+            </div>
+            <p class="feature-description">
+              Save and organize your favorite episodes with persistent storage.
+            </p>
+            <ul class="feature-list">
+              <li>Heart icon in player (outline/filled states)</li>
+              <li>Beautiful confirmation modal with animation</li>
+              <li>Dedicated Favorites tab</li>
+              <li>Episodes grouped by podcast with headers</li>
+              <li>Swipe-to-delete with confirmation dialog</li>
+              <li>Complete episode metadata stored in Hive database</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
+              <h3 class="feature-title">Download States</h3>
+            </div>
+            <p class="feature-description">
+              Clear visual indicators for download status.
+            </p>
+            <ul class="feature-list">
+              <li>Not Downloaded: Download outline icon (white)</li>
+              <li>Downloading: Circular progress with percentage</li>
+              <li>Completed: Green checkmark icon</li>
+              <li>Failed: Red error icon with retry option</li>
+              <li>Storage permissions handled automatically</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Design & Technical -->
+      <section class="feature-section">
+        <h2>🎨 Design & Technical</h2>
+        <p class="section-intro">
+          Beautiful minimalist dark theme with robust architecture and cross-platform support.
+        </p>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-palette"></i></div>
+              <h3 class="feature-title">Minimalist Dark Theme</h3>
+            </div>
+            <p class="feature-description">
+              Consistent design system throughout the app.
+            </p>
+            <ul class="feature-list">
+              <li>Oswald font for headers</li>
+              <li>Nunito font for body text</li>
+              <li>Dynamic color extraction from podcast artwork</li>
+              <li>Visual indicators (green for playing, waveform icons)</li>
+              <li>Beautiful modals with animations</li>
+              <li>Responsive layout for all screen sizes</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-database"></i></div>
+              <h3 class="feature-title">Offline-Ready</h3>
+            </div>
+            <p class="feature-description">
+              Local caching with Hive database for fast, offline access.
+            </p>
+            <ul class="feature-list">
+              <li>Type-safe storage with generated adapters</li>
+              <li>Three boxes: podcasts, favorites, app_settings</li>
+              <li>30-minute cache freshness window</li>
+              <li>Automatic migration for schema changes</li>
+              <li>Offline audio playback for downloaded episodes</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-code"></i></div>
+              <h3 class="feature-title">Clean Architecture</h3>
+            </div>
+            <p class="feature-description">
+              Well-organized codebase with separation of concerns.
+            </p>
+            <ul class="feature-list">
+              <li>Provider pattern for state management</li>
+              <li>Service layer for business logic</li>
+              <li>Repository pattern for data fetching</li>
+              <li>Zero lint warnings</li>
+              <li>Comprehensive error handling</li>
+              <li>Well-documented codebase</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+              <h3 class="feature-title">Cross-Platform</h3>
+            </div>
+            <p class="feature-description">
+              Built with Flutter for iOS, Android, and Web.
+            </p>
+            <ul class="feature-list">
+              <li>iOS: Full featured with background audio</li>
+              <li>Android: Full featured with background audio</li>
+              <li>Web (Chrome): Full featured with CORS proxy</li>
+              <li>Consistent experience across all platforms</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+              <h3 class="feature-title">Error Resilient</h3>
+            </div>
+            <p class="feature-description">
+              Graceful handling of network and audio issues.
+            </p>
+            <ul class="feature-list">
+              <li>Comprehensive try-catch blocks</li>
+              <li>Validation before playing episodes</li>
+              <li>Visual indicators for episodes without audio</li>
+              <li>User-friendly error messages via snackbars</li>
+              <li>Proper state reset when errors occur</li>
+              <li>Detailed logging for debugging</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-header">
+              <div class="feature-icon"><i class="fas fa-network-wired"></i></div>
+              <h3 class="feature-title">Network Awareness</h3>
+            </div>
+            <p class="feature-description">
+              Real-time connectivity monitoring with smart defaults.
+            </p>
+            <ul class="feature-list">
+              <li>ConnectivityProvider for real-time status</li>
+              <li>Safe default (assumes offline until proven online)</li>
+              <li>10-second timeout for requests</li>
+              <li>Cache-first strategy for faster startup</li>
+              <li>Background refresh when online</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="gallery-modal-overlay" id="galleryModal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="gallery-modal" role="document">
+          <div class="gallery-modal-header">
+            <div class="gallery-modal-title">
+              <i class="fa-solid fa-images"></i>
+              PodFeed Studio App Gallery
+            </div>
+            <button type="button" class="gallery-close" id="closeGalleryButton" aria-label="Close gallery">&times;</button>
+          </div>
+          <div class="gallery-modal-body">
+            <div class="gallery-thumbnails" id="galleryThumbnails" role="tablist" aria-label="App gallery thumbnails"></div>
+            <div class="gallery-main">
+              <div class="gallery-main-image">
+                <img src="" alt="" id="galleryMainImage" />
+              </div>
+              <div class="gallery-meta">
+                <div class="gallery-counter" id="galleryCounter">Image 1 of 16</div>
+                <div class="gallery-caption" id="galleryCaption">PodFeed Studio App screenshot</div>
+                <div class="gallery-actions">
+                  <button type="button" class="gallery-nav" id="galleryPrev" data-direction="prev" aria-label="View previous screenshot">
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                  <button type="button" class="gallery-nav" id="galleryNext" data-direction="next" aria-label="View next screenshot">
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="site-footer">
+        <p>© 2025 &mdash; Built and designed by
+          <a href="https://starkey.digital" target="_blank" rel="noopener">starkey.digital</a>
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        const openButton = document.getElementById('openGalleryButton');
+        const modalOverlay = document.getElementById('galleryModal');
+        const closeButton = document.getElementById('closeGalleryButton');
+        const thumbnailsContainer = document.getElementById('galleryThumbnails');
+        const mainImage = document.getElementById('galleryMainImage');
+        const counter = document.getElementById('galleryCounter');
+        const caption = document.getElementById('galleryCaption');
+        const prevButton = document.getElementById('galleryPrev');
+        const nextButton = document.getElementById('galleryNext');
+
+        if (!openButton || !modalOverlay) {
+          return;
+        }
+
+        const galleryBase = new URL('./gallery/', window.location.href);
+        const images = Array.from({ length: 16 }, (_, index) => {
+          const number = index + 1;
+          return {
+            index,
+            src: new URL(`${number}.jpeg`, galleryBase).toString(),
+            alt: `PodFeed Studio App screenshot ${number}`,
+            caption: [
+              'Home screen featuring curated podcast highlights',
+              'Podcast detail view with immersive gradient header',
+              'Now playing screen with rich waveform visualization',
+              'Mini-player overlay with persistent playback controls',
+              'Episode list showcasing progress bars and statuses',
+              'Sleep timer configuration modal with countdown ring',
+              'Downloads tab with offline availability indicators',
+              'Favorites library organized by saved episodes',
+              'Global search results with category chips',
+              'Playlist queue management with drag controls',
+              'Live radio streaming interface with broadcast badge',
+              'Settings screen featuring theme and playback options',
+              'Onboarding flow highlighting personalization steps',
+              'Authentication success screen with celebratory state',
+              'Subscription prompts with premium feature highlights',
+              'Notification center summarizing latest updates'
+            ][index] || `PodFeed Studio App screenshot ${number}`
+          };
+        });
+
+        let activeIndex = 0;
+        let previouslyFocusedElement = null;
+
+        const focusableSelectors = 'button, [href], [tabindex]:not([tabindex="-1"])';
+
+        const updateMainImage = (index) => {
+          const item = images[index];
+          if (!item) return;
+          activeIndex = index;
+          mainImage.src = item.src;
+          mainImage.alt = item.alt;
+          counter.textContent = `Image ${index + 1} of ${images.length}`;
+          caption.textContent = item.caption;
+
+          const thumbnailButtons = thumbnailsContainer.querySelectorAll('.gallery-thumbnail-button');
+          thumbnailButtons.forEach((button, buttonIndex) => {
+            const isActive = buttonIndex === index;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            button.setAttribute('tabindex', isActive ? '0' : '-1');
+          });
+        };
+
+        const showModal = () => {
+          previouslyFocusedElement = document.activeElement;
+          modalOverlay.classList.add('show');
+          modalOverlay.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+          const focusableItems = modalOverlay.querySelectorAll(focusableSelectors);
+          if (focusableItems.length) {
+            focusableItems[0].focus();
+          }
+          document.addEventListener('keydown', handleKeydown);
+        };
+
+        const hideModal = () => {
+          modalOverlay.classList.remove('show');
+          modalOverlay.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          document.removeEventListener('keydown', handleKeydown);
+          if (previouslyFocusedElement && typeof previouslyFocusedElement.focus === 'function') {
+            previouslyFocusedElement.focus();
+          }
+        };
+
+        const handleKeydown = (event) => {
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            hideModal();
+            return;
+          }
+
+          if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            navigate(1);
+            return;
+          }
+
+          if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            navigate(-1);
+            return;
+          }
+
+          if (event.key === 'Tab') {
+            const focusableItems = modalOverlay.querySelectorAll(focusableSelectors);
+            if (!focusableItems.length) return;
+            const first = focusableItems[0];
+            const last = focusableItems[focusableItems.length - 1];
+
+            if (event.shiftKey) {
+              if (document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+              }
+            } else if (document.activeElement === last) {
+              event.preventDefault();
+              first.focus();
+            }
+          }
+        };
+
+        const navigate = (direction) => {
+          const nextIndex = (activeIndex + direction + images.length) % images.length;
+          updateMainImage(nextIndex);
+          const activeButton = thumbnailsContainer.querySelector(`.gallery-thumbnail-button[data-index="${nextIndex}"]`);
+          if (activeButton) {
+            activeButton.focus({ preventScroll: true });
+            activeButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+          }
+        };
+
+        const buildThumbnails = () => {
+          const fragment = document.createDocumentFragment();
+
+          images.forEach((image) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'gallery-thumbnail-button';
+            button.dataset.index = image.index.toString();
+            button.setAttribute('role', 'tab');
+            button.setAttribute('aria-selected', image.index === 0 ? 'true' : 'false');
+            button.setAttribute('tabindex', image.index === 0 ? '0' : '-1');
+
+            const thumbImage = document.createElement('img');
+            thumbImage.src = image.src;
+            thumbImage.alt = image.alt;
+
+            button.appendChild(thumbImage);
+            fragment.appendChild(button);
+          });
+
+          thumbnailsContainer.innerHTML = '';
+          thumbnailsContainer.appendChild(fragment);
+
+          thumbnailsContainer.addEventListener('click', (event) => {
+            const target = event.target.closest('.gallery-thumbnail-button');
+            if (!target) return;
+            const index = Number.parseInt(target.dataset.index || '0', 10);
+            updateMainImage(index);
+          });
+        };
+
+        openButton.addEventListener('click', () => {
+          if (!thumbnailsContainer.children.length) {
+            buildThumbnails();
+            updateMainImage(0);
+          }
+          showModal();
+        });
+
+        closeButton.addEventListener('click', hideModal);
+
+        modalOverlay.addEventListener('click', (event) => {
+          if (event.target === modalOverlay) {
+            hideModal();
+          }
+        });
+
+        prevButton.addEventListener('click', () => navigate(-1));
+        nextButton.addEventListener('click', () => navigate(1));
+      })();
+    </script>
+  </body>
+</html>
