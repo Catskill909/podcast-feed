@@ -122,7 +122,7 @@
 
       .gallery-modal {
         width: min(1080px, 100%);
-        max-height: min(90vh, 920px);
+        max-height: min(92vh, 920px);
         background: var(--bg-secondary);
         border-radius: 20px;
         border: 1px solid rgba(88, 166, 255, 0.25);
@@ -133,96 +133,12 @@
         position: relative;
       }
 
-      .gallery-modal-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-md);
-        border-bottom: 1px solid rgba(88, 166, 255, 0.15);
-      }
-
-      .gallery-modal-title {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-        font-family: 'Oswald', sans-serif;
-        font-size: 1.45rem;
-        letter-spacing: 0.02em;
-      }
-
-      .gallery-close {
-        background: none;
-        border: none;
-        color: var(--text-secondary);
-        font-size: 1.65rem;
-        cursor: pointer;
-        line-height: 1;
-        padding: var(--spacing-xs) var(--spacing-sm);
-        border-radius: 8px;
-        transition: background 0.18s ease, color 0.18s ease;
-      }
-
-      .gallery-close:hover,
-      .gallery-close:focus-visible {
-        background: rgba(88, 166, 255, 0.1);
-        color: #58a6ff;
-        outline: none;
-      }
-
       .gallery-modal-body {
         flex: 1;
-        display: grid;
-        grid-template-columns: minmax(180px, 240px) 1fr;
-        gap: var(--spacing-lg);
-        padding: var(--spacing-xl);
-        min-height: 0;
-      }
-
-      .gallery-thumbnails {
-        display: grid;
-        gap: var(--spacing-sm);
-        overflow-y: auto;
-        padding-right: 6px;
-      }
-
-      .gallery-thumbnail-button {
-        position: relative;
-        display: block;
-        width: 100%;
-        height: 0;
-        padding-bottom: 190%;
-        border: 1px solid transparent;
-        border-radius: 18px;
-        overflow: hidden;
-        background: var(--bg-tertiary);
-        cursor: pointer;
-        transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
-      }
-
-      .gallery-thumbnail-button img {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-      }
-
-      .gallery-thumbnail-button:hover img,
-      .gallery-thumbnail-button:focus-visible img {
-        transform: scale(1.05);
-      }
-
-      .gallery-thumbnail-button.is-active {
-        border-color: rgba(46, 160, 67, 0.8);
-        box-shadow: 0 12px 26px rgba(46, 160, 67, 0.28);
-      }
-
-      .gallery-main {
         display: flex;
-        flex-direction: column;
-        gap: var(--spacing-lg);
+        padding: var(--spacing-lg);
         min-height: 0;
+        position: relative;
       }
 
       .gallery-main-image {
@@ -230,64 +146,129 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(140deg, rgba(88, 166, 255, 0.08), rgba(46, 160, 67, 0.08));
-        border-radius: 24px;
-        border: 1px solid rgba(88, 166, 255, 0.15);
-        padding: var(--spacing-lg);
-        min-height: 0;
+        background: linear-gradient(150deg, rgba(88, 166, 255, 0.08), rgba(46, 160, 67, 0.08));
+        border-radius: 20px;
+        border: 1px solid rgba(88, 166, 255, 0.18);
+        padding: var(--spacing-md);
+        position: relative;
+        overflow: hidden;
       }
 
       .gallery-main-image img {
         max-height: 100%;
         max-width: 100%;
-        border-radius: 18px;
-        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+        border-radius: 16px;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.42);
         object-fit: contain;
       }
 
-      .gallery-meta {
+      .gallery-overlay-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        gap: var(--spacing-lg);
+        align-items: flex-start;
+        pointer-events: none;
+        z-index: 10;
+        padding: var(--spacing-lg);
+      }
+
+      .gallery-overlay-info {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        max-width: min(340px, 28%);
+        padding: 1rem 1.35rem;
+        background: linear-gradient(155deg, rgba(13, 17, 23, 0.85), rgba(13, 17, 23, 0.1));
+        border-radius: 18px;
+        backdrop-filter: blur(10px);
+        pointer-events: auto;
+        margin-right: auto;
+      }
+
+      .gallery-title {
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.25rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #fff;
+        margin-bottom: 0.15rem;
       }
 
       .gallery-counter {
         font-weight: 600;
         letter-spacing: 0.08em;
-        color: rgba(88, 166, 255, 0.85);
+        color: rgba(229, 237, 243, 0.92);
         text-transform: uppercase;
+        font-size: 0.9rem;
       }
 
       .gallery-caption {
-        flex: 1;
-        color: var(--text-secondary);
+        color: rgba(225, 232, 240, 0.9);
         letter-spacing: 0.02em;
-        font-size: 0.95rem;
+        font-size: 0.98rem;
+        line-height: 1.45;
+        margin-top: 0.25rem;
+      }
+
+      .gallery-close {
+        background: rgba(13, 17, 23, 0.75);
+        border: 1px solid rgba(88, 166, 255, 0.2);
+        color: var(--text-secondary);
+        font-size: 1.5rem;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0.5rem 0.65rem;
+        border-radius: 12px;
+        transition: background 0.18s ease, color 0.18s ease;
+        pointer-events: auto;
+        backdrop-filter: blur(10px);
+      }
+
+      .gallery-close:hover,
+      .gallery-close:focus-visible {
+        background: rgba(88, 166, 255, 0.15);
+        color: #58a6ff;
+        outline: none;
+      }
+
+      .gallery-overlay-bottom {
+        position: absolute;
+        bottom: var(--spacing-lg);
+        right: var(--spacing-lg);
+        display: flex;
+        gap: var(--spacing-md);
+        pointer-events: none;
+        z-index: 10;
       }
 
       .gallery-actions {
         display: inline-flex;
         align-items: center;
-        gap: var(--spacing-sm);
+        gap: var(--spacing-md);
+        pointer-events: auto;
       }
 
       .gallery-nav {
-        width: 46px;
-        height: 46px;
+        width: 52px;
+        height: 52px;
         border-radius: 14px;
-        border: 1px solid rgba(88, 166, 255, 0.25);
-        background: rgba(88, 166, 255, 0.15);
+        border: 1px solid rgba(88, 166, 255, 0.3);
+        background: rgba(13, 17, 23, 0.75);
         color: #58a6ff;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        backdrop-filter: blur(10px);
         transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
       }
 
       .gallery-nav[data-direction="next"] {
-        background: rgba(35, 134, 54, 0.18);
+        background: rgba(13, 17, 23, 0.75);
         border-color: rgba(46, 160, 67, 0.4);
         color: rgba(198, 255, 215, 0.9);
       }
@@ -295,54 +276,20 @@
       .gallery-nav:hover,
       .gallery-nav:focus-visible {
         transform: translateY(-2px);
-        box-shadow: 0 12px 24px rgba(88, 166, 255, 0.25);
-        background: rgba(88, 166, 255, 0.3);
+        box-shadow: 0 12px 24px rgba(88, 166, 255, 0.3);
+        background: rgba(88, 166, 255, 0.25);
         outline: none;
       }
 
       .gallery-nav[data-direction="next"]:hover,
       .gallery-nav[data-direction="next"]:focus-visible {
         box-shadow: 0 12px 24px rgba(46, 160, 67, 0.3);
-        background: rgba(46, 160, 67, 0.32);
-      }
-
-      .gallery-modal-overlay::-webkit-scrollbar,
-      .gallery-thumbnails::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      .gallery-thumbnails::-webkit-scrollbar-thumb {
-        background: rgba(88, 166, 255, 0.4);
-        border-radius: 4px;
+        background: rgba(46, 160, 67, 0.25);
       }
 
       @media (max-width: 1024px) {
-        .gallery-modal-body {
-          grid-template-columns: 1fr;
-          gap: var(--spacing-md);
-        }
-
-        .gallery-thumbnails {
-          display: grid;
-          grid-auto-flow: column;
-          grid-auto-columns: minmax(110px, 1fr);
-          overflow-x: auto;
-          overflow-y: hidden;
-          padding-bottom: var(--spacing-sm);
-        }
-
-        .gallery-thumbnail-button {
-          padding-bottom: 220%;
-        }
-
-        .gallery-meta {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: var(--spacing-sm);
-        }
-
-        .gallery-actions {
-          align-self: stretch;
+        .gallery-overlay-info {
+          max-width: min(300px, 32%);
         }
       }
 
@@ -351,16 +298,35 @@
           border-radius: 16px;
         }
 
-        .gallery-modal-header {
-          padding: var(--spacing-md) var(--spacing-lg) var(--spacing-sm);
-        }
-
         .gallery-modal-body {
-          padding: var(--spacing-lg);
+          padding: var(--spacing-sm);
         }
 
         .gallery-main-image {
-          padding: var(--spacing-md);
+          padding: var(--spacing-xs);
+        }
+
+        .gallery-overlay-top {
+          padding: var(--spacing-sm);
+        }
+
+        .gallery-overlay-bottom {
+          bottom: var(--spacing-sm);
+          right: var(--spacing-sm);
+        }
+
+        .gallery-overlay-info {
+          max-width: min(260px, 40%);
+          padding: 0.75rem 1rem;
+        }
+
+        .gallery-title {
+          font-size: 1.1rem;
+        }
+
+        .gallery-nav {
+          width: 48px;
+          height: 48px;
         }
 
         .gallery-launch-wrapper {
@@ -1076,22 +1042,18 @@
 
       <div class="gallery-modal-overlay" id="galleryModal" aria-hidden="true" role="dialog" aria-modal="true">
         <div class="gallery-modal" role="document">
-          <div class="gallery-modal-header">
-            <div class="gallery-modal-title">
-              <i class="fa-solid fa-images"></i>
-              PodFeed Studio App Gallery
-            </div>
-            <button type="button" class="gallery-close" id="closeGalleryButton" aria-label="Close gallery">&times;</button>
-          </div>
           <div class="gallery-modal-body">
-            <div class="gallery-thumbnails" id="galleryThumbnails" role="tablist" aria-label="App gallery thumbnails"></div>
-            <div class="gallery-main">
-              <div class="gallery-main-image">
-                <img src="" alt="" id="galleryMainImage" />
+            <div class="gallery-main-image">
+              <img src="" alt="" id="galleryMainImage" />
+              <div class="gallery-overlay-top">
+                <div class="gallery-overlay-info">
+                  <div class="gallery-title">PodFeed Studio App Gallery</div>
+                  <div class="gallery-counter" id="galleryCounter">Image 1 of 16</div>
+                  <div class="gallery-caption" id="galleryCaption">PodFeed Studio App screenshot</div>
+                </div>
+                <button type="button" class="gallery-close" id="closeGalleryButton" aria-label="Close gallery">&times;</button>
               </div>
-              <div class="gallery-meta">
-                <div class="gallery-counter" id="galleryCounter">Image 1 of 16</div>
-                <div class="gallery-caption" id="galleryCaption">PodFeed Studio App screenshot</div>
+              <div class="gallery-overlay-bottom">
                 <div class="gallery-actions">
                   <button type="button" class="gallery-nav" id="galleryPrev" data-direction="prev" aria-label="View previous screenshot">
                     <i class="fa-solid fa-chevron-left"></i>
@@ -1138,22 +1100,22 @@
             src: new URL(`${number}.jpeg`, galleryBase).toString(),
             alt: `PodFeed Studio App screenshot ${number}`,
             caption: [
-              'Home screen featuring curated podcast highlights',
-              'Podcast detail view with immersive gradient header',
-              'Now playing screen with rich waveform visualization',
-              'Mini-player overlay with persistent playback controls',
-              'Episode list showcasing progress bars and statuses',
-              'Sleep timer configuration modal with countdown ring',
-              'Downloads tab with offline availability indicators',
-              'Favorites library organized by saved episodes',
-              'Global search results with category chips',
-              'Playlist queue management with drag controls',
-              'Live radio streaming interface with broadcast badge',
-              'Settings screen featuring theme and playback options',
-              'Onboarding flow highlighting personalization steps',
-              'Authentication success screen with celebratory state',
-              'Subscription prompts with premium feature highlights',
-              'Notification center summarizing latest updates'
+              "Podcast catalog home screen with NEW badges",
+              "Favorites tab showing queued episodes and mini player",
+              "Radio Chatskill podcast detail view with episode list",
+              "Democracy Now! now playing screen with waveform controls",
+              "Download confirmation dialog for Pan African Journal",
+              "Download progress modal at 58% for Pan African Journal",
+              "Download complete modal with View All shortcut",
+              "Favorites success modal for What's At Stake episode",
+              "Downloads tab with offline banner and saved episodes",
+              "iOS lock screen audio controls for Shelf Life episode",
+              "Sleep timer configuration modal set to 30 minutes",
+              "Player screen showing active sleep timer countdown badge",
+              "Navigation drawer with contact links and social icons",
+              "Pacifica network affiliates directory listing",
+              "Pacifica sister stations gallery grid",
+              "Station profile for WPFW 89.3 FM" 
             ][index] || `PodFeed Studio App screenshot ${number}`
           };
         });
@@ -1171,14 +1133,6 @@
           mainImage.alt = item.alt;
           counter.textContent = `Image ${index + 1} of ${images.length}`;
           caption.textContent = item.caption;
-
-          const thumbnailButtons = thumbnailsContainer.querySelectorAll('.gallery-thumbnail-button');
-          thumbnailButtons.forEach((button, buttonIndex) => {
-            const isActive = buttonIndex === index;
-            button.classList.toggle('is-active', isActive);
-            button.setAttribute('aria-selected', isActive ? 'true' : 'false');
-            button.setAttribute('tabindex', isActive ? '0' : '-1');
-          });
         };
 
         const showModal = () => {
@@ -1243,49 +1197,10 @@
         const navigate = (direction) => {
           const nextIndex = (activeIndex + direction + images.length) % images.length;
           updateMainImage(nextIndex);
-          const activeButton = thumbnailsContainer.querySelector(`.gallery-thumbnail-button[data-index="${nextIndex}"]`);
-          if (activeButton) {
-            activeButton.focus({ preventScroll: true });
-            activeButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-          }
-        };
-
-        const buildThumbnails = () => {
-          const fragment = document.createDocumentFragment();
-
-          images.forEach((image) => {
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'gallery-thumbnail-button';
-            button.dataset.index = image.index.toString();
-            button.setAttribute('role', 'tab');
-            button.setAttribute('aria-selected', image.index === 0 ? 'true' : 'false');
-            button.setAttribute('tabindex', image.index === 0 ? '0' : '-1');
-
-            const thumbImage = document.createElement('img');
-            thumbImage.src = image.src;
-            thumbImage.alt = image.alt;
-
-            button.appendChild(thumbImage);
-            fragment.appendChild(button);
-          });
-
-          thumbnailsContainer.innerHTML = '';
-          thumbnailsContainer.appendChild(fragment);
-
-          thumbnailsContainer.addEventListener('click', (event) => {
-            const target = event.target.closest('.gallery-thumbnail-button');
-            if (!target) return;
-            const index = Number.parseInt(target.dataset.index || '0', 10);
-            updateMainImage(index);
-          });
         };
 
         openButton.addEventListener('click', () => {
-          if (!thumbnailsContainer.children.length) {
-            buildThumbnails();
-            updateMainImage(0);
-          }
+          updateMainImage(0);
           showModal();
         });
 
