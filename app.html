@@ -160,6 +160,12 @@
         border-radius: 16px;
         box-shadow: 0 24px 48px rgba(0, 0, 0, 0.42);
         object-fit: contain;
+        opacity: 1;
+        transition: opacity 0.65s ease-in-out;
+      }
+
+      .gallery-main-image img.fade-out {
+        opacity: 0;
       }
 
       .gallery-overlay-top {
@@ -1047,7 +1053,7 @@
               <img src="" alt="" id="galleryMainImage" />
               <div class="gallery-overlay-top">
                 <div class="gallery-overlay-info">
-                  <div class="gallery-title">PodFeed Studio App Gallery</div>
+                  <div class="gallery-title">PodFeed App Gallery</div>
                   <div class="gallery-counter" id="galleryCounter">Image 1 of 16</div>
                   <div class="gallery-caption" id="galleryCaption">PodFeed Studio App screenshot</div>
                 </div>
@@ -1081,7 +1087,6 @@
         const openButton = document.getElementById('openGalleryButton');
         const modalOverlay = document.getElementById('galleryModal');
         const closeButton = document.getElementById('closeGalleryButton');
-        const thumbnailsContainer = document.getElementById('galleryThumbnails');
         const mainImage = document.getElementById('galleryMainImage');
         const counter = document.getElementById('galleryCounter');
         const caption = document.getElementById('galleryCaption');
@@ -1125,14 +1130,38 @@
 
         const focusableSelectors = 'button, [href], [tabindex]:not([tabindex="-1"])';
 
-        const updateMainImage = (index) => {
+        const updateMainImage = (index, { animate = true } = {}) => {
           const item = images[index];
           if (!item) return;
+          
           activeIndex = index;
-          mainImage.src = item.src;
-          mainImage.alt = item.alt;
           counter.textContent = `Image ${index + 1} of ${images.length}`;
           caption.textContent = item.caption;
+
+          // Skip animation on first load or if disabled
+          if (!animate || !mainImage.src) {
+            mainImage.src = item.src;
+            mainImage.alt = item.alt;
+            mainImage.classList.remove('fade-out');
+            return;
+          }
+
+          // Fade out current image
+          mainImage.classList.add('fade-out');
+
+          // Wait for fade to reach midpoint, then swap image and fade in
+          setTimeout(() => {
+            mainImage.src = item.src;
+            mainImage.alt = item.alt;
+            
+            // Force reflow to ensure the new image starts faded out
+            mainImage.offsetHeight;
+            
+            // Fade in new image
+            requestAnimationFrame(() => {
+              mainImage.classList.remove('fade-out');
+            });
+          }, 325); // Swap at midpoint for smoother crossfade
         };
 
         const showModal = () => {
@@ -1200,7 +1229,7 @@
         };
 
         openButton.addEventListener('click', () => {
-          updateMainImage(0);
+          updateMainImage(0, { animate: false });
           showModal();
         });
 
