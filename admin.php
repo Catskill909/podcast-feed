@@ -161,7 +161,7 @@ function escapeJs($text) {
                 <nav>
                     <ul class="nav-links">
                         <li><a href="index.php"><i class="fa-solid fa-house"></i> Public Site</a></li>
-                        <li><a href="ads-manager.php"><i class="fa-solid fa-ad"></i> Ads Manager</a></li>
+                        <li><a href="ads-manager.php"><i class="fa-solid fa-ad"></i> Ads</a></li>
                         <li><a href="menu-manager.php"><i class="fa-solid fa-bars"></i> Menu</a></li>
                         <li><a href="javascript:void(0)" onclick="showFeedModal()">View Feed</a></li>
                         <li><a href="javascript:void(0)" onclick="showStats()">Stats</a></li>
@@ -1320,6 +1320,131 @@ function escapeJs($text) {
                             <li><strong>Downloads:</strong> When someone clicks the download button</li>
                             <li><strong>Unique Listeners:</strong> Approximate count based on session IDs</li>
                         </ul>
+                    </div>
+                </div>
+
+                <!-- Embed Generator -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">🔗</span>
+                        Embed Generator - Full-Featured Podcast Browser & Player
+                    </h3>
+                    <div class="help-section-content">
+                        <p><strong>What is the Embed Generator?</strong></p>
+                        <p>A complete, embeddable podcast browsing and playback system with a visual configuration tool. This isn't just an embed generator—it's a <strong>full-featured podcast player and browser</strong> that you can customize and embed anywhere. Features multi-podcast support, modal audio player, episode browsing, and complete playback controls.</p>
+
+                        <p><strong>🎧 Complete Podcast Player Features:</strong></p>
+                        <ul>
+                            <li><strong>Multi-Podcast Browser:</strong> Browse and switch between all podcasts in your feed with custom dropdown</li>
+                            <li><strong>Episode List View:</strong> Scrollable episode list with cover art, titles, descriptions, and dates</li>
+                            <li><strong>Modal Audio Player:</strong> Sticky bottom player bar with full playback controls</li>
+                            <li><strong>Playback Controls:</strong> Play/pause, skip ±15s/30s, progress scrubber, time display</li>
+                            <li><strong>Speed Control:</strong> Adjustable playback speed (0.5x, 0.75x, 1x, 1.25x, 1.5x, 2x)</li>
+                            <li><strong>Volume Control:</strong> Volume slider with mute toggle</li>
+                            <li><strong>Episode Download:</strong> Direct download button for each episode</li>
+                            <li><strong>Expandable Descriptions:</strong> Click to expand full episode descriptions</li>
+                            <li><strong>Cover Art Display:</strong> Podcast and episode artwork throughout the interface</li>
+                            <li><strong>Dark/Light Theme:</strong> Built-in theme toggle with auto-detection</li>
+                            <li><strong>Keyboard Shortcuts:</strong> Space (play/pause), arrows (skip), M (mute)</li>
+                            <li><strong>Responsive Design:</strong> Perfect on desktop, tablet, and mobile devices</li>
+                        </ul>
+
+                        <p><strong>How to Access the Generator:</strong></p>
+                        <ul>
+                            <li>Navigate to <code>/embed/iframe-generator.html</code> or <code>/embed/iframe-generator.php</code></li>
+                            <li>Visual configuration interface with live, interactive preview</li>
+                            <li>Test the full player functionality before generating embed code</li>
+                        </ul>
+
+                        <p><strong>🎯 What You're Embedding:</strong></p>
+                        <p>The embed code creates a complete podcast browsing and listening experience with:</p>
+                        <ul>
+                            <li><strong>Podcast Selector:</strong> Dropdown to browse all available podcasts</li>
+                            <li><strong>Episode Browser:</strong> Scrollable list of episodes with metadata</li>
+                            <li><strong>Audio Player:</strong> Modal player bar that appears when playing episodes</li>
+                            <li><strong>Full Controls:</strong> All playback, speed, and volume controls included</li>
+                        </ul>
+
+                        <p><strong>Configuration Options:</strong></p>
+                        
+                        <p><strong>1. Iframe Dimensions</strong></p>
+                        <ul>
+                            <li><strong>Width:</strong> Set in pixels (px) or percentage (%), range: 200-1200</li>
+                            <li><strong>Height:</strong> Set in pixels (px), range: 400-1000</li>
+                            <li>Dimensions update the preview and embed code in real-time</li>
+                        </ul>
+
+                        <p><strong>2. Content & Behavior</strong></p>
+                        <ul>
+                            <li><strong>Default Podcast:</strong> Choose which podcast loads first (or "First Available")</li>
+                            <li><strong>Episode Order:</strong> Newest first, oldest first, or alphabetical</li>
+                            <li><strong>Max Episodes Shown:</strong> Limit to 5, 10, 25, 50, or show all episodes</li>
+                            <li><strong>Podcast Dropdown Order:</strong> 7 sorting options including:
+                                <ul style="margin-left: var(--spacing-lg);">
+                                    <li>Feed Order (default)</li>
+                                    <li>Alphabetical A-Z or Z-A</li>
+                                    <li>Most/Least Episodes First</li>
+                                    <li>Latest/Oldest Content First</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <p><strong>3. Theme & UI Customization</strong></p>
+                        <ul>
+                            <li><strong>Default Theme:</strong> Dark, Light, or Auto (system preference)</li>
+                            <li><strong>Hide Theme Toggle:</strong> Remove the theme switcher button</li>
+                            <li><strong>Show Header:</strong> Display or hide the player header</li>
+                            <li><strong>Show Podcast Selector:</strong> Display or hide the podcast dropdown</li>
+                            <li><strong>Show Cover Art:</strong> Display or hide podcast/episode artwork</li>
+                            <li><strong>Show Download Buttons:</strong> Enable or disable episode download buttons</li>
+                        </ul>
+
+                        <p><strong>Live Preview Features:</strong></p>
+                        <ul>
+                            <li><strong>Device Modes:</strong> Switch between Desktop, Tablet, and Mobile views</li>
+                            <li><strong>Real-Time Updates:</strong> Preview updates instantly as you change settings</li>
+                            <li><strong>Interactive:</strong> Test the player directly in the preview window</li>
+                            <li><strong>Responsive Testing:</strong> See how your embed looks on different screen sizes</li>
+                        </ul>
+
+                        <p><strong>How to Use Generated Code:</strong></p>
+                        <ol>
+                            <li>Configure all settings in the three control columns</li>
+                            <li>Preview your configuration in real-time</li>
+                            <li>Click <strong>"Copy Embed Code"</strong> button (or the copy icon)</li>
+                            <li>Paste the iframe code into your website's HTML</li>
+                            <li>The player will load with your exact configuration</li>
+                        </ol>
+
+                        <p><strong>URL Parameters (Advanced):</strong></p>
+                        <ul>
+                            <li>The generator creates URL parameters automatically</li>
+                            <li>Example: <code>?theme=dark&hideToggle=1&podcast=0&episode=5</code></li>
+                            <li>Parameters allow deep linking to specific podcasts and episodes</li>
+                            <li>All settings are encoded in the URL for easy sharing</li>
+                        </ul>
+
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>💡 Use Cases:</strong>
+                            <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                                <li><strong>Blog Posts:</strong> Embed specific episodes in articles</li>
+                                <li><strong>Partner Sites:</strong> Share your full catalog with customized branding</li>
+                                <li><strong>Landing Pages:</strong> Create focused players for marketing campaigns</li>
+                                <li><strong>Email Newsletters:</strong> Link to pre-configured player states</li>
+                                <li><strong>Social Media:</strong> Share direct links to specific episodes</li>
+                            </ul>
+                        </div>
+
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>🎨 Customization Tips:</strong>
+                            <ul style="margin: var(--spacing-xs) 0 0 var(--spacing-lg);">
+                                <li>Hide the header and selector for a minimal, single-podcast player</li>
+                                <li>Use "Auto" theme to match the visitor's system preferences</li>
+                                <li>Limit episodes to latest 10 for faster loading on external sites</li>
+                                <li>Hide download buttons if you want listening-only embeds</li>
+                                <li>Test on all three device modes before deploying</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 

@@ -332,6 +332,30 @@ git push origin main
 - **Automatic Cleanup**: Configurable data retention (default: 365 days)
 - **~2,100 Lines of Code**: Complete tracking, aggregation, and visualization system
 
+### **🔗 Embed Generator - Full Podcast Browser & Player (November 2025)** ✨✨✨
+- **Complete Podcast Player**: Full-featured embeddable player with multi-podcast browsing and modal audio controls
+- **Multi-Podcast Browser**: Custom dropdown to browse and switch between all podcasts in your feed
+- **Episode List View**: Scrollable episode list with cover art, titles, descriptions, and publish dates
+- **Modal Audio Player**: Sticky bottom player bar with complete playback controls
+- **Playback Controls**: Play/pause, skip ±15s/30s, progress scrubber, time display, buffering indicator
+- **Speed Control**: Adjustable playback speed (0.5x, 0.75x, 1x, 1.25x, 1.5x, 2x)
+- **Volume Control**: Volume slider with mute toggle and visual feedback
+- **Episode Downloads**: Direct download button for each episode
+- **Expandable Descriptions**: Click to expand full episode descriptions
+- **Cover Art Display**: Podcast and episode artwork throughout the interface
+- **Dark/Light Theme**: Built-in theme toggle with auto-detection and system preference support
+- **Keyboard Shortcuts**: Space (play/pause), arrows (skip), M (mute)
+- **Visual Iframe Builder**: Configuration tool with live, interactive preview and real-time code generation
+- **15+ Configuration Options**: Full control over dimensions, content, behavior, and UI appearance
+- **Multi-Device Preview**: Test embeds on desktop, tablet, and mobile views instantly
+- **Content Customization**: Default podcast, episode order, max episodes, dropdown sorting (7 options)
+- **UI Toggles**: Show/hide header, podcast selector, cover art, download buttons
+- **One-Click Copy**: Copy generated iframe code to clipboard instantly
+- **URL Parameters**: Automatic deep linking support for specific podcasts and episodes
+- **Responsive Design**: Perfect experience on all devices with adaptive layouts
+- **Use Cases**: Blog posts, partner sites, landing pages, email newsletters, social media
+- **Location**: `/embed/iframe-generator.html` or `/embed/iframe-generator.php`
+
 ### **🎨 Public Browsing Interface (October 17, 2025)** ✨
 - **Beautiful Podcast Grid**: Responsive card layout with cover images and overlays
 - **Hover Effects**: Smooth animations with play button overlay on hover
@@ -510,6 +534,16 @@ podcast-feed/
 ├── self-hosted-episodes.php         # Episode management page
 ├── self-hosted-feed.php             # RSS feed generator
 ├── streaming-audio-player.html      # Standalone live streaming player (NEW)
+├── embed/                           # Embed Generator Tool (NEW)
+│   ├── iframe-generator.html        # Visual embed builder
+│   ├── iframe-generator.php         # PHP version with cache busting
+│   ├── iframe-generator.css         # Material Design styling
+│   ├── iframe-generator.js          # Real-time preview logic
+│   ├── index.html                   # Embeddable player
+│   ├── styles.css                   # Player styles
+│   ├── script.js                    # Player functionality
+│   ├── proxy.php                    # CORS proxy for RSS feeds
+│   └── README.md                    # Embed documentation
 └── logs/
     ├── error.log                    # Error logging
     └── operations.log               # Activity logging
