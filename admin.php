@@ -240,16 +240,37 @@ function escapeJs($text) {
                         </div>
                     </div>
                     
-                    <!-- Auto-Sync Status -->
+                    <!-- Auto-Scan Status -->
                     <div style="display: flex; align-items: center; gap: var(--spacing-md);">
-                        <div class="tooltip" data-tooltip="Feeds automatically update every 30 minutes" style="display: flex; align-items: center; gap: var(--spacing-sm); font-size: var(--font-size-sm);">
+                        <div class="tooltip" data-tooltip="Feeds update automatically on page visits (every 5 min)" style="display: flex; align-items: center; gap: var(--spacing-sm); font-size: var(--font-size-sm);">
                             <i class="fa-solid fa-rotate" style="color: #238636;"></i>
                             <span id="autoScanStatus" style="color: var(--text-muted);">
                                 <?php
-                                $lastScanFile = __DIR__ . '/data/last-scan.txt';
-                                if (file_exists($lastScanFile)) {
-                                    $lastScan = file_get_contents($lastScanFile);
-                                    $lastScanTime = strtotime($lastScan);
+                                // Check both systems (cron and browser), use most recent
+                                $cronScanFile = __DIR__ . '/data/last-scan.txt';
+                                $browserRefreshFile = __DIR__ . '/data/last-auto-refresh.txt';
+                                
+                                $lastScanTime = 0;
+                                
+                                // Check cron system timestamp
+                                if (file_exists($cronScanFile)) {
+                                    $cronScan = file_get_contents($cronScanFile);
+                                    $cronTime = strtotime($cronScan);
+                                    if ($cronTime > $lastScanTime) {
+                                        $lastScanTime = $cronTime;
+                                    }
+                                }
+                                
+                                // Check browser system timestamp
+                                if (file_exists($browserRefreshFile)) {
+                                    $browserTime = (int)file_get_contents($browserRefreshFile);
+                                    if ($browserTime > $lastScanTime) {
+                                        $lastScanTime = $browserTime;
+                                    }
+                                }
+                                
+                                // Display most recent scan time
+                                if ($lastScanTime > 0) {
                                     $timeAgo = time() - $lastScanTime;
                                     
                                     if ($timeAgo < 60) {
@@ -261,17 +282,9 @@ function escapeJs($text) {
                                         echo 'Auto-scan: ' . date('g:i A', $lastScanTime);
                                     }
                                 } else {
-                                    echo 'Auto-scan: Active (every 30 min)';
+                                    echo 'Auto-scan: Waiting for first scan';
                                 }
                                 ?>
-                            </span>
-                        </div>
-                        
-                        <!-- Sort Sync Indicator -->
-                        <div class="tooltip" data-tooltip="Sort preferences sync automatically across browsers" style="display: flex; align-items: center; gap: var(--spacing-sm); font-size: var(--font-size-sm);">
-                            <i class="fa-solid fa-arrows-rotate" style="color: #238636;"></i>
-                            <span style="color: var(--text-muted);">
-                                Auto-sync: Active
                             </span>
                         </div>
                     </div>
@@ -1787,9 +1800,9 @@ function escapeJs($text) {
                         </ul>
                         <p><strong>Automated Episode Updates:</strong></p>
                         <ul>
-                            <li><strong>Auto-scan runs every 30 minutes</strong> - checks all podcast feeds for new episodes</li>
+                            <li><strong>Auto-scan runs automatically on page visits (every 5 min)</strong> - checks all podcast feeds for new episodes when you visit the site</li>
                             <li><strong>Latest Episode column</strong> shows when each podcast last published (Today, Yesterday, or date)</li>
-                            <li><strong>Refresh button (🔄)</strong> - manually update any podcast's episode data instantly</li>
+                            <li><strong>Refresh button (🔄)</strong> - manually update any podcast's episode data instantly, bypasses cache</li>
                             <li><strong>Status indicator</strong> - see "Auto-scan: X mins ago" to know when last scan ran</li>
                         </ul>
                         <p><strong>Pro Tip:</strong> Use "Newest Episodes" sort to quickly see which podcasts have fresh content!</p>
