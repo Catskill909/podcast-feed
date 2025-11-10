@@ -162,6 +162,7 @@ function escapeJs($text) {
                     <ul class="nav-links">
                         <li><a href="index.php"><i class="fa-solid fa-house"></i> Public Site</a></li>
                         <li><a href="ads-manager.php"><i class="fa-solid fa-ad"></i> Ads</a></li>
+                        <li><a href="/embed/iframe-generator.html"><i class="fa-solid fa-code"></i> Embed</a></li>
                         <li><a href="menu-manager.php"><i class="fa-solid fa-bars"></i> Menu</a></li>
                         <li><a href="javascript:void(0)" onclick="showFeedModal()">View Feed</a></li>
                         <li><a href="javascript:void(0)" onclick="showStats()">Stats</a></li>
