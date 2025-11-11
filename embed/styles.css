@@ -470,18 +470,62 @@ iframe .app-container,
     font-size: 24px;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-3);
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.metadata-details {
+.podcast-description {
     font-size: 14px;
+    line-height: 1.6;
     color: var(--text-secondary);
+    margin-bottom: var(--space-4);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
-.episode-count {
+.metadata-badges {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+}
+
+.metadata-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-3);
+    border-radius: 16px;
+    font-size: 13px;
     font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge-episodes {
+    background: rgba(187, 134, 252, 0.15);
+    color: var(--primary);
+    border: 1px solid rgba(187, 134, 252, 0.3);
+}
+
+.badge-date {
+    background: rgba(187, 134, 252, 0.15);
+    color: var(--primary);
+    border: 1px solid rgba(187, 134, 252, 0.3);
+}
+
+/* Light mode badge colors */
+[data-theme="light"] .badge-episodes {
+    background: rgba(103, 80, 164, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(103, 80, 164, 0.25);
+}
+
+[data-theme="light"] .badge-date {
+    background: rgba(103, 80, 164, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(103, 80, 164, 0.25);
 }
 
 /* ==========================================
@@ -1871,7 +1915,15 @@ iframe .app-container,
     }
     
     .metadata-container {
-        text-align: center;
+        text-align: left;
+    }
+    
+    .podcast-description {
+        font-size: 13px;
+    }
+    
+    .metadata-badges {
+        justify-content: flex-start;
     }
     
     .episode-item {
@@ -1961,11 +2013,19 @@ iframe .app-container,
     
     .podcast-title {
         font-size: 18px;
-        margin-bottom: var(--space-1);
+        margin-bottom: var(--space-2);
     }
     
-    .metadata-details {
+    .podcast-description {
         font-size: 12px;
+        margin-bottom: var(--space-3);
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+    }
+    
+    .metadata-badge {
+        font-size: 11px;
+        padding: 2px var(--space-2);
     }
     
     #episode-title {

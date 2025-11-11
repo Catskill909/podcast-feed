@@ -82,7 +82,9 @@ const elements = {
     dropdownOptions: document.getElementById('dropdown-options'),
     coverArt: document.getElementById('cover-art'),
     podcastTitle: document.getElementById('podcast-title'),
+    podcastDescription: document.getElementById('podcast-description'),
     episodeCount: document.getElementById('episode-count'),
+    relativeDate: document.getElementById('relative-date'),
     audioElement: document.getElementById('audio-element'),
     playPauseBtn: document.getElementById('play-pause'),
     skipBackwardBtn: document.getElementById('skip-backward'),
@@ -274,6 +276,7 @@ async function parseMasterFeed(xmlDoc) {
         const coverImage = item.querySelector('enclosure[type="image/jpeg"]')?.getAttribute('url') || '';
         const episodeCount = item.querySelector('episodeCount')?.textContent || '0';
         const latestDate = item.querySelector('latestEpisodeDate')?.textContent || '';
+        const relativeDate = item.querySelector('relativeDate')?.textContent || '';
 
         if (feedUrl) {
             podcasts.push({
@@ -284,6 +287,7 @@ async function parseMasterFeed(xmlDoc) {
                 coverImage,
                 episodeCount: parseInt(episodeCount) || 0,
                 latestDate,
+                relativeDate,
                 episodes: [] // Episodes will be loaded on demand
             });
         }
@@ -708,10 +712,24 @@ function updatePodcastMetadata() {
         elements.coverArt.classList.remove('loaded');
     }
 
-    // Update podcast title and episode count
+    // Update podcast title and metadata
     elements.podcastTitle.textContent = state.currentPodcast.title;
+    
+    // Update description
+    if (elements.podcastDescription) {
+        elements.podcastDescription.textContent = state.currentPodcast.description || 'No description available';
+    }
+    
+    // Update episode count
     const episodeCount = state.currentPodcast.episodes.length;
-    elements.episodeCount.textContent = `${episodeCount} episode${episodeCount !== 1 ? 's' : ''}`;
+    if (elements.episodeCount) {
+        elements.episodeCount.textContent = `${episodeCount} Episode${episodeCount !== 1 ? 's' : ''}`;
+    }
+    
+    // Update relative date
+    if (elements.relativeDate && state.currentPodcast.relativeDate) {
+        elements.relativeDate.textContent = `Latest: ${state.currentPodcast.relativeDate}`;
+    }
 }
 
 // ==========================================
