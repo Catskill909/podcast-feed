@@ -475,16 +475,86 @@ iframe .app-container,
     text-overflow: ellipsis;
 }
 
+.description-wrapper {
+    position: relative;
+    margin-bottom: var(--space-4);
+}
+
 .podcast-description {
     font-size: 14px;
     line-height: 1.6;
     color: var(--text-secondary);
-    margin-bottom: var(--space-4);
+    margin: 0;
     overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.podcast-description.collapsed {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     line-clamp: 3;
     -webkit-box-orient: vertical;
+    max-height: 4.8em; /* 3 lines * 1.6 line-height */
+}
+
+.podcast-description.expanded {
+    display: block;
+    max-height: 1000px;
+}
+
+.description-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-top: var(--space-2);
+    padding: var(--space-1) var(--space-2);
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    border-radius: var(--radius-sm);
+}
+
+.description-toggle:hover {
+    background: rgba(187, 134, 252, 0.1);
+    gap: var(--space-2);
+}
+
+.description-toggle:active {
+    transform: scale(0.95);
+}
+
+[data-theme="light"] .description-toggle:hover {
+    background: rgba(103, 80, 164, 0.1);
+}
+
+.toggle-text-less {
+    display: none;
+}
+
+.description-toggle.expanded .toggle-text-more {
+    display: none;
+}
+
+.description-toggle.expanded .toggle-text-less {
+    display: inline;
+}
+
+.toggle-icon {
+    font-size: 10px;
+    transition: transform var(--transition);
+}
+
+.description-toggle.expanded .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Hide toggle button if description is short enough */
+.description-toggle.hidden {
+    display: none;
 }
 
 .metadata-badges {
@@ -1922,6 +1992,16 @@ iframe .app-container,
         font-size: 13px;
     }
     
+    .podcast-description.collapsed {
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        max-height: 3.2em; /* 2 lines * 1.6 line-height */
+    }
+    
+    .description-toggle {
+        font-size: 12px;
+    }
+    
     .metadata-badges {
         justify-content: flex-start;
     }
@@ -2018,9 +2098,21 @@ iframe .app-container,
     
     .podcast-description {
         font-size: 12px;
-        margin-bottom: var(--space-3);
+    }
+    
+    .podcast-description.collapsed {
         -webkit-line-clamp: 2;
         line-clamp: 2;
+        max-height: 3.2em; /* 2 lines * 1.6 line-height */
+    }
+    
+    .description-wrapper {
+        margin-bottom: var(--space-3);
+    }
+    
+    .description-toggle {
+        font-size: 11px;
+        padding: 2px var(--space-2);
     }
     
     .metadata-badge {

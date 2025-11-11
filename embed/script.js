@@ -37,6 +37,27 @@ function toggleTheme() {
     }
 }
 
+function toggleDescription() {
+    const description = elements.podcastDescription;
+    const toggleBtn = document.getElementById('description-toggle');
+    
+    if (!description || !toggleBtn) return;
+    
+    const isExpanded = description.classList.contains('expanded');
+    
+    if (isExpanded) {
+        description.classList.remove('expanded');
+        description.classList.add('collapsed');
+        toggleBtn.classList.remove('expanded');
+        toggleBtn.setAttribute('aria-label', 'Expand description');
+    } else {
+        description.classList.remove('collapsed');
+        description.classList.add('expanded');
+        toggleBtn.classList.add('expanded');
+        toggleBtn.setAttribute('aria-label', 'Collapse description');
+    }
+}
+
 function updateThemeToggle(theme) {
     const toggle = document.getElementById('theme-toggle');
     if (!toggle) return;
@@ -717,7 +738,29 @@ function updatePodcastMetadata() {
     
     // Update description
     if (elements.podcastDescription) {
-        elements.podcastDescription.textContent = state.currentPodcast.description || 'No description available';
+        const description = state.currentPodcast.description || 'No description available';
+        elements.podcastDescription.textContent = description;
+        
+        // Reset to collapsed state
+        elements.podcastDescription.classList.remove('expanded');
+        elements.podcastDescription.classList.add('collapsed');
+        
+        // Check if description is long enough to need toggle button
+        const toggleBtn = document.getElementById('description-toggle');
+        if (toggleBtn) {
+            toggleBtn.classList.remove('expanded');
+            toggleBtn.setAttribute('aria-label', 'Expand description');
+            
+            // Check if text is actually truncated by comparing scroll height to client height
+            setTimeout(() => {
+                const isTruncated = elements.podcastDescription.scrollHeight > elements.podcastDescription.clientHeight;
+                if (isTruncated) {
+                    toggleBtn.classList.remove('hidden');
+                } else {
+                    toggleBtn.classList.add('hidden');
+                }
+            }, 50);
+        }
     }
     
     // Update episode count
@@ -1321,6 +1364,12 @@ function initEventListeners() {
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', toggleTheme);
+    }
+
+    // Description toggle
+    const descriptionToggle = document.getElementById('description-toggle');
+    if (descriptionToggle) {
+        descriptionToggle.addEventListener('click', toggleDescription);
     }
 
     // Podcast selection
