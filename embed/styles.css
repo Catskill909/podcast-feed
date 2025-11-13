@@ -940,12 +940,21 @@ iframe .app-container,
 
 /* Episode Image */
 .episode-image {
-    width: 80px;
-    height: 80px;
-    min-width: 80px;
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
     object-fit: cover;
     border-radius: var(--radius-md);
     background: var(--surface);
+}
+
+/* CRITICAL FIX: Tablet episode image size - placed here to ensure it applies */
+@media (min-width: 481px) and (max-width: 769px) {
+    .episode-image {
+        width: 100px !important;
+        height: 100px !important;
+        min-width: 100px !important;
+    }
 }
 
 /* Episode Content */
@@ -1040,6 +1049,84 @@ iframe .app-container,
 
 .episode-duration {
     font-weight: 500;
+}
+
+/* Episode Description */
+.episode-description-wrapper {
+    position: relative;
+    margin-bottom: var(--space-1);
+}
+
+.episode-item-description {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.episode-item-description.collapsed {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    max-height: 3em; /* 2 lines * 1.5 line-height */
+}
+
+.episode-item-description.expanded {
+    display: block;
+    max-height: 1000px;
+}
+
+.episode-description-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 2px var(--space-2);
+    margin-top: 2px;
+    transition: all var(--transition);
+    border-radius: var(--radius-sm);
+}
+
+.episode-description-toggle:hover {
+    background: rgba(187, 134, 252, 0.1);
+    gap: var(--space-2);
+}
+
+.episode-description-toggle:active {
+    transform: scale(0.95);
+}
+
+[data-theme="light"] .episode-description-toggle:hover {
+    background: rgba(103, 80, 164, 0.1);
+}
+
+.episode-description-toggle .toggle-text-less {
+    display: none;
+}
+
+.episode-description-toggle.expanded .toggle-text-more {
+    display: none;
+}
+
+.episode-description-toggle.expanded .toggle-text-less {
+    display: inline;
+}
+
+.episode-description-toggle .toggle-icon {
+    font-size: 10px;
+    transition: transform var(--transition);
+}
+
+.episode-description-toggle.expanded .toggle-icon {
+    transform: rotate(180deg);
 }
 
 /* Episode Actions */
@@ -1936,7 +2023,7 @@ iframe .app-container,
 /* ==========================================
    RESPONSIVE - TABLET
    ========================================== */
-@media (max-width: 768px) {
+@media (min-width: 481px) and (max-width: 769px) {
     .main-content {
         grid-template-columns: 1fr;
     }
@@ -2011,9 +2098,9 @@ iframe .app-container,
     }
     
     .episode-image {
-        width: 50px;
-        height: 50px;
-        min-width: 50px;
+        width: 100px !important;
+        height: 100px !important;
+        min-width: 100px !important;
     }
 }
 
@@ -2158,6 +2245,8 @@ iframe .app-container,
     .episode-item {
         padding: var(--space-2);
         gap: var(--space-2);
+        flex-wrap: wrap; /* Allow wrapping */
+        align-items: flex-start;
     }
     
     /* Compact episode images for mobile */
@@ -2168,16 +2257,44 @@ iframe .app-container,
         border-radius: 6px;
     }
     
+    /* Episode content wraps to full width on mobile */
+    .episode-content {
+        flex-basis: 100%; /* Force to new row */
+        width: 100%;
+        order: 2; /* After image and actions */
+    }
+    
+    /* Actions in first row with image */
+    .episode-actions {
+        order: 1;
+        margin-left: auto; /* Push to right */
+    }
+    
+    /* Episode meta below description */
+    .episode-meta {
+        font-size: 10px;
+        gap: var(--space-1);
+    }
+    
     /* Smaller episode title */
     .episode-item-title {
         font-size: 11px;
         line-height: 1.3;
     }
     
-    /* Smaller episode metadata */
-    .episode-meta {
+    /* Episode description mobile styles */
+    .episode-item-description {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+    
+    .episode-item-description.collapsed {
+        max-height: 2.8em; /* 2 lines * 1.4 line-height */
+    }
+    
+    .episode-description-toggle {
         font-size: 10px;
-        gap: var(--space-1);
+        padding: 2px var(--space-1);
     }
     
     /* Compact play button for mobile */

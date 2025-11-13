@@ -850,6 +850,16 @@ function createEpisodeElement(episode) {
                     <span class="audio-bar"></span>
                 </div>
             </div>
+            ${episode.description ? `
+                <div class="episode-description-wrapper">
+                    <p class="episode-item-description collapsed">${episode.description}</p>
+                    <button class="episode-description-toggle" aria-label="Expand description">
+                        <span class="toggle-text-more">Read more</span>
+                        <span class="toggle-text-less">Show less</span>
+                        <i class="fa-solid fa-chevron-down toggle-icon"></i>
+                    </button>
+                </div>
+            ` : ''}
             <div class="episode-meta">
                 <span class="episode-item-date">${formattedDate}</span>
                 ${duration ? `<span>•</span><span class="episode-duration">${duration}</span>` : ''}
@@ -901,6 +911,44 @@ function createEpisodeElement(episode) {
         // Load new episode and open modal
         playEpisodeInModal(episode);
     });
+
+    // Handle description toggle button
+    const descToggle = div.querySelector('.episode-description-toggle');
+    if (descToggle) {
+        const description = div.querySelector('.episode-item-description');
+        
+        // Check if description needs toggle (more than 2 lines)
+        if (description) {
+            // Wait for DOM to render to check height
+            setTimeout(() => {
+                const lineHeight = parseFloat(getComputedStyle(description).lineHeight);
+                const maxHeight = lineHeight * 2; // 2 lines
+                
+                if (description.scrollHeight <= maxHeight) {
+                    // Description is short, hide toggle button
+                    descToggle.style.display = 'none';
+                }
+            }, 0);
+        }
+        
+        descToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            const isExpanded = description.classList.contains('expanded');
+            
+            if (isExpanded) {
+                description.classList.remove('expanded');
+                description.classList.add('collapsed');
+                descToggle.classList.remove('expanded');
+                descToggle.setAttribute('aria-label', 'Expand description');
+            } else {
+                description.classList.remove('collapsed');
+                description.classList.add('expanded');
+                descToggle.classList.add('expanded');
+                descToggle.setAttribute('aria-label', 'Collapse description');
+            }
+        });
+    }
 
     return div;
 }

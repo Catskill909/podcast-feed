@@ -188,19 +188,40 @@ class IframeGenerator {
         this.deviceButtons.forEach(btn => btn.classList.remove('active'));
         document.querySelector(`[data-device="${device}"]`).classList.add('active');
 
-        // Update iframe container class
+        // Update container class
         const container = this.controls.iframeContainer;
         container.className = 'iframe-container';
 
         if (device === 'tablet') {
             container.classList.add('tablet');
+            // CRITICAL FIX: Force iframe to fixed 768px width for tablet
+            // This ensures the iframe's internal viewport matches the media query breakpoint
+            const iframe = this.controls.previewIframe;
+            iframe.style.width = '768px';
+            // DON'T call updatePreview() - it would override the width!
+            // Just reload the iframe with current URL
+            const params = this.generateUrlParams();
+            const embedUrl = params ? `${this.baseUrl}?${params}` : this.baseUrl;
+            const cacheBuster = Date.now();
+            const finalUrl = params ? `${embedUrl}&_t=${cacheBuster}` : `${embedUrl}?_t=${cacheBuster}`;
+            iframe.src = 'about:blank';
+            setTimeout(() => { iframe.src = finalUrl; }, 150);
         } else if (device === 'mobile') {
             container.classList.add('mobile');
+            // Force mobile to fixed 375px width
+            const iframe = this.controls.previewIframe;
+            iframe.style.width = '375px';
+            // DON'T call updatePreview() - it would override the width!
+            const params = this.generateUrlParams();
+            const embedUrl = params ? `${this.baseUrl}?${params}` : this.baseUrl;
+            const cacheBuster = Date.now();
+            const finalUrl = params ? `${embedUrl}&_t=${cacheBuster}` : `${embedUrl}?_t=${cacheBuster}`;
+            iframe.src = 'about:blank';
+            setTimeout(() => { iframe.src = finalUrl; }, 150);
+        } else {
+            // Desktop - use the configured width
+            this.updatePreview();
         }
-
-        // Re-apply iframe dimensions after device change
-        // This ensures height setting takes effect in all device modes
-        this.updatePreview();
     }
 
     generateUrlParams() {

@@ -4,8 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // Fix viewport for iframe embeds - use iframe width, not device width
+        if (window.self !== window.top) {
+            const meta = document.querySelector('meta[name="viewport"]');
+            meta.setAttribute('content', 'width=' + window.innerWidth + ', initial-scale=1.0');
+        }
+    </script>
     <title>Podcast Player</title>
-    <link rel="stylesheet" href="styles.css">
+    <script>
+        // Aggressive CSS cache busting - mobile flex-wrap fix
+        document.write('<link rel="stylesheet" href="styles.css?v=' + Date.now() + '">');
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Inter:wght@400;500;600&display=swap"
