@@ -2102,6 +2102,16 @@ iframe .app-container,
         height: 100px !important;
         min-width: 100px !important;
     }
+    
+    /* Embed mode margins for tablet */
+    .embed-mode .podcast-info-section {
+        margin: var(--space-3);
+        margin-bottom: var(--space-2);
+    }
+    
+    .embed-mode .episodes-section {
+        margin: 0 var(--space-3) var(--space-3) var(--space-3);
+    }
 }
 
 /* ==========================================
@@ -2359,6 +2369,16 @@ iframe .app-container,
         bottom: var(--space-3);
         max-width: none;
     }
+    
+    /* Embed mode margins for mobile */
+    .embed-mode .podcast-info-section {
+        margin: var(--space-2);
+        margin-bottom: var(--space-2);
+    }
+    
+    .embed-mode .episodes-section {
+        margin: 0 var(--space-2) var(--space-2) var(--space-2);
+    }
 }
 
 /* ==========================================
@@ -2409,16 +2429,22 @@ iframe .app-container,
 
 /* EMBED MODE: Basic adjustments only - SIMPLIFIED TO FIX CRITICAL ISSUES */
 .embed-mode .app-container {
-    padding: var(--space-2);
+    padding: 0; /* No padding - sections handle their own padding */
 }
 
 .embed-mode .main-content {
     padding: 0; /* Remove main content padding */
 }
 
+/* Add margin to podcast info section in embed mode */
+.embed-mode .podcast-info-section {
+    margin: var(--space-4);
+    margin-bottom: var(--space-3);
+}
+
 /* EMBED MODE: Ensure episodes section fills remaining space properly */
 .embed-mode .episodes-section {
-    margin-top: 0;
+    margin: 0 var(--space-4) var(--space-4) var(--space-4); /* Top 0, sides and bottom space-4 */
     padding-top: var(--space-3); /* Minimal spacing from selector */
 }
 
