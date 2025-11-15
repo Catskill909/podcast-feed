@@ -23,6 +23,17 @@ class IframeGenerator {
             showCoverArt: document.getElementById('show-cover-art'),
             showDownloadButtons: document.getElementById('show-download-buttons'),
 
+            // Branding & Colors
+            headerTitle: document.getElementById('header-title'),
+            headerIcon: document.getElementById('header-icon'),
+            showHeaderIcon: document.getElementById('show-header-icon'),
+            iconPreview: document.getElementById('icon-preview'),
+            primaryColorDark: document.getElementById('primary-color-dark'),
+            primaryColorDarkHex: document.getElementById('primary-color-dark-hex'),
+            primaryColorLight: document.getElementById('primary-color-light'),
+            primaryColorLightHex: document.getElementById('primary-color-light-hex'),
+            resetBranding: document.getElementById('reset-branding'),
+
             // Preview
             previewIframe: document.getElementById('preview-iframe'),
             iframeContainer: document.getElementById('iframe-container'),
@@ -171,6 +182,16 @@ class IframeGenerator {
         this.controls.showCoverArt.addEventListener('change', () => this.updatePreview());
         this.controls.showDownloadButtons.addEventListener('change', () => this.updatePreview());
 
+        // Branding & Color controls
+        this.controls.headerTitle.addEventListener('input', this.debounce(() => this.updatePreview(), 300));
+        this.controls.headerIcon.addEventListener('input', () => this.handleIconChange());
+        this.controls.showHeaderIcon.addEventListener('change', () => this.updatePreview());
+        this.controls.primaryColorDark.addEventListener('input', (e) => this.handleDarkColorChange(e));
+        this.controls.primaryColorDarkHex.addEventListener('input', (e) => this.handleDarkColorHexChange(e));
+        this.controls.primaryColorLight.addEventListener('input', (e) => this.handleLightColorChange(e));
+        this.controls.primaryColorLightHex.addEventListener('input', (e) => this.handleLightColorHexChange(e));
+        this.controls.resetBranding.addEventListener('click', () => this.resetBranding());
+
         // Device preview buttons
         this.deviceButtons.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -273,7 +294,145 @@ class IframeGenerator {
             params.append('download', 'false');
         }
 
+        // Branding & Colors
+        const headerTitle = this.controls.headerTitle.value.trim();
+        const headerIcon = this.controls.headerIcon.value.trim();
+        const showIcon = this.controls.showHeaderIcon.checked;
+        const darkColor = this.controls.primaryColorDark.value;
+        const lightColor = this.controls.primaryColorLight.value;
+
+        if (headerTitle && headerTitle !== 'Podcast Player') {
+            params.append('title', encodeURIComponent(headerTitle));
+        }
+        if (headerIcon && headerIcon !== 'fa-podcast') {
+            params.append('icon', encodeURIComponent(headerIcon));
+        }
+        if (!showIcon) {
+            params.append('showIcon', 'false');
+        }
+        if (darkColor && darkColor !== '#BB86FC') {
+            params.append('darkColor', encodeURIComponent(darkColor));
+        }
+        if (lightColor && lightColor !== '#6750A4') {
+            params.append('lightColor', encodeURIComponent(lightColor));
+        }
+
         return params.toString();
+    }
+
+    // Branding & Color Methods
+    handleIconChange() {
+        const iconClass = this.controls.headerIcon.value.trim() || 'fa-podcast';
+        // Update icon preview
+        this.controls.iconPreview.className = `fa-solid ${iconClass}`;
+        this.updatePreview();
+    }
+
+    handleDarkColorChange(e) {
+        const color = e.target.value;
+        this.controls.primaryColorDarkHex.value = color;
+        this.updatePreview();
+    }
+
+    handleDarkColorHexChange(e) {
+        const hex = e.target.value.trim();
+        if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+            this.controls.primaryColorDark.value = hex;
+            this.updatePreview();
+        }
+    }
+
+    handleLightColorChange(e) {
+        const color = e.target.value;
+        this.controls.primaryColorLightHex.value = color;
+        this.updatePreview();
+    }
+
+    handleLightColorHexChange(e) {
+        const hex = e.target.value.trim();
+        if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+            this.controls.primaryColorLight.value = hex;
+            this.updatePreview();
+        }
+    }
+
+    resetBranding() {
+        this.controls.headerTitle.value = 'Podcast Player';
+        this.controls.headerIcon.value = 'fa-podcast';
+        this.controls.showHeaderIcon.checked = true;
+        this.controls.primaryColorDark.value = '#BB86FC';
+        this.controls.primaryColorDarkHex.value = '#BB86FC';
+        this.controls.primaryColorLight.value = '#6750A4';
+        this.controls.primaryColorLightHex.value = '#6750A4';
+        this.controls.iconPreview.className = 'fa-solid fa-podcast';
+        this.updatePreview();
+    }
+
+    generateDarkerShade(hex) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        
+        const newR = Math.max(0, Math.floor(r * 0.8));
+        const newG = Math.max(0, Math.floor(g * 0.8));
+        const newB = Math.max(0, Math.floor(b * 0.8));
+        
+        return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+    }
+
+    applyBrandingToIframe(iframe) {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!iframeDoc) return;
+
+        // Get custom values
+        const headerTitle = this.controls.headerTitle.value || 'Podcast Player';
+        const headerIcon = this.controls.headerIcon.value || 'fa-podcast';
+        const showIcon = this.controls.showHeaderIcon.checked;
+        const darkColor = this.controls.primaryColorDark.value || '#BB86FC';
+        const lightColor = this.controls.primaryColorLight.value || '#6750A4';
+        
+        // Generate darker shades for hover states
+        const darkColorShade = this.generateDarkerShade(darkColor);
+        const lightColorShade = this.generateDarkerShade(lightColor);
+        
+        // Update header - CLEAR and rebuild to avoid duplicates
+        const iframeTitle = iframeDoc.querySelector('.app-title');
+        if (iframeTitle) {
+            // Clear all content first
+            iframeTitle.innerHTML = '';
+            
+            // Add icon if enabled
+            if (showIcon) {
+                const iconElement = iframeDoc.createElement('i');
+                iconElement.className = `fa-solid ${headerIcon}`;
+                iframeTitle.appendChild(iconElement);
+            }
+            
+            // Add title text (CSS gap handles spacing)
+            iframeTitle.appendChild(document.createTextNode(headerTitle));
+        }
+        
+        // Inject CSS variables
+        const styleId = 'custom-branding-styles';
+        let styleElement = iframeDoc.getElementById(styleId);
+        
+        if (!styleElement) {
+            styleElement = iframeDoc.createElement('style');
+            styleElement.id = styleId;
+            iframeDoc.head.appendChild(styleElement);
+        }
+        
+        styleElement.textContent = `
+            :root {
+                --primary: ${darkColor} !important;
+                --primary-dark: ${darkColorShade} !important;
+            }
+            
+            [data-theme="light"] {
+                --primary: ${lightColor} !important;
+                --primary-dark: ${lightColorShade} !important;
+            }
+        `;
     }
 
     updatePreview() {
@@ -292,6 +451,13 @@ class IframeGenerator {
 
         setTimeout(() => {
             iframe.src = finalUrl;
+            
+            // Apply branding after iframe loads
+            iframe.addEventListener('load', () => {
+                setTimeout(() => {
+                    this.applyBrandingToIframe(iframe);
+                }, 500);
+            }, { once: true });
         }, 150);
 
         // Update iframe dimensions

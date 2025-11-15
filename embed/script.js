@@ -1262,6 +1262,89 @@ function handleAutoPlay(episodes) {
 }
 
 // ==========================================
+// BRANDING & COLORS
+// ==========================================
+function applyBrandingParams(params) {
+    const titleElement = document.querySelector('.app-title');
+    if (!titleElement) return;
+    
+    // Get parameters
+    const title = params.get('title');
+    const icon = params.get('icon');
+    const showIcon = params.get('showIcon') !== 'false'; // Default true
+    
+    // CLEAR and rebuild header to avoid duplicates
+    titleElement.innerHTML = '';
+    
+    // Add icon if enabled
+    if (showIcon) {
+        const iconElement = document.createElement('i');
+        iconElement.className = `fa-solid ${icon ? decodeURIComponent(icon) : 'fa-podcast'}`;
+        titleElement.appendChild(iconElement);
+    }
+    
+    // Add title text (CSS gap handles spacing)
+    const titleText = title ? decodeURIComponent(title) : 'Podcast Player';
+    titleElement.appendChild(document.createTextNode(titleText));
+    
+    // Update page title
+    if (title) {
+        document.title = decodeURIComponent(title);
+    }
+    
+    // Colors
+    const darkColor = params.get('darkColor');
+    const lightColor = params.get('lightColor');
+    
+    if (darkColor || lightColor) {
+        const styleId = 'url-branding-styles';
+        let styleElement = document.getElementById(styleId);
+        
+        if (!styleElement) {
+            styleElement = document.createElement('style');
+            styleElement.id = styleId;
+            document.head.appendChild(styleElement);
+        }
+        
+        let css = '';
+        
+        if (darkColor) {
+            const darkShade = generateDarkerShade(decodeURIComponent(darkColor));
+            css += `
+                :root {
+                    --primary: ${decodeURIComponent(darkColor)} !important;
+                    --primary-dark: ${darkShade} !important;
+                }
+            `;
+        }
+        
+        if (lightColor) {
+            const lightShade = generateDarkerShade(decodeURIComponent(lightColor));
+            css += `
+                [data-theme="light"] {
+                    --primary: ${decodeURIComponent(lightColor)} !important;
+                    --primary-dark: ${lightShade} !important;
+                }
+            `;
+        }
+        
+        styleElement.textContent = css;
+    }
+}
+
+function generateDarkerShade(hex) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    
+    const newR = Math.max(0, Math.floor(r * 0.8));
+    const newG = Math.max(0, Math.floor(g * 0.8));
+    const newB = Math.max(0, Math.floor(b * 0.8));
+    
+    return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+}
+
+// ==========================================
 // URL PARAMETERS
 // ==========================================
 function loadFromUrlParams() {
@@ -1273,6 +1356,9 @@ function loadFromUrlParams() {
     if (theme && ['dark', 'light', 'auto'].includes(theme)) {
         applyThemeFromParam(theme);
     }
+
+    // Branding & Colors
+    applyBrandingParams(params);
 
     // UI component visibility
     const hideHeader = params.get('header') === 'false';

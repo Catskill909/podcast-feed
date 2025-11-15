@@ -10,6 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Font Awesome 6.5.1 for icon preview -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
 </head>
 
 <body>
@@ -209,6 +211,83 @@
                                 </label>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Branding & Colors - Full Width Section -->
+            <section class="branding-section">
+                <h2 class="section-title">
+                    <span class="material-icons">brush</span>
+                    Branding & Colors
+                </h2>
+
+                <div class="branding-grid">
+                    <!-- Column 1: Header Text & Icon -->
+                    <div class="branding-column">
+                        <div class="input-field">
+                            <label class="input-label">Header Title</label>
+                            <input type="text" id="header-title" value="Podcast Player" 
+                                   class="text-input" placeholder="Podcast Player">
+                        </div>
+
+                        <div class="input-field">
+                            <label class="input-label">Header Icon (Font Awesome)</label>
+                            <input type="text" id="header-icon" value="fa-podcast" 
+                                   class="text-input" placeholder="fa-podcast">
+                            <small class="input-hint">
+                                e.g., fa-music, fa-microphone, fa-radio
+                                <a href="https://fontawesome.com/icons" target="_blank" rel="noopener">Browse</a>
+                            </small>
+                        </div>
+
+                        <!-- Show Icon Toggle -->
+                        <div class="toggle-field">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="show-header-icon" checked class="toggle-input">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-text">Show Header Icon</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Colors -->
+                    <div class="branding-column">
+                        <div class="input-field">
+                            <label class="input-label">Primary Color (Dark Mode)</label>
+                            <div class="color-input-group">
+                                <input type="color" id="primary-color-dark" value="#BB86FC" class="color-picker">
+                                <input type="text" id="primary-color-dark-hex" value="#BB86FC" 
+                                       class="hex-input" pattern="^#[0-9A-Fa-f]{6}$" maxlength="7">
+                            </div>
+                            <small class="input-hint">Default: #BB86FC (Purple)</small>
+                        </div>
+
+                        <div class="input-field">
+                            <label class="input-label">Primary Color (Light Mode)</label>
+                            <div class="color-input-group">
+                                <input type="color" id="primary-color-light" value="#6750A4" class="color-picker">
+                                <input type="text" id="primary-color-light-hex" value="#6750A4" 
+                                       class="hex-input" pattern="^#[0-9A-Fa-f]{6}$" maxlength="7">
+                            </div>
+                            <small class="input-hint">Default: #6750A4 (Deep Purple)</small>
+                        </div>
+                    </div>
+
+                    <!-- Column 3: Icon Preview & Reset -->
+                    <div class="branding-column">
+                        <div class="icon-preview-wrapper">
+                            <label class="input-label">Icon Preview</label>
+                            <div class="icon-preview">
+                                <i class="fa-solid fa-podcast" id="icon-preview"></i>
+                            </div>
+                        </div>
+
+                        <button class="btn-reset" id="reset-branding">
+                            <span class="material-icons">refresh</span>
+                            Reset to Defaults
+                        </button>
                     </div>
                 </div>
             </section>

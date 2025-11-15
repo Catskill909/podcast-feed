@@ -342,7 +342,7 @@ iframe .app-container,
     color: var(--primary);
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-3);
     margin: 0;
 }
 
@@ -804,7 +804,7 @@ iframe .app-container,
    HEADER
    ========================================== */
 .app-header {
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--space-6);
     text-align: center;
 }
 
@@ -814,7 +814,7 @@ iframe .app-container,
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-md);
+    gap: var(--space-3);
     color: var(--primary);
 }
 
@@ -2131,7 +2131,7 @@ iframe .app-container,
     
     .app-title {
         font-size: 18px;
-        gap: var(--space-1);
+        gap: var(--space-2);
     }
     
     .app-title .material-symbols-outlined {

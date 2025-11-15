@@ -52,6 +52,15 @@ A sleek, ultra-compact podcast player with custom-styled dropdown, dark mode the
 - **Copy to Clipboard:** One-click embed code generation
 - **Customizable:** Support for URL parameters (podcast/episode selection)
 
+### 🎨 Branding & Customization (NEW!)
+- **Custom Header Title:** Change "Podcast Player" to your brand name
+- **Custom Icon:** Choose any Font Awesome icon (fa-podcast, fa-microphone, fa-music, etc.)
+- **Dark Mode Colors:** Customize primary color for dark theme
+- **Light Mode Colors:** Customize primary color for light theme
+- **Auto-Shading:** Button hover states automatically match your colors
+- **Live Preview:** See changes in real-time as you customize
+- **Visual Generator:** Interactive UI with color pickers and instant code generation
+
 ---
 
 ## 🚀 Quick Start
@@ -216,6 +225,84 @@ Browser → Your Player → proxy.php → RSS Feeds
     </iframe>
 </div>
 ```
+
+---
+
+## 🎨 Using the Embed Generator with Custom Branding
+
+### Access the Generator
+```
+http://localhost:8000/iframe-generator.html
+```
+
+### Customization Options
+
+#### **1. Iframe Dimensions**
+- Width: 100% or custom px value
+- Height: 600px or custom value
+
+#### **2. Content & Behavior**
+- Default Podcast: Choose which podcast loads first
+- Episode Order: Newest first, oldest first, alphabetical
+- Max Episodes: Limit displayed episodes (5, 10, 25, 50, or all)
+- Podcast Dropdown Order: 7 sorting options
+
+#### **3. Theme & UI**
+- Default Theme: Dark, Light, or System Preference
+- Toggle visibility of: Header, Podcast Selector, Cover Art, Download Buttons, Theme Toggle
+
+#### **4. Branding & Colors** ⭐ NEW
+- **Header Title:** Customize the main title (default: "Podcast Player")
+  - Example: "My Radio Show", "Company Podcasts", "Music Player"
+  
+- **Header Icon:** Choose Font Awesome icon (default: fa-podcast)
+  - Examples: `fa-microphone`, `fa-music`, `fa-radio`, `fa-headphones`
+  - Browse all icons: [Font Awesome Icons](https://fontawesome.com/icons)
+  
+- **Primary Color (Dark Mode):** Customize purple accent (#BB86FC)
+  - Use color picker or enter hex code
+  - Affects: title, labels, buttons, progress bars, scrollbars
+  
+- **Primary Color (Light Mode):** Customize light theme color (#6750A4)
+  - Separate color control for light theme users
+  
+- **Reset Button:** Restore all defaults with one click
+
+### Example Branding Presets
+
+**Corporate Style:**
+```
+Title: "Company Podcast Hub"
+Icon: fa-building
+Dark Color: #4CAF50 (Green)
+Light Color: #2E7D32 (Dark Green)
+```
+
+**Music Focus:**
+```
+Title: "Music Player"
+Icon: fa-music
+Dark Color: #2196F3 (Blue)
+Light Color: #1565C0 (Dark Blue)
+```
+
+**Radio Show:**
+```
+Title: "Live Radio"
+Icon: fa-microphone
+Dark Color: #FF6B9D (Pink)
+Light Color: #C2185B (Deep Pink)
+```
+
+### Generated URL Parameters
+
+When you customize branding, these parameters are added to the embed URL:
+
+```
+?title=My%20Show&icon=fa-microphone&darkColor=%23FF6B9D&lightColor=%23C2185B
+```
+
+All purple elements automatically update to match your colors!
 
 ---
 
