@@ -3,10 +3,21 @@
 /**
  * RSS Feed Endpoint
  * Generates XML feed for podcast directory
+ * 
+ * LAZY SCAN: Automatically updates stale feed data before serving
+ * This ensures users always get reasonably fresh data even if cron fails
  */
 
 require_once __DIR__ . '/includes/PodcastManager.php';
 require_once __DIR__ . '/includes/SortPreferenceManager.php';
+require_once __DIR__ . '/includes/FeedScanner.php';
+
+// LAZY SCAN: Check if data is stale and update if needed
+// This runs BEFORE serving feed to ensure freshness
+$scanner = new FeedScanner(300); // 5-minute interval
+if ($scanner->needsScan()) {
+    $scanner->scan();
+}
 
 // Set proper headers for XML output
 header('Content-Type: application/rss+xml; charset=UTF-8');

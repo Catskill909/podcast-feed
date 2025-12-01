@@ -16,7 +16,11 @@ class RssFeedParser
      * Get cached feed data if available
      */
     private function getCachedFeed($url) {
-        $cacheFile = sys_get_temp_dir() . '/feed_cache_' . md5($url);
+        $cacheDir = __DIR__ . '/../data/cache';
+        if (!is_dir($cacheDir)) {
+            @mkdir($cacheDir, 0755, true);
+        }
+        $cacheFile = $cacheDir . '/feed_cache_' . md5($url);
         if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $this->cacheTime)) {
             return file_get_contents($cacheFile);
         }
@@ -27,8 +31,12 @@ class RssFeedParser
      * Save feed data to cache
      */
     private function cacheFeed($url, $content) {
-        $cacheFile = sys_get_temp_dir() . '/feed_cache_' . md5($url);
-        file_put_contents($cacheFile, $content);
+        $cacheDir = __DIR__ . '/../data/cache';
+        if (!is_dir($cacheDir)) {
+            @mkdir($cacheDir, 0755, true);
+        }
+        $cacheFile = $cacheDir . '/feed_cache_' . md5($url);
+        @file_put_contents($cacheFile, $content);
     }
     
     /**
@@ -455,9 +463,10 @@ class RssFeedParser
      * Clear cache for a specific feed URL
      */
     public function clearCache($url) {
-        $cacheFile = sys_get_temp_dir() . '/feed_cache_' . md5($url);
+        $cacheDir = __DIR__ . '/../data/cache';
+        $cacheFile = $cacheDir . '/feed_cache_' . md5($url);
         if (file_exists($cacheFile)) {
-            unlink($cacheFile);
+            @unlink($cacheFile);
         }
     }
     
