@@ -1,7 +1,7 @@
 # Latest Episode Update Solution - Analysis & Recommendations
 
-**Date:** November 20, 2025  
-**Status:** Analysis Complete - Ready for Implementation  
+**Date:** November 20, 2025 (analysis), updated December 1, 2025 (implementation)  
+**Status:** Implemented - Hybrid solution live in production  
 **Priority:** High - Affects user experience on live site
 
 ---
@@ -21,7 +21,19 @@
 - ❌ Browse page shows outdated "Latest: X days ago" badges
 - ❌ Requires manual admin intervention
 
-**Good News:** Live site works perfectly otherwise! This is purely an update frequency issue.
+**Good News:** Live site works perfectly otherwise! This was purely an update frequency issue.
+
+### Implementation Summary (December 1, 2025)
+
+- **Solution Chosen:** Hybrid approach (cron + lazy scan + browser auto-refresh)
+- **Cron:** Coolify scheduled task running `php /app/cron/auto-scan-feeds.php` every 15 minutes (`*/15 * * * *`) in the PHP app container
+- **Lazy Scan:** New `includes/FeedScanner.php` used by `feed.php` and `api/get-public-podcasts.php`
+  - Triggers a background scan when data is older than 5 minutes
+  - Uses `data/last-lazy-scan.txt` as its lock file
+  - Writes stats to `logs/lazy-scan.log`
+- **Browser Auto-Refresh:** Existing `api/auto-refresh.php` + `assets/js/auto-refresh.js` kept as an extra safety net when users hit `index.php` or `admin.php`
+- **Caching Fix:** `RssFeedParser` now caches RSS responses in `data/cache/` instead of `/tmp` to avoid container permission errors inside Coolify
+- **Result:** New visitors (and embeds) see the latest episodes automatically; no more need to "click around" in admin to force updates.
 
 ---
 
@@ -551,6 +563,6 @@ When you're ready to implement:
 
 ---
 
-**Status:** Ready to implement when you are! All analysis complete, path forward clear. 🎯
+**Status:** Implemented December 1, 2025 - Hybrid solution live and verified via cron + lazy-scan logs. 🎯
 
-**Next Step:** Take a break, then come back fresh and start with Phase 1 (verify cron). Might be a 30-minute fix!
+**Next Step:** Periodically monitor `logs/auto-scan.log` and `logs/lazy-scan.log` to ensure background updates continue running as expected.

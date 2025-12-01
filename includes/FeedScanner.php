@@ -22,9 +22,10 @@ class FeedScanner {
     private $podcastManager;
     
     /**
-     * @param int $scanInterval Minimum seconds between scans (default: 300 = 5 minutes)
+     * @param int $scanInterval Minimum seconds between scans (default: 1200 = 20 minutes)
+     * Note: Set higher than cron interval (15 min) so lazy scan only triggers if cron fails
      */
-    public function __construct($scanInterval = 300) {
+    public function __construct($scanInterval = 1200) {
         $this->lockFile = __DIR__ . '/../data/last-lazy-scan.txt';
         $this->scanInterval = $scanInterval;
         $this->podcastManager = new PodcastManager();

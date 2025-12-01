@@ -12,9 +12,9 @@ require_once __DIR__ . '/includes/PodcastManager.php';
 require_once __DIR__ . '/includes/SortPreferenceManager.php';
 require_once __DIR__ . '/includes/FeedScanner.php';
 
-// LAZY SCAN: Check if data is stale and update if needed
-// This runs BEFORE serving feed to ensure freshness
-$scanner = new FeedScanner(300); // 5-minute interval
+// LAZY SCAN: Backup mechanism if cron fails
+// Only triggers if data is >20 minutes old (cron runs every 15 min)
+$scanner = new FeedScanner(); // 20-minute interval (default)
 if ($scanner->needsScan()) {
     $scanner->scan();
 }

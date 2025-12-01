@@ -4,7 +4,20 @@ A complete podcast platform combining a modern directory browser with a full-fea
 
 ---
 
-## 🆕 Recent Updates (October 30, 2025)
+## 🆕 Recent Updates (December 1, 2025)
+
+### **🔄 Latest Episode Auto-Update System (December 1, 2025)** ✨✨✨
+- ✅ **Hybrid Update Pipeline**: Ensures latest episodes appear within 15–30 minutes without manual admin clicks
+  - Cron-based auto-scan runs every 15 minutes in production (`cron/auto-scan-feeds.php` via Coolify scheduled task)
+  - New `FeedScanner` class (`includes/FeedScanner.php`) performs lazy scans from `feed.php` and `api/get-public-podcasts.php` when data is older than 5 minutes
+  - Existing browser-based auto-refresh remains as an extra safety net on `index.php` and `admin.php`
+- ✅ **Fresh Data For All Consumers**: Browse page, embed feed, and admin all read from an up-to-date `data/podcasts.xml`
+  - Public browse page now reliably shows correct "Latest: X days ago" badges for new visitors
+  - `feed.php` outputs fresh `latestEpisodeDate` values for external apps and embeds
+  - Manual refresh button (🔄) still bypasses cache for instant per-podcast updates
+- ✅ **Safe Caching & Permissions**: RSS caching moved into the app's writable data directory
+  - `RssFeedParser` now stores cache files in `data/cache/` instead of `/tmp` to avoid container permission issues
+  - Background activity is visible via `logs/auto-scan.log` (cron) and `logs/lazy-scan.log` (lazy scans)
 
 ### **📊 Engagement Analytics System** ✨✨✨
 - ✅ **Complete Analytics Tracking**: Track plays and downloads from the public player
@@ -388,7 +401,7 @@ git push origin main
 - **Password Protection**: Secure admin access with authentication modal
 
 ### **🆕 Automated Features (October 2025)**
-- **Automated Feed Scanning** 🔄: Cron job updates episode dates every 30 minutes automatically
+- **Automated Feed Scanning** 🔄: Hybrid system keeps episode dates current (15-minute cron + 5-minute lazy-scan backup)
 - **Smart Sorting** 📊: Server-side sorting by latest episode dates, title, or status
 - **Episode Date Tracking** 📅: Automatically extracts and stores latest episode publication dates
 - **Sort Persistence** 💾: Sort preferences saved server-side for consistent feed output
