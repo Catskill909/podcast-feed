@@ -1,8 +1,11 @@
 <?php
 /**
  * Browser-Based Auto-Refresh API
- * Triggered when users visit the site - no cron needed
- * Only refreshes if last refresh was > 5 minutes ago
+ * Triggered when users visit the site as BACKUP to cron
+ * Only refreshes if last refresh was > 30 minutes ago
+ * 
+ * Primary update mechanism is cron (every 15 min)
+ * This only kicks in if cron has been dead for a while
  */
 
 header('Content-Type: application/json');
@@ -12,7 +15,7 @@ require_once __DIR__ . '/../includes/RssFeedParser.php';
 
 try {
     $lastRefreshFile = __DIR__ . '/../data/last-auto-refresh.txt';
-    $refreshInterval = 300; // 5 minutes in seconds (changed from 1800/30min)
+    $refreshInterval = 1800; // 30 minutes - only as backup when cron fails
     
     // Check if we need to refresh
     $shouldRefresh = true;

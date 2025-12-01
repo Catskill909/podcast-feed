@@ -3,21 +3,17 @@
  * Get Public Podcasts API
  * Returns only active podcasts for public browsing
  * 
- * LAZY SCAN: Automatically updates stale feed data before serving
- * This ensures users always get reasonably fresh data even if cron fails
+ * Data freshness is handled by:
+ * - Cron job (every 15 min) - primary
+ * - Browser auto-refresh (every 5 min on page visit) - backup
+ * - feed.php lazy scan (every 20 min) - emergency fallback
+ * 
+ * This endpoint just serves cached data for fast page loads.
  */
 
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../includes/PodcastManager.php';
-require_once __DIR__ . '/../includes/FeedScanner.php';
-
-// LAZY SCAN: Backup mechanism if cron fails
-// Only triggers if data is >20 minutes old (cron runs every 15 min)
-$scanner = new FeedScanner(); // 20-minute interval (default)
-if ($scanner->needsScan()) {
-    $scanner->scan();
-}
 
 try {
     $podcastManager = new PodcastManager();
