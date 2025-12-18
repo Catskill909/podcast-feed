@@ -30,7 +30,7 @@ $settings = $manager->getSettings();
     <!-- Sortable.js for drag and drop -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     
-    <link rel="stylesheet" href="assets/css/ads-manager.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="/assets/css/banner-manager.css?v=<?php echo time(); ?>">
 </head>
 <body>
     <div class="container">
@@ -455,6 +455,6 @@ $settings = $manager->getSettings();
         </div>
     </div>
 
-    <script src="assets/js/ads-manager.js?v=<?php echo time(); ?>"></script>
+    <script src="/assets/js/banner-manager.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
