@@ -65,13 +65,15 @@ try {
         <div class="container">
             <div class="header-content">
                 <a href="index.php" class="logo">
-                    <?php if ($branding['logo_type'] === 'image' && !empty($branding['logo_image'])): ?>
+                    <?php if (($branding['logo_type'] === 'image' || $branding['logo_type'] === 'image_only') && !empty($branding['logo_image'])): ?>
                         <img src="<?php echo htmlspecialchars($branding['logo_image']); ?>" 
-                             alt="Logo" class="logo-icon" style="width: 32px; height: 32px; object-fit: contain;">
+                             alt="Logo" class="logo-image">
                     <?php else: ?>
                         <i class="fa-solid <?php echo htmlspecialchars($branding['logo_icon']); ?> logo-icon"></i>
                     <?php endif; ?>
-                    <span><?php echo htmlspecialchars($branding['site_title']); ?></span>
+                    <?php if ($branding['logo_type'] !== 'image_only'): ?>
+                        <span><?php echo htmlspecialchars($branding['site_title']); ?></span>
+                    <?php endif; ?>
                 </a>
                 <nav>
                     <ul class="nav-links">

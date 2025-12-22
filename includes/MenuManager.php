@@ -9,12 +9,14 @@
 require_once __DIR__ . '/MenuXMLHandler.php';
 require_once __DIR__ . '/../config/config.php';
 
-class MenuManager {
+class MenuManager
+{
     private $xmlHandler;
     private $uploadsDir;
     private $uploadsUrl;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->xmlHandler = new MenuXMLHandler();
         $this->uploadsDir = __DIR__ . '/../uploads/menu';
         $this->uploadsUrl = APP_URL . '/uploads/menu';
@@ -23,14 +25,16 @@ class MenuManager {
     /**
      * Get site branding configuration
      */
-    public function getBranding() {
+    public function getBranding()
+    {
         return $this->xmlHandler->getBranding();
     }
 
     /**
      * Save site branding configuration
      */
-    public function saveBranding($data, $logoFile = null) {
+    public function saveBranding($data, $logoFile = null)
+    {
         // Validate required fields
         if (empty($data['site_title'])) {
             return [
@@ -46,7 +50,10 @@ class MenuManager {
                 return $uploadResult;
             }
             $data['logo_image'] = $uploadResult['path'];
-            $data['logo_type'] = 'image';
+            // Only set logo_type to 'image' if it's not already set to 'image' or 'image_only'
+            if ($data['logo_type'] !== 'image' && $data['logo_type'] !== 'image_only') {
+                $data['logo_type'] = 'image';
+            }
         }
 
         // Save to XML
@@ -61,11 +68,12 @@ class MenuManager {
     /**
      * Get all menu items
      */
-    public function getMenuItems($activeOnly = false) {
+    public function getMenuItems($activeOnly = false)
+    {
         $items = $this->xmlHandler->getItems();
 
         if ($activeOnly) {
-            $items = array_filter($items, function($item) {
+            $items = array_filter($items, function ($item) {
                 return $item['active'] == 1;
             });
             // Reset array keys after filtering
@@ -78,14 +86,16 @@ class MenuManager {
     /**
      * Get single menu item
      */
-    public function getMenuItem($id) {
+    public function getMenuItem($id)
+    {
         return $this->xmlHandler->getItem($id);
     }
 
     /**
      * Add new menu item
      */
-    public function addMenuItem($data, $iconFile = null) {
+    public function addMenuItem($data, $iconFile = null)
+    {
         // Validate
         $validation = $this->validateMenuItem($data);
         if (!$validation['valid']) {
@@ -123,7 +133,8 @@ class MenuManager {
     /**
      * Update existing menu item
      */
-    public function updateMenuItem($id, $data, $iconFile = null) {
+    public function updateMenuItem($id, $data, $iconFile = null)
+    {
         // Validate
         $validation = $this->validateMenuItem($data);
         if (!$validation['valid']) {
@@ -164,7 +175,8 @@ class MenuManager {
     /**
      * Delete menu item
      */
-    public function deleteMenuItem($id) {
+    public function deleteMenuItem($id)
+    {
         $success = $this->xmlHandler->deleteItem($id);
 
         return [
@@ -176,7 +188,8 @@ class MenuManager {
     /**
      * Reorder menu items
      */
-    public function reorderMenuItems($order) {
+    public function reorderMenuItems($order)
+    {
         $success = $this->xmlHandler->reorderItems($order);
 
         return [
@@ -188,7 +201,8 @@ class MenuManager {
     /**
      * Toggle menu item active state
      */
-    public function toggleMenuItem($id, $active) {
+    public function toggleMenuItem($id, $active)
+    {
         $success = $this->xmlHandler->toggleItem($id, $active);
 
         return [
@@ -200,7 +214,8 @@ class MenuManager {
     /**
      * Validate menu item data
      */
-    public function validateMenuItem($data) {
+    public function validateMenuItem($data)
+    {
         // Required fields
         if (empty($data['label'])) {
             return [
@@ -261,7 +276,8 @@ class MenuManager {
     /**
      * Validate URL format
      */
-    private function isValidUrl($url) {
+    private function isValidUrl($url)
+    {
         // Allow relative URLs
         if (strpos($url, '/') === 0 || strpos($url, './') === 0) {
             return true;
@@ -276,7 +292,7 @@ class MenuManager {
         if (filter_var($url, FILTER_VALIDATE_URL)) {
             return true;
         }
-        
+
         // Allow domain names without protocol (e.g., example.com, subdomain.example.com)
         if (preg_match('/^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?)+$/', $url)) {
             return true;
@@ -293,7 +309,8 @@ class MenuManager {
     /**
      * Validate Font Awesome icon format
      */
-    private function isValidFontAwesomeIcon($icon) {
+    private function isValidFontAwesomeIcon($icon)
+    {
         // Must start with fa- and contain only lowercase letters, numbers, and hyphens
         return preg_match('/^fa-[a-z0-9-]+$/', $icon) === 1;
     }
@@ -301,21 +318,24 @@ class MenuManager {
     /**
      * Upload logo image
      */
-    private function uploadLogoImage($file) {
+    private function uploadLogoImage($file)
+    {
         return $this->uploadImage($file, 'logo');
     }
 
     /**
      * Upload icon image
      */
-    private function uploadIconImage($file) {
+    private function uploadIconImage($file)
+    {
         return $this->uploadImage($file, 'icon');
     }
 
     /**
      * Upload image (logo or icon)
      */
-    private function uploadImage($file, $type = 'logo') {
+    private function uploadImage($file, $type = 'logo')
+    {
         // Validate file type
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
         $finfo = finfo_open(FILEINFO_MIME_TYPE);

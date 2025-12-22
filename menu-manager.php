@@ -101,6 +101,13 @@ function escapeJs($text) {
                                        <?php echo $branding['logo_type'] === 'image' ? 'checked' : ''; ?>>
                                 <span>Custom Image</span>
                             </label>
+                            <label class="radio-option">
+                                <input type="radio" 
+                                       name="logo_type" 
+                                       value="image_only" 
+                                       <?php echo $branding['logo_type'] === 'image_only' ? 'checked' : ''; ?>>
+                                <span>Image Only (No Text)</span>
+                            </label>
                         </div>
                     </div>
 
@@ -116,8 +123,8 @@ function escapeJs($text) {
                         <small class="form-hint">Use format: fa-icon-name (e.g., fa-podcast, fa-microphone)</small>
                     </div>
 
-                    <!-- Image Upload -->
-                    <div class="form-group" id="imageGroup" style="display: <?php echo $branding['logo_type'] === 'image' ? 'block' : 'none'; ?>;">
+                    <!-- Image Upload (shown for both 'image' and 'image_only') -->
+                    <div class="form-group" id="imageGroup" style="display: <?php echo ($branding['logo_type'] === 'image' || $branding['logo_type'] === 'image_only') ? 'block' : 'none'; ?>;">
                         <label for="logoImage">Logo Image</label>
                         <div class="file-upload-wrapper">
                             <input type="file" id="logoImage" name="logo_file" accept="image/*">
@@ -138,12 +145,14 @@ function escapeJs($text) {
                     <div class="form-group">
                         <label>Preview</label>
                         <div class="branding-preview" id="brandingPreview">
-                            <?php if ($branding['logo_type'] === 'image' && !empty($branding['logo_image'])): ?>
+                            <?php if (($branding['logo_type'] === 'image' || $branding['logo_type'] === 'image_only') && !empty($branding['logo_image'])): ?>
                                 <img src="<?php echo htmlspecialchars($branding['logo_image']); ?>" alt="Logo" class="preview-logo-image">
                             <?php else: ?>
                                 <i class="fas <?php echo htmlspecialchars($branding['logo_icon']); ?> preview-logo-icon"></i>
                             <?php endif; ?>
-                            <span class="preview-title"><?php echo htmlspecialchars($branding['site_title']); ?></span>
+                            <?php if ($branding['logo_type'] !== 'image_only'): ?>
+                                <span class="preview-title"><?php echo htmlspecialchars($branding['site_title']); ?></span>
+                            <?php endif; ?>
                         </div>
                     </div>
 

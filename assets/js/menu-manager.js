@@ -35,6 +35,7 @@ function initializeBrandingForm() {
                 iconGroup.style.display = 'block';
                 imageGroup.style.display = 'none';
             } else {
+                // Both 'image' and 'image_only' show the image upload
                 iconGroup.style.display = 'none';
                 imageGroup.style.display = 'block';
             }
@@ -72,20 +73,24 @@ function updateBrandingPreview(imageDataUrl = null) {
     const logoType = document.querySelector('input[name="logo_type"]:checked').value;
     const logoIcon = document.getElementById('logoIcon').value || 'fa-podcast';
 
-    if (logoType === 'image' && imageDataUrl) {
+    // For image_only, don't show title text
+    const titleHtml = logoType === 'image_only' ? '' : `<span class="preview-title">${escapeHtml(siteTitle)}</span>`;
+
+    if ((logoType === 'image' || logoType === 'image_only') && imageDataUrl) {
         preview.innerHTML = `
             <img src="${imageDataUrl}" alt="Logo" class="preview-logo-image">
-            <span class="preview-title">${escapeHtml(siteTitle)}</span>
+            ${titleHtml}
         `;
     } else if (logoType === 'icon') {
         preview.innerHTML = `
             <i class="fas ${escapeHtml(logoIcon)} preview-logo-icon"></i>
-            <span class="preview-title">${escapeHtml(siteTitle)}</span>
+            ${titleHtml}
         `;
     } else {
+        // Fallback (image/image_only without new upload - keep existing or show placeholder)
         preview.innerHTML = `
-            <i class="fas fa-podcast preview-logo-icon"></i>
-            <span class="preview-title">${escapeHtml(siteTitle)}</span>
+            <i class="fas fa-image preview-logo-icon" style="opacity: 0.5;"></i>
+            ${titleHtml}
         `;
     }
 }

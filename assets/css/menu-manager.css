@@ -179,7 +179,7 @@ body {
     cursor: pointer;
 }
 
-.radio-option input[type="radio"]:checked + span {
+.radio-option input[type="radio"]:checked+span {
     color: #4CAF50;
     font-weight: 600;
 }
@@ -249,8 +249,8 @@ body {
 }
 
 .preview-logo-image {
-    max-width: 40px;
-    max-height: 40px;
+    max-width: 300px;
+    max-height: 80px;
     border-radius: 6px;
 }
 
@@ -530,11 +530,11 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-input:checked + .toggle-slider {
+input:checked+.toggle-slider {
     background-color: #4CAF50;
 }
 
-input:checked + .toggle-slider:before {
+input:checked+.toggle-slider:before {
     transform: translateX(24px);
 }
 
