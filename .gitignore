@@ -14,6 +14,14 @@ uploads/covers/*
 !uploads/covers/.gitkeep
 uploads/audio/*
 !uploads/audio/.gitkeep
+uploads/menu/*
+!uploads/menu/.gitkeep
+uploads/ads/*
+!uploads/ads/.gitkeep
+
+# Runtime Data (local configuration and timestamps)
+data/menu-config.xml
+data/last-auto-refresh.txt
 
 # Logs
 logs/*.log
