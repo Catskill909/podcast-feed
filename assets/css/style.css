@@ -200,11 +200,13 @@ a:focus {
 }
 
 .logo-image {
-  height: 60px;
+  height: 80px;
   width: auto;
   object-fit: contain;
   transition: all var(--transition-base);
   border-radius: 4px;
+  margin: -15px 0;
+  /* Negative margin to overflow without expanding header */
 }
 
 .logo:hover .logo-icon {
