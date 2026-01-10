@@ -637,7 +637,7 @@ class PodcastPlayerModal {
     }
 
     /**
-     * Download episode using Fetch + Blob for cross-origin support
+     * Download episode using server-side proxy for cross-origin support
      * Shows a Material Design progress modal during download
      */
     async downloadEpisode(audioUrl, title) {
@@ -664,74 +664,82 @@ class PodcastPlayerModal {
         // Show download modal with progress
         this.showDownloadModal(title, coverUrl);
         
-        // Try Fetch + Blob approach for cross-origin downloads
-        try {
-            const response = await fetch(audioUrl, {
-                method: 'GET',
-                mode: 'cors'
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-            
-            // Get content length for progress
-            const contentLength = response.headers.get('content-length');
-            const total = contentLength ? parseInt(contentLength, 10) : 0;
-            
-            // Read the response as a stream for progress tracking
-            const reader = response.body.getReader();
-            const chunks = [];
-            let received = 0;
-            
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
+        // Check if URL is same-origin (can use Fetch + Blob)
+        const isSameOrigin = new URL(audioUrl, window.location.origin).origin === window.location.origin;
+        
+        if (isSameOrigin) {
+            // Same-origin: use Fetch + Blob with progress tracking
+            try {
+                const response = await fetch(audioUrl);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 
-                chunks.push(value);
-                received += value.length;
+                const contentLength = response.headers.get('content-length');
+                const total = contentLength ? parseInt(contentLength, 10) : 0;
                 
-                // Update progress
-                if (total > 0) {
-                    const percent = Math.round((received / total) * 100);
-                    this.updateDownloadProgress(percent, received, total);
+                const reader = response.body.getReader();
+                const chunks = [];
+                let received = 0;
+                
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    chunks.push(value);
+                    received += value.length;
+                    
+                    if (total > 0) {
+                        const percent = Math.round((received / total) * 100);
+                        this.updateDownloadProgress(percent, received, total);
+                    }
                 }
+                
+                const blob = new Blob(chunks);
+                const blobUrl = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+                
+                this.showDownloadSuccess();
+                setTimeout(() => this.hideDownloadModal(), 1500);
+                return;
+            } catch (error) {
+                console.warn('Same-origin fetch failed:', error.message);
             }
-            
-            // Combine chunks into blob
-            const blob = new Blob(chunks);
-            const blobUrl = URL.createObjectURL(blob);
-            
-            const link = document.createElement('a');
-            link.href = blobUrl;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Clean up blob URL after a short delay
-            setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-            
-            // Show success state briefly then close
-            this.showDownloadSuccess();
-            setTimeout(() => this.hideDownloadModal(), 1500);
-            
-        } catch (error) {
-            console.warn('Fetch download failed, using fallback:', error.message);
-            
-            // Fallback to direct link (may open in new tab for cross-origin)
-            const link = document.createElement('a');
-            link.href = audioUrl;
-            link.download = filename;
-            link.target = '_blank';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Show fallback message and close
-            this.showDownloadFallback();
-            setTimeout(() => this.hideDownloadModal(), 2000);
         }
+        
+        // Cross-origin: use server-side proxy
+        // The proxy sets Content-Disposition: attachment to force download
+        const proxyUrl = `/api/download-proxy.php?url=${encodeURIComponent(audioUrl)}&filename=${encodeURIComponent(filename)}`;
+        
+        // Update status to show we're starting the download
+        const status = document.getElementById('downloadStatus');
+        if (status) {
+            status.innerHTML = `<i class="fa-solid fa-download"></i><span>Starting download...</span>`;
+        }
+        
+        // Use an iframe to trigger the download without leaving the page
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = proxyUrl;
+        document.body.appendChild(iframe);
+        
+        // Show success after a brief delay (proxy handles the actual download)
+        setTimeout(() => {
+            this.showDownloadSuccess();
+            setTimeout(() => {
+                this.hideDownloadModal();
+                // Clean up iframe
+                if (iframe.parentNode) {
+                    iframe.parentNode.removeChild(iframe);
+                }
+            }, 1500);
+        }, 1000);
     }
 
     /**
