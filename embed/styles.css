@@ -2521,3 +2521,399 @@ input:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
+
+/* ==========================================
+   DOWNLOAD MODAL
+   ========================================== */
+.download-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(10, 10, 10, 0.9);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    animation: downloadModalFadeIn 0.2s ease-out;
+}
+
+@keyframes downloadModalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.download-modal {
+    background-color: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 360px;
+    width: 100%;
+    padding: var(--space-4);
+    animation: downloadModalSlideUp 0.2s ease-out;
+}
+
+@keyframes downloadModalSlideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.download-modal-content {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+}
+
+.download-modal-cover {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--surface);
+}
+
+.download-modal-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.download-modal-cover-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    font-size: 1.5rem;
+}
+
+.download-modal-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.download-modal-title {
+    margin: 0 0 var(--space-2) 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.download-modal-status {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-2);
+}
+
+.download-modal-status i {
+    color: var(--primary);
+}
+
+.download-modal-status.success {
+    color: #4ade80;
+}
+
+.download-modal-status.success i {
+    color: #4ade80;
+}
+
+.download-progress-container {
+    height: 5px;
+    background: var(--surface);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: var(--space-1);
+}
+
+.download-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.download-progress-bar.success {
+    background: #4ade80;
+}
+
+.download-progress-text {
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    text-align: right;
+}
+
+/* Light mode for download modal */
+[data-theme="light"] .download-modal-overlay {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* ==========================================
+   SHARE MODAL
+   ========================================== */
+.share-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(10, 10, 10, 0.9);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    animation: shareModalFadeIn 0.2s ease-out;
+}
+
+@keyframes shareModalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.share-modal {
+    background-color: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 360px;
+    width: 100%;
+    animation: shareModalSlideUp 0.2s ease-out;
+}
+
+@keyframes shareModalSlideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.share-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--border);
+}
+
+.share-modal-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.share-modal-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: var(--space-1);
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.share-modal-close:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.share-modal-body {
+    padding: var(--space-4);
+}
+
+/* Episode preview in share modal */
+.share-modal-preview {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-3);
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-4);
+}
+
+.share-modal-cover {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--background);
+}
+
+.share-modal-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.share-modal-cover-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    font-size: 1.2rem;
+}
+
+.share-modal-episode-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.share-modal-episode-info h4 {
+    margin: 0 0 var(--space-1) 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.share-modal-episode-info p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.share-modal-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+}
+
+.share-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.share-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.share-btn i {
+    font-size: 1.1em;
+}
+
+.share-btn-twitter:hover {
+    border-color: #1da1f2;
+    color: #1da1f2;
+}
+
+.share-btn-facebook:hover {
+    border-color: #1877f2;
+    color: #1877f2;
+}
+
+.share-btn-whatsapp:hover {
+    border-color: #25d366;
+    color: #25d366;
+}
+
+.share-btn-email:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.share-btn-copy:hover {
+    border-color: var(--secondary);
+    color: var(--secondary);
+}
+
+.share-btn-copy {
+    grid-column: span 2;
+}
+
+/* Share button in episode actions */
+.episode-share-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: var(--space-2);
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.episode-share-btn:hover {
+    color: var(--primary);
+    background: rgba(187, 134, 252, 0.1);
+}
+
+@media (max-width: 480px) {
+    .share-modal-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .share-btn-copy {
+        grid-column: span 1;
+    }
+}
+
+/* Light mode adjustments for share modal */
+[data-theme="light"] .share-modal-overlay {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="light"] .share-modal-close:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .share-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}

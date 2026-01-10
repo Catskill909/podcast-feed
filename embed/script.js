@@ -201,6 +201,314 @@ function showLoading(show = true, message = 'Loading podcasts...') {
 }
 
 // ==========================================
+// SHARE FUNCTIONALITY
+// ==========================================
+async function shareEpisode(episode) {
+    if (!episode || !state.currentPodcast) return;
+
+    const shareData = {
+        title: episode.title,
+        text: `Listen to "${episode.title}" from ${state.currentPodcast.title}`,
+        url: episode.audioUrl
+    };
+
+    // Try native Web Share API first (works on mobile + modern desktop)
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        try {
+            await navigator.share(shareData);
+            return; // Success - no toast needed, OS handles feedback
+        } catch (err) {
+            if (err.name === 'AbortError') {
+                return; // User cancelled - no error
+            }
+            console.warn('Web Share failed, using fallback:', err.message);
+        }
+    }
+
+    // Fallback: Show share modal with options
+    showShareModal(episode);
+}
+
+function showShareModal(episode) {
+    const shareUrl = encodeURIComponent(episode.audioUrl);
+    const shareText = encodeURIComponent(`Listen to "${episode.title}" from ${state.currentPodcast.title}`);
+    const shareTitle = encodeURIComponent(episode.title);
+    const coverUrl = episode.image || state.currentPodcast?.image || '';
+
+    // Create modal HTML with episode preview
+    const modalHtml = `
+        <div class="share-modal-overlay" id="shareModalOverlay">
+            <div class="share-modal">
+                <div class="share-modal-header">
+                    <h3>Share Episode</h3>
+                    <button class="share-modal-close" id="shareModalClose">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="share-modal-body">
+                    <div class="share-modal-preview">
+                        <div class="share-modal-cover">
+                            ${coverUrl ? 
+                                `<img src="${coverUrl}" alt="${episode.title}">` :
+                                `<div class="share-modal-cover-placeholder"><i class="fa-solid fa-podcast"></i></div>`
+                            }
+                        </div>
+                        <div class="share-modal-episode-info">
+                            <h4>${episode.title}</h4>
+                            <p>${state.currentPodcast.title}</p>
+                        </div>
+                    </div>
+                    <div class="share-modal-buttons">
+                        <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" 
+                           target="_blank" class="share-btn share-btn-twitter" title="Share on X/Twitter">
+                            <i class="fa-brands fa-x-twitter"></i>
+                            <span>X / Twitter</span>
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" 
+                           target="_blank" class="share-btn share-btn-facebook" title="Share on Facebook">
+                            <i class="fa-brands fa-facebook-f"></i>
+                            <span>Facebook</span>
+                        </a>
+                        <a href="https://wa.me/?text=${shareText}%20${shareUrl}" 
+                           target="_blank" class="share-btn share-btn-whatsapp" title="Share on WhatsApp">
+                            <i class="fa-brands fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                        <a href="mailto:?subject=${shareTitle}&body=${shareText}%0A%0A${shareUrl}" 
+                           class="share-btn share-btn-email" title="Share via Email">
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>Email</span>
+                        </a>
+                        <button class="share-btn share-btn-copy" id="copyLinkBtn" title="Copy Link">
+                            <i class="fa-solid fa-link"></i>
+                            <span>Copy Link</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Remove existing modal if any
+    hideShareModal();
+
+    // Add modal to DOM
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    // Close button handler
+    document.getElementById('shareModalClose').addEventListener('click', hideShareModal);
+
+    // Copy link handler
+    document.getElementById('copyLinkBtn').addEventListener('click', () => {
+        copyToClipboard(episode.audioUrl);
+    });
+
+    // Close on overlay click
+    document.getElementById('shareModalOverlay').addEventListener('click', (e) => {
+        if (e.target.id === 'shareModalOverlay') {
+            hideShareModal();
+        }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', handleShareModalEscape);
+}
+
+function handleShareModalEscape(e) {
+    if (e.key === 'Escape') {
+        hideShareModal();
+    }
+}
+
+function hideShareModal() {
+    const modal = document.getElementById('shareModalOverlay');
+    if (modal) {
+        modal.remove();
+    }
+    document.removeEventListener('keydown', handleShareModalEscape);
+}
+
+function copyToClipboard(url) {
+    navigator.clipboard.writeText(url).then(() => {
+        hideShareModal();
+        showError('Link copied to clipboard!'); // Reusing error toast for success message
+    }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            hideShareModal();
+            showError('Link copied to clipboard!');
+        } catch (err) {
+            showError('Could not copy link');
+        }
+        document.body.removeChild(textArea);
+    });
+}
+
+// ==========================================
+// DOWNLOAD FUNCTIONALITY
+// ==========================================
+async function downloadEpisode(episode) {
+    if (!episode || !episode.audioUrl) return;
+    
+    const filename = `${episode.title}.mp3`;
+    const coverUrl = episode.image || state.currentPodcast?.image || '';
+    
+    // Show download modal with progress
+    showDownloadModal(episode.title, coverUrl);
+    
+    try {
+        const response = await fetch(episode.audioUrl, {
+            method: 'GET',
+            mode: 'cors'
+        });
+        
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+        // Get content length for progress
+        const contentLength = response.headers.get('content-length');
+        const total = contentLength ? parseInt(contentLength, 10) : 0;
+        
+        // Read the response as a stream for progress tracking
+        const reader = response.body.getReader();
+        const chunks = [];
+        let received = 0;
+        
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            chunks.push(value);
+            received += value.length;
+            
+            // Update progress
+            if (total > 0) {
+                const percent = Math.round((received / total) * 100);
+                updateDownloadProgress(percent, received, total);
+            }
+        }
+        
+        // Combine chunks into blob
+        const blob = new Blob(chunks);
+        const blobUrl = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+        
+        // Show success state briefly then close
+        showDownloadSuccess();
+        setTimeout(() => hideDownloadModal(), 1500);
+        
+    } catch (error) {
+        console.warn('Fetch download failed, using fallback:', error.message);
+        
+        // Fallback to direct link
+        const a = document.createElement('a');
+        a.href = episode.audioUrl;
+        a.download = filename;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        // Show fallback message and close
+        showDownloadFallback();
+        setTimeout(() => hideDownloadModal(), 2000);
+    }
+}
+
+function showDownloadModal(title, coverUrl) {
+    hideDownloadModal();
+    
+    const modalHtml = `
+        <div class="download-modal-overlay" id="downloadModalOverlay">
+            <div class="download-modal">
+                <div class="download-modal-content">
+                    <div class="download-modal-cover">
+                        ${coverUrl ? 
+                            `<img src="${coverUrl}" alt="Episode cover">` :
+                            `<div class="download-modal-cover-placeholder"><i class="fa-solid fa-podcast"></i></div>`
+                        }
+                    </div>
+                    <div class="download-modal-info">
+                        <h4 class="download-modal-title">${title}</h4>
+                        <div class="download-modal-status" id="downloadStatus">
+                            <i class="fa-solid fa-circle-notch fa-spin"></i>
+                            <span>Preparing download...</span>
+                        </div>
+                        <div class="download-progress-container">
+                            <div class="download-progress-bar" id="downloadProgressBar"></div>
+                        </div>
+                        <div class="download-progress-text" id="downloadProgressText">0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+function updateDownloadProgress(percent, received, total) {
+    const progressBar = document.getElementById('downloadProgressBar');
+    const progressText = document.getElementById('downloadProgressText');
+    const status = document.getElementById('downloadStatus');
+    
+    if (progressBar) progressBar.style.width = `${percent}%`;
+    if (progressText) {
+        const receivedMB = (received / (1024 * 1024)).toFixed(1);
+        const totalMB = (total / (1024 * 1024)).toFixed(1);
+        progressText.textContent = `${percent}% • ${receivedMB} / ${totalMB} MB`;
+    }
+    if (status && percent > 0) {
+        status.innerHTML = `<i class="fa-solid fa-download"></i><span>Downloading...</span>`;
+    }
+}
+
+function showDownloadSuccess() {
+    const status = document.getElementById('downloadStatus');
+    const progressBar = document.getElementById('downloadProgressBar');
+    
+    if (status) {
+        status.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>Download complete!</span>`;
+        status.classList.add('success');
+    }
+    if (progressBar) {
+        progressBar.style.width = '100%';
+        progressBar.classList.add('success');
+    }
+}
+
+function showDownloadFallback() {
+    const status = document.getElementById('downloadStatus');
+    const progressContainer = document.querySelector('.download-progress-container');
+    const progressText = document.getElementById('downloadProgressText');
+    
+    if (status) {
+        status.innerHTML = `<i class="fa-solid fa-arrow-up-right-from-square"></i><span>Opening download...</span>`;
+    }
+    if (progressContainer) progressContainer.style.display = 'none';
+    if (progressText) progressText.style.display = 'none';
+}
+
+function hideDownloadModal() {
+    const modal = document.getElementById('downloadModalOverlay');
+    if (modal) modal.remove();
+}
+
+// ==========================================
 // RSS FEED PARSING
 // ==========================================
 async function fetchWithFallback(url) {
@@ -866,6 +1174,9 @@ function createEpisodeElement(episode) {
             </div>
         </div>
         <div class="episode-actions">
+            <button class="episode-share-btn" aria-label="Share episode" title="Share">
+                <i class="fa-solid fa-share-nodes"></i>
+            </button>
             <button class="episode-download-btn" aria-label="Download episode" title="Download">
                 <i class="fa-solid fa-download"></i>
             </button>
@@ -876,18 +1187,19 @@ function createEpisodeElement(episode) {
         </div>
     `;
 
-    // Handle download button
+    // Handle share button
+    const shareBtn = div.querySelector('.episode-share-btn');
+    shareBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        shareEpisode(episode);
+    });
+
+    // Handle download button - uses Fetch + Blob with progress modal
     const downloadBtn = div.querySelector('.episode-download-btn');
-    downloadBtn.addEventListener('click', (e) => {
+    downloadBtn.addEventListener('click', async (e) => {
         e.stopPropagation();
         if (episode.audioUrl) {
-            const a = document.createElement('a');
-            a.href = episode.audioUrl;
-            a.download = `${episode.title}.mp3`;
-            a.target = '_blank';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            downloadEpisode(episode);
         }
     });
 

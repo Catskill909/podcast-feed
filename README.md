@@ -4,7 +4,19 @@ A complete podcast platform combining a modern directory browser with a full-fea
 
 ---
 
-## 🆕 Recent Updates (December 1, 2025)
+## 🆕 Recent Updates (January 10, 2026)
+
+### **📤 Episode Sharing & Download Improvements (January 10, 2026)** ✨✨✨
+- ✅ **Share Episodes**: New share button on every episode card in the player modal
+  - Mobile/modern desktop: Uses native Web Share API for seamless sharing via Messages, AirDrop, social apps
+  - Desktop fallback: Beautiful modal with Twitter/X, Facebook, WhatsApp, Email, and Copy Link buttons
+  - Share modal displays episode artwork and podcast title for context
+- ✅ **Improved Downloads**: Material Design download experience with progress tracking
+  - Progress modal shows episode artwork, status, and real-time progress bar with MB counter
+  - Uses Fetch + Blob for reliable cross-origin downloads (works with external podcast CDNs like Libsyn, Podbean, etc.)
+  - Auto-closes when complete — no double-click confirmations needed
+  - Graceful fallback to direct download if CORS is blocked
+- ✅ **Embed Player Support**: Same sharing and download features available in the embeddable player
 
 ### **🔄 Latest Episode Auto-Update System (December 1, 2025)** ✨✨✨
 - ✅ **Hybrid Update Pipeline**: Ensures latest episodes appear within 15–30 minutes without manual admin clicks

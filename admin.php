@@ -974,7 +974,37 @@ function escapeJs($text) {
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Episode Sharing & Downloads -->
+                <div class="help-section">
+                    <h3 class="help-section-title">
+                        <span class="help-section-icon">📤</span>
+                        Episode Sharing & Downloads
+                    </h3>
+                    <div class="help-section-content">
+                        <p>Share and download episodes directly from the player modal with a modern, intuitive interface.</p>
+                        
+                        <p><strong>Share Episodes:</strong></p>
+                        <ul>
+                            <li><strong>Mobile/Modern Desktop:</strong> Uses native Web Share API to open your device's share sheet (Messages, AirDrop, social apps, etc.)</li>
+                            <li><strong>Desktop Fallback:</strong> Opens a beautiful modal with buttons for Twitter/X, Facebook, WhatsApp, Email, and Copy Link</li>
+                            <li>Share modal displays episode artwork and title for context</li>
+                        </ul>
+                        
+                        <p><strong>Download Episodes:</strong></p>
+                        <ul>
+                            <li>Click the download icon on any episode to start downloading</li>
+                            <li>Material Design progress modal shows episode artwork, status, and real-time progress bar</li>
+                            <li>Uses Fetch + Blob for reliable cross-origin downloads (works with external podcast CDNs)</li>
+                            <li>Auto-closes when download completes — no confirmation clicks needed</li>
+                        </ul>
+                        
+                        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <strong>💡 Tip:</strong> The share and download features also work in the embeddable player, giving your listeners the same great experience on external sites.
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Live Streaming Player Modal -->
                 <div class="help-section">
                     <h3 class="help-section-title">
