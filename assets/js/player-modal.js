@@ -717,11 +717,8 @@ class PodcastPlayerModal {
         // The proxy sets Content-Disposition: attachment to force download
         const proxyUrl = `/api/download-proxy.php?url=${encodeURIComponent(audioUrl)}&filename=${encodeURIComponent(filename)}`;
         
-        // Update status to show we're starting the download
-        const status = document.getElementById('downloadStatus');
-        if (status) {
-            status.innerHTML = `<i class="fa-solid fa-download"></i><span>Starting download...</span>`;
-        }
+        // Show downloading state with indeterminate progress and close button
+        this.showDownloadingState();
         
         // Use an iframe to trigger the download without leaving the page
         const iframe = document.createElement('iframe');
@@ -729,17 +726,8 @@ class PodcastPlayerModal {
         iframe.src = proxyUrl;
         document.body.appendChild(iframe);
         
-        // Show success after a brief delay (proxy handles the actual download)
-        setTimeout(() => {
-            this.showDownloadSuccess();
-            setTimeout(() => {
-                this.hideDownloadModal();
-                // Clean up iframe
-                if (iframe.parentNode) {
-                    iframe.parentNode.removeChild(iframe);
-                }
-            }, 1500);
-        }, 1000);
+        // Store iframe reference for cleanup
+        this.downloadIframe = iframe;
     }
 
     /**
@@ -771,11 +759,45 @@ class PodcastPlayerModal {
                             <div class="download-progress-text" id="downloadProgressText">0%</div>
                         </div>
                     </div>
+                    <button class="download-modal-close" id="downloadModalClose" style="display: none;">
+                        <i class="fa-solid fa-xmark"></i> Close
+                    </button>
                 </div>
             </div>
         `;
         
         document.body.insertAdjacentHTML('beforeend', modalHtml);
+        
+        // Add close button handler
+        const closeBtn = document.getElementById('downloadModalClose');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.hideDownloadModal());
+        }
+    }
+
+    /**
+     * Show download started state for proxy downloads
+     */
+    showDownloadingState() {
+        const status = document.getElementById('downloadStatus');
+        const progressContainer = document.querySelector('.download-progress-container');
+        const progressText = document.getElementById('downloadProgressText');
+        const closeBtn = document.getElementById('downloadModalClose');
+        
+        if (status) {
+            status.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>Download Started</span>`;
+            status.classList.add('success');
+        }
+        if (progressContainer) {
+            progressContainer.style.display = 'none';
+        }
+        if (progressText) {
+            progressText.style.display = 'none';
+        }
+        if (closeBtn) {
+            closeBtn.style.display = 'block';
+            closeBtn.textContent = 'OK';
+        }
     }
 
     /**
