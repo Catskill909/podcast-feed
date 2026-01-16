@@ -74,27 +74,44 @@
         flex-wrap: wrap;
       }
 
-      .hero-actions a {
+      .hero-actions a,
+      .hero-actions button {
         background: var(--accent-primary);
         border: 1px solid transparent;
         border-radius: var(--border-radius-lg);
         color: #fff;
-        font-weight: 600;
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 500;
         padding: 0.85rem 1.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
+        text-transform: none !important;
+        letter-spacing: 0.05em;
         transition: all var(--transition-base);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
       }
 
-      .hero-actions a.secondary {
-        background: transparent;
-        border-color: var(--border-primary);
-        color: var(--text-secondary);
-      }
-
-      .hero-actions a:hover {
+      .hero-actions a:hover,
+      .hero-actions button:hover {
         transform: translateY(-3px);
         box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+        background: var(--accent-primary-hover);
+      }
+
+      .hero-actions a,
+      .hero-actions a:hover,
+      .hero-actions a:focus,
+      .hero-actions a:focus-visible {
+        text-decoration: none !important;
+      }
+
+      .hero-actions a i,
+      .hero-actions a:hover i,
+      .hero-actions a:focus i,
+      .hero-actions a:focus-visible i {
+        text-decoration: none !important;
       }
 
       .feature-section {
@@ -330,16 +347,16 @@
         align-items: center;
         gap: 0.75rem;
         padding: 0.875rem 1.75rem;
-        font-family: 'Inter', sans-serif;
-        font-size: 1rem;
-        font-weight: 600;
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 500;
         color: #fff;
         background: var(--accent-primary);
         border: 1px solid transparent;
         border-radius: var(--border-radius-lg);
         cursor: pointer;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
+        text-transform: none !important;
+        letter-spacing: 0.05em;
         transition: all 0.2s ease;
       }
 
@@ -690,15 +707,16 @@
           PodFeed Studio combines podcast aggregation, self-hosted management, advertising controls, custom app feeds, site customization, and analytics. This page documents the production features that are available today.
         </p>
         <div class="hero-actions">
-          <button class="gallery-button" onclick="openGallery()"><i class="fas fa-images"></i> View App Screenshots</button>
-              <a
+          <a href="https://podcast.supersoul.top" target="_blank"><i class="fa-solid fa-globe"></i> Site Front</a>
+          <button class="gallery-button" onclick="openGallery()"><i class="fas fa-images"></i> Screenshots</button>
+          <a
             class="secondary"
             href="javascript:void(0)"
             role="button"
             onclick="showHelpModal()"
             aria-haspopup="dialog"
             aria-controls="helpModal"
-          ><i class="fa-solid fa-circle-question"></i> View Full Documentation</a>
+          ><i class="fa-solid fa-circle-question"></i> Documentation</a>
         </div>
       </div>
     </header>
