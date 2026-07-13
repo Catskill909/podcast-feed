@@ -48,22 +48,71 @@ if ($isLocalFeed) {
     // Fetch external feed via HTTP with cache-busting
     $separator = (strpos($feedUrl, '?') === false) ? '?' : '&';
     $cacheBustUrl = $feedUrl . $separator . '_t=' . time() . '&_nocache=1';
-    
-    $context = stream_context_create([
-        'http' => [
-            'timeout' => 10,
-            'user_agent' => 'PodFeed Builder/1.0',
-            'follow_location' => true,
-            'max_redirects' => 3,
-            'header' => "Cache-Control: no-cache, no-store, must-revalidate\r\n" .
-                       "Pragma: no-cache\r\n" .
-                       "Expires: 0\r\n"
-        ]
-    ]);
 
-    $feedContent = @file_get_contents($cacheBustUrl, false, $context);
+    $feedContent = false;
+    $lastError = '';
+    $maxAttempts = 2; // one retry absorbs transient upstream/network blips
+
+    for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+        if (function_exists('curl_init')) {
+            // Preferred path: cURL (works even when allow_url_fopen is off,
+            // and gives us the real error/status instead of a blind failure)
+            $ch = curl_init();
+            curl_setopt_array($ch, [
+                CURLOPT_URL => $cacheBustUrl,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_MAXREDIRS => 3,
+                CURLOPT_CONNECTTIMEOUT => 5,  // fail fast on dead hosts
+                CURLOPT_TIMEOUT => 15,        // allow slow-but-alive sources
+                CURLOPT_USERAGENT => 'PodFeed Builder/1.0',
+                CURLOPT_HTTPHEADER => [
+                    'Cache-Control: no-cache, no-store, must-revalidate',
+                    'Pragma: no-cache',
+                    'Expires: 0',
+                ],
+            ]);
+            $response = curl_exec($ch);
+            $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlErr = curl_error($ch);
+            // Note: curl_close() intentionally omitted — it's a no-op since PHP 8.0
+            // (the handle is freed when $ch goes out of scope) and deprecated in 8.5.
+
+            if ($response !== false && $response !== '' && $httpCode >= 200 && $httpCode < 300) {
+                $feedContent = $response;
+                break;
+            }
+            $lastError = $curlErr !== '' ? $curlErr : ('HTTP ' . $httpCode);
+        } else {
+            // Fallback for hosts without the cURL extension (unchanged behavior)
+            $context = stream_context_create([
+                'http' => [
+                    'timeout' => 15,
+                    'user_agent' => 'PodFeed Builder/1.0',
+                    'follow_location' => true,
+                    'max_redirects' => 3,
+                    'header' => "Cache-Control: no-cache, no-store, must-revalidate\r\n" .
+                               "Pragma: no-cache\r\n" .
+                               "Expires: 0\r\n"
+                ]
+            ]);
+            $response = @file_get_contents($cacheBustUrl, false, $context);
+            if ($response !== false && $response !== '') {
+                $feedContent = $response;
+                break;
+            }
+            $lastError = 'file_get_contents failed';
+        }
+
+        // Brief pause before retrying (only if another attempt remains)
+        if ($attempt < $maxAttempts) {
+            usleep(300000); // 0.3s
+        }
+    }
 
     if ($feedContent === false) {
+        // Record which feed failed and why, so recurrences can be diagnosed
+        error_log('fetch-feed.php: failed for ' . $feedUrl . ' after ' . $maxAttempts . ' attempts: ' . $lastError);
         http_response_code(502);
         echo '<?xml version="1.0"?><error>Failed to fetch feed from source</error>';
         exit;
