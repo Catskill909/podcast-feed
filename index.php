@@ -335,7 +335,7 @@ try {
     <!-- Scripts -->
     <script src="assets/js/auto-refresh.js"></script>
     <script src="assets/js/browse.js?v=3.0.2"></script>
-    <script src="assets/js/player-modal.js?v=3.0.2"></script>
+    <script src="assets/js/player-modal.js?v=3.0.3"></script>
     <script src="assets/js/audio-player.js?v=3.0.5"></script>
     <script src="assets/js/analytics-tracker.js?v=1.0.0"></script>
     <script src="assets/js/streaming-modal.js?v=1.0.0"></script>

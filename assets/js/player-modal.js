@@ -346,7 +346,12 @@ class PodcastPlayerModal {
             let errorMsg = error.message;
             let errorTitle = 'Failed to load episodes';
             
-            if (error.message.includes('empty response')) {
+            if (error.message.includes('HTTP 502') || error.message.includes('HTTP 503') || error.message.includes('HTTP 504')) {
+                // Source feed host is unreachable/down (e.g. station archive offline).
+                // Not a problem with our server or the user's connection.
+                errorTitle = 'Feed Temporarily Unavailable';
+                errorMsg = "This station's archive isn't responding right now — it may be down for maintenance. Please try again later.";
+            } else if (error.message.includes('empty response')) {
                 errorTitle = 'Feed Loading Timeout';
                 errorMsg = 'The podcast feed is taking too long to respond. This feed may be slow or temporarily unavailable.';
             } else if (error.message.includes('invalid response')) {
