@@ -113,7 +113,7 @@ if (isset($_GET['edit'])) {
  * Escape string for use in JavaScript (onclick attributes, etc.)
  * Handles quotes, apostrophes, backslashes, and newlines
  */
-function escapeJs($text) {
+function escapeJs(?string $text): string {
     if (empty($text)) return '';
     return str_replace(
         ['\\', "'", '"', "\n", "\r", "\t"],
