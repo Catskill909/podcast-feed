@@ -10,8 +10,8 @@ require_once __DIR__ . '/RssFeedParser.php';
  */
 class PodcastManager
 {
-    private $xmlHandler;
-    private $imageUploader;
+    private XMLHandler $xmlHandler;
+    private ImageUploader $imageUploader;
 
     public function __construct()
     {
@@ -22,7 +22,7 @@ class PodcastManager
     /**
      * Create a new podcast entry
      */
-    public function createPodcast($data, $imageFile = null)
+    public function createPodcast(array $data, ?array $imageFile = null): array
     {
         try {
             // Validate input data
@@ -103,7 +103,7 @@ class PodcastManager
     /**
      * Update existing podcast entry
      */
-    public function updatePodcast($id, $data, $imageFile = null)
+    public function updatePodcast(string $id, array $data, ?array $imageFile = null): array
     {
         try {
             // Check if podcast exists
@@ -162,7 +162,7 @@ class PodcastManager
      * Update podcast metadata only (episode date, count)
      * Used by automated scanner - no validation of title/url
      */
-    public function updatePodcastMetadata($id, $metadata)
+    public function updatePodcastMetadata(string $id, array $metadata): array
     {
         try {
             // Check if podcast exists
@@ -202,7 +202,7 @@ class PodcastManager
     /**
      * Delete podcast entry
      */
-    public function deletePodcast($id)
+    public function deletePodcast(string $id): array
     {
         try {
             // Check if this is a self-hosted podcast
@@ -247,7 +247,7 @@ class PodcastManager
     /**
      * Update podcast status
      */
-    public function updatePodcastStatus($id, $status)
+    public function updatePodcastStatus(string $id, string $status): array
     {
         try {
             // Check if this is a self-hosted podcast
@@ -302,7 +302,7 @@ class PodcastManager
     /**
      * Get single podcast by ID
      */
-    public function getPodcast($id)
+    public function getPodcast(string $id): ?array
     {
         try {
             // First try RSS podcasts
@@ -428,7 +428,7 @@ class PodcastManager
     /**
      * Search podcasts
      */
-    public function searchPodcasts($query)
+    public function searchPodcasts(string $query): array
     {
         try {
             $allPodcasts = $this->getAllPodcasts();
@@ -521,7 +521,7 @@ class PodcastManager
     /**
      * Validate podcast data
      */
-    private function validatePodcastData($data, $excludeId = null)
+    private function validatePodcastData(array $data, ?string $excludeId = null): array
     {
         // Check required fields
         if (empty($data['title'])) {
@@ -563,7 +563,7 @@ class PodcastManager
     /**
      * Rename image file after podcast creation
      */
-    private function renameImageFile($oldFilename, $newPodcastId)
+    private function renameImageFile(string $oldFilename, string $newPodcastId): string
     {
         $oldPath = COVERS_DIR . '/' . $oldFilename;
         
@@ -584,7 +584,7 @@ class PodcastManager
     /**
      * Log operations
      */
-    private function logOperation($operation, $podcastId, $title)
+    private function logOperation(string $operation, string $podcastId, string $title): void
     {
         $logFile = LOGS_DIR . '/operations.log';
         $timestamp = date('Y-m-d H:i:s');
@@ -596,7 +596,7 @@ class PodcastManager
     /**
      * Log errors
      */
-    private function logError($operation, $message)
+    private function logError(string $operation, string $message): void
     {
         $logFile = LOGS_DIR . '/error.log';
         $timestamp = date('Y-m-d H:i:s');
