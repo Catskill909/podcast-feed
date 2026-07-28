@@ -837,6 +837,12 @@ function logout() {
 }
 
 // RSS Import Modal Functions
+
+// Resolver for the pending "feed has warnings" prompt. Held so that closing the
+// modal mid-prompt can settle the promise instead of leaving fetchRssFeedData()
+// awaiting forever (which would also skip its finally block).
+let pendingRssValidationResolve = null;
+
 function showImportRssModal() {
     const modal = document.getElementById('importRssModal');
     if (modal) {
@@ -861,17 +867,48 @@ function hideImportRssModal() {
 }
 
 function resetRssImportModal() {
+    // Settle any outstanding "continue with warnings?" prompt so the awaiting
+    // fetchRssFeedData() unwinds and runs its finally block.
+    if (pendingRssValidationResolve) {
+        const resolvePending = pendingRssValidationResolve;
+        pendingRssValidationResolve = null;
+        resolvePending(false);
+    }
+
     // Reset to step 1
     document.getElementById('rssImportStep1').style.display = 'block';
     document.getElementById('rssImportStep2').style.display = 'none';
     document.getElementById('rssImportError').style.display = 'none';
     document.getElementById('rssImportLoading').style.display = 'none';
-    
-    // Reset buttons
-    document.getElementById('rssFetchButton').style.display = 'inline-block';
-    document.getElementById('rssImportButton').style.display = 'none';
+
+    // Clear the validation panel. It holds the error / warning / success result
+    // from the previous run, so it must be emptied as well as hidden - otherwise
+    // the stale result reappears the next time the modal is opened.
+    const validationPanel = document.getElementById('rssValidationPanel');
+    if (validationPanel) {
+        validationPanel.style.display = 'none';
+        validationPanel.innerHTML = '';
+    }
+
+    // Clear the inline error text
+    const errorMessage = document.getElementById('rssImportErrorMessage');
+    if (errorMessage) {
+        errorMessage.textContent = '';
+    }
+
+    // Reset buttons, including any disabled / in-progress state left by a
+    // previous attempt
+    const fetchButton = document.getElementById('rssFetchButton');
+    fetchButton.style.display = 'inline-block';
+    fetchButton.disabled = false;
+
+    const importButton = document.getElementById('rssImportButton');
+    importButton.style.display = 'none';
+    importButton.disabled = false;
+    importButton.innerHTML = '<i class="fa-solid fa-check"></i> Import Podcast';
+
     document.getElementById('rssBackButton').style.display = 'none';
-    
+
     // Clear inputs
     document.getElementById('rssFeedUrlInput').value = '';
     document.getElementById('rssTitle').value = '';
@@ -1037,16 +1074,23 @@ function showValidationWarnings(validation) {
         `;
         panel.style.display = 'block';
         
+        // Track the resolver so closing the modal can settle this prompt
+        pendingRssValidationResolve = resolve;
+
         // Set up global callbacks
         window.cancelRssValidation = () => {
+            pendingRssValidationResolve = null;
             panel.style.display = 'none';
+            panel.innerHTML = '';
             document.getElementById('rssImportLoading').style.display = 'none';
             document.getElementById('rssFetchButton').disabled = false;
             resolve(false);
         };
-        
+
         window.continueRssImportWithWarnings = () => {
+            pendingRssValidationResolve = null;
             panel.style.display = 'none';
+            panel.innerHTML = '';
             resolve(true);
         };
     });
