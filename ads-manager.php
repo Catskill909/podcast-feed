@@ -82,7 +82,6 @@ $settings = $manager->getSettings();
                         </div>
                     <?php else: ?>
                         <?php 
-                        $enabledWebAds = array_filter($webAds, function($ad) { return $ad['enabled']; });
                         $firstEnabled = true;
                         foreach ($webAds as $ad): 
                             $isEnabled = $ad['enabled'];
@@ -250,7 +249,7 @@ $settings = $manager->getSettings();
 
             <!-- Phone Ads Section -->
             <?php 
-            $phoneAds = array_filter($mobileAds, function($ad) { 
+            $phoneAds = array_filter($mobileAds, function(array $ad) { 
                 return $ad['dimensions'] === '320x50'; 
             });
             ?>
@@ -315,7 +314,7 @@ $settings = $manager->getSettings();
 
             <!-- Tablet Ads Section -->
             <?php 
-            $tabletAds = array_filter($mobileAds, function($ad) { 
+            $tabletAds = array_filter($mobileAds, function(array $ad) { 
                 return $ad['dimensions'] === '728x90'; 
             });
             ?>

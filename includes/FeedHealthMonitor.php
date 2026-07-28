@@ -7,8 +7,8 @@ require_once __DIR__ . '/../config/config.php';
  */
 class FeedHealthMonitor
 {
-    private $xmlHandler;
-    private $errorLogFile;
+    private XMLHandler $xmlHandler;
+    private string $errorLogFile;
     
     // Health status thresholds
     const THRESHOLD_WARNING_FAILURES = 2;
@@ -54,7 +54,7 @@ class FeedHealthMonitor
     /**
      * Record a successful feed check
      */
-    public function recordSuccess($podcastId, $responseTime = 0)
+    public function recordSuccess(string $podcastId, int|float $responseTime = 0)
     {
         try {
             $podcast = $this->xmlHandler->getPodcast($podcastId);
@@ -101,7 +101,7 @@ class FeedHealthMonitor
     /**
      * Record a failed feed check
      */
-    public function recordFailure($podcastId, $errorMessage, $errorType = 'unknown', $httpCode = 0, $responseTime = 0)
+    public function recordFailure(string $podcastId, string $errorMessage, string $errorType = 'unknown', int $httpCode = 0, int|float $responseTime = 0)
     {
         try {
             $podcast = $this->xmlHandler->getPodcast($podcastId);
@@ -157,7 +157,7 @@ class FeedHealthMonitor
     /**
      * Update health status based on current metrics
      */
-    public function updateHealthStatus($podcastId)
+    public function updateHealthStatus(string $podcastId)
     {
         try {
             $podcast = $this->xmlHandler->getPodcast($podcastId);
@@ -219,7 +219,7 @@ class FeedHealthMonitor
     /**
      * Log error to error history file
      */
-    private function logError($podcastId, $errorMessage, $errorType, $httpCode, $responseTime)
+    private function logError(string $podcastId, string $errorMessage, string $errorType, int $httpCode, int|float $responseTime)
     {
         try {
             $xml = new DOMDocument('1.0', 'UTF-8');
@@ -230,6 +230,7 @@ class FeedHealthMonitor
             
             // Find or create feed element
             $feedElement = null;
+            /** @var DOMElement $feed */
             foreach ($root->getElementsByTagName('feed') as $feed) {
                 if ($feed->getAttribute('id') === $podcastId) {
                     $feedElement = $feed;
@@ -284,7 +285,7 @@ class FeedHealthMonitor
     /**
      * Get error history for a podcast
      */
-    public function getErrorHistory($podcastId, $limit = 10)
+    public function getErrorHistory(string $podcastId, int $limit = 10)
     {
         try {
             if (!file_exists($this->errorLogFile)) {
@@ -295,11 +296,13 @@ class FeedHealthMonitor
             $xml->load($this->errorLogFile);
             
             $errors = [];
+            /** @var DOMElement $feed */
             foreach ($xml->getElementsByTagName('feed') as $feed) {
                 if ($feed->getAttribute('id') === $podcastId) {
                     $errorElements = $feed->getElementsByTagName('error');
                     $count = 0;
                     
+                    /** @var DOMElement $error */
                     foreach ($errorElements as $error) {
                         if ($count >= $limit) break;
                         
@@ -328,7 +331,7 @@ class FeedHealthMonitor
     /**
      * Manually reactivate a feed (clears auto-disabled flag)
      */
-    public function reactivateFeed($podcastId)
+    public function reactivateFeed(string $podcastId)
     {
         try {
             $updateData = [
@@ -358,7 +361,7 @@ class FeedHealthMonitor
     /**
      * Reset error counters for a feed
      */
-    public function resetErrors($podcastId)
+    public function resetErrors(string $podcastId)
     {
         try {
             $updateData = [
@@ -435,7 +438,7 @@ class FeedHealthMonitor
     /**
      * Get health badge HTML for display
      */
-    public function getHealthBadge($podcast)
+    public function getHealthBadge(array $podcast)
     {
         $healthStatus = $podcast['health_status'] ?? 'healthy';
         $consecutiveFailures = (int)($podcast['consecutive_failures'] ?? 0);

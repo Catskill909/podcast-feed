@@ -21,15 +21,15 @@ require_once __DIR__ . '/ImageUploader.php';
 
 class PodcastFeedCloner
 {
-    private $validator;
-    private $parser;
-    private $selfHostedManager;
-    private $audioDownloader;
-    private $imageUploader;
-    private $progressFile;
-    private $jobId;
+    private RssImportValidator $validator;
+    private RssFeedParser $parser;
+    private SelfHostedPodcastManager $selfHostedManager;
+    private PodcastAudioDownloader $audioDownloader;
+    private ImageUploader $imageUploader;
+    private string $progressFile;
+    private string $jobId;
 
-    public function __construct($jobId = null)
+    public function __construct(?string $jobId = null)
     {
         $this->validator = new RssImportValidator();
         $this->parser = new RssFeedParser();
@@ -44,7 +44,7 @@ class PodcastFeedCloner
     /**
      * Validate feed for cloning
      */
-    public function validateFeedForCloning($feedUrl)
+    public function validateFeedForCloning(string $feedUrl)
     {
         try {
             // Use existing validator (same as RSS import)
@@ -95,7 +95,7 @@ class PodcastFeedCloner
     /**
      * Estimate storage requirements
      */
-    private function estimateStorageRequirements($feedData)
+    private function estimateStorageRequirements(array $feedData)
     {
         $episodeCount = 0;
         $totalSize = 0;
@@ -141,7 +141,7 @@ class PodcastFeedCloner
     /**
      * Clone feed - Main orchestration method
      */
-    public function cloneFeed($feedUrl, $options = [])
+    public function cloneFeed(string $feedUrl, array $options = [])
     {
         try {
             // Initialize progress
@@ -242,7 +242,7 @@ class PodcastFeedCloner
     /**
      * Create podcast in My Podcasts
      */
-    private function createPodcast($feedData)
+    private function createPodcast(array $feedData)
     {
         // Download cover image to temp (optional - continue without if fails)
         $coverImageFile = null;
@@ -300,7 +300,7 @@ class PodcastFeedCloner
     /**
      * Clone all episodes
      */
-    private function cloneEpisodes($podcastId, $feedData, $options)
+    private function cloneEpisodes(string $podcastId, array $feedData, array $options)
     {
         $episodes = $feedData['episodes'] ?? [];
         $totalEpisodes = count($episodes);
@@ -437,7 +437,7 @@ class PodcastFeedCloner
     /**
      * Import to main directory (optional)
      */
-    private function importToMainDirectory($podcastId, $feedUrl, $feedData)
+    private function importToMainDirectory(string $podcastId, string $feedUrl, array $feedData)
     {
         try {
             require_once __DIR__ . '/PodcastManager.php';
@@ -483,7 +483,7 @@ class PodcastFeedCloner
     /**
      * Download image to temp location
      */
-    private function downloadImageToTemp($imageUrl)
+    private function downloadImageToTemp(?string $imageUrl)
     {
         try {
             if (empty($imageUrl)) {
@@ -510,7 +510,6 @@ class PodcastFeedCloner
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $error = curl_error($ch);
             
-            curl_close($ch);
             fclose($fp);
             
             if (!$success || $httpCode !== 200) {
@@ -543,7 +542,7 @@ class PodcastFeedCloner
     /**
      * Initialize progress tracking
      */
-    private function initializeProgress($feedUrl, $options)
+    private function initializeProgress(string $feedUrl, array $options)
     {
         $progress = [
             'job_id' => $this->jobId,
@@ -562,7 +561,7 @@ class PodcastFeedCloner
     /**
      * Update progress
      */
-    public function updateProgress($data)
+    public function updateProgress(array $data)
     {
         $current = $this->getProgress();
         
@@ -599,7 +598,7 @@ class PodcastFeedCloner
     /**
      * Format file size
      */
-    private function formatFileSize($bytes)
+    private function formatFileSize(int|float $bytes)
     {
         $units = ['B', 'KB', 'MB', 'GB'];
         $bytes = max($bytes, 0);

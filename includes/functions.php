@@ -10,7 +10,7 @@ require_once __DIR__ . '/../config/config.php';
 /**
  * Sanitize input data
  */
-function sanitizeInput($data)
+function sanitizeInput(mixed $data)
 {
     if (is_array($data)) {
         return array_map('sanitizeInput', $data);
@@ -26,7 +26,7 @@ function sanitizeInput($data)
 /**
  * Validate URL format
  */
-function isValidUrl($url)
+function isValidUrl(?string $url)
 {
     return filter_var($url, FILTER_VALIDATE_URL) !== false;
 }
@@ -34,7 +34,7 @@ function isValidUrl($url)
 /**
  * Validate RSS feed URL (basic check)
  */
-function isValidRSSUrl($url)
+function isValidRSSUrl(?string $url)
 {
     if (!isValidUrl($url)) {
         return false;
@@ -48,7 +48,7 @@ function isValidRSSUrl($url)
 /**
  * Format file size for display
  */
-function formatFileSize($bytes)
+function formatFileSize(int|float $bytes)
 {
     $units = ['B', 'KB', 'MB', 'GB'];
     $bytes = max($bytes, 0);
@@ -63,7 +63,7 @@ function formatFileSize($bytes)
 /**
  * Generate unique ID
  */
-function generateUniqueId($prefix = '')
+function generateUniqueId(string $prefix = '')
 {
     return $prefix . time() . '_' . uniqid();
 }
@@ -71,7 +71,7 @@ function generateUniqueId($prefix = '')
 /**
  * Log message to file
  */
-function logMessage($message, $level = 'INFO', $logFile = null)
+function logMessage(string $message, string $level = 'INFO', ?string $logFile = null)
 {
     if ($logFile === null) {
         $logFile = LOGS_DIR . '/app.log';
@@ -86,7 +86,7 @@ function logMessage($message, $level = 'INFO', $logFile = null)
 /**
  * Create directory if it doesn't exist
  */
-function ensureDirectoryExists($path, $permissions = 0755)
+function ensureDirectoryExists(string $path, int $permissions = 0755)
 {
     if (!is_dir($path)) {
         return mkdir($path, $permissions, true);
@@ -124,7 +124,7 @@ function getClientIP()
 /**
  * Rate limiting check
  */
-function checkRateLimit($key, $maxRequests = 10, $timeWindow = 60)
+function checkRateLimit(string $key, int $maxRequests = 10, int $timeWindow = 60)
 {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
@@ -140,7 +140,7 @@ function checkRateLimit($key, $maxRequests = 10, $timeWindow = 60)
     // Clean old requests outside time window
     $_SESSION[$rateLimitKey] = array_filter(
         $_SESSION[$rateLimitKey],
-        function ($timestamp) use ($currentTime, $timeWindow) {
+        function (int $timestamp) use ($currentTime, $timeWindow) {
             return ($currentTime - $timestamp) < $timeWindow;
         }
     );
@@ -159,7 +159,7 @@ function checkRateLimit($key, $maxRequests = 10, $timeWindow = 60)
 /**
  * Send JSON response
  */
-function sendJsonResponse($data, $statusCode = 200)
+function sendJsonResponse(mixed $data, int $statusCode = 200)
 {
     http_response_code($statusCode);
     header('Content-Type: application/json');
@@ -170,7 +170,7 @@ function sendJsonResponse($data, $statusCode = 200)
 /**
  * Redirect with message
  */
-function redirectWithMessage($url, $message, $type = 'info')
+function redirectWithMessage(string $url, string $message, string $type = 'info')
 {
     $params = [
         'message' => urlencode($message),
@@ -201,9 +201,9 @@ function getUrlMessage()
 /**
  * Escape data for HTML output
  */
-function e($data)
+function e(?string $data)
 {
-    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars((string) $data, ENT_QUOTES, 'UTF-8');
 }
 
 /**
@@ -232,7 +232,7 @@ function getCurrentUrl()
 /**
  * Generate slug from string
  */
-function generateSlug($string)
+function generateSlug(?string $string)
 {
     $slug = strtolower(trim($string));
     $slug = preg_replace('/[^a-z0-9-]/', '-', $slug);
@@ -246,11 +246,11 @@ function generateSlug($string)
  * Validate image dimensions from file
  */
 function validateImageDimensions(
-    $filePath,
-    $minWidth = MIN_IMAGE_WIDTH,
-    $minHeight = MIN_IMAGE_HEIGHT,
-    $maxWidth = MAX_IMAGE_WIDTH,
-    $maxHeight = MAX_IMAGE_HEIGHT
+    string $filePath,
+    int $minWidth = MIN_IMAGE_WIDTH,
+    int $minHeight = MIN_IMAGE_HEIGHT,
+    int $maxWidth = MAX_IMAGE_WIDTH,
+    int $maxHeight = MAX_IMAGE_HEIGHT
 ) {
     $imageInfo = getimagesize($filePath);
 
@@ -292,7 +292,7 @@ function validateImageDimensions(
 /**
  * Clean old backup files
  */
-function cleanupOldBackups($directory, $maxFiles = 10)
+function cleanupOldBackups(string $directory, int $maxFiles = 10)
 {
     if (!is_dir($directory)) {
         return 0;
@@ -304,7 +304,7 @@ function cleanupOldBackups($directory, $maxFiles = 10)
     }
 
     // Sort by modification time, oldest first
-    usort($files, function ($a, $b) {
+    usort($files, function (string $a, string $b) {
         return filemtime($a) - filemtime($b);
     });
 

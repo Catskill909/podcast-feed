@@ -25,7 +25,7 @@ class RssImportValidator
     const RESPONSE_TIME_WARNING = 5;
     
     // Timeout for validation checks (shorter than main fetch)
-    private $validationTimeout = 8;
+    private int $validationTimeout = 8;
     
     /**
      * Main validation method - validates RSS feed comprehensively
@@ -40,7 +40,7 @@ class RssImportValidator
      *   - validation_errors: array (blocking errors)
      *   - validation_warnings: array (non-blocking warnings)
      */
-    public function validateFeedForImport($feedUrlToValidate)
+    public function validateFeedForImport(string $feedUrlToValidate): array
     {
         $validationResults = [
             'can_import' => false,
@@ -202,7 +202,7 @@ class RssImportValidator
     /**
      * Check URL format validity
      */
-    private function checkUrlFormat($urlToCheck)
+    private function checkUrlFormat(string $urlToCheck): array
     {
         $isValidFormat = filter_var($urlToCheck, FILTER_VALIDATE_URL) !== false;
         
@@ -218,7 +218,7 @@ class RssImportValidator
     /**
      * Check feed accessibility (HTTP status)
      */
-    private function checkFeedAccessibility($urlToCheck)
+    private function checkFeedAccessibility(string $urlToCheck): array
     {
         $ch = curl_init();
         curl_setopt_array($ch, [
@@ -236,7 +236,6 @@ class RssImportValidator
         curl_exec($ch);
         $httpStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curlErrorMsg = curl_error($ch);
-        curl_close($ch);
         
         $isAccessible = ($httpStatusCode === 200);
         
@@ -252,7 +251,7 @@ class RssImportValidator
     /**
      * Fetch feed content for validation (separate from main parser)
      */
-    private function fetchFeedForValidation($urlToFetch)
+    private function fetchFeedForValidation(string $urlToFetch): string|false
     {
         $ch = curl_init();
         curl_setopt_array($ch, [
@@ -268,7 +267,6 @@ class RssImportValidator
         
         $contentFetched = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
         
         if ($httpCode !== 200 || !$contentFetched) {
             return false;
@@ -280,7 +278,7 @@ class RssImportValidator
     /**
      * Check XML structure validity
      */
-    private function checkXmlStructure($xmlContentToCheck)
+    private function checkXmlStructure(string $xmlContentToCheck): array
     {
         libxml_use_internal_errors(true);
         libxml_clear_errors();
@@ -310,7 +308,7 @@ class RssImportValidator
     /**
      * Check required RSS fields
      */
-    private function checkRequiredRssFields($xmlToCheck)
+    private function checkRequiredRssFields(SimpleXMLElement $xmlToCheck): array
     {
         $missingFields = [];
         
@@ -346,7 +344,7 @@ class RssImportValidator
     /**
      * Check that episodes exist
      */
-    private function checkEpisodesExist($xmlToCheck)
+    private function checkEpisodesExist(SimpleXMLElement $xmlToCheck): array
     {
         $itemElements = $xmlToCheck->channel->item ?? [];
         $episodeCount = count($itemElements);
@@ -365,7 +363,7 @@ class RssImportValidator
     /**
      * Extract cover image URL from feed
      */
-    private function extractCoverImageUrl($xmlToExtractFrom)
+    private function extractCoverImageUrl(SimpleXMLElement $xmlToExtractFrom): ?string
     {
         // Try iTunes image first
         $itunesNamespaces = $xmlToExtractFrom->getNamespaces(true);
@@ -390,7 +388,7 @@ class RssImportValidator
     /**
      * Check cover image exists
      */
-    private function checkCoverImageExists($imageUrlToCheck)
+    private function checkCoverImageExists(?string $imageUrlToCheck): array
     {
         if (empty($imageUrlToCheck)) {
             return [
@@ -414,7 +412,7 @@ class RssImportValidator
     /**
      * Validate cover image (accessibility, format, dimensions)
      */
-    private function checkCoverImageValidation($imageUrlToValidate)
+    private function checkCoverImageValidation(?string $imageUrlToValidate): array
     {
         if (empty($imageUrlToValidate)) {
             return [
@@ -440,7 +438,6 @@ class RssImportValidator
         curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-        curl_close($ch);
         
         if ($httpCode !== 200) {
             return [
@@ -522,7 +519,7 @@ class RssImportValidator
     /**
      * Check iTunes namespace presence (warning)
      */
-    private function checkItunesNamespace($xmlToCheck)
+    private function checkItunesNamespace(SimpleXMLElement $xmlToCheck): array
     {
         $namespaces = $xmlToCheck->getNamespaces(true);
         $hasItunes = isset($namespaces['itunes']);
@@ -540,7 +537,7 @@ class RssImportValidator
     /**
      * Check iTunes tags presence (warning)
      */
-    private function checkItunesTags($xmlToCheck)
+    private function checkItunesTags(SimpleXMLElement $xmlToCheck): array
     {
         $namespaces = $xmlToCheck->getNamespaces(true);
         if (!isset($namespaces['itunes'])) {
@@ -555,9 +552,20 @@ class RssImportValidator
         }
         
         $itunesElements = $xmlToCheck->channel->children($namespaces['itunes']);
-        $hasAuthor = !empty($itunesElements->author);
-        $hasCategory = !empty($itunesElements->category);
-        
+        $hasAuthor = isset($itunesElements->author) && trim((string) $itunesElements->author) !== '';
+
+        // itunes:category carries its value in the "text" attribute and is normally
+        // self-closing, so the element itself has no text content to test.
+        $hasCategory = false;
+        if (isset($itunesElements->category)) {
+            foreach ($itunesElements->category as $category) {
+                if (trim((string) $category->attributes()['text']) !== '') {
+                    $hasCategory = true;
+                    break;
+                }
+            }
+        }
+
         $hasRecommendedTags = ($hasAuthor && $hasCategory);
         
         return [
@@ -573,7 +581,7 @@ class RssImportValidator
     /**
      * Check image size recommendation (warning)
      */
-    private function checkImageSizeRecommendation($dimensionsToCheck)
+    private function checkImageSizeRecommendation(array $dimensionsToCheck): array
     {
         $width = $dimensionsToCheck['width'];
         $height = $dimensionsToCheck['height'];
@@ -593,7 +601,7 @@ class RssImportValidator
     /**
      * Check response time (warning)
      */
-    private function checkResponseTime($timeInSeconds)
+    private function checkResponseTime(float $timeInSeconds): array
     {
         $isFastEnough = ($timeInSeconds < self::RESPONSE_TIME_WARNING);
         
@@ -610,7 +618,7 @@ class RssImportValidator
     /**
      * Check item pubDate presence (warning)
      */
-    private function checkItemPubDates($xmlToCheck)
+    private function checkItemPubDates(SimpleXMLElement $xmlToCheck): array
     {
         $items = $xmlToCheck->channel->item ?? [];
         if (count($items) === 0) {
@@ -646,7 +654,7 @@ class RssImportValidator
     /**
      * Extract feed metadata for display
      */
-    private function extractFeedMetadataForValidation($xmlToExtract, $imageUrl, $episodesCheck)
+    private function extractFeedMetadataForValidation(SimpleXMLElement $xmlToExtract, ?string $imageUrl, array $episodesCheck): array
     {
         $channel = $xmlToExtract->channel;
         

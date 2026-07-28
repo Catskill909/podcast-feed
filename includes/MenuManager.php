@@ -11,9 +11,9 @@ require_once __DIR__ . '/../config/config.php';
 
 class MenuManager
 {
-    private $xmlHandler;
-    private $uploadsDir;
-    private $uploadsUrl;
+    private MenuXMLHandler $xmlHandler;
+    private string $uploadsDir;
+    private string $uploadsUrl;
 
     public function __construct()
     {
@@ -33,7 +33,7 @@ class MenuManager
     /**
      * Save site branding configuration
      */
-    public function saveBranding($data, $logoFile = null)
+    public function saveBranding(array $data, ?array $logoFile = null)
     {
         // Validate required fields
         if (empty($data['site_title'])) {
@@ -68,12 +68,12 @@ class MenuManager
     /**
      * Get all menu items
      */
-    public function getMenuItems($activeOnly = false)
+    public function getMenuItems(bool $activeOnly = false)
     {
         $items = $this->xmlHandler->getItems();
 
         if ($activeOnly) {
-            $items = array_filter($items, function ($item) {
+            $items = array_filter($items, function (array $item) {
                 return $item['active'] == 1;
             });
             // Reset array keys after filtering
@@ -86,7 +86,7 @@ class MenuManager
     /**
      * Get single menu item
      */
-    public function getMenuItem($id)
+    public function getMenuItem(string $id)
     {
         return $this->xmlHandler->getItem($id);
     }
@@ -94,7 +94,7 @@ class MenuManager
     /**
      * Add new menu item
      */
-    public function addMenuItem($data, $iconFile = null)
+    public function addMenuItem(array $data, ?array $iconFile = null)
     {
         // Validate
         $validation = $this->validateMenuItem($data);
@@ -133,7 +133,7 @@ class MenuManager
     /**
      * Update existing menu item
      */
-    public function updateMenuItem($id, $data, $iconFile = null)
+    public function updateMenuItem(string $id, array $data, ?array $iconFile = null)
     {
         // Validate
         $validation = $this->validateMenuItem($data);
@@ -175,7 +175,7 @@ class MenuManager
     /**
      * Delete menu item
      */
-    public function deleteMenuItem($id)
+    public function deleteMenuItem(string $id)
     {
         $success = $this->xmlHandler->deleteItem($id);
 
@@ -188,7 +188,7 @@ class MenuManager
     /**
      * Reorder menu items
      */
-    public function reorderMenuItems($order)
+    public function reorderMenuItems(array $order)
     {
         $success = $this->xmlHandler->reorderItems($order);
 
@@ -201,7 +201,7 @@ class MenuManager
     /**
      * Toggle menu item active state
      */
-    public function toggleMenuItem($id, $active)
+    public function toggleMenuItem(string $id, bool $active)
     {
         $success = $this->xmlHandler->toggleItem($id, $active);
 
@@ -214,7 +214,7 @@ class MenuManager
     /**
      * Validate menu item data
      */
-    public function validateMenuItem($data)
+    public function validateMenuItem(array $data)
     {
         // Required fields
         if (empty($data['label'])) {
@@ -276,7 +276,7 @@ class MenuManager
     /**
      * Validate URL format
      */
-    private function isValidUrl($url)
+    private function isValidUrl(string $url)
     {
         // Allow relative URLs
         if (strpos($url, '/') === 0 || strpos($url, './') === 0) {
@@ -309,7 +309,7 @@ class MenuManager
     /**
      * Validate Font Awesome icon format
      */
-    private function isValidFontAwesomeIcon($icon)
+    private function isValidFontAwesomeIcon(string $icon)
     {
         // Must start with fa- and contain only lowercase letters, numbers, and hyphens
         return preg_match('/^fa-[a-z0-9-]+$/', $icon) === 1;
@@ -318,7 +318,7 @@ class MenuManager
     /**
      * Upload logo image
      */
-    private function uploadLogoImage($file)
+    private function uploadLogoImage(array $file)
     {
         return $this->uploadImage($file, 'logo');
     }
@@ -326,7 +326,7 @@ class MenuManager
     /**
      * Upload icon image
      */
-    private function uploadIconImage($file)
+    private function uploadIconImage(array $file)
     {
         return $this->uploadImage($file, 'icon');
     }
@@ -334,13 +334,12 @@ class MenuManager
     /**
      * Upload image (logo or icon)
      */
-    private function uploadImage($file, $type = 'logo')
+    private function uploadImage(array $file, string $type = 'logo')
     {
         // Validate file type
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $file['tmp_name']);
-        finfo_close($finfo);
 
         if (!in_array($mimeType, $allowedTypes)) {
             return [

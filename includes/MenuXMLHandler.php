@@ -7,8 +7,8 @@
  */
 
 class MenuXMLHandler {
-    private $xmlFile;
-    private $uploadsDir;
+    private string $xmlFile;
+    private string $uploadsDir;
 
     public function __construct() {
         $this->xmlFile = __DIR__ . '/../data/menu-config.xml';
@@ -38,7 +38,7 @@ class MenuXMLHandler {
     /**
      * Save site branding configuration
      */
-    public function saveBranding($data) {
+    public function saveBranding(array $data) {
         $xml = simplexml_load_file($this->xmlFile);
         
         if (!isset($xml->branding)) {
@@ -78,7 +78,7 @@ class MenuXMLHandler {
         }
 
         // Sort by order
-        usort($items, function($a, $b) {
+        usort($items, function(array $a, array $b) {
             return $a['order'] - $b['order'];
         });
 
@@ -88,7 +88,7 @@ class MenuXMLHandler {
     /**
      * Get single menu item by ID
      */
-    public function getItem($id) {
+    public function getItem(string $id) {
         $items = $this->getItems();
         foreach ($items as $item) {
             if ($item['id'] === $id) {
@@ -101,7 +101,7 @@ class MenuXMLHandler {
     /**
      * Add new menu item
      */
-    public function addItem($data) {
+    public function addItem(array $data) {
         $xml = simplexml_load_file($this->xmlFile);
 
         if (!isset($xml->items)) {
@@ -124,7 +124,7 @@ class MenuXMLHandler {
     /**
      * Update existing menu item
      */
-    public function updateItem($id, $data) {
+    public function updateItem(string $id, array $data) {
         $xml = simplexml_load_file($this->xmlFile);
 
         if (!isset($xml->items) || !isset($xml->items->item)) {
@@ -150,7 +150,7 @@ class MenuXMLHandler {
     /**
      * Delete menu item
      */
-    public function deleteItem($id) {
+    public function deleteItem(string $id) {
         $xml = simplexml_load_file($this->xmlFile);
 
         if (!isset($xml->items) || !isset($xml->items->item)) {
@@ -180,7 +180,7 @@ class MenuXMLHandler {
     /**
      * Reorder menu items
      */
-    public function reorderItems($order) {
+    public function reorderItems(array $order) {
         $xml = simplexml_load_file($this->xmlFile);
 
         if (!isset($xml->items) || !isset($xml->items->item)) {
@@ -202,7 +202,7 @@ class MenuXMLHandler {
     /**
      * Toggle menu item active state
      */
-    public function toggleItem($id, $active) {
+    public function toggleItem(string $id, bool $active) {
         $xml = simplexml_load_file($this->xmlFile);
 
         if (!isset($xml->items) || !isset($xml->items->item)) {
@@ -332,7 +332,7 @@ class MenuXMLHandler {
     /**
      * Save XML to file
      */
-    private function saveXML($xml) {
+    private function saveXML(SimpleXMLElement $xml) {
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;

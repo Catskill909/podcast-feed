@@ -206,7 +206,7 @@ try {
 /**
  * Log message to file and stdout
  */
-function log_message($message) {
+function log_message(string $message) {
     global $config;
     
     $logEntry = date('[Y-m-d H:i:s] ') . $message . PHP_EOL;

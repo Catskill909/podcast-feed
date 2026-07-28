@@ -67,7 +67,7 @@ try {
 /**
  * Parse episodes from RSS feed
  */
-function parseEpisodes($feedUrl) {
+function parseEpisodes(string $feedUrl) {
     // Increase memory limit and execution time for large feeds
     ini_set('memory_limit', '256M');
     set_time_limit(60);
@@ -199,7 +199,7 @@ function parseEpisodes($feedUrl) {
 /**
  * Fetch feed content using cURL
  */
-function fetchFeedContent($url) {
+function fetchFeedContent(string $url) {
     $ch = curl_init();
     
     if ($ch === false) {
@@ -229,7 +229,6 @@ function fetchFeedContent($url) {
     $error = curl_error($ch);
     $errno = curl_errno($ch);
     
-    curl_close($ch);
     
     // Check for cURL errors
     if ($errno !== 0) {
@@ -252,7 +251,7 @@ function fetchFeedContent($url) {
 /**
  * Extract episode image from item
  */
-function extractEpisodeImage($item, $itunes) {
+function extractEpisodeImage(SimpleXMLElement $item, mixed $itunes) {
     // Try iTunes image first
     if ($itunes && isset($itunes->image)) {
         $imageUrl = (string)$itunes->image['href'];
@@ -293,33 +292,39 @@ function extractEpisodeImage($item, $itunes) {
 /**
  * Format duration from seconds or HH:MM:SS to readable format
  */
-function formatDuration($duration) {
-    // If already formatted (HH:MM:SS or MM:SS), return as is
-    if (preg_match('/^\d{1,2}:\d{2}(:\d{2})?$/', $duration)) {
-        return $duration;
+function formatDuration(string|int|float|null $duration): ?string {
+    if ($duration === null) {
+        return null;
     }
-    
+
+    $rawDuration = (string) $duration;
+
+    // If already formatted (HH:MM:SS or MM:SS), return as is
+    if (preg_match('/^\d{1,2}:\d{2}(:\d{2})?$/', $rawDuration)) {
+        return $rawDuration;
+    }
+
     // If it's just seconds
-    if (is_numeric($duration)) {
-        $seconds = (int)$duration;
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds % 3600) / 60);
+    if (is_numeric($rawDuration)) {
+        $seconds = (int) $rawDuration;
+        $hours = intdiv($seconds, 3600);
+        $minutes = intdiv($seconds % 3600, 60);
         $secs = $seconds % 60;
-        
+
         if ($hours > 0) {
             return sprintf('%d:%02d:%02d', $hours, $minutes, $secs);
         } else {
             return sprintf('%d:%02d', $minutes, $secs);
         }
     }
-    
-    return $duration;
+
+    return $rawDuration;
 }
 
 /**
  * Format bytes to human readable size
  */
-function formatBytes($bytes) {
+function formatBytes(int|float $bytes) {
     if ($bytes >= 1073741824) {
         return number_format($bytes / 1073741824, 2) . ' GB';
     } elseif ($bytes >= 1048576) {

@@ -13,7 +13,8 @@ echo "Podcast Field Migration Script\n";
 echo "========================================\n\n";
 
 try {
-    $xmlHandler = new XMLHandler();
+    // Instantiated for its constructor side effect: ensures podcasts.xml exists
+    new XMLHandler();
     
     // Load the XML
     $xmlFile = DATA_DIR . '/podcasts.xml';
@@ -32,6 +33,7 @@ try {
     
     echo "Found " . $podcasts->length . " podcasts\n\n";
     
+    /** @var DOMElement $podcast */
     foreach ($podcasts as $podcast) {
         $id = $podcast->getAttribute('id');
         $title = $podcast->getElementsByTagName('title')->item(0)->nodeValue ?? 'Unknown';

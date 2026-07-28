@@ -6,8 +6,8 @@
 
 class AdsXMLHandler
 {
-    private $xmlFile;
-    private $xml;
+    private string $xmlFile;
+    private ?DOMDocument $xml = null;
 
     public function __construct()
     {
@@ -82,7 +82,7 @@ class AdsXMLHandler
     /**
      * Add element helper
      */
-    private function addElement($parent, $name, $value, $doc = null)
+    private function addElement(DOMNode $parent, string $name, string $value, ?DOMDocument $doc = null)
     {
         $doc = $doc ?? $this->xml;
         $element = $doc->createElement($name);
@@ -94,7 +94,7 @@ class AdsXMLHandler
     /**
      * Add web banner ad
      */
-    public function addWebAd($filename, $filepath)
+    public function addWebAd(string $filename, string $filepath)
     {
         $root = $this->xml->documentElement;
         $webAds = $root->getElementsByTagName('webads')->item(0);
@@ -121,7 +121,7 @@ class AdsXMLHandler
     /**
      * Add mobile banner ad
      */
-    public function addMobileAd($filename, $filepath, $dimensions = '320x50')
+    public function addMobileAd(string $filename, string $filepath, string $dimensions = '320x50')
     {
         $root = $this->xml->documentElement;
         $mobileAds = $root->getElementsByTagName('mobileads')->item(0);
@@ -149,10 +149,11 @@ class AdsXMLHandler
     /**
      * Get next display order
      */
-    private function getNextDisplayOrder($type)
+    private function getNextDisplayOrder(string $type)
     {
         $section = $type === 'web' ? 'webads' : 'mobileads';
         $root = $this->xml->documentElement;
+        /** @var DOMElement $adsSection */
         $adsSection = $root->getElementsByTagName($section)->item(0);
         $ads = $adsSection->getElementsByTagName('ad');
         
@@ -165,10 +166,12 @@ class AdsXMLHandler
     public function getWebAds()
     {
         $root = $this->xml->documentElement;
+        /** @var DOMElement $webAds */
         $webAds = $root->getElementsByTagName('webads')->item(0);
         $ads = $webAds->getElementsByTagName('ad');
         
         $result = [];
+        /** @var DOMElement $ad */
         foreach ($ads as $ad) {
             $clickUrlNode = $ad->getElementsByTagName('click_url')->item(0);
             // Fallback to old 'url' field for backward compatibility
@@ -189,7 +192,7 @@ class AdsXMLHandler
         }
         
         // Sort by display order
-        usort($result, function($a, $b) {
+        usort($result, function(array $a, array $b) {
             return $a['display_order'] - $b['display_order'];
         });
         
@@ -202,10 +205,12 @@ class AdsXMLHandler
     public function getMobileAds()
     {
         $root = $this->xml->documentElement;
+        /** @var DOMElement $mobileAds */
         $mobileAds = $root->getElementsByTagName('mobileads')->item(0);
         $ads = $mobileAds->getElementsByTagName('ad');
         
         $result = [];
+        /** @var DOMElement $ad */
         foreach ($ads as $ad) {
             $dimensionsNode = $ad->getElementsByTagName('dimensions')->item(0);
             $clickUrlNode = $ad->getElementsByTagName('click_url')->item(0);
@@ -229,7 +234,7 @@ class AdsXMLHandler
         }
         
         // Sort by display order
-        usort($result, function($a, $b) {
+        usort($result, function(array $a, array $b) {
             return $a['display_order'] - $b['display_order'];
         });
         
@@ -239,12 +244,14 @@ class AdsXMLHandler
     /**
      * Delete web ad
      */
-    public function deleteWebAd($id)
+    public function deleteWebAd(string $id)
     {
         $root = $this->xml->documentElement;
+        /** @var DOMElement $webAds */
         $webAds = $root->getElementsByTagName('webads')->item(0);
         $ads = $webAds->getElementsByTagName('ad');
         
+        /** @var DOMElement $ad */
         foreach ($ads as $ad) {
             $adId = $ad->getElementsByTagName('id')->item(0)->nodeValue;
             if ($adId === $id) {
@@ -261,12 +268,14 @@ class AdsXMLHandler
     /**
      * Delete mobile ad
      */
-    public function deleteMobileAd($id)
+    public function deleteMobileAd(string $id)
     {
         $root = $this->xml->documentElement;
+        /** @var DOMElement $mobileAds */
         $mobileAds = $root->getElementsByTagName('mobileads')->item(0);
         $ads = $mobileAds->getElementsByTagName('ad');
         
+        /** @var DOMElement $ad */
         foreach ($ads as $ad) {
             $adId = $ad->getElementsByTagName('id')->item(0)->nodeValue;
             if ($adId === $id) {
@@ -283,9 +292,10 @@ class AdsXMLHandler
     /**
      * Get setting value
      */
-    public function getSetting($key)
+    public function getSetting(string $key)
     {
         $root = $this->xml->documentElement;
+        /** @var DOMElement $settings */
         $settings = $root->getElementsByTagName('settings')->item(0);
         $setting = $settings->getElementsByTagName($key)->item(0);
         
@@ -295,9 +305,10 @@ class AdsXMLHandler
     /**
      * Update setting
      */
-    public function updateSetting($key, $value)
+    public function updateSetting(string $key, string $value)
     {
         $root = $this->xml->documentElement;
+        /** @var DOMElement $settings */
         $settings = $root->getElementsByTagName('settings')->item(0);
         $setting = $settings->getElementsByTagName($key)->item(0);
         
@@ -327,12 +338,14 @@ class AdsXMLHandler
     /**
      * Update display order for web ads
      */
-    public function updateWebAdsOrder($orderedIds)
+    public function updateWebAdsOrder(array $orderedIds)
     {
         $root = $this->xml->documentElement;
+        /** @var DOMElement $webAds */
         $webAds = $root->getElementsByTagName('webads')->item(0);
         $ads = $webAds->getElementsByTagName('ad');
         
+        /** @var DOMElement $ad */
         foreach ($ads as $ad) {
             $adId = $ad->getElementsByTagName('id')->item(0)->nodeValue;
             $newOrder = array_search($adId, $orderedIds);
@@ -349,12 +362,14 @@ class AdsXMLHandler
     /**
      * Update display order for mobile ads
      */
-    public function updateMobileAdsOrder($orderedIds)
+    public function updateMobileAdsOrder(array $orderedIds)
     {
         $root = $this->xml->documentElement;
+        /** @var DOMElement $mobileAds */
         $mobileAds = $root->getElementsByTagName('mobileads')->item(0);
         $ads = $mobileAds->getElementsByTagName('ad');
         
+        /** @var DOMElement $ad */
         foreach ($ads as $ad) {
             $adId = $ad->getElementsByTagName('id')->item(0)->nodeValue;
             $newOrder = array_search($adId, $orderedIds);
@@ -371,7 +386,7 @@ class AdsXMLHandler
     /**
      * Update ad URL
      */
-    public function updateAdUrl($adId, $adType, $url)
+    public function updateAdUrl(string $adId, string $adType, string $url)
     {
         $root = $this->xml->documentElement;
         $adsSection = $adType === 'web' ? 
@@ -380,6 +395,7 @@ class AdsXMLHandler
         
         $ads = $adsSection->getElementsByTagName('ad');
         
+        /** @var DOMElement $ad */
         foreach ($ads as $ad) {
             $id = $ad->getElementsByTagName('id')->item(0)->nodeValue;
             if ($id === $adId) {
@@ -400,7 +416,7 @@ class AdsXMLHandler
     /**
      * Toggle ad enabled state
      */
-    public function toggleAdEnabled($adId, $adType)
+    public function toggleAdEnabled(string $adId, string $adType)
     {
         $root = $this->xml->documentElement;
         $adsSection = $adType === 'web' ? 
@@ -409,6 +425,7 @@ class AdsXMLHandler
         
         $ads = $adsSection->getElementsByTagName('ad');
         
+        /** @var DOMElement $ad */
         foreach ($ads as $ad) {
             $id = $ad->getElementsByTagName('id')->item(0)->nodeValue;
             if ($id === $adId) {

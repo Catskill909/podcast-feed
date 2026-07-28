@@ -6,8 +6,8 @@
 
 class SelfHostedXMLHandler
 {
-    private $xmlFile;
-    private $xml;
+    private string $xmlFile;
+    private ?DOMDocument $xml = null;
 
     public function __construct()
     {
@@ -66,7 +66,7 @@ class SelfHostedXMLHandler
     /**
      * Add new podcast
      */
-    public function addPodcast($data)
+    public function addPodcast(array $data)
     {
         $root = $this->xml->documentElement;
         
@@ -121,7 +121,7 @@ class SelfHostedXMLHandler
     /**
      * Update podcast
      */
-    public function updatePodcast($id, $data)
+    public function updatePodcast(string $id, array $data)
     {
         $xpath = new DOMXPath($this->xml);
         $podcast = $xpath->query("//podcast[id='$id']")->item(0);
@@ -167,7 +167,7 @@ class SelfHostedXMLHandler
     /**
      * Delete podcast
      */
-    public function deletePodcast($id)
+    public function deletePodcast(string $id)
     {
         $xpath = new DOMXPath($this->xml);
         $podcast = $xpath->query("//podcast[id='$id']")->item(0);
@@ -185,7 +185,7 @@ class SelfHostedXMLHandler
     /**
      * Get single podcast
      */
-    public function getPodcast($id)
+    public function getPodcast(string $id)
     {
         $xpath = new DOMXPath($this->xml);
         $podcast = $xpath->query("//podcast[id='$id']")->item(0);
@@ -216,7 +216,7 @@ class SelfHostedXMLHandler
     /**
      * Add episode to podcast
      */
-    public function addEpisode($podcastId, $episodeData)
+    public function addEpisode(string $podcastId, array $episodeData)
     {
         $xpath = new DOMXPath($this->xml);
         $podcast = $xpath->query("//podcast[id='$podcastId']")->item(0);
@@ -269,7 +269,7 @@ class SelfHostedXMLHandler
     /**
      * Update episode
      */
-    public function updateEpisode($podcastId, $episodeId, $episodeData)
+    public function updateEpisode(string $podcastId, string $episodeId, array $episodeData)
     {
         $xpath = new DOMXPath($this->xml);
         $episode = $xpath->query("//podcast[id='$podcastId']/episodes/episode[id='$episodeId']")->item(0);
@@ -306,7 +306,7 @@ class SelfHostedXMLHandler
     /**
      * Delete episode
      */
-    public function deleteEpisode($podcastId, $episodeId)
+    public function deleteEpisode(string $podcastId, string $episodeId)
     {
         $xpath = new DOMXPath($this->xml);
         $episode = $xpath->query("//podcast[id='$podcastId']/episodes/episode[id='$episodeId']")->item(0);
@@ -324,7 +324,7 @@ class SelfHostedXMLHandler
     /**
      * Get all episodes for a podcast
      */
-    public function getEpisodes($podcastId)
+    public function getEpisodes(string $podcastId)
     {
         $xpath = new DOMXPath($this->xml);
         $episodes = $xpath->query("//podcast[id='$podcastId']/episodes/episode");
@@ -340,7 +340,7 @@ class SelfHostedXMLHandler
     /**
      * Helper: Add element with text content
      */
-    private function addElement($parent, $name, $value)
+    private function addElement(DOMNode $parent, string $name, ?string $value)
     {
         $element = $this->xml->createElement($name);
         $element->nodeValue = htmlspecialchars($value, ENT_XML1, 'UTF-8');
@@ -350,7 +350,7 @@ class SelfHostedXMLHandler
     /**
      * Helper: Add element with CDATA content
      */
-    private function addCDataElement($parent, $name, $value)
+    private function addCDataElement(DOMNode $parent, string $name, ?string $value)
     {
         $element = $this->xml->createElement($name);
         $cdata = $this->xml->createCDATASection($value);
@@ -361,7 +361,7 @@ class SelfHostedXMLHandler
     /**
      * Helper: Convert podcast node to array
      */
-    private function podcastNodeToArray($podcast, $xpath)
+    private function podcastNodeToArray(DOMNode $podcast, DOMXPath $xpath)
     {
         $data = [];
         
@@ -386,7 +386,7 @@ class SelfHostedXMLHandler
     /**
      * Helper: Convert episode node to array
      */
-    private function episodeNodeToArray($episode, $xpath)
+    private function episodeNodeToArray(DOMNode $episode, DOMXPath $xpath)
     {
         $data = [];
         

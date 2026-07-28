@@ -8,14 +8,14 @@ require_once __DIR__ . '/../config/config.php';
  */
 class RssFeedParser
 {
-    private $timeout = 3; // seconds (reduced for faster failures)
-    private $userAgent = 'PodFeed Builder/1.0';
-    private $cacheTime = 300; // Cache results for 5 minutes (matches auto-refresh interval)
+    private int $timeout = 3; // seconds (reduced for faster failures)
+    private string $userAgent = 'PodFeed Builder/1.0';
+    private int $cacheTime = 300; // Cache results for 5 minutes (matches auto-refresh interval)
 
     /**
      * Get cached feed data if available
      */
-    private function getCachedFeed($url) {
+    private function getCachedFeed(string $url) {
         $cacheDir = __DIR__ . '/../data/cache';
         if (!is_dir($cacheDir)) {
             @mkdir($cacheDir, 0755, true);
@@ -30,7 +30,7 @@ class RssFeedParser
     /**
      * Save feed data to cache
      */
-    private function cacheFeed($url, $content) {
+    private function cacheFeed(string $url, string $content) {
         $cacheDir = __DIR__ . '/../data/cache';
         if (!is_dir($cacheDir)) {
             @mkdir($cacheDir, 0755, true);
@@ -44,7 +44,7 @@ class RssFeedParser
      * @param string $url RSS feed URL
      * @return array Result with success status and data/error
      */
-    public function fetchAndParse($url)
+    public function fetchAndParse(string $url)
     {
         try {
             // Validate URL format
@@ -90,7 +90,7 @@ class RssFeedParser
     /**
      * Validate URL format
      */
-    private function isValidUrl($url)
+    private function isValidUrl(?string $url)
     {
         return filter_var($url, FILTER_VALIDATE_URL) !== false;
     }
@@ -98,7 +98,7 @@ class RssFeedParser
     /**
      * Fetch feed content using cURL with caching
      */
-    private function fetchFeedContent($url, $bustCache = false)
+    private function fetchFeedContent(string $url, bool $bustCache = false)
     {
         // Try cache first (unless cache busting is requested)
         if (!$bustCache) {
@@ -141,7 +141,6 @@ class RssFeedParser
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
         
-        curl_close($ch);
         
         if ($error || $httpCode !== 200) {
             error_log("RSS Fetch Error for $url: HTTP $httpCode - $error");
@@ -159,7 +158,7 @@ class RssFeedParser
     /**
      * Parse XML content and extract podcast data
      */
-    private function parseXmlContent($xmlContent, $feedUrl)
+    private function parseXmlContent(string $xmlContent, string $feedUrl)
     {
         // Suppress XML parsing warnings
         libxml_use_internal_errors(true);
@@ -190,7 +189,7 @@ class RssFeedParser
     /**
      * Detect feed type
      */
-    private function detectFeedType($xml)
+    private function detectFeedType(SimpleXMLElement $xml)
     {
         $rootName = $xml->getName();
         
@@ -206,7 +205,7 @@ class RssFeedParser
     /**
      * Parse RSS 2.0 feed
      */
-    private function parseRssFeed($xml, $feedUrl)
+    private function parseRssFeed(SimpleXMLElement $xml, string $feedUrl)
     {
         $channel = $xml->channel;
         
@@ -303,7 +302,7 @@ class RssFeedParser
     /**
      * Parse Atom feed
      */
-    private function parseAtomFeed($xml, $feedUrl)
+    private function parseAtomFeed(SimpleXMLElement $xml, string $feedUrl)
     {
         // Extract title (required)
         $title = $this->extractText($xml->title);
@@ -343,7 +342,7 @@ class RssFeedParser
     /**
      * Extract image URL from RSS feed
      */
-    private function extractRssImage($channel, $itunes)
+    private function extractRssImage(SimpleXMLElement $channel, mixed $itunes)
     {
         // Try iTunes image first (usually better quality)
         if ($itunes && isset($itunes->image)) {
@@ -379,7 +378,7 @@ class RssFeedParser
     /**
      * Extract text content safely
      */
-    private function extractText($element)
+    private function extractText(mixed $element)
     {
         if (!$element) {
             return '';
@@ -392,7 +391,7 @@ class RssFeedParser
     /**
      * Get latest episode date from RSS items
      */
-    private function getLatestEpisodeDate($items)
+    private function getLatestEpisodeDate(mixed $items)
     {
         if (empty($items) || count($items) === 0) {
             return null;
@@ -429,7 +428,7 @@ class RssFeedParser
     /**
      * Get latest episode date from Atom entries
      */
-    private function getLatestEpisodeDateAtom($entries)
+    private function getLatestEpisodeDateAtom(mixed $entries)
     {
         if (empty($entries) || count($entries) === 0) {
             return null;
@@ -462,7 +461,7 @@ class RssFeedParser
     /**
      * Clear cache for a specific feed URL
      */
-    public function clearCache($url) {
+    public function clearCache(string $url) {
         $cacheDir = __DIR__ . '/../data/cache';
         $cacheFile = $cacheDir . '/feed_cache_' . md5($url);
         if (file_exists($cacheFile)) {
@@ -474,7 +473,7 @@ class RssFeedParser
      * Fetch only metadata from a feed (quick check for latest episode)
      * This is a lightweight version that only gets what we need for sorting
      */
-    public function fetchFeedMetadata($url, $bustCache = false)
+    public function fetchFeedMetadata(string $url, bool $bustCache = false)
     {
         try {
             $xmlContent = $this->fetchFeedContent($url, $bustCache);
@@ -530,7 +529,7 @@ class RssFeedParser
      * @param string $podcastId Podcast ID for filename
      * @return array Result with success status and filename/error
      */
-    public function downloadCoverImage($imageUrl, $podcastId)
+    public function downloadCoverImage(?string $imageUrl, string $podcastId)
     {
         try {
             if (empty($imageUrl)) {
@@ -600,7 +599,7 @@ class RssFeedParser
     /**
      * Fetch image data using cURL
      */
-    private function fetchImageData($url)
+    private function fetchImageData(string $url)
     {
         $ch = curl_init();
         
@@ -621,7 +620,6 @@ class RssFeedParser
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curlError = curl_error($ch);
         
-        curl_close($ch);
         
         if ($httpCode !== 200) {
             error_log("Cover image download failed: HTTP {$httpCode}" . ($curlError ? " - cURL: {$curlError}" : '') . " - URL: {$url}");
@@ -634,7 +632,7 @@ class RssFeedParser
     /**
      * Validate image data
      */
-    private function validateImageData($imageData)
+    private function validateImageData(string $imageData)
     {
         // Check if data is valid image
         $finfo = new finfo(FILEINFO_MIME_TYPE);

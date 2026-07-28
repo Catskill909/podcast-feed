@@ -6,8 +6,8 @@
 
 class AnalyticsXMLHandler
 {
-    private $xmlFile;
-    private $backupDir;
+    private string $xmlFile;
+    private string $backupDir;
 
     public function __construct()
     {
@@ -78,7 +78,7 @@ class AnalyticsXMLHandler
     /**
      * Save XML document with backup
      */
-    private function saveXML($xml)
+    private function saveXML(DOMDocument $xml)
     {
         // Create backup
         if (file_exists($this->xmlFile)) {
@@ -105,7 +105,7 @@ class AnalyticsXMLHandler
     {
         $backups = glob($this->backupDir . 'analytics_*.xml');
         if (count($backups) > 10) {
-            usort($backups, function ($a, $b) {
+            usort($backups, function (string $a, string $b) {
                 return filemtime($a) - filemtime($b);
             });
 
@@ -126,7 +126,7 @@ class AnalyticsXMLHandler
      * @param array $metadata Additional metadata (title, audioUrl, etc.)
      * @return bool Success status
      */
-    public function logEvent($type, $podcastId, $episodeId, $sessionId, $metadata = [])
+    public function logEvent(?string $type, ?string $podcastId, ?string $episodeId, ?string $sessionId, array $metadata = [])
     {
         try {
             $xml = $this->loadXML();
@@ -137,6 +137,7 @@ class AnalyticsXMLHandler
             // Find or create day element
             $dayElement = null;
             $days = $xml->getElementsByTagName('day');
+            /** @var DOMElement $day */
             foreach ($days as $day) {
                 if ($day->getAttribute('date') === $date) {
                     $dayElement = $day;
@@ -153,6 +154,7 @@ class AnalyticsXMLHandler
             // Find or create metric element
             $metricElement = null;
             $metrics = $dayElement->getElementsByTagName('metric');
+            /** @var DOMElement $metric */
             foreach ($metrics as $metric) {
                 if ($metric->getAttribute('type') === $type &&
                     $metric->getAttribute('podcast_id') === $podcastId &&
@@ -192,7 +194,6 @@ class AnalyticsXMLHandler
             $metricElement->setAttribute('last_updated', date('c'));
 
             // Track unique visitors using session IDs
-            $uniqueVisitors = $metricElement->getAttribute('unique_visitors');
             $sessionIds = $metricElement->getAttribute('session_ids');
             
             if (empty($sessionIds)) {
@@ -222,13 +223,14 @@ class AnalyticsXMLHandler
      * @param string $endDate End date (Y-m-d)
      * @return array Analytics data
      */
-    public function getDataByDateRange($startDate, $endDate)
+    public function getDataByDateRange(string $startDate, string $endDate)
     {
         try {
             $xml = $this->loadXML();
             $data = [];
 
             $days = $xml->getElementsByTagName('day');
+            /** @var DOMElement $day */
             foreach ($days as $day) {
                 $date = $day->getAttribute('date');
                 
@@ -239,6 +241,7 @@ class AnalyticsXMLHandler
                     ];
 
                     $metrics = $day->getElementsByTagName('metric');
+                    /** @var DOMElement $metric */
                     foreach ($metrics as $metric) {
                         $dayData['metrics'][] = [
                             'type' => $metric->getAttribute('type'),
@@ -278,6 +281,7 @@ class AnalyticsXMLHandler
             $data = [];
 
             $days = $xml->getElementsByTagName('day');
+            /** @var DOMElement $day */
             foreach ($days as $day) {
                 $dayData = [
                     'date' => $day->getAttribute('date'),
@@ -285,6 +289,7 @@ class AnalyticsXMLHandler
                 ];
 
                 $metrics = $day->getElementsByTagName('metric');
+                /** @var DOMElement $metric */
                 foreach ($metrics as $metric) {
                     $dayData['metrics'][] = [
                         'type' => $metric->getAttribute('type'),
@@ -317,7 +322,7 @@ class AnalyticsXMLHandler
      * @param int $daysToKeep Number of days to keep
      * @return bool Success status
      */
-    public function cleanupOldData($daysToKeep = 365)
+    public function cleanupOldData(int $daysToKeep = 365)
     {
         try {
             $xml = $this->loadXML();
@@ -328,6 +333,7 @@ class AnalyticsXMLHandler
             $days = $xml->getElementsByTagName('day');
             $toRemove = [];
 
+            /** @var DOMElement $day */
             foreach ($days as $day) {
                 if ($day->getAttribute('date') < $cutoffDate) {
                     $toRemove[] = $day;

@@ -17,15 +17,15 @@ require_once __DIR__ . '/RssFeedParser.php';
 
 class FeedScanner {
     
-    private $lockFile;
-    private $scanInterval;
-    private $podcastManager;
+    private string $lockFile;
+    private int $scanInterval;
+    private PodcastManager $podcastManager;
     
     /**
      * @param int $scanInterval Minimum seconds between scans (default: 1200 = 20 minutes)
      * Note: Set higher than cron interval (15 min) so lazy scan only triggers if cron fails
      */
-    public function __construct($scanInterval = 1200) {
+    public function __construct(int $scanInterval = 1200) {
         $this->lockFile = __DIR__ . '/../data/last-lazy-scan.txt';
         $this->scanInterval = $scanInterval;
         $this->podcastManager = new PodcastManager();
@@ -154,7 +154,7 @@ class FeedScanner {
      * @param string $feedUrl The RSS feed URL
      * @return array Result with success flag and metadata
      */
-    private function fetchFeedMetadata($feedUrl) {
+    private function fetchFeedMetadata(string $feedUrl) {
         // Add cache buster
         $separator = (strpos($feedUrl, '?') === false) ? '?' : '&';
         $cacheBustUrl = $feedUrl . $separator . '_t=' . time();
@@ -209,7 +209,7 @@ class FeedScanner {
      * 
      * @param array $stats Scan statistics
      */
-    private function logScan($stats) {
+    private function logScan(array $stats) {
         $logFile = __DIR__ . '/../logs/lazy-scan.log';
         $logDir = dirname($logFile);
         

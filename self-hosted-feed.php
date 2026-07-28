@@ -32,11 +32,11 @@ if (!$podcast) {
 $episodes = $manager->getEpisodes($podcastId);
 
 // Filter only published episodes and sort by date (newest first)
-$publishedEpisodes = array_filter($episodes, function($ep) {
+$publishedEpisodes = array_filter($episodes, function(array $ep) {
     return ($ep['status'] ?? 'published') === 'published';
 });
 
-usort($publishedEpisodes, function($a, $b) {
+usort($publishedEpisodes, function(array $a, array $b) {
     return strtotime($b['pub_date']) - strtotime($a['pub_date']);
 });
 
@@ -47,26 +47,38 @@ $latestEpisodeDate = !empty($publishedEpisodes) ? $publishedEpisodes[0]['pub_dat
 header('Content-Type: application/rss+xml; charset=UTF-8');
 
 // Helper function to format date to RFC 2822
-function formatRFC2822($dateString) {
+function formatRFC2822(?string $dateString): string {
     $timestamp = strtotime($dateString);
     return date('D, d M Y H:i:s O', $timestamp);
 }
 
 // Helper function to format duration
-function formatDuration($seconds) {
-    if (empty($seconds)) return '0';
-    
-    // If already in HH:MM:SS format, return as is
-    if (preg_match('/^\d{1,2}:\d{2}:\d{2}$/', $seconds)) {
-        return $seconds;
+function formatDuration(string|int|float|null $seconds): string {
+    if ($seconds === null) return '0';
+
+    $rawDuration = trim((string) $seconds);
+    if ($rawDuration === '') return '0';
+
+    // Feeds supply either plain seconds or a colon form (HH:MM:SS or MM:SS).
+    // Both are normalised to a total so the output is always HH:MM:SS.
+    if (preg_match('/^(?:(\d+):)?(\d{1,2}):(\d{2})$/', $rawDuration, $durationParts)) {
+        $totalSeconds = ((int) $durationParts[1] * 3600)
+            + ((int) $durationParts[2] * 60)
+            + (int) $durationParts[3];
+    } elseif (is_numeric($rawDuration)) {
+        $totalSeconds = (int) $rawDuration;
+    } else {
+        return '0';
     }
-    
-    // Convert seconds to HH:MM:SS
-    $hours = floor($seconds / 3600);
-    $minutes = floor(($seconds % 3600) / 60);
-    $secs = $seconds % 60;
-    
-    return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
+
+    if ($totalSeconds <= 0) return '0';
+
+    return sprintf(
+        '%02d:%02d:%02d',
+        intdiv($totalSeconds, 3600),
+        intdiv($totalSeconds % 3600, 60),
+        $totalSeconds % 60
+    );
 }
 
 // Start XML output

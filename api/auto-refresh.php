@@ -18,7 +18,6 @@ try {
     $refreshInterval = 1800; // 30 minutes - only as backup when cron fails
     
     // Check if we need to refresh
-    $shouldRefresh = true;
     if (file_exists($lastRefreshFile)) {
         $lastRefresh = (int)file_get_contents($lastRefreshFile);
         $timeSinceRefresh = time() - $lastRefresh;

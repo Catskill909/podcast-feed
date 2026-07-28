@@ -148,7 +148,6 @@ class StreamingProxy
         $error = curl_error($ch);
         $errno = curl_errno($ch);
 
-        curl_close($ch);
 
         if ($errno !== 0) {
             throw new RuntimeException(sprintf('Network error: %s (code %d)', $error ?: 'Unknown', $errno));

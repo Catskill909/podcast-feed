@@ -86,7 +86,7 @@ function handleValidate()
 
     $feedUrl = $_POST['feed_url'] ?? '';
 
-    if (empty($feedUrl)) {
+    if (!is_string($feedUrl) || empty($feedUrl)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'Feed URL is required']);
         return;
@@ -111,7 +111,7 @@ function handleStart()
 
     $feedUrl = $_POST['feed_url'] ?? '';
 
-    if (empty($feedUrl)) {
+    if (!is_string($feedUrl) || empty($feedUrl)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'Feed URL is required']);
         return;
@@ -178,7 +178,7 @@ function handleProgress()
         $totalEstimated = ($elapsed / $progress['percent']) * 100;
         $remaining = $totalEstimated - $elapsed;
         $progress['remaining_seconds'] = max(0, $remaining);
-        $progress['remaining_formatted'] = formatDuration(max(0, $remaining));
+        $progress['remaining_formatted'] = formatDuration((int) max(0, $remaining));
     }
 
     echo json_encode([
@@ -214,7 +214,7 @@ function handleCancel()
 /**
  * Format duration in seconds to human-readable format
  */
-function formatDuration($seconds)
+function formatDuration(int $seconds): string
 {
     if ($seconds < 60) {
         return $seconds . 's';

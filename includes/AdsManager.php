@@ -9,8 +9,8 @@ require_once __DIR__ . '/AdsImageUploader.php';
  */
 class AdsManager
 {
-    private $xmlHandler;
-    private $imageUploader;
+    private AdsXMLHandler $xmlHandler;
+    private AdsImageUploader $imageUploader;
 
     public function __construct()
     {
@@ -21,7 +21,7 @@ class AdsManager
     /**
      * Upload web banner ad
      */
-    public function uploadWebAd($file): array
+    public function uploadWebAd(array $file): array
     {
         try {
             // Upload image with strict validation
@@ -55,7 +55,7 @@ class AdsManager
     /**
      * Upload mobile banner ad
      */
-    public function uploadMobileAd($file): array
+    public function uploadMobileAd(array $file): array
     {
         try {
             // Upload image with strict validation
@@ -125,7 +125,7 @@ class AdsManager
     /**
      * Delete web ad
      */
-    public function deleteWebAd($id): array
+    public function deleteWebAd(string $id): array
     {
         try {
             // Get filepath and remove from XML
@@ -153,7 +153,7 @@ class AdsManager
     /**
      * Delete mobile ad
      */
-    public function deleteMobileAd($id): array
+    public function deleteMobileAd(string $id): array
     {
         try {
             // Get filepath and remove from XML
@@ -181,7 +181,7 @@ class AdsManager
     /**
      * Update settings
      */
-    public function updateSettings($settings): array
+    public function updateSettings(array $settings): array
     {
         try {
             foreach ($settings as $key => $value) {
@@ -211,7 +211,7 @@ class AdsManager
     /**
      * Update web ads display order
      */
-    public function updateWebAdsOrder($orderedIds): array
+    public function updateWebAdsOrder(array $orderedIds): array
     {
         try {
             $this->xmlHandler->updateWebAdsOrder($orderedIds);
@@ -231,7 +231,7 @@ class AdsManager
     /**
      * Update mobile ads display order
      */
-    public function updateMobileAdsOrder($orderedIds): array
+    public function updateMobileAdsOrder(array $orderedIds): array
     {
         try {
             $this->xmlHandler->updateMobileAdsOrder($orderedIds);
@@ -251,7 +251,7 @@ class AdsManager
     /**
      * Get required dimensions for ad type
      */
-    public function getRequiredDimensions($type): array
+    public function getRequiredDimensions(string $type): array
     {
         return $this->imageUploader->getRequiredDimensions($type);
     }
@@ -262,7 +262,7 @@ class AdsManager
     public function getEnabledWebAds(): array
     {
         $ads = $this->getWebAds();
-        $filtered = array_filter($ads, function($ad) {
+        $filtered = array_filter($ads, function(array $ad) {
             return $ad['enabled'] === true;
         });
         // Reset array keys so first enabled ad is at index 0
@@ -275,7 +275,7 @@ class AdsManager
     public function getEnabledMobileAds(): array
     {
         $ads = $this->getMobileAds();
-        $filtered = array_filter($ads, function($ad) {
+        $filtered = array_filter($ads, function(array $ad) {
             return $ad['enabled'] === true;
         });
         // Reset array keys so first enabled ad is at index 0

@@ -8,15 +8,15 @@ require_once __DIR__ . '/../config/config.php';
  */
 class PodcastHealthChecker
 {
-    private $timeout = 10; // seconds
-    private $userAgent = 'PodFeed Builder Health Check/1.0';
+    private int $timeout = 10; // seconds
+    private string $userAgent = 'PodFeed Builder Health Check/1.0';
     
     /**
      * Perform comprehensive health check on a podcast
      * @param array $podcast Podcast data with feed_url and cover_image
      * @return array Health check results
      */
-    public function checkPodcastHealth($podcast)
+    public function checkPodcastHealth(array $podcast): array
     {
         $results = [
             'podcast_id' => $podcast['id'] ?? 'unknown',
@@ -68,7 +68,7 @@ class PodcastHealthChecker
     /**
      * Check if feed URL is accessible
      */
-    public function checkFeedUrl($url)
+    public function checkFeedUrl(string $url): array
     {
         $startTime = microtime(true);
         
@@ -93,7 +93,6 @@ class PodcastHealthChecker
         $error = curl_error($ch);
         $responseTime = round((microtime(true) - $startTime) * 1000); // ms
         
-        curl_close($ch);
         
         // Evaluate response
         if ($error) {
@@ -131,21 +130,20 @@ class PodcastHealthChecker
             'message' => $message,
             'http_code' => $httpCode,
             'response_time' => $responseTime . 'ms',
-            'content' => $content // Store for further validation
+            'content' => (string) $content // Store for further validation
         ];
     }
     
     /**
      * Validate RSS 2.0 structure
      */
-    public function validateRssStructure($xmlContent)
+    public function validateRssStructure(string $xmlContent): array
     {
         libxml_use_internal_errors(true);
         
         $xml = simplexml_load_string($xmlContent);
         
         if ($xml === false) {
-            $errors = libxml_get_errors();
             libxml_clear_errors();
             return [
                 'status' => 'fail',
@@ -205,7 +203,7 @@ class PodcastHealthChecker
     /**
      * Validate iTunes namespace and tags
      */
-    public function validateItunesNamespace($xmlContent)
+    public function validateItunesNamespace(string $xmlContent): array
     {
         libxml_use_internal_errors(true);
         
@@ -293,7 +291,7 @@ class PodcastHealthChecker
     /**
      * Check if image URL is accessible
      */
-    public function checkImageUrl($imagePath)
+    public function checkImageUrl(string $imagePath): array
     {
         // Check if it's a local file or URL
         if (strpos($imagePath, 'http') === 0) {
@@ -323,7 +321,7 @@ class PodcastHealthChecker
                 'status' => 'pass',
                 'message' => 'Image file exists and is readable',
                 'path' => $imagePath,
-                'size' => $this->formatBytes(filesize($fullPath))
+                'size' => $this->formatBytes((int) filesize($fullPath))
             ];
         }
         
@@ -351,7 +349,6 @@ class PodcastHealthChecker
         $error = curl_error($ch);
         $responseTime = round((microtime(true) - $startTime) * 1000);
         
-        curl_close($ch);
         
         if ($error) {
             return [
@@ -390,7 +387,7 @@ class PodcastHealthChecker
     /**
      * Calculate overall health status from individual checks
      */
-    private function calculateOverallStatus($checks)
+    private function calculateOverallStatus(array $checks): string
     {
         $hasFail = false;
         $hasWarning = false;
@@ -415,7 +412,7 @@ class PodcastHealthChecker
     /**
      * Format bytes to human-readable size
      */
-    private function formatBytes($bytes)
+    private function formatBytes(int $bytes): string
     {
         $units = ['B', 'KB', 'MB', 'GB'];
         $bytes = max($bytes, 0);
@@ -429,7 +426,7 @@ class PodcastHealthChecker
     /**
      * Check all podcasts and return summary
      */
-    public function checkAllPodcasts($podcasts)
+    public function checkAllPodcasts(array $podcasts): array
     {
         $results = [
             'timestamp' => date('Y-m-d H:i:s'),

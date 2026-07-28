@@ -12,10 +12,10 @@ require_once __DIR__ . '/AudioUploader.php';
 
 class PodcastAudioDownloader
 {
-    private $audioUploader;
-    private $maxFileSize;
-    private $timeout;
-    private $userAgent;
+    private AudioUploader $audioUploader;
+    private int $maxFileSize;
+    private int $timeout;
+    private string $userAgent;
 
     public function __construct()
     {
@@ -33,7 +33,7 @@ class PodcastAudioDownloader
      * Download audio file from URL and upload to local storage
      * Uses existing AudioUploader to bypass PHP limits
      */
-    public function downloadAudioFromUrl($url, $podcastId, $episodeId)
+    public function downloadAudioFromUrl(string $url, string $podcastId, string $episodeId)
     {
         try {
             // Validate URL
@@ -94,7 +94,7 @@ class PodcastAudioDownloader
     /**
      * Download file from URL to temp location
      */
-    private function downloadToTemp($url)
+    private function downloadToTemp(string $url)
     {
         $tempFile = tempnam(sys_get_temp_dir(), 'podcast_audio_');
         
@@ -115,7 +115,6 @@ class PodcastAudioDownloader
         $error = curl_error($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        curl_close($ch);
         fclose($fp);
 
         if (!$success || $httpCode !== 200) {
@@ -132,7 +131,7 @@ class PodcastAudioDownloader
     /**
      * Get remote file size using HEAD request
      */
-    public function getRemoteFileSize($url)
+    public function getRemoteFileSize(string $url)
     {
         $ch = curl_init($url);
         
@@ -150,7 +149,6 @@ class PodcastAudioDownloader
         curl_exec($ch);
         $size = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
 
         if ($httpCode !== 200 || $size < 0) {
             return false;
@@ -162,7 +160,7 @@ class PodcastAudioDownloader
     /**
      * Validate remote audio file
      */
-    public function validateRemoteAudioFile($url)
+    public function validateRemoteAudioFile(string $url)
     {
         // Check URL format
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
@@ -208,7 +206,7 @@ class PodcastAudioDownloader
     /**
      * Format file size for display
      */
-    private function formatFileSize($bytes)
+    private function formatFileSize(int|float $bytes)
     {
         $units = ['B', 'KB', 'MB', 'GB'];
         $bytes = max($bytes, 0);
@@ -217,16 +215,5 @@ class PodcastAudioDownloader
         $bytes /= pow(1024, $pow);
         
         return round($bytes, 2) . ' ' . $units[$pow];
-    }
-
-    /**
-     * Download with progress callback
-     * For future enhancement - real-time progress tracking
-     */
-    public function downloadWithProgress($url, $podcastId, $episodeId, $progressCallback = null)
-    {
-        // Future enhancement: Add progress tracking
-        // For now, just use standard download
-        return $this->downloadAudioFromUrl($url, $podcastId, $episodeId);
     }
 }

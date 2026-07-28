@@ -21,7 +21,6 @@ curl_setopt_array($ch, [
 $content = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $error = curl_error($ch);
-curl_close($ch);
 
 echo "HTTP Code: $httpCode\n";
 echo "Error: " . ($error ?: 'none') . "\n";

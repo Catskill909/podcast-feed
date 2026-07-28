@@ -150,7 +150,7 @@ $episodes = $manager->getEpisodes($podcastId);
 /**
  * Escape string for use in JavaScript (onclick attributes, etc.)
  */
-function escapeJs($text) {
+function escapeJs(?string $text): string {
     if (empty($text)) return '';
     return str_replace(
         ['\\', "'", '"', "\n", "\r", "\t"],

@@ -11,10 +11,10 @@
  */
 class AuthPlaceholder
 {
-    private $sessionKey = 'podcast_admin_auth';
-    private $loginAttempts = [];
-    private $maxAttempts = 5;
-    private $lockoutTime = 900; // 15 minutes
+    private string $sessionKey = 'podcast_admin_auth';
+    private array $loginAttempts = [];
+    private int $maxAttempts = 5;
+    private int $lockoutTime = 900; // 15 minutes
 
     public function __construct()
     {
@@ -41,7 +41,7 @@ class AuthPlaceholder
      * Authenticate user with credentials
      * Placeholder for future implementation
      */
-    public function authenticate($username, $password)
+    public function authenticate(string $username, string $password)
     {
         // TODO: Implement actual authentication logic
         // - Hash password comparison
@@ -129,7 +129,7 @@ class AuthPlaceholder
      * Check if user has specific permission
      * Placeholder for future role-based access control
      */
-    public function hasPermission($permission)
+    public function hasPermission(string $permission)
     {
         // TODO: Implement role-based permissions
         // Current permissions might include:
@@ -150,7 +150,7 @@ class AuthPlaceholder
     /**
      * Require authentication for a page
      */
-    public function requireAuth($redirectUrl = 'login.php')
+    public function requireAuth(string $redirectUrl = 'login.php')
     {
         if (!$this->isAuthenticated()) {
             header('Location: ' . $redirectUrl . '?redirect=' . urlencode($_SERVER['REQUEST_URI']));
@@ -161,7 +161,7 @@ class AuthPlaceholder
     /**
      * Require specific permission
      */
-    public function requirePermission($permission, $errorMessage = 'Access denied')
+    public function requirePermission(string $permission, string $errorMessage = 'Access denied')
     {
         if (!$this->hasPermission($permission)) {
             http_response_code(403);
@@ -186,7 +186,7 @@ class AuthPlaceholder
         // Clean old attempts (older than lockout time)
         $this->loginAttempts[$ip] = array_filter(
             $this->loginAttempts[$ip],
-            function ($timestamp) use ($currentTime) {
+            function (int $timestamp) use ($currentTime) {
                 return ($currentTime - $timestamp) < $this->lockoutTime;
             }
         );
@@ -209,7 +209,7 @@ class AuthPlaceholder
 
         $recentAttempts = array_filter(
             $this->loginAttempts[$ip],
-            function ($timestamp) {
+            function (int $timestamp) {
                 return (time() - $timestamp) < $this->lockoutTime;
             }
         );
@@ -231,7 +231,7 @@ class AuthPlaceholder
 
         $recentAttempts = array_filter(
             $this->loginAttempts[$ip],
-            function ($timestamp) {
+            function (int $timestamp) {
                 return (time() - $timestamp) < $this->lockoutTime;
             }
         );
@@ -279,7 +279,7 @@ class AuthPlaceholder
     /**
      * Validate CSRF token
      */
-    public function validateCSRFToken($token)
+    public function validateCSRFToken(?string $token)
     {
         return isset($_SESSION['csrf_token']) &&
             hash_equals($_SESSION['csrf_token'], $token);
@@ -288,7 +288,7 @@ class AuthPlaceholder
     /**
      * Session timeout check
      */
-    public function checkSessionTimeout($timeoutMinutes = 60)
+    public function checkSessionTimeout(int $timeoutMinutes = 60)
     {
         if (!$this->isAuthenticated()) {
             return false;
@@ -334,7 +334,7 @@ function isAuthenticated()
 /**
  * Require authentication
  */
-function requireAuth($redirectUrl = 'login.php')
+function requireAuth(string $redirectUrl = 'login.php')
 {
     getAuth()->requireAuth($redirectUrl);
 }
@@ -342,7 +342,7 @@ function requireAuth($redirectUrl = 'login.php')
 /**
  * Check permission
  */
-function hasPermission($permission)
+function hasPermission(string $permission)
 {
     return getAuth()->hasPermission($permission);
 }
@@ -350,7 +350,7 @@ function hasPermission($permission)
 /**
  * Require permission
  */
-function requirePermission($permission, $errorMessage = 'Access denied')
+function requirePermission(string $permission, string $errorMessage = 'Access denied')
 {
     getAuth()->requirePermission($permission, $errorMessage);
 }
@@ -382,7 +382,7 @@ function csrfInput()
 /**
  * Validate CSRF token
  */
-function validateCSRF($token)
+function validateCSRF(?string $token)
 {
     return getAuth()->validateCSRFToken($token);
 }

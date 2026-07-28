@@ -7,11 +7,10 @@
 
 class AudioUploader
 {
-    private $audioDir;
-    private $audioUrl;
-    private $maxFileSize;
-    private $allowedMimeTypes = ['audio/mpeg', 'audio/mp3', 'audio/x-m4a', 'audio/mp4', 'audio/m4a'];
-    private $allowedExtensions = ['mp3', 'm4a'];
+    private string $audioDir;
+    private string $audioUrl;
+    private int $maxFileSize;
+    private array $allowedExtensions = ['mp3', 'm4a'];
 
     public function __construct()
     {
@@ -31,7 +30,7 @@ class AudioUploader
     /**
      * Upload audio file for an episode
      */
-    public function uploadAudio($file, $podcastId, $episodeId)
+    public function uploadAudio(array $file, string $podcastId, string $episodeId)
     {
         try {
             // Validate file
@@ -107,7 +106,7 @@ class AudioUploader
     /**
      * Delete audio file
      */
-    public function deleteAudio($podcastId, $episodeId, $extension = 'mp3')
+    public function deleteAudio(string $podcastId, string $episodeId, string $extension = 'mp3')
     {
         try {
             // Try to find the file with any supported extension
@@ -155,7 +154,7 @@ class AudioUploader
     /**
      * Get audio file information
      */
-    public function getAudioInfo($podcastId, $episodeId, $extension = 'mp3')
+    public function getAudioInfo(string $podcastId, string $episodeId, string $extension = 'mp3')
     {
         // Try to find the file with any supported extension
         $filepath = null;
@@ -203,7 +202,7 @@ class AudioUploader
     /**
      * Get audio duration (basic MP3 parsing)
      */
-    private function getAudioDuration($filepath)
+    private function getAudioDuration(string $filepath)
     {
         try {
             // Basic MP3 duration calculation
@@ -221,7 +220,6 @@ class AudioUploader
 
             // Skip ID3v2 tag if present
             if (substr($header, 0, 3) == 'ID3') {
-                $id3v2_flags = ord($header[5]);
                 $id3v2_size = (ord($header[6]) << 21) | (ord($header[7]) << 14) | (ord($header[8]) << 7) | ord($header[9]);
                 $offset = $id3v2_size + 10;
                 fseek($handle, $offset);
@@ -244,21 +242,17 @@ class AudioUploader
             }
 
             // Extract bitrate and sample rate
-            $version = ($header_int >> 19) & 0x03;
-            $layer = ($header_int >> 17) & 0x03;
             $bitrate_index = ($header_int >> 12) & 0x0F;
             $samplerate_index = ($header_int >> 10) & 0x03;
 
             // Bitrate table (MPEG1 Layer 3)
             $bitrates = [0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 0];
-            $samplerates = [44100, 48000, 32000, 0];
 
             if ($bitrate_index == 0 || $bitrate_index == 15 || $samplerate_index == 3) {
                 return 0;
             }
 
             $bitrate = $bitrates[$bitrate_index] * 1000;
-            $samplerate = $samplerates[$samplerate_index];
 
             if ($bitrate > 0) {
                 // Calculate duration: (filesize * 8) / bitrate
@@ -275,7 +269,7 @@ class AudioUploader
     /**
      * Validate audio file
      */
-    private function validateAudioFile($file)
+    private function validateAudioFile(array $file)
     {
         // Check if file was uploaded
         if (!isset($file['tmp_name']) || $file['error'] !== UPLOAD_ERR_OK) {
@@ -318,7 +312,6 @@ class AudioUploader
         // Check MIME type (be lenient for downloaded files)
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $file['tmp_name']);
-        finfo_close($finfo);
 
         // Accept various audio MIME types including M4A
         $acceptableMimeTypes = [
@@ -413,7 +406,7 @@ EOT;
     /**
      * Format file size for display
      */
-    private function formatFileSize($bytes)
+    private function formatFileSize(int|float $bytes)
     {
         $units = ['B', 'KB', 'MB', 'GB'];
         $bytes = max($bytes, 0);
@@ -427,13 +420,17 @@ EOT;
     /**
      * Format duration for display (HH:MM:SS)
      */
-    private function formatDuration($seconds)
+    private function formatDuration(int|float $seconds): string
     {
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds % 3600) / 60);
-        $secs = $seconds % 60;
-        
-        return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
+        // getAudioDuration() returns a rounded float, so narrow before integer maths
+        $totalSeconds = max(0, (int) $seconds);
+
+        return sprintf(
+            '%02d:%02d:%02d',
+            intdiv($totalSeconds, 3600),
+            intdiv($totalSeconds % 3600, 60),
+            $totalSeconds % 60
+        );
     }
 
     /**
@@ -468,7 +465,7 @@ EOT;
     /**
      * Clean up orphaned audio files
      */
-    public function cleanupOrphanedFiles($validPodcastIds)
+    public function cleanupOrphanedFiles(array $validPodcastIds)
     {
         $deletedCount = 0;
 

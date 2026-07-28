@@ -374,7 +374,7 @@ class PodcastManager
      * NOTE: Does NOT fetch RSS feeds on page load (performance/health check fix)
      * Use refreshPodcastFeed() or cron job to update episode data
      */
-    public function getAllPodcasts($includeImageInfo = false): array
+    public function getAllPodcasts(bool $includeImageInfo = false): array
     {
         try {
             // Get RSS podcasts
@@ -400,7 +400,7 @@ class PodcastManager
                     $episodes = $selfHostedManager->getEpisodes($shPodcast['id']);
                     if (!empty($episodes)) {
                         // Sort by pub_date descending
-                        usort($episodes, function($a, $b) {
+                        usort($episodes, function(array $a, array $b) {
                             return strtotime($b['pub_date']) - strtotime($a['pub_date']);
                         });
                         $latestEpisodeDate = $episodes[0]['pub_date'] ?? '';
@@ -477,7 +477,7 @@ class PodcastManager
      * Get RSS feed XML
      * Uses fresh podcast data with live RSS feed information (same as UI display)
      */
-    public function getRSSFeed($sortBy = 'episodes', $sortOrder = 'desc')
+    public function getRSSFeed(string $sortBy = 'episodes', string $sortOrder = 'desc')
     {
         try {
             // Get podcasts with fresh RSS data (same method used by UI)
@@ -516,7 +516,7 @@ class PodcastManager
 
             return [
                 'total_podcasts' => count($podcasts),
-                'active_podcasts' => count(array_filter($podcasts, function ($p) {
+                'active_podcasts' => count(array_filter($podcasts, function (array $p) {
                     return isset($p['status']) && $p['status'] === 'active';
                 })),
                 'storage_stats' => $storageStats,

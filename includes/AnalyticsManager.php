@@ -8,8 +8,8 @@ require_once __DIR__ . '/AnalyticsXMLHandler.php';
 
 class AnalyticsManager
 {
-    private $xmlHandler;
-    private $logFile;
+    private AnalyticsXMLHandler $xmlHandler;
+    private string $logFile;
 
     public function __construct()
     {
@@ -27,7 +27,7 @@ class AnalyticsManager
      * @param array $metadata Additional metadata
      * @return array Response with success status
      */
-    public function logEvent($type, $podcastId, $episodeId, $sessionId, $metadata = [])
+    public function logEvent(?string $type, ?string $podcastId, ?string $episodeId, ?string $sessionId, array $metadata = [])
     {
         // Validate event type
         if (!in_array($type, ['play', 'download'])) {
@@ -93,7 +93,7 @@ class AnalyticsManager
      * @param string $range Time range (7d, 30d, 90d, all)
      * @return array Dashboard statistics
      */
-    public function getDashboardStats($range = '7d')
+    public function getDashboardStats(string $range = '7d')
     {
         // Calculate date range
         $endDate = date('Y-m-d');
@@ -140,7 +140,7 @@ class AnalyticsManager
      * @param array $data Raw analytics data
      * @return array Aggregated statistics
      */
-    private function aggregateStats($data)
+    private function aggregateStats(array $data)
     {
         $totalPlays = 0;
         $totalDownloads = 0;
@@ -233,12 +233,12 @@ class AnalyticsManager
         $playToDownloadRate = $totalPlays > 0 ? round($totalDownloads / $totalPlays, 2) : 0;
 
         // Sort episodes by plays
-        usort($episodeStats, function ($a, $b) {
+        usort($episodeStats, function (array $a, array $b) {
             return $b['plays'] - $a['plays'];
         });
 
         // Sort podcasts by plays
-        usort($podcastStats, function ($a, $b) {
+        usort($podcastStats, function (array $a, array $b) {
             return $b['plays'] - $a['plays'];
         });
 
@@ -272,7 +272,7 @@ class AnalyticsManager
      * @param string $sortBy Sort by 'plays' or 'downloads'
      * @return array Top episodes
      */
-    public function getTopEpisodes($limit = 10, $sortBy = 'plays')
+    public function getTopEpisodes(int $limit = 10, string $sortBy = 'plays')
     {
         $data = $this->xmlHandler->getAllData();
         $episodeStats = [];
@@ -301,7 +301,7 @@ class AnalyticsManager
         }
 
         // Sort by specified metric
-        usort($episodeStats, function ($a, $b) use ($sortBy) {
+        usort($episodeStats, function (array $a, array $b) use ($sortBy) {
             return $b[$sortBy] - $a[$sortBy];
         });
 
@@ -314,9 +314,9 @@ class AnalyticsManager
      * @param string $input Input string
      * @return string Sanitized string
      */
-    private function sanitize($input)
+    private function sanitize(?string $input)
     {
-        return htmlspecialchars(strip_tags(trim($input)), ENT_QUOTES, 'UTF-8');
+        return htmlspecialchars(strip_tags(trim((string) $input)), ENT_QUOTES, 'UTF-8');
     }
 
     /**
@@ -325,7 +325,7 @@ class AnalyticsManager
      * @param string $action Action name
      * @param array $details Action details
      */
-    private function logOperation($action, $details = [])
+    private function logOperation(string $action, array $details = [])
     {
         $logDir = dirname($this->logFile);
         if (!is_dir($logDir)) {
@@ -345,7 +345,7 @@ class AnalyticsManager
      * @param int $daysToKeep Number of days to keep
      * @return bool Success status
      */
-    public function cleanupOldData($daysToKeep = 365)
+    public function cleanupOldData(int $daysToKeep = 365)
     {
         return $this->xmlHandler->cleanupOldData($daysToKeep);
     }

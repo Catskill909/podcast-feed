@@ -44,7 +44,7 @@ if (empty($feedUrlToValidate) && isset($_POST['feed_url'])) {
 }
 
 // Validate input
-if (empty($feedUrlToValidate)) {
+if (!is_string($feedUrlToValidate) || empty($feedUrlToValidate)) {
     http_response_code(400);
     echo json_encode([
         'success' => false,
@@ -72,7 +72,7 @@ try {
             // Critical checks summary
             'critical' => [
                 'total' => count($validationResults['critical_checks']),
-                'passed' => count(array_filter($validationResults['critical_checks'], function($check) {
+                'passed' => count(array_filter($validationResults['critical_checks'], function(array $check) {
                     return $check['passed'];
                 })),
                 'checks' => $validationResults['critical_checks']
@@ -81,7 +81,7 @@ try {
             // Warning checks summary
             'warnings' => [
                 'total' => count($validationResults['warning_checks']),
-                'passed' => count(array_filter($validationResults['warning_checks'], function($check) {
+                'passed' => count(array_filter($validationResults['warning_checks'], function(array $check) {
                     return $check['passed'];
                 })),
                 'checks' => $validationResults['warning_checks']

@@ -8,8 +8,8 @@ require_once __DIR__ . '/../config/config.php';
  */
 class SortPreferenceManager
 {
-    private $preferenceFile;
-    private $defaultPreference = [
+    private string $preferenceFile;
+    private array $defaultPreference = [
         'sort' => 'episodes',
         'order' => 'desc',
         'last_updated' => null

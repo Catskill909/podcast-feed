@@ -24,7 +24,6 @@ foreach ($feeds as $name => $url) {
         CURLOPT_SSL_VERIFYPEER => false,
     ]);
     $xmlContent = curl_exec($ch);
-    curl_close($ch);
     
     if (!$xmlContent) {
         echo "Failed to fetch\n\n";

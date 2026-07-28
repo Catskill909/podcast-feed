@@ -7,19 +7,19 @@ require_once __DIR__ . '/../config/config.php';
  */
 class AdsImageUploader
 {
-    private $webAdsDimensions = ['width' => 728, 'height' => 90];
-    private $mobileAdsDimensions = [
+    private array $webAdsDimensions = ['width' => 728, 'height' => 90];
+    private array $mobileAdsDimensions = [
         'phone' => ['width' => 320, 'height' => 50],
         'tablet' => ['width' => 728, 'height' => 90]
     ];
-    private $maxFileSize = 2 * 1024 * 1024; // 2MB
-    private $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    private $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+    private int $maxFileSize = 2 * 1024 * 1024; // 2MB
+    private array $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    private array $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 
     /**
      * Upload web banner ad (728x90)
      */
-    public function uploadWebAd($file): array
+    public function uploadWebAd(array $file): array
     {
         return $this->uploadAd($file, 'web');
     }
@@ -27,7 +27,7 @@ class AdsImageUploader
     /**
      * Upload mobile banner ad (320x50)
      */
-    public function uploadMobileAd($file): array
+    public function uploadMobileAd(array $file): array
     {
         return $this->uploadAd($file, 'mobile');
     }
@@ -35,7 +35,7 @@ class AdsImageUploader
     /**
      * Upload ad banner with validation
      */
-    private function uploadAd($file, $type): array
+    private function uploadAd(array $file, string $type): array
     {
         try {
             // Basic file validation
@@ -85,7 +85,7 @@ class AdsImageUploader
     /**
      * Validate file upload
      */
-    private function validateUpload($file): array
+    private function validateUpload(array $file): array
     {
         // Check for upload errors
         if ($file['error'] !== UPLOAD_ERR_OK) {
@@ -106,7 +106,6 @@ class AdsImageUploader
         // Check MIME type
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $file['tmp_name']);
-        finfo_close($finfo);
 
         if (!in_array($mimeType, $this->allowedTypes)) {
             return [
@@ -130,7 +129,7 @@ class AdsImageUploader
     /**
      * Validate image dimensions (STRICT)
      */
-    private function validateDimensions($tmpFile, $type): array
+    private function validateDimensions(string $tmpFile, string $type): array
     {
         $imageInfo = getimagesize($tmpFile);
         
@@ -180,7 +179,7 @@ class AdsImageUploader
     /**
      * Generate unique filename
      */
-    private function generateFilename($file, $type): string
+    private function generateFilename(array $file, string $type): string
     {
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         $prefix = $type === 'web' ? 'web_ad' : 'mobile_ad';
@@ -193,7 +192,7 @@ class AdsImageUploader
     /**
      * Get target directory for ad type
      */
-    private function getTargetDirectory($type): string
+    private function getTargetDirectory(string $type): string
     {
         $baseDir = UPLOADS_DIR . '/ads';
         return $type === 'web' ? $baseDir . '/web' : $baseDir . '/mobile';
@@ -202,7 +201,7 @@ class AdsImageUploader
     /**
      * Get image URL
      */
-    private function getImageUrl($filename, $type): string
+    private function getImageUrl(string $filename, string $type): string
     {
         $path = $type === 'web' ? 'web' : 'mobile';
         return APP_URL . "/uploads/ads/{$path}/{$filename}";
@@ -211,7 +210,7 @@ class AdsImageUploader
     /**
      * Delete ad image file
      */
-    public function deleteAdImage($filepath): bool
+    public function deleteAdImage(string $filepath): bool
     {
         if (file_exists($filepath)) {
             return @unlink($filepath);
@@ -222,7 +221,7 @@ class AdsImageUploader
     /**
      * Get upload error message
      */
-    private function getUploadErrorMessage($errorCode): string
+    private function getUploadErrorMessage(int $errorCode): string
     {
         switch ($errorCode) {
             case UPLOAD_ERR_INI_SIZE:
@@ -246,7 +245,7 @@ class AdsImageUploader
     /**
      * Get required dimensions for ad type
      */
-    public function getRequiredDimensions($type): array
+    public function getRequiredDimensions(string $type): array
     {
         return $type === 'web' ? $this->webAdsDimensions : $this->mobileAdsDimensions;
     }

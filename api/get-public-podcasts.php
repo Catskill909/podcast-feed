@@ -22,7 +22,7 @@ try {
     $allPodcasts = $podcastManager->getAllPodcasts(true);
     
     // Filter to only active podcasts
-    $activePodcasts = array_filter($allPodcasts, function($podcast) {
+    $activePodcasts = array_filter($allPodcasts, function(array $podcast) {
         return $podcast['status'] === 'active';
     });
     
@@ -30,7 +30,7 @@ try {
     $activePodcasts = array_values($activePodcasts);
     
     // Format response for public consumption
-    $publicPodcasts = array_map(function($podcast) {
+    $publicPodcasts = array_map(function(array $podcast) {
         return [
             'id' => $podcast['id'],
             'title' => $podcast['title'],

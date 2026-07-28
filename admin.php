@@ -2147,7 +2147,7 @@ function escapeJs(?string $text): string {
     <script>
     // Make all podcasts available to JavaScript for analytics dropdown
     // This ensures the dropdown shows ALL podcasts, not just those with analytics data
-    window.ALL_PODCASTS_FOR_FILTER = <?php echo json_encode(array_map(function($p) {
+    window.ALL_PODCASTS_FOR_FILTER = <?php echo json_encode(array_map(function(array $p) {
         return ['id' => $p['id'], 'title' => $p['title']];
     }, $podcasts)); ?>;
     </script>

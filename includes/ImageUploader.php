@@ -11,7 +11,7 @@ class ImageUploader
     /**
      * Upload and validate image file
      */
-    public function uploadImage($file, $podcastId, $isEpisodeImage = false): array
+    public function uploadImage(array $file, string $podcastId, bool $isEpisodeImage = false): array
     {
         try {
             // Basic file validation
@@ -67,7 +67,7 @@ class ImageUploader
     /**
      * Validate file upload
      */
-    private function validateUpload($file): array
+    private function validateUpload(array $file): array
     {
         // Check for upload errors
         if ($file['error'] !== UPLOAD_ERR_OK) {
@@ -97,7 +97,6 @@ class ImageUploader
         // Check MIME type
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $file['tmp_name']);
-        finfo_close($finfo);
 
         if (!in_array($mimeType, ALLOWED_MIME_TYPES)) {
             return [
@@ -112,7 +111,7 @@ class ImageUploader
     /**
      * Validate image dimensions
      */
-    public function validateImageDimensions($imagePath)
+    public function validateImageDimensions(string $imagePath)
     {
         $imageInfo = getimagesize($imagePath);
 
@@ -153,7 +152,7 @@ class ImageUploader
     /**
      * Generate unique filename
      */
-    private function generateFilename($file, $podcastId)
+    private function generateFilename(array $file, string $podcastId)
     {
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         $timestamp = time();
@@ -165,7 +164,7 @@ class ImageUploader
     /**
      * Delete image file
      */
-    public function deleteImage($filename)
+    public function deleteImage(string $filename)
     {
         if (empty($filename)) {
             return true; // Nothing to delete
@@ -197,7 +196,7 @@ class ImageUploader
     /**
      * Get image information
      */
-    public function getImageInfo($filename)
+    public function getImageInfo(string $filename)
     {
         if (empty($filename)) {
             return null;
@@ -227,7 +226,7 @@ class ImageUploader
     /**
      * Format file size for display
      */
-    private function formatFileSize($bytes): string
+    private function formatFileSize(int|float $bytes): string
     {
         if ($bytes >= 1048576) {
             return number_format($bytes / 1048576, 2) . ' MB';
@@ -241,7 +240,7 @@ class ImageUploader
     /**
      * Get upload error message
      */
-    private function getUploadErrorMessage($errorCode): string
+    private function getUploadErrorMessage(int $errorCode): string
     {
         switch ($errorCode) {
             case UPLOAD_ERR_INI_SIZE:
@@ -265,7 +264,7 @@ class ImageUploader
     /**
      * Clean up orphaned image files
      */
-    public function cleanupOrphanedImages($validFilenames = []): int
+    public function cleanupOrphanedImages(array $validFilenames = []): int
     {
         $files = glob(COVERS_DIR . '/*');
         $deletedCount = 0;
@@ -347,7 +346,7 @@ class ImageUploader
     /**
      * Validate image from URL (for future use)
      */
-    public function validateImageFromUrl($url): array
+    public function validateImageFromUrl(string $url): array
     {
         $headers = get_headers($url, 1);
 

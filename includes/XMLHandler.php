@@ -7,8 +7,8 @@ require_once __DIR__ . '/../config/config.php';
  */
 class XMLHandler
 {
-    private $xmlFile;
-    private $dom;
+    private string $xmlFile;
+    private DOMDocument $dom;
 
     public function __construct()
     {
@@ -143,7 +143,7 @@ class XMLHandler
         $backupFiles = glob(BACKUP_DIR . '/podcasts_*.xml');
         if (count($backupFiles) > 10) {
             // Sort by modification time, oldest first
-            usort($backupFiles, function ($a, $b) {
+            usort($backupFiles, function (string $a, string $b) {
                 return filemtime($a) - filemtime($b);
             });
 
@@ -158,7 +158,7 @@ class XMLHandler
     /**
      * Add a new podcast entry
      */
-    public function addPodcast($data)
+    public function addPodcast(array $data)
     {
         $this->loadXML();
 
@@ -241,7 +241,7 @@ class XMLHandler
     /**
      * Update existing podcast entry
      */
-    public function updatePodcast($id, $data)
+    public function updatePodcast(string $id, array $data)
     {
         $this->loadXML();
 
@@ -334,7 +334,7 @@ class XMLHandler
     /**
      * Delete podcast entry
      */
-    public function deletePodcast($id)
+    public function deletePodcast(string $id)
     {
         $this->loadXML();
 
@@ -354,7 +354,7 @@ class XMLHandler
     /**
      * Get single podcast by ID
      */
-    public function getPodcast($id): ?array
+    public function getPodcast(string $id): ?array
     {
         $this->loadXML();
 
@@ -379,6 +379,7 @@ class XMLHandler
             $podcasts = [];
             $podcastNodes = $this->dom->getElementsByTagName('podcast');
 
+            /** @var DOMElement $node */
             foreach ($podcastNodes as $node) {
                 $podcasts[] = $this->podcastNodeToArray($node);
             }
@@ -393,7 +394,7 @@ class XMLHandler
     /**
      * Convert podcast DOM node to array
      */
-    private function podcastNodeToArray($node): array
+    private function podcastNodeToArray(DOMElement $node): array
     {
         $xpath = new DOMXPath($this->dom);
 
@@ -427,7 +428,7 @@ class XMLHandler
     /**
      * Check for duplicate entries
      */
-    private function isDuplicate($title, $feedUrl)
+    private function isDuplicate(?string $title, ?string $feedUrl)
     {
         $podcasts = $this->getAllPodcasts();
 
@@ -446,7 +447,7 @@ class XMLHandler
     /**
      * Generate RSS feed XML
      */
-    public function generateRSSFeed($sortBy = 'episodes', $sortOrder = 'desc')
+    public function generateRSSFeed(string $sortBy = 'episodes', string $sortOrder = 'desc')
     {
         try {
             $this->loadXML();
@@ -578,7 +579,7 @@ class XMLHandler
      * This version accepts fresh podcast data instead of reading from XML
      * Used by PodcastManager to ensure latest episode dates are current
      */
-    public function generateRSSFeedFromData($podcasts, $sortBy = 'episodes', $sortOrder = 'desc')
+    public function generateRSSFeedFromData(array $podcasts, string $sortBy = 'episodes', string $sortOrder = 'desc')
     {
         try {
             $rss = new DOMDocument('1.0', 'UTF-8');
@@ -707,9 +708,9 @@ class XMLHandler
     /**
      * Sort podcasts array by specified criteria
      */
-    private function sortPodcasts($podcasts, $sortBy, $sortOrder)
+    private function sortPodcasts(array $podcasts, string $sortBy, string $sortOrder)
     {
-        usort($podcasts, function($a, $b) use ($sortBy, $sortOrder) {
+        usort($podcasts, function(array $a, array $b) use ($sortBy, $sortOrder) {
             $result = 0;
             
             switch($sortBy) {
@@ -760,7 +761,7 @@ class XMLHandler
      * Format date as relative time (Today, Yesterday, X days ago, etc.)
      * Matches the logic in browse.js for consistency
      */
-    private function formatRelativeDate($dateString)
+    private function formatRelativeDate(?string $dateString)
     {
         if (empty($dateString)) {
             return 'Unknown';
@@ -795,7 +796,7 @@ class XMLHandler
      * Check if episode is new (within last 7 days)
      * Matches the logic in browse.js
      */
-    private function isNewEpisode($dateString)
+    private function isNewEpisode(?string $dateString)
     {
         if (empty($dateString)) {
             return false;

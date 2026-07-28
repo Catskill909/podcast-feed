@@ -68,13 +68,13 @@ curl_setopt_array($ch, [
     CURLOPT_USERAGENT => 'Mozilla/5.0 (compatible; PodFeed/1.0)',
     CURLOPT_HEADER => false,
     // Stream directly to output
-    CURLOPT_WRITEFUNCTION => function($ch, $data) {
+    CURLOPT_WRITEFUNCTION => function(CurlHandle $ch, string $data) {
         echo $data;
         flush();
         return strlen($data);
     },
     // Get headers to determine content type and length
-    CURLOPT_HEADERFUNCTION => function($ch, $header) use ($filename) {
+    CURLOPT_HEADERFUNCTION => function(CurlHandle $ch, string $header) use ($filename) {
         $len = strlen($header);
         $header = trim($header);
         
@@ -103,8 +103,6 @@ curl_setopt_array($headCh, [
 curl_exec($headCh);
 $httpCode = curl_getinfo($headCh, CURLINFO_HTTP_CODE);
 $contentLength = curl_getinfo($headCh, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
-$contentType = curl_getinfo($headCh, CURLINFO_CONTENT_TYPE);
-curl_close($headCh);
 
 // Check if resource exists
 if ($httpCode !== 200) {
@@ -135,4 +133,3 @@ if ($result === false) {
     error_log("Download proxy error: $error for URL: $url");
 }
 
-curl_close($ch);

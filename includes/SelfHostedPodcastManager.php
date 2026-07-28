@@ -10,9 +10,9 @@ require_once __DIR__ . '/AudioUploader.php';
  */
 class SelfHostedPodcastManager
 {
-    private $xmlHandler;
-    private $imageUploader;
-    private $audioUploader;
+    private SelfHostedXMLHandler $xmlHandler;
+    private ImageUploader $imageUploader;
+    private AudioUploader $audioUploader;
 
     public function __construct()
     {
@@ -24,7 +24,7 @@ class SelfHostedPodcastManager
     /**
      * Create new podcast
      */
-    public function createPodcast($data, $imageFile = null)
+    public function createPodcast(array $data, ?array $imageFile = null)
     {
         try {
             // Validate input
@@ -78,7 +78,7 @@ class SelfHostedPodcastManager
     /**
      * Update podcast
      */
-    public function updatePodcast($id, $data, $imageFile = null)
+    public function updatePodcast(string $id, array $data, ?array $imageFile = null)
     {
         try {
             // Check if podcast exists
@@ -131,7 +131,7 @@ class SelfHostedPodcastManager
     /**
      * Delete podcast
      */
-    public function deletePodcast($id)
+    public function deletePodcast(string $id)
     {
         try {
             // Get podcast data
@@ -207,7 +207,7 @@ class SelfHostedPodcastManager
     /**
      * Update podcast metadata (for cloning)
      */
-    public function updatePodcastMetadata($id, $metadata)
+    public function updatePodcastMetadata(string $id, array $metadata)
     {
         try {
             $this->xmlHandler->updatePodcast($id, $metadata);
@@ -221,7 +221,7 @@ class SelfHostedPodcastManager
     /**
      * Get single podcast
      */
-    public function getPodcast($id)
+    public function getPodcast(string $id)
     {
         try {
             $podcast = $this->xmlHandler->getPodcast($id);
@@ -270,7 +270,7 @@ class SelfHostedPodcastManager
      * Update podcast's latest episode date based on its episodes
      * Called after adding/updating/deleting episodes
      */
-    private function updateLatestEpisodeDate($podcastId)
+    private function updateLatestEpisodeDate(string $podcastId)
     {
         try {
             $episodes = $this->xmlHandler->getEpisodes($podcastId);
@@ -285,7 +285,7 @@ class SelfHostedPodcastManager
             }
             
             // Filter published episodes only
-            $publishedEpisodes = array_filter($episodes, function($ep) {
+            $publishedEpisodes = array_filter($episodes, function(array $ep) {
                 return ($ep['status'] ?? 'published') === 'published';
             });
             
@@ -324,7 +324,7 @@ class SelfHostedPodcastManager
     /**
      * Add episode to podcast
      */
-    public function addEpisode($podcastId, $episodeData, $imageFile = null, $audioFile = null)
+    public function addEpisode(string $podcastId, array $episodeData, ?array $imageFile = null, ?array $audioFile = null)
     {
         error_log("[MANAGER] addEpisode called for podcast: $podcastId");
         error_log("[MANAGER] Episode data received: " . print_r($episodeData, true));
@@ -398,7 +398,7 @@ class SelfHostedPodcastManager
     /**
      * Update episode
      */
-    public function updateEpisode($podcastId, $episodeId, $episodeData, $imageFile = null, $audioFile = null)
+    public function updateEpisode(string $podcastId, string $episodeId, array $episodeData, ?array $imageFile = null, ?array $audioFile = null)
     {
         try {
             // Get existing episode data
@@ -481,7 +481,7 @@ class SelfHostedPodcastManager
     /**
      * Delete episode
      */
-    public function deleteEpisode($podcastId, $episodeId)
+    public function deleteEpisode(string $podcastId, string $episodeId)
     {
         try {
             // Get episodes to find the one being deleted
@@ -533,7 +533,7 @@ class SelfHostedPodcastManager
     /**
      * Get all episodes for a podcast
      */
-    public function getEpisodes($podcastId)
+    public function getEpisodes(string $podcastId)
     {
         try {
             return $this->xmlHandler->getEpisodes($podcastId);
@@ -546,7 +546,7 @@ class SelfHostedPodcastManager
     /**
      * Validate podcast data
      */
-    private function validatePodcastData($data, $excludeId = null)
+    private function validatePodcastData(array $data, ?string $excludeId = null)
     {
         // Required fields
         if (empty($data['title'])) {
@@ -588,7 +588,7 @@ class SelfHostedPodcastManager
     /**
      * Validate episode data
      */
-    private function validateEpisodeData($data, $hasAudioFile = false)
+    private function validateEpisodeData(array $data, bool $hasAudioFile = false)
     {
         if (empty($data['title'])) {
             return ['valid' => false, 'message' => 'Episode title is required'];
@@ -628,7 +628,7 @@ class SelfHostedPodcastManager
     /**
      * Rename image file after creation
      */
-    private function renameImageFile($oldFilename, $newId)
+    private function renameImageFile(string $oldFilename, string $newId)
     {
         $oldPath = COVERS_DIR . '/' . $oldFilename;
         $extension = pathinfo($oldFilename, PATHINFO_EXTENSION);
@@ -645,7 +645,7 @@ class SelfHostedPodcastManager
     /**
      * Log operations
      */
-    private function logOperation($operation, $id, $title)
+    private function logOperation(string $operation, string $id, ?string $title)
     {
         $logFile = LOGS_DIR . '/operations.log';
         $timestamp = date('Y-m-d H:i:s');
@@ -656,7 +656,7 @@ class SelfHostedPodcastManager
     /**
      * Log errors
      */
-    private function logError($operation, $message)
+    private function logError(string $operation, string $message)
     {
         $logFile = LOGS_DIR . '/error.log';
         $timestamp = date('Y-m-d H:i:s');
