@@ -33,6 +33,26 @@ class PodcastManager
 
             $coverImage = '';
 
+            // No cover file uploaded and no image URL supplied (e.g. the manual
+            // "Add New Podcast" form, which does not parse the feed client-side):
+            // resolve the cover image straight from the feed so any podcast added
+            // by URL gets its artwork, regardless of which form was used.
+            $hasUploadedFile = $imageFile && $imageFile['error'] !== UPLOAD_ERR_NO_FILE;
+            if (!$hasUploadedFile && empty($data['rss_image_url']) && !empty($data['feed_url'])) {
+                require_once __DIR__ . '/RssFeedParser.php';
+                try {
+                    $parser = new RssFeedParser();
+                    $feedResult = $parser->fetchAndParse($data['feed_url']);
+                    if (!empty($feedResult['success']) && !empty($feedResult['data']['image_url'])) {
+                        $data['rss_image_url'] = $feedResult['data']['image_url'];
+                    } else {
+                        error_log('Cover image lookup: no image found in feed - ' . $data['feed_url']);
+                    }
+                } catch (Exception $e) {
+                    error_log('Cover image lookup failed: ' . $e->getMessage() . ' - ' . $data['feed_url']);
+                }
+            }
+
             // Handle image upload if provided
             if ($imageFile && $imageFile['error'] !== UPLOAD_ERR_NO_FILE) {
                 // Generate temporary ID for filename
