@@ -612,17 +612,19 @@ class RssFeedParser
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_MAXREDIRS => 5,
-            CURLOPT_TIMEOUT => $this->timeout,
+            CURLOPT_TIMEOUT => 30, // Image download is a one-time operation at import; allow slow hosts (do NOT use $this->timeout, which is tuned for fast feed health checks)
             CURLOPT_USERAGENT => $this->userAgent,
             CURLOPT_SSL_VERIFYPEER => $sslVerify,
         ]);
         
         $data = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
         
         curl_close($ch);
         
         if ($httpCode !== 200) {
+            error_log("Cover image download failed: HTTP {$httpCode}" . ($curlError ? " - cURL: {$curlError}" : '') . " - URL: {$url}");
             return false;
         }
         
