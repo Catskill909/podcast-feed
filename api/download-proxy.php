@@ -12,6 +12,8 @@
  * Usage: /api/download-proxy.php?url=ENCODED_URL&filename=ENCODED_FILENAME
  */
 
+require_once __DIR__ . '/../includes/FeedUrlGuard.php';
+
 // Increase limits for large audio files
 set_time_limit(300); // 5 minutes
 ini_set('memory_limit', '512M');
@@ -42,6 +44,16 @@ if (!in_array($parsed['scheme'] ?? '', ['http', 'https'])) {
     die('Invalid protocol');
 }
 
+// This endpoint is unauthenticated, so an unrestricted fetch would let any
+// caller use the server to reach internal services and cloud metadata
+// endpoints. An allowlist is the wrong tool here - episode audio is routinely
+// served from a different host than the feed (feed on podbean.com, media on
+// mcdn.podbean.com) - so require the target to resolve to public addresses.
+if (!feedUrlHostIsPublic($url)) {
+    http_response_code(403);
+    die('URL host is not permitted');
+}
+
 // Sanitize filename
 $filename = preg_replace('/[^a-zA-Z0-9._-]/', '_', $filename);
 if (empty($filename)) {
@@ -60,8 +72,10 @@ $ch = curl_init();
 curl_setopt_array($ch, [
     CURLOPT_URL => $url,
     CURLOPT_RETURNTRANSFER => false,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_MAXREDIRS => 5,
+    // Redirects are resolved by the HEAD below and re-checked before any bytes
+    // are streamed, so this handle must not follow new ones of its own.
+    CURLOPT_FOLLOWLOCATION => false,
+    CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
     CURLOPT_TIMEOUT => 300,
     CURLOPT_CONNECTTIMEOUT => 30,
     CURLOPT_SSL_VERIFYPEER => true,
@@ -95,6 +109,8 @@ curl_setopt_array($headCh, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_FOLLOWLOCATION => true,
     CURLOPT_MAXREDIRS => 5,
+    CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+    CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
     CURLOPT_TIMEOUT => 30,
     CURLOPT_SSL_VERIFYPEER => true,
     CURLOPT_USERAGENT => 'Mozilla/5.0 (compatible; PodFeed/1.0)',
@@ -103,6 +119,17 @@ curl_setopt_array($headCh, [
 curl_exec($headCh);
 $httpCode = curl_getinfo($headCh, CURLINFO_HTTP_CODE);
 $contentLength = curl_getinfo($headCh, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+$effectiveUrl = (string) curl_getinfo($headCh, CURLINFO_EFFECTIVE_URL);
+
+// Checking only the submitted URL would be bypassable: a permitted host can
+// redirect to an internal address. Re-check where the redirects actually landed
+// before streaming anything back, and pin the download to that address.
+if ($effectiveUrl === '' || !feedUrlHostIsPublic($effectiveUrl)) {
+    http_response_code(403);
+    die('URL host is not permitted');
+}
+
+curl_setopt($ch, CURLOPT_URL, $effectiveUrl);
 
 // Check if resource exists
 if ($httpCode !== 200) {

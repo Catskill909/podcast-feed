@@ -10,7 +10,7 @@
  * Run: php test-proxy-allowlist.php
  */
 
-require_once __DIR__ . '/embed/feed-allowlist.php';
+require_once __DIR__ . '/includes/FeedUrlGuard.php';
 
 $ownHost = 'podcast.supersoul.top';
 $failures = [];
@@ -79,9 +79,30 @@ foreach ($mustBlock as $url) {
     check("blocked $url", feedUrlIsAllowed($url, $ownHost), false, $failures);
 }
 
+// 4. feedUrlHostIsPublic: the guard used where an allowlist cannot apply
+//    (download-proxy.php). Private and loopback space must never resolve.
+$privateUrls = [
+    'http://127.0.0.1/',
+    'http://localhost/',
+    'http://169.254.169.254/latest/meta-data/',
+    'http://10.0.0.1/',
+    'http://192.168.1.1/',
+    'http://172.16.0.1/',
+    'http://[::1]/',
+    'http://0.0.0.0/',
+];
+
+foreach ($privateUrls as $url) {
+    check("private host $url", feedUrlHostIsPublic($url), false, $failures);
+}
+
+// A public host must still pass, or downloads break.
+check('public host', feedUrlHostIsPublic('https://example.com/a.mp3'), true, $failures);
+
 // Report
 if ($failures === []) {
-    echo "PASS - {$checked} directory feeds allowed, " . count($mustBlock) . " hostile URLs blocked\n";
+    echo "PASS - {$checked} directory feeds allowed, " . count($mustBlock) . " hostile URLs blocked, "
+        . count($privateUrls) . " private hosts rejected\n";
     exit(0);
 }
 

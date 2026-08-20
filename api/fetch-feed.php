@@ -4,6 +4,8 @@
  * Fetches external RSS feeds to avoid CORS issues
  */
 
+require_once __DIR__ . '/../includes/FeedUrlGuard.php';
+
 header('Content-Type: application/xml; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 
@@ -45,6 +47,15 @@ if ($isLocalFeed) {
         exit;
     }
 } else {
+    // This endpoint is unauthenticated, so an unrestricted fetch would let any
+    // caller use the server to reach arbitrary hosts, including internal
+    // services. Only feeds that are actually in the directory are fetchable.
+    if (!feedUrlIsAllowed($feedUrl, (string) ($_SERVER['HTTP_HOST'] ?? ''))) {
+        http_response_code(403);
+        echo '<?xml version="1.0"?><error>Feed URL is not in the podcast directory</error>';
+        exit;
+    }
+
     // Fetch external feed via HTTP with cache-busting
     $separator = (strpos($feedUrl, '?') === false) ? '?' : '&';
     $cacheBustUrl = $feedUrl . $separator . '_t=' . time() . '&_nocache=1';
@@ -63,6 +74,8 @@ if ($isLocalFeed) {
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_MAXREDIRS => 3,
+                CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+                CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
                 CURLOPT_CONNECTTIMEOUT => 5,  // fail fast on dead hosts
                 CURLOPT_TIMEOUT => 15,        // allow slow-but-alive sources
                 CURLOPT_USERAGENT => 'PodFeed Builder/1.0',
@@ -75,6 +88,16 @@ if ($isLocalFeed) {
             $response = curl_exec($ch);
             $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $curlErr = curl_error($ch);
+
+            // The allowlist covers the submitted URL, but an allowed host can
+            // redirect inward. Discard the body rather than relay it if the
+            // redirects ended somewhere non-public.
+            $effectiveUrl = (string) curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+            if ($response !== false && $effectiveUrl !== '' && !feedUrlHostIsPublic($effectiveUrl)) {
+                http_response_code(403);
+                echo '<?xml version="1.0"?><error>Feed redirected to a host that is not permitted</error>';
+                exit;
+            }
             // Note: curl_close() intentionally omitted — it's a no-op since PHP 8.0
             // (the handle is freed when $ch goes out of scope) and deprecated in 8.5.
 

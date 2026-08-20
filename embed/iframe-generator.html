@@ -40,6 +40,8 @@
         </header>
 
         <div class="main-layout">
+            <div class="controls-drawer" id="controls-drawer">
+                <div class="controls-drawer-content" id="controls-drawer-content">
             <!-- Controls Panel - 3 Columns Layout -->
             <section class="controls-grid">
                 <!-- Column 1: Iframe Dimensions -->
@@ -313,10 +315,17 @@
                     </button>
                 </div>
             </div>
+                </div><!-- /.controls-drawer-content -->
+            </div><!-- /.controls-drawer -->
 
             <!-- Preview Panel - Full Width -->
             <main class="preview-panel">
                 <div class="preview-header">
+                    <button id="toggle-controls" class="drawer-toggle" type="button"
+                        aria-expanded="true" aria-controls="controls-drawer-content"
+                        title="Hide controls" aria-label="Hide controls">
+                        <span class="material-icons" aria-hidden="true">chevron_left</span>
+                    </button>
                     <h2 class="preview-title">
                         <span class="material-icons">preview</span>
                         Live Preview

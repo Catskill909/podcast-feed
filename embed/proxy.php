@@ -25,7 +25,7 @@ function proxyError(int $status, string $message): never
     exit;
 }
 
-require_once __DIR__ . '/feed-allowlist.php';
+require_once __DIR__ . '/../includes/FeedUrlGuard.php';
 
 // Get the feed URL from query parameter
 $feedUrl = isset($_GET['url']) ? trim((string) $_GET['url']) : '';

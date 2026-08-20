@@ -35,6 +35,8 @@ class IframeGenerator {
             resetBranding: document.getElementById('reset-branding'),
 
             // Preview
+            toggleControls: document.getElementById('toggle-controls'),
+            mainLayout: document.querySelector('.main-layout'),
             previewIframe: document.getElementById('preview-iframe'),
             iframeContainer: document.getElementById('iframe-container'),
             embedCodeDisplay: document.getElementById('embed-code-display'),
@@ -53,7 +55,44 @@ class IframeGenerator {
     init() {
         this.loadPodcastList();
         this.setupEventListeners();
+        this.restoreDrawerState();
         this.updatePreview();
+    }
+
+    // ==========================================
+    // CONTROLS DRAWER
+    // ==========================================
+    static DRAWER_KEY = 'iframe-generator-controls-collapsed';
+
+    restoreDrawerState() {
+        // Default to open: a first-time visitor should see the controls.
+        const collapsed = localStorage.getItem(IframeGenerator.DRAWER_KEY) === 'true';
+        this.setDrawerCollapsed(collapsed, { persist: false });
+    }
+
+    toggleDrawer() {
+        const collapsed = this.controls.mainLayout.classList.contains('controls-collapsed');
+        this.setDrawerCollapsed(!collapsed);
+    }
+
+    setDrawerCollapsed(collapsed, { persist = true } = {}) {
+        const { mainLayout, toggleControls } = this.controls;
+        if (!mainLayout) return;
+
+        mainLayout.classList.toggle('controls-collapsed', collapsed);
+
+        if (toggleControls) {
+            // The button reports the drawer's state, so the label describes the
+            // action it will perform next.
+            const label = collapsed ? 'Show controls' : 'Hide controls';
+            toggleControls.setAttribute('aria-expanded', String(!collapsed));
+            toggleControls.setAttribute('aria-label', label);
+            toggleControls.setAttribute('title', label);
+        }
+
+        if (persist) {
+            localStorage.setItem(IframeGenerator.DRAWER_KEY, String(collapsed));
+        }
     }
 
     async loadPodcastList() {
@@ -203,6 +242,11 @@ class IframeGenerator {
             });
         });
 
+        // Controls drawer
+        if (this.controls.toggleControls) {
+            this.controls.toggleControls.addEventListener('click', () => this.toggleDrawer());
+        }
+
         // Copy buttons
         this.controls.copyEmbedCode.addEventListener('click', () => this.copyToClipboard());
         this.controls.copyCodeBtn.addEventListener('click', () => this.copyToClipboard());
@@ -229,8 +273,7 @@ class IframeGenerator {
             const embedUrl = params ? `${this.baseUrl}?${params}` : this.baseUrl;
             const cacheBuster = Date.now();
             const finalUrl = params ? `${embedUrl}&_t=${cacheBuster}` : `${embedUrl}?_t=${cacheBuster}`;
-            iframe.src = 'about:blank';
-            setTimeout(() => { iframe.src = finalUrl; }, 150);
+            iframe.src = finalUrl;
         } else if (device === 'mobile') {
             container.classList.add('mobile');
             // Force mobile to fixed 375px width
@@ -241,8 +284,7 @@ class IframeGenerator {
             const embedUrl = params ? `${this.baseUrl}?${params}` : this.baseUrl;
             const cacheBuster = Date.now();
             const finalUrl = params ? `${embedUrl}&_t=${cacheBuster}` : `${embedUrl}?_t=${cacheBuster}`;
-            iframe.src = 'about:blank';
-            setTimeout(() => { iframe.src = finalUrl; }, 150);
+            iframe.src = finalUrl;
         } else {
             // Desktop - use the configured width
             this.updatePreview();
@@ -450,19 +492,18 @@ class IframeGenerator {
         const cacheBuster = Date.now();
         const finalUrl = params ? `${embedUrl}&_t=${cacheBuster}` : `${embedUrl}?_t=${cacheBuster}`;
 
-        // Force complete reload
-        iframe.src = 'about:blank';
+        // The _t cache-buster already makes every URL unique, so assigning src
+        // reloads on its own. Bouncing through about:blank first aborted the
+        // document mid-load, which cancelled its in-flight stylesheet requests -
+        // that is the "failed to load a stylesheet" issue Chrome reported - and
+        // flashed the preview blank on every control change.
+        iframe.addEventListener('load', () => {
+            setTimeout(() => {
+                this.applyBrandingToIframe(iframe);
+            }, 500);
+        }, { once: true });
 
-        setTimeout(() => {
-            iframe.src = finalUrl;
-            
-            // Apply branding after iframe loads
-            iframe.addEventListener('load', () => {
-                setTimeout(() => {
-                    this.applyBrandingToIframe(iframe);
-                }, 500);
-            }, { once: true });
-        }, 150);
+        iframe.src = finalUrl;
 
         // Update iframe dimensions
         const width = this.controls.widthValue.value + this.controls.widthUnit.value;

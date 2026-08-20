@@ -538,6 +538,8 @@ body {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
+    /* Keeps the title beside the toggle and the device buttons pinned right. */
+    margin-right: auto;
 }
 
 .preview-title .material-icons {
@@ -1039,4 +1041,139 @@ body {
 
 [data-theme="light"] .icon-preview {
     box-shadow: var(--elevation-1);
+}
+/* ==========================================
+   COLLAPSIBLE CONTROLS DRAWER + STICKY PREVIEW
+   ==========================================
+   .main-layout was a single flex column at every width, so the preview panel
+   rendered below the entire control stack - roughly 3000px down once the
+   controls collapsed to one column. Changing a control at the top then looked
+   like it did nothing, because the result was far off-screen.
+
+   On wide screens the controls become a drawer beside a sticky preview,
+   separated by a rail. The rail carries a grip at its top and is the single
+   control that collapses and restores the drawer; collapsing leaves the rail in
+   place so the way back is always visible.
+*/
+
+/* Toggle beside the Live Preview title. Deliberately high-contrast - it is the
+   only affordance for collapsing the controls, so it has to be easy to spot. */
+.drawer-toggle {
+    display: none;                      /* desktop-only; enabled in the query below */
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-right: var(--spacing-md);
+    flex-shrink: 0;
+    border: none;
+    border-radius: var(--radius-full);
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    box-shadow: var(--elevation-1);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast),
+                box-shadow var(--transition-fast);
+}
+
+.drawer-toggle:hover {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    box-shadow: var(--elevation-2);
+}
+
+.drawer-toggle:focus-visible {
+    outline: 2px solid var(--md-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.drawer-toggle .material-icons {
+    font-size: 22px;
+    transition: transform var(--transition-medium);
+}
+
+@media (min-width: 1200px) {
+    .drawer-toggle {
+        display: inline-flex;
+    }
+
+    .main-layout {
+        display: grid;
+        /* .main-layout is a column-flex item with `margin: 0 auto`, and auto
+           cross-axis margins suppress stretch - so it was shrink-to-fit and the
+           1fr track resolved against content (356px) instead of the viewport.
+           Filling explicitly is what lets the preview expand when the drawer
+           collapses; max-width still caps it and the auto margins still centre. */
+        width: 100%;
+        /* Controls are form fields and read fine in one narrow column; the
+           preview is what benefits from width. */
+        grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
+        align-items: start;
+        gap: var(--spacing-lg);
+        /* Animatable in Chromium; elsewhere the change is simply instant. */
+        transition: grid-template-columns var(--transition-slow),
+                    gap var(--transition-slow);
+    }
+
+    /* Content on the left, rail pinned to the right edge of the drawer. */
+    .controls-drawer {
+        grid-column: 1;
+        min-width: 0;
+        position: relative;
+    }
+
+    .controls-drawer-content {
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xl);
+        transition: opacity var(--transition-medium);
+    }
+
+    /* Single column inside the drawer - the preview beside it supplies width. */
+    .controls-grid,
+    .branding-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .preview-panel {
+        grid-column: 2;
+        min-width: 0;
+        position: sticky;
+        top: var(--spacing-xl);
+        /* Keep a tall preview scrollable rather than overflowing the viewport. */
+        max-height: calc(100vh - (var(--spacing-xl) * 2));
+        overflow-y: auto;
+    }
+
+    /* Collapsed: the drawer shrinks to just the rail, which stays put. */
+    .main-layout.controls-collapsed {
+        grid-template-columns: 0 minmax(0, 1fr);
+        gap: 0;
+    }
+
+    .main-layout.controls-collapsed .controls-drawer-content {
+        opacity: 0;
+        pointer-events: none;
+        /* Keeps the hidden controls out of the tab order and off the a11y tree. */
+        visibility: hidden;
+        position: absolute;
+        width: 0;
+        overflow: hidden;
+    }
+
+    .main-layout.controls-collapsed .drawer-toggle .material-icons {
+        transform: rotate(180deg);
+    }
+}
+
+/* Users who prefer reduced motion get the state change without the slide. */
+@media (prefers-reduced-motion: reduce) {
+    .main-layout,
+    .controls-drawer-content,
+    .drawer-toggle .material-icons {
+        transition: none;
+    }
 }

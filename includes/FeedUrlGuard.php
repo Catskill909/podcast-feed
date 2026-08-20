@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Shared guards for server-side URL fetching.
+ *
+ * Any endpoint that fetches a caller-supplied URL must use one of these. An
+ * unguarded fetcher is a server-side request forgery hole: it lets an anonymous
+ * caller reach internal services and cloud metadata endpoints, and launder
+ * traffic through the server's IP.
+ */
+
+/**
  * Hosts the RSS proxy is allowed to fetch.
  *
  * Derived from the admin-curated podcast directory rather than a hand-kept
@@ -80,4 +89,70 @@ function feedUrlIsAllowed(string $url, string $ownHost = ''): bool
     $host = is_string($host) ? strtolower($host) : '';
 
     return $host !== '' && isset(feedAllowedHosts($ownHost)[$host]);
+}
+
+/**
+ * Whether $url resolves only to public, routable addresses.
+ *
+ * For fetchers that cannot use an allowlist - podcast audio is routinely served
+ * from a different host than the feed (feed on podbean.com, media on
+ * mcdn.podbean.com), so allowlisting feed hosts would break downloads. Blocking
+ * private space is the correct guard there.
+ *
+ * Every resolved address is checked, not just the first: a hostname can return
+ * both a public and a private record.
+ */
+function feedUrlHostIsPublic(string $url): bool
+{
+    $host = parse_url($url, PHP_URL_HOST);
+    if (!is_string($host) || $host === '') {
+        return false;
+    }
+
+    $host = trim($host, '[]');
+
+    // A literal IP is checked directly; a name is resolved first.
+    $addresses = filter_var($host, FILTER_VALIDATE_IP) ? [$host] : resolveHostAddresses($host);
+    if ($addresses === []) {
+        return false;
+    }
+
+    foreach ($addresses as $address) {
+        $isPublic = filter_var(
+            $address,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+        );
+        if ($isPublic === false) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * All A/AAAA records for a hostname.
+ *
+ * @return list<string>
+ */
+function resolveHostAddresses(string $host): array
+{
+    $addresses = [];
+
+    $v4 = gethostbynamel($host);
+    if (is_array($v4)) {
+        $addresses = $v4;
+    }
+
+    $v6 = @dns_get_record($host, DNS_AAAA);
+    if (is_array($v6)) {
+        foreach ($v6 as $record) {
+            if (isset($record['ipv6'])) {
+                $addresses[] = $record['ipv6'];
+            }
+        }
+    }
+
+    return array_values(array_unique($addresses));
 }
