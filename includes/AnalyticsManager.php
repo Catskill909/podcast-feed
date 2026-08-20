@@ -130,8 +130,33 @@ class AnalyticsManager
             'dailySeries' => $stats['dailySeries'],
             'topEpisodes' => $stats['topEpisodes'],
             'topPodcasts' => $stats['topPodcasts'],
+            // Newest recorded day across ALL data, not just this range. Without
+            // it an empty range is indistinguishable from having no data at
+            // all, which is what made a stale-but-populated store report
+            // "No Analytics Data Yet".
+            'lastEventDate' => $this->getLastEventDate(),
             'updatedAt' => date('c')
         ];
+    }
+
+    /**
+     * Newest day that has any recorded metric, or null if the store is empty.
+     */
+    private function getLastEventDate(): ?string
+    {
+        $latest = null;
+
+        foreach ($this->xmlHandler->getAllData() as $day) {
+            if (empty($day['metrics'])) {
+                continue;
+            }
+            $date = $day['date'] ?? '';
+            if ($date !== '' && ($latest === null || $date > $latest)) {
+                $latest = $date;
+            }
+        }
+
+        return $latest;
     }
 
     /**
@@ -265,48 +290,6 @@ class AnalyticsManager
         ];
     }
 
-    /**
-     * Get top episodes by plays or downloads
-     * 
-     * @param int $limit Number of episodes to return
-     * @param string $sortBy Sort by 'plays' or 'downloads'
-     * @return array Top episodes
-     */
-    public function getTopEpisodes(int $limit = 10, string $sortBy = 'plays')
-    {
-        $data = $this->xmlHandler->getAllData();
-        $episodeStats = [];
-
-        foreach ($data as $day) {
-            foreach ($day['metrics'] as $metric) {
-                $episodeId = $metric['episode_id'];
-
-                if (!isset($episodeStats[$episodeId])) {
-                    $episodeStats[$episodeId] = [
-                        'episodeId' => $episodeId,
-                        'episodeTitle' => $metric['episode_title'] ?? 'Unknown Episode',
-                        'podcastId' => $metric['podcast_id'],
-                        'podcastTitle' => $metric['podcast_title'] ?? 'Unknown Podcast',
-                        'plays' => 0,
-                        'downloads' => 0
-                    ];
-                }
-
-                if ($metric['type'] === 'play') {
-                    $episodeStats[$episodeId]['plays'] += $metric['count'];
-                } elseif ($metric['type'] === 'download') {
-                    $episodeStats[$episodeId]['downloads'] += $metric['count'];
-                }
-            }
-        }
-
-        // Sort by specified metric
-        usort($episodeStats, function (array $a, array $b) use ($sortBy) {
-            return $b[$sortBy] - $a[$sortBy];
-        });
-
-        return array_slice($episodeStats, 0, $limit);
-    }
 
     /**
      * Sanitize input string

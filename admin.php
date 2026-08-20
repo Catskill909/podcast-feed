@@ -615,7 +615,6 @@ function escapeJs(?string $text): string {
                             <div class="analytics-time-range">
                                 <button class="analytics-time-range-btn active" data-range="7d">7 Days</button>
                                 <button class="analytics-time-range-btn" data-range="30d">30 Days</button>
-                                <button class="analytics-time-range-btn" data-range="90d">90 Days</button>
                                 <button class="analytics-time-range-btn" data-range="all">All Time</button>
                             </div>
 

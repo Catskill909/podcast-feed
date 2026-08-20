@@ -7,6 +7,8 @@ config/config.local.php
 # Data Files (exclude from git, backup separately)
 data/podcasts.xml
 data/self-hosted-podcasts.xml
+# Live analytics; the repo copy would otherwise overwrite production data
+data/analytics.xml
 data/backup/*.xml
 
 # Uploads (exclude from git, backup separately)

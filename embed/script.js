@@ -612,6 +612,9 @@ async function parseMasterFeed(xmlDoc) {
 
         if (feedUrl) {
             podcasts.push({
+                // Real directory ID, so embed events aggregate with events from
+                // the public browser page instead of forming a separate set.
+                analyticsId: item.querySelector('guid')?.textContent?.trim() || '',
                 url: feedUrl,
                 title,
                 description,
@@ -882,6 +885,21 @@ function getChannelImage(channel) {
     return '';
 }
 
+/**
+ * Episode ID hash. Copied verbatim from assets/js/player-modal.js - the two
+ * must produce identical IDs for the same episode or the dashboard will count
+ * one episode twice.
+ */
+function hashCode(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(36);
+}
+
 function parseEpisode(item, episodeIndex) {
     const enclosure = item.querySelector('enclosure');
 
@@ -904,12 +922,18 @@ function parseEpisode(item, episodeIndex) {
     let title = item.querySelector('title')?.textContent || 'Untitled Episode';
     title = decodeHtmlEntities(title);
 
+    const audioUrl = enclosure?.getAttribute('url') || item.querySelector('link')?.textContent || '';
+
     const episode = {
         id: episodeIndex,
+        // Must match assets/js/player-modal.js: 'ep_' + hash(audioUrl + index),
+        // computed here in feed order, before any sorting or limiting is
+        // applied, or the same episode would get a different ID per view.
+        analyticsId: audioUrl ? 'ep_' + hashCode(audioUrl + episodeIndex) : '',
         title: title,
         description: description,
         pubDate: item.querySelector('pubDate')?.textContent || '',
-        audioUrl: enclosure?.getAttribute('url') || item.querySelector('link')?.textContent || '',
+        audioUrl: audioUrl,
         duration: duration,
         type: enclosure?.getAttribute('type') || 'audio/mpeg',
         image: image
@@ -1483,6 +1507,8 @@ function setPlaybackSpeed(speed) {
 function downloadEpisode() {
     if (!state.currentEpisode) return;
 
+    window.embedAnalytics?.trackDownload(state.currentEpisode, state.currentPodcast);
+
     const a = document.createElement('a');
     a.href = state.currentEpisode.audioUrl;
     a.download = `${state.currentEpisode.title}.mp3`;
@@ -1922,7 +1948,13 @@ function initEventListeners() {
     }
 
     // Audio events
-    elements.audioElement.addEventListener('play', () => updatePlayPauseButton(true));
+    elements.audioElement.addEventListener('play', () => {
+        updatePlayPauseButton(true);
+        // Hooked on the element rather than at each call site so every path
+        // that starts playback is counted once. The tracker itself dedupes per
+        // episode per session, so resuming after a pause does not re-log.
+        window.embedAnalytics?.trackPlay(state.currentEpisode, state.currentPodcast);
+    });
     elements.audioElement.addEventListener('pause', () => updatePlayPauseButton(false));
     elements.audioElement.addEventListener('timeupdate', updateProgress);
     elements.audioElement.addEventListener('progress', updateBuffered);

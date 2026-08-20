@@ -220,3 +220,15 @@ in each section, not by a broad regression suite; no such suite exists in this r
 
 Treat the security fixes in section 7 as the load-bearing part of this change set. They
 close holes that were confirmed exploitable on the live host.
+
+---
+
+## 9. Related work this session
+
+Analytics "no data" was diagnosed and fixed separately — see
+[ANALYTICS-EMBED-TRACKING-2026-08-20.md](ANALYTICS-EMBED-TRACKING-2026-08-20.md).
+
+Note the shared root cause: the main analytics tracker posts to a **relative**
+`api/log-analytics-event.php`, which resolves to `/embed/api/...` and 404s from the embed —
+the same relative-path defect that broke the proxy. Any code that runs in both `/` and
+`/embed/` must resolve same-origin URLs from `window.location`, never as a bare relative path.

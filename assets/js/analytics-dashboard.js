@@ -203,7 +203,7 @@ class AnalyticsDashboard {
         const hasData = data.overview.totalPlays > 0 || data.overview.totalDownloads > 0;
 
         if (!hasData) {
-            this.showEmptyState();
+            this.showEmptyState(data);
             return;
         }
 
@@ -496,19 +496,67 @@ class AnalyticsDashboard {
     /**
      * Show empty state
      */
-    showEmptyState() {
+    showEmptyState(data = null) {
         const container = document.getElementById('analyticsContent');
         if (!container) return;
+
+        // An empty *range* is not the same as an empty store. Saying "No
+        // Analytics Data Yet" over a populated-but-stale store reads as data
+        // loss, which is exactly how this was reported as a bug.
+        const lastEventDate = data?.lastEventDate || null;
+        const filtered = Boolean(this.currentPodcastId);
+
+        if (lastEventDate && this.currentRange !== 'all') {
+            const last = new Date(`${lastEventDate}T00:00:00`);
+            const formatted = last.toLocaleDateString(undefined, {
+                year: 'numeric', month: 'short', day: 'numeric'
+            });
+
+            container.innerHTML = `
+                <div class="analytics-empty-state">
+                    <div class="analytics-empty-icon">🗓️</div>
+                    <h5 class="analytics-empty-title">Nothing in this time range</h5>
+                    <p class="analytics-empty-description">
+                        No ${filtered ? 'activity for this podcast' : 'plays or downloads'}
+                        in the selected range. Last recorded activity was
+                        <strong>${this.sanitizeText(formatted)}</strong>.
+                    </p>
+                    <button type="button" class="analytics-empty-action" id="analyticsViewAllTime">
+                        View all time
+                    </button>
+                </div>
+            `;
+
+            const button = document.getElementById('analyticsViewAllTime');
+            if (button) {
+                button.addEventListener('click', () => this.selectRange('all'));
+            }
+            return;
+        }
 
         container.innerHTML = `
             <div class="analytics-empty-state">
                 <div class="analytics-empty-icon">📊</div>
                 <h5 class="analytics-empty-title">No Analytics Data Yet</h5>
                 <p class="analytics-empty-description">
-                    Start playing or downloading episodes from the public player to see engagement analytics here.
+                    Play or download an episode in the public player or an embed to see
+                    engagement analytics here.
                 </p>
             </div>
         `;
+    }
+
+    /**
+     * Switch range programmatically, keeping the range buttons in sync.
+     */
+    selectRange(range) {
+        this.currentRange = range;
+
+        document.querySelectorAll('.analytics-time-range-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.range === range);
+        });
+
+        this.loadAnalytics();
     }
 
     /**
