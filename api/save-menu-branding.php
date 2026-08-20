@@ -1,5 +1,9 @@
 <?php
 
+// Admin-only endpoint: reject unauthenticated callers with JSON, not a redirect.
+require_once __DIR__ . '/../includes/Auth.php';
+Auth::requireApi();
+
 /**
  * Save Menu Branding API
  * Handles saving site title and logo configuration

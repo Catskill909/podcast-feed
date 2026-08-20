@@ -63,8 +63,12 @@ class IframeGenerator {
             // Use the same master feed URL as the main player
             const masterFeedUrl = 'https://podcast.supersoul.top/feed.php';
 
-            // Try multiple CORS proxies like the main player does
+            // Same-origin proxy.php first, derived from the page location so it
+            // works locally and deployed. The third-party proxies are unreliable
+            // fallbacks only (see fetchWithFallback in script.js).
+            const baseUrl = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
             const proxies = [
+                `${baseUrl}proxy.php?url=${encodeURIComponent(masterFeedUrl)}`,
                 `https://corsproxy.io/?${encodeURIComponent(masterFeedUrl)}`,
                 `https://api.allorigins.win/get?url=${encodeURIComponent(masterFeedUrl)}`
             ];

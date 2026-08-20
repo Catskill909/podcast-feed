@@ -113,7 +113,9 @@
 
             output.innerHTML = `<span class="info">Testing: ${url}</span>\n\n`;
 
+            const baseUrl = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
             const proxies = [
+                { name: 'Same-origin PHP Proxy', url: `${baseUrl}proxy.php?url=${encodeURIComponent(url)}` },
                 { name: 'CorsProxy.io', url: `https://corsproxy.io/?${encodeURIComponent(url)}` },
                 { name: 'AllOrigins', url: `https://api.allorigins.win/get?url=${encodeURIComponent(url)}` }
             ];

@@ -8,6 +8,10 @@
 // Start session for flash messages
 session_start();
 
+// Server-side admin gate (replaces the old client-side auth.js check).
+require_once __DIR__ . '/includes/Auth.php';
+Auth::requirePage();
+
 require_once __DIR__ . '/includes/PodcastManager.php';
 
 $podcastManager = new PodcastManager();
@@ -146,7 +150,6 @@ function escapeJs(?string $text): string {
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
     
     <!-- Simple Password Protection - ALWAYS ACTIVE -->
-    <script src="auth.js"></script>
 </head>
 
 <body>

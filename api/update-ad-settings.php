@@ -1,4 +1,8 @@
 <?php
+
+// Admin-only endpoint: reject unauthenticated callers with JSON, not a redirect.
+require_once __DIR__ . '/../includes/Auth.php';
+Auth::requireApi();
 /**
  * Update Ad Settings API Endpoint
  * Handles AJAX requests for updating ad settings (toggles, rotation duration, order)

@@ -1,4 +1,8 @@
 <?php
+
+// Admin-only endpoint: reject unauthenticated callers with JSON, not a redirect.
+require_once __DIR__ . '/../includes/Auth.php';
+Auth::requireApi();
 // Start output buffering to catch any stray output
 ob_start();
 

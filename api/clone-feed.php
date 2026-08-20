@@ -1,4 +1,8 @@
 <?php
+
+// Admin-only endpoint: reject unauthenticated callers with JSON, not a redirect.
+require_once __DIR__ . '/../includes/Auth.php';
+Auth::requireApi();
 /**
  * Clone Feed API Endpoint
  * Handles podcast feed cloning requests and progress tracking

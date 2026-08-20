@@ -1,4 +1,8 @@
 <?php
+
+// Admin-only endpoint: reject unauthenticated callers with JSON, not a redirect.
+require_once __DIR__ . '/../includes/Auth.php';
+Auth::requireApi();
 /**
  * RSS Feed Import API Endpoint
  * Handles fetching and parsing RSS feeds for import preview

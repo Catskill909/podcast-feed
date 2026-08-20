@@ -1,45 +1,37 @@
 <?php
 
 /**
- * Login Page - Placeholder for Future Authentication
- * Currently allows access without authentication
+ * Admin login.
+ *
+ * Password-only, matching the UX of the old auth.js modal it replaces.
+ * Verification happens server-side against Auth::passwordHash().
  */
 
-require_once __DIR__ . '/config/auth_placeholder.php';
-require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/Auth.php';
 
-$auth = new AuthPlaceholder();
 $message = '';
-$messageType = '';
 
-// Handle login form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
-
-    if (validateCSRF($_POST['csrf_token'] ?? '')) {
-        $result = $auth->authenticate($username, $password);
-
-        if ($result['success']) {
-            $redirectUrl = $_GET['redirect'] ?? 'index.php';
-            header('Location: ' . $redirectUrl);
-            exit;
-        } else {
-            $message = $result['message'];
-            $messageType = 'danger';
-        }
-    } else {
-        $message = 'Invalid security token. Please try again.';
-        $messageType = 'danger';
-    }
+// Only allow relative redirect targets, so ?redirect= cannot be used to
+// bounce a logged-in admin to an external site.
+$redirect = $_GET['redirect'] ?? '/admin.php';
+if (!is_string($redirect) || $redirect === '' || $redirect[0] !== '/' || str_starts_with($redirect, '//')) {
+    $redirect = '/admin.php';
 }
 
-// If already authenticated, redirect to main page
-if ($auth->isAuthenticated()) {
-    $redirectUrl = $_GET['redirect'] ?? 'index.php';
-    header('Location: ' . $redirectUrl);
+if (Auth::check()) {
+    header('Location: ' . $redirect);
     exit;
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (Auth::attempt($_POST['password'] ?? '')) {
+        header('Location: ' . $redirect);
+        exit;
+    }
+    $message = 'Incorrect password.';
+}
+
+$usingEnv = Auth::usingEnvHash();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,155 +39,108 @@ if ($auth->isAuthenticated()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - PodFeed Builder</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
+    <title>Admin Login - PodFeed Builder</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
     <style>
-        .login-container {
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #f0f6fc;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: var(--spacing-md);
+            padding: 20px;
         }
-
-        .login-card {
-            max-width: 400px;
+        .card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 40px;
             width: 100%;
+            max-width: 400px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
         }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: var(--spacing-xl);
+        .icon { text-align: center; font-size: 42px; color: #58a6ff; margin-bottom: 18px; }
+        h1 { font-size: 22px; text-align: center; margin-bottom: 6px; }
+        .sub { text-align: center; color: #8b949e; font-size: 14px; margin-bottom: 28px; }
+        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #c9d1d9; }
+        .field { position: relative; }
+        input[type="password"], input[type="text"] {
+            width: 100%;
+            padding: 12px 44px 12px 14px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            color: #f0f6fc;
+            font-size: 15px;
         }
-
-        .login-logo {
-            font-size: 4rem;
-            margin-bottom: var(--spacing-md);
-            color: var(--accent-primary);
+        input:focus { outline: none; border-color: #58a6ff; }
+        .toggle {
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: #8b949e; cursor: pointer; font-size: 15px;
         }
-
-        .demo-notice {
-            background-color: rgba(31, 111, 235, 0.1);
-            border: 1px solid rgba(31, 111, 235, 0.2);
-            border-radius: var(--border-radius);
-            padding: var(--spacing-md);
-            margin-bottom: var(--spacing-lg);
-            color: var(--accent-info);
-            font-size: var(--font-size-sm);
+        button[type="submit"] {
+            width: 100%; margin-top: 20px; padding: 12px;
+            background: #238636; border: none; border-radius: 8px;
+            color: #fff; font-size: 15px; font-weight: 600; cursor: pointer;
         }
+        button[type="submit"]:hover { background: #2ea043; }
+        .error {
+            background: rgba(248, 81, 73, 0.1);
+            border: 1px solid rgba(248, 81, 73, 0.4);
+            color: #f85149;
+            padding: 10px 14px; border-radius: 8px; font-size: 14px; margin-bottom: 18px;
+        }
+        .envnote {
+            margin-top: 24px; padding-top: 18px; border-top: 1px solid #30363d;
+            font-size: 12px; color: #8b949e; text-align: center; line-height: 1.5;
+        }
+        .envnote .ok { color: #3fb950; }
+        .envnote .warn { color: #d29922; }
     </style>
 </head>
 
 <body>
-    <div class="login-container">
-        <div class="login-card">
-            <div class="card">
-                <div class="login-header">
-                    <div class="login-logo"><i class="fa-solid fa-headphones"></i></div>
-                    <h1>PodFeed Builder</h1>
-                    <p class="text-secondary">Admin Login</p>
-                </div>
+    <div class="card">
+        <div class="icon"><i class="fas fa-lock"></i></div>
+        <h1>Admin Access</h1>
+        <p class="sub">Enter the admin password to continue</p>
 
-                <!-- Demo Notice -->
-                <div class="demo-notice">
-                    <strong>Demo Mode:</strong> This is a placeholder login system.
-                    In the current implementation, no authentication is required.
-                    You can access the application directly at
-                    <a href="index.php" class="text-link">index.php</a>.
-                </div>
+        <?php if ($message !== ''): ?>
+            <div class="error"><i class="fas fa-circle-exclamation"></i> <?= htmlspecialchars($message) ?></div>
+        <?php endif; ?>
 
-                <!-- Success/Error Messages -->
-                <?php if ($message): ?>
-                    <div class="alert alert-<?php echo $messageType; ?> alert-dismissible">
-                        <div class="alert-icon">
-                            <?php echo $messageType === 'success' ? '✅' : '❌'; ?>
-                        </div>
-                        <div>
-                            <?php echo htmlspecialchars($message); ?>
-                        </div>
-                        <button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Login Form -->
-                <form method="POST" id="loginForm">
-                    <?php echo csrfInput(); ?>
-
-                    <div class="form-group">
-                        <label for="username" class="form-label required">Username</label>
-                        <input type="text" class="form-control" id="username" name="username"
-                            placeholder="Enter username" required autocomplete="username">
-                        <div class="form-text">Demo: Use "admin" as username</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password" class="form-label required">Password</label>
-                        <input type="password" class="form-control" id="password" name="password"
-                            placeholder="Enter password" required autocomplete="current-password">
-                        <div class="form-text">Demo: Use "admin123" as password</div>
-                    </div>
-
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
-                            🔐 Login
-                        </button>
-                    </div>
-                </form>
-
-                <!-- Links -->
-                <div class="text-center mt-4">
-                    <p class="text-muted">
-                        <small>
-                            <a href="index.php" class="text-link">← Back to Main Application</a>
-                        </small>
-                    </p>
-                </div>
-
-                <!-- Future Features -->
-                <div class="card mt-4" style="background-color: var(--bg-tertiary);">
-                    <div style="padding: var(--spacing-md);">
-                        <h4 class="mb-2">Future Authentication Features</h4>
-                        <ul class="text-sm text-muted" style="margin: 0; padding-left: var(--spacing-lg);">
-                            <li>User registration and management</li>
-                            <li>Role-based access control</li>
-                            <li>Session timeout handling</li>
-                            <li>Password reset functionality</li>
-                            <li>Two-factor authentication</li>
-                            <li>Login attempt rate limiting</li>
-                            <li>Activity logging and audit trails</li>
-                        </ul>
-                    </div>
-                </div>
+        <form method="POST">
+            <label for="password">Password</label>
+            <div class="field">
+                <input type="password" id="password" name="password"
+                       autocomplete="current-password" required autofocus>
+                <button type="button" class="toggle" id="toggle" title="Show password">
+                    <i class="fas fa-eye"></i>
+                </button>
             </div>
+            <button type="submit">Sign In</button>
+        </form>
+
+        <div class="envnote">
+            <?php if ($usingEnv): ?>
+                <span class="ok"><i class="fas fa-circle-check"></i> Using ADMIN_PASSWORD_HASH from environment</span>
+            <?php else: ?>
+                <span class="warn"><i class="fas fa-triangle-exclamation"></i> ADMIN_PASSWORD_HASH not set &mdash; using built-in fallback</span>
+            <?php endif; ?>
         </div>
     </div>
 
     <script>
-        // Simple form validation
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-
-            if (!username || !password) {
-                e.preventDefault();
-                alert('Please enter both username and password.');
-                return false;
-            }
+        document.getElementById('toggle').addEventListener('click', function () {
+            const input = document.getElementById('password');
+            const show = input.type === 'password';
+            input.type = show ? 'text' : 'password';
+            this.innerHTML = show ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+            this.title = show ? 'Hide password' : 'Show password';
         });
-
-        // Auto-focus username field
-        document.getElementById('username').focus();
     </script>
 </body>
 

@@ -1,4 +1,8 @@
 <?php
+
+// Server-side admin gate. This page exposes environment details.
+require_once __DIR__ . '/includes/Auth.php';
+Auth::requirePage();
 /**
  * Debug page to check environment detection
  * Delete this file after debugging

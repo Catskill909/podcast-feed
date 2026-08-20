@@ -512,11 +512,20 @@ function hideDownloadModal() {
 // RSS FEED PARSING
 // ==========================================
 async function fetchWithFallback(url) {
-    // Use dedicated PHP server for local proxy if available
-    const phpServerUrl = 'http://localhost:8080';
+    // Same-origin proxy.php lives next to this file both locally and when
+    // deployed, so derive it from the page location rather than hardcoding a
+    // host. This must be tried FIRST: the third-party CORS proxies below are
+    // unreliable (free tiers now block production origins, and they go down),
+    // so relying on them was what broke the embed preview in production.
     const baseUrl = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
 
     const proxies = [
+        {
+            name: 'Same-origin PHP Proxy',
+            url: `${baseUrl}proxy.php?url=${encodeURIComponent(url)}`,
+            parseJson: false,
+            getContents: (data) => data
+        },
         {
             name: 'CorsProxy.io',
             url: `https://corsproxy.io/?${encodeURIComponent(url)}`,
@@ -541,12 +550,6 @@ async function fetchWithFallback(url) {
                 }
                 return data.contents;
             }
-        },
-        {
-            name: 'Local PHP Proxy',
-            url: `${phpServerUrl}/proxy.php?url=${encodeURIComponent(url)}`,
-            parseJson: false,
-            getContents: (data) => data
         },
         {
             name: 'CodeTabs',

@@ -6,6 +6,10 @@
 
 session_start();
 
+// Server-side admin gate (replaces the old client-side auth.js check).
+require_once __DIR__ . '/includes/Auth.php';
+Auth::requirePage();
+
 require_once __DIR__ . '/includes/MenuManager.php';
 
 $manager = new MenuManager();
@@ -43,7 +47,6 @@ function escapeJs(?string $text): string {
     <link rel="stylesheet" href="assets/css/menu-manager.css?v=<?php echo time(); ?>">
     
     <!-- Simple Password Protection -->
-    <script src="auth.js"></script>
 </head>
 <body>
     <div class="container">

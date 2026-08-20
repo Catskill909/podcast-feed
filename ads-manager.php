@@ -6,6 +6,10 @@
 
 session_start();
 
+// Server-side admin gate (replaces the old client-side auth.js check).
+require_once __DIR__ . '/includes/Auth.php';
+Auth::requirePage();
+
 require_once __DIR__ . '/includes/AdsManager.php';
 require_once __DIR__ . '/config/config.php';
 
