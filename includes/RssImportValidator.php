@@ -1,4 +1,6 @@
 <?php
+
+require_once __DIR__ . '/FeedText.php';
 /**
  * RssImportValidator Class
  * Validates RSS feeds before import to ensure quality and compatibility
@@ -673,8 +675,8 @@ class RssImportValidator
         }
         
         return [
-            'title' => (string)$channel->title,
-            'description' => (string)$channel->description,
+            'title' => feedText($channel->title),
+            'description' => feedText($channel->description),
             'feed_type' => $feedType,
             'episode_count' => $episodesCheck['episode_count'] ?? 0,
             'latest_episode' => $latestEpisodeDate,

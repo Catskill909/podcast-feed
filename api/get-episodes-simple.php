@@ -1,4 +1,6 @@
 <?php
+
+require_once __DIR__ . '/../includes/FeedText.php';
 /**
  * Simplified Episode API - bypasses PodcastManager for testing
  */
@@ -62,8 +64,8 @@ try {
             
             $episodes[] = [
                 'id' => 'ep_' . md5($audioUrl),
-                'title' => (string)$item->title ?: 'Untitled',
-                'description' => substr(strip_tags((string)$item->description), 0, 300),
+                'title' => feedText($item->title) ?: 'Untitled',
+                'description' => feedText($item->description, 300),
                 'pub_date' => (string)$item->pubDate,
                 'audio_url' => $audioUrl,
                 'duration' => $itunes ? (string)$itunes->duration : '',

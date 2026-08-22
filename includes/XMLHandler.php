@@ -1,4 +1,6 @@
 <?php
+
+require_once __DIR__ . '/FeedText.php';
 require_once __DIR__ . '/../config/config.php';
 
 /**
@@ -400,9 +402,15 @@ class XMLHandler
 
         return [
             'id' => $node->getAttribute('id'),
-            'title' => $xpath->query('title', $node)->item(0)->nodeValue ?? '',
+            // Normalised on read, not just on write: rows stored before
+            // feedText() existed hold literal "&nbsp;"/"&mdash;" from
+            // double-encoded feeds, and refreshing a feed never rewrites these
+            // two fields. Doing it here means bad stored text cannot reach the
+            // UI regardless of when the row was written. feedText() is
+            // idempotent, so clean values pass through unchanged.
+            'title' => feedText($xpath->query('title', $node)->item(0)->nodeValue ?? ''),
             'feed_url' => $xpath->query('feed_url', $node)->item(0)->nodeValue ?? '',
-            'description' => $xpath->query('description', $node)->item(0)->nodeValue ?? '',
+            'description' => feedText($xpath->query('description', $node)->item(0)->nodeValue ?? ''),
             'cover_image' => $xpath->query('cover_image', $node)->item(0)->nodeValue ?? '',
             'created_date' => $xpath->query('created_date', $node)->item(0)->nodeValue ?? '',
             'updated_date' => $xpath->query('updated_date', $node)->item(0)->nodeValue ?? '',

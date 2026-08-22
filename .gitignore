@@ -60,3 +60,6 @@ sessions/
 # Cache
 cache/
 *.cache
+
+# Migration backups
+data/*.bak-*

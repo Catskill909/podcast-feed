@@ -1,4 +1,6 @@
 <?php
+
+require_once __DIR__ . '/FeedText.php';
 /**
  * SelfHostedXMLHandler Class
  * Handles XML operations for self-hosted podcasts
@@ -367,7 +369,7 @@ class SelfHostedXMLHandler
         
         foreach ($podcast->childNodes as $child) {
             if ($child->nodeType === XML_ELEMENT_NODE && $child->nodeName !== 'episodes') {
-                $data[$child->nodeName] = $child->nodeValue;
+                $data[$child->nodeName] = self::normaliseTextField($child->nodeName, $child->nodeValue);
             }
         }
         
@@ -392,10 +394,27 @@ class SelfHostedXMLHandler
         
         foreach ($episode->childNodes as $child) {
             if ($child->nodeType === XML_ELEMENT_NODE) {
-                $data[$child->nodeName] = $child->nodeValue;
+                $data[$child->nodeName] = self::normaliseTextField($child->nodeName, $child->nodeValue);
             }
         }
         
         return $data;
+    }
+
+    /**
+     * Normalise prose fields on read, leaving URLs, dates and ids untouched.
+     *
+     * Rows written before feedText() existed hold literal "&nbsp;"/"&mdash;"
+     * from double-encoded feeds. Cleaning here means stored junk cannot reach
+     * the UI whenever the row was written; feedText() is idempotent, so values
+     * that are already clean pass through unchanged.
+     */
+    private static function normaliseTextField(string $name, ?string $value): string
+    {
+        $value = (string) $value;
+
+        return in_array($name, ['title', 'description'], true)
+            ? feedText($value)
+            : $value;
     }
 }

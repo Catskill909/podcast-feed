@@ -1,4 +1,6 @@
 <?php
+
+require_once __DIR__ . '/../includes/FeedText.php';
 /**
  * Get Podcast Episodes API
  * Fetches and parses all episodes from a podcast's RSS feed
@@ -122,8 +124,8 @@ function parseEpisodes(string $feedUrl) {
             // Extract episode data
             $episode = [
                 'id' => 'ep_' . md5($audioUrl . $episodeNumber),
-                'title' => (string)$item->title ?: 'Untitled Episode',
-                'description' => strip_tags((string)($item->description ?? $item->summary ?? '')),
+                'title' => feedText($item->title) ?: 'Untitled Episode',
+                'description' => feedText($item->description ?? $item->summary ?? ''),
                 'pub_date' => (string)$item->pubDate,
                 'audio_url' => $audioUrl,
                 'duration' => $itunes ? (string)$itunes->duration : '',
@@ -173,8 +175,8 @@ function parseEpisodes(string $feedUrl) {
             
             $episode = [
                 'id' => 'ep_' . md5($audioUrl . $episodeNumber),
-                'title' => (string)$entry->title ?: 'Untitled Episode',
-                'description' => strip_tags((string)($entry->summary ?? $entry->content ?? '')),
+                'title' => feedText($entry->title) ?: 'Untitled Episode',
+                'description' => feedText($entry->summary ?? $entry->content ?? ''),
                 'pub_date' => (string)$entry->published ?? (string)$entry->updated,
                 'audio_url' => $audioUrl,
                 'duration' => '',

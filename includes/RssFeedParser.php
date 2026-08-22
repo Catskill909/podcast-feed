@@ -1,4 +1,6 @@
 <?php
+
+require_once __DIR__ . '/FeedText.php';
 require_once __DIR__ . '/../config/config.php';
 
 /**
@@ -384,8 +386,9 @@ class RssFeedParser
             return '';
         }
         
-        $text = (string) $element;
-        return trim(strip_tags($text));
+        // Shared normaliser: strip_tags alone leaves entities untouched, which
+        // stored "&nbsp;" and "&mdash;" verbatim and rendered them literally.
+        return feedText($element);
     }
     
     /**
