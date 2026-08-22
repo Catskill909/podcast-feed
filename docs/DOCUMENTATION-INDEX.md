@@ -1,6 +1,6 @@
 # 📚 PodFeed Builder - Documentation Index
 
-**Last Updated:** 2025-10-13  
+**Last Updated:** 2026-08-22  
 **Status:** ✅ All systems operational
 
 ---
@@ -25,6 +25,14 @@
 | **[QUICK-START-DEPLOYMENT-FIX.md](QUICK-START-DEPLOYMENT-FIX.md)** | Fast deployment setup | Quick reference |
 | **[deployment-fix.md](deployment-fix.md)** | Comprehensive deployment analysis | Deep dive, troubleshooting |
 | **[DEPLOYMENT-ANALYSIS-SUMMARY.md](DEPLOYMENT-ANALYSIS-SUMMARY.md)** | Technical deep dive | Understanding architecture |
+
+### August 2026 Fixes
+
+| Document | Purpose | When to Use |
+|----------|---------|-------------|
+| **[EMBED-PROXY-FIX-2026-08-20.md](EMBED-PROXY-FIX-2026-08-20.md)** | Embed preview failure, RSS proxy allowlist, SSRF fixes on `fetch-feed.php` / `download-proxy.php`, generator layout | Feed proxying, embed preview, or SSRF questions |
+| **[ANALYTICS-EMBED-TRACKING-2026-08-20.md](ANALYTICS-EMBED-TRACKING-2026-08-20.md)** | Why stats showed "no data", embed player tracking, honest empty state | Analytics or stats dashboard questions |
+| **[FEED-TEXT-ENTITIES-2026-08-21.md](FEED-TEXT-ENTITIES-2026-08-21.md)** | `&nbsp;` / `&mdash;` rendered literally; `feedText()` normalisation | Any feed text, title or description handling |
 
 ### Features & Implementation
 
