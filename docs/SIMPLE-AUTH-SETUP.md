@@ -1,5 +1,15 @@
 # Simple Authentication Setup Guide
 
+> ## ⚠️ SUPERSEDED — never adopted
+>
+> This document proposed HTTP Basic Auth via `.htpasswd`. **That approach was
+> not used.** Authentication is server-side in `includes/Auth.php`, with the
+> password in the `ADMIN_PASSWORD` environment variable and a login form at
+> `/login.php`. Kept for reference only.
+>
+> Current documentation: [PASSWORD-SETUP.md](PASSWORD-SETUP.md) ·
+> [HANDOFF.md](HANDOFF.md) — *noted 2026-09-22*
+
 ## Overview
 
 This guide provides the **simplest possible authentication** for your Podcast Directory Manager. Perfect for non-critical data where you just need basic protection.

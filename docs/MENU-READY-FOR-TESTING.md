@@ -70,7 +70,7 @@ Server is running at: **http://localhost:8000**
 
 ### **2. Test Menu Manager**
 1. Go to http://localhost:8000/admin.php
-2. Enter password (default: `podcast2025`)
+2. Enter the admin password (the `ADMIN_PASSWORD` env var; `podcast2025` only if that is unset — see [PASSWORD-SETUP.md](PASSWORD-SETUP.md))
 3. Click **"Menu"** in the navigation
 4. You should see the Menu Manager interface
 

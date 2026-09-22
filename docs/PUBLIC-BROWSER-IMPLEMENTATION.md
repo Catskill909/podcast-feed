@@ -125,7 +125,7 @@ Public Flow:
 
 Admin Flow:
 1. User visits admin.php or clicks "Admin" in header
-2. Password prompt (existing auth.js)
+2. Password prompt (`/login.php`, server-side)
 3. Full CRUD interface available
 4. Link back to public site in header
 ```

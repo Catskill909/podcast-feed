@@ -1,6 +1,6 @@
 # 📚 PodFeed Builder - Documentation Index
 
-**Last Updated:** 2026-08-22  
+**Last Updated:** 2026-09-22  
 **Status:** ✅ All systems operational
 
 ---
@@ -45,9 +45,19 @@
 
 | Document | Purpose | When to Use |
 |----------|---------|-------------|
-| **[SECURITY-AUDIT.md](SECURITY-AUDIT.md)** | Security best practices | Security review |
-| **[PASSWORD-SETUP.md](PASSWORD-SETUP.md)** | Password configuration | Setting up auth |
-| **[SIMPLE-AUTH-SETUP.md](SIMPLE-AUTH-SETUP.md)** | Simple auth implementation | Quick auth setup |
+| **[PASSWORD-SETUP.md](PASSWORD-SETUP.md)** | ⭐ **Current** — the `ADMIN_PASSWORD` env var, how to change the password, banner troubleshooting | Changing or setting the admin password |
+| **[HANDOFF.md](HANDOFF.md)** | Why auth moved server-side, design rationale, remaining hardening step | Touching the auth code |
+
+**Superseded — historical only.** These describe the old client-side `auth.js`
+password, which has been deleted. They carry banners saying so; do not follow
+their instructions.
+
+| Document | Why it is stale |
+|----------|-----------------|
+| [SECURITY-AUDIT.md](SECURITY-AUDIT.md) | Audited the `auth.js` era |
+| [SECURITY-AUDIT-SUMMARY.md](SECURITY-AUDIT-SUMMARY.md) | Says "change the password in `auth.js`" — that file is gone |
+| [GITHUB-SECURITY-AUDIT.md](GITHUB-SECURITY-AUDIT.md) | Same; pre-dates server-side auth |
+| [SIMPLE-AUTH-SETUP.md](SIMPLE-AUTH-SETUP.md) | Proposed `.htpasswd`; never adopted |
 
 ---
 
@@ -66,7 +76,8 @@
 | File | Purpose | Location |
 |------|---------|----------|
 | `config/config.php` | Main app configuration | `/config/` |
-| `config/auth_placeholder.php` | Auth structure | `/config/` |
+| `includes/Auth.php` | ⭐ Admin authentication (live) | `/includes/` |
+| `config/auth_placeholder.php` | Unused scaffolding, superseded by `includes/Auth.php` | `/config/` |
 | `.htaccess.example` | Apache configuration | Root |
 | `.env.example` | Environment variables template | Root |
 
@@ -231,7 +242,7 @@ See **[FUTURE-DEV.md](FUTURE-DEV.md)** for roadmap
 | Permission denied | Check persistent volumes | [QUICK-START-DEPLOYMENT-FIX.md](QUICK-START-DEPLOYMENT-FIX.md) |
 | RSS import fails | Check SSL/cURL | [RSS-IMPORT-IMPLEMENTATION.md](RSS-IMPORT-IMPLEMENTATION.md) |
 | Images not uploading | Check uploads directory | [README.md](README.md) |
-| Auth not working | Check password config | [PASSWORD-SETUP.md](PASSWORD-SETUP.md) |
+| Auth not working, or password change had no effect | Check the `/login.php` banner — it says whether `ADMIN_PASSWORD` reached PHP | [PASSWORD-SETUP.md](PASSWORD-SETUP.md) |
 
 ---
 

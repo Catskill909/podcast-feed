@@ -1,5 +1,16 @@
 # Security Audit Summary - Ready for Public GitHub
 
+> ## ⚠️ SUPERSEDED — historical record
+>
+> This summary was written when the admin password was a client-side constant in
+> `auth.js`. **That file has been deleted.** Authentication is now server-side
+> in `includes/Auth.php`, with the password in the `ADMIN_PASSWORD` environment
+> variable. Any instruction below to "change the password in `auth.js`" refers
+> to a file that no longer exists — following it would change nothing.
+>
+> Current documentation: [PASSWORD-SETUP.md](PASSWORD-SETUP.md) ·
+> [HANDOFF.md](HANDOFF.md) — *noted 2026-09-22*
+
 ## Date: October 17, 2025
 
 ---

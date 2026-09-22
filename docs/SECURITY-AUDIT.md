@@ -1,5 +1,15 @@
 # Security Audit Report - Podcast Directory Manager
 
+> ## ⚠️ SUPERSEDED — historical record
+>
+> This audit was written when the admin password was a client-side constant in
+> `auth.js`. **That file has been deleted.** Authentication is now server-side
+> in `includes/Auth.php`, with the password in the `ADMIN_PASSWORD` environment
+> variable. Findings below about client-side password exposure are **resolved**.
+>
+> Current documentation: [PASSWORD-SETUP.md](PASSWORD-SETUP.md) ·
+> [HANDOFF.md](HANDOFF.md) — *noted 2026-09-22*
+
 ## Executive Summary
 
 **Date:** 2025-10-09  

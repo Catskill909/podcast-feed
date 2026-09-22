@@ -1,11 +1,18 @@
 # HANDOFF — Admin Authentication Migration
 
-**Date:** 2026-08-19
+**Date:** 2026-08-19 · **Updated:** 2026-09-22
 **Branch:** `main`
-**Status:** ✅ Code complete, ⚠️ **not tested in production**
+**Status:** ✅ **Live and verified in production.** `ADMIN_PASSWORD` is set in
+Coolify and the login banner reads green. Steps 1 and 2 below are done; step 3
+(removing the fallback) is the one remaining optional hardening step.
 **Context:** This is a **demo application**. No payments, no PII, no destructive
 public actions. Full source is on GitHub, so worst-case recovery is a revert.
 Risk tolerance was explicitly set to "ship it, verify later."
+
+> **Day-to-day use:** to change the admin password, edit `ADMIN_PASSWORD` in
+> Coolify and redeploy. That is the whole procedure — see
+> [PASSWORD-SETUP.md](PASSWORD-SETUP.md). This document is the *why*, kept for
+> whoever next touches the auth code.
 
 ---
 
@@ -131,14 +138,14 @@ of *"a brick."*
 
 ## 5. NEXT STEPS (in order)
 
-### Step 1 — Set the env var in Coolify
+### ✅ Step 1 — Set the env var in Coolify — DONE (2026-09-22)
 1. Coolify dashboard → the `podcast-feed` app → **Configuration → Environment Variables**
 2. Add: name `ADMIN_PASSWORD`, value = the password you want, e.g. `Podcast2026`
 3. Redeploy.
 
 To change it later, edit that same value and redeploy. Nothing else to do.
 
-### Step 2 — Verify it reached PHP
+### ✅ Step 2 — Verify it reached PHP — DONE (2026-09-22, banner green)
 Visit **`/login.php`**. There is a status line at the bottom of the card:
 
 - 🟢 **"Using ADMIN_PASSWORD from environment"** → working. Continue to step 3.
@@ -154,7 +161,13 @@ Visit **`/login.php`**. There is a status line at the bottom of the card:
 
 Run `php tests/auth_env_test.php` to exercise all of these paths locally.
 
-### Step 3 — Remove the fallback (only after step 2 is green)
+### ⬜ Step 3 — Remove the fallback (optional; step 2 is green, so this is now unblocked)
+
+Doing this means a missing `ADMIN_PASSWORD` produces a 500 instead of silently
+accepting the old password. The tradeoff: no way back in except fixing the env
+var and redeploying. For a demo app either choice is defensible — it is left
+undone deliberately, not forgotten.
+
 In `includes/Auth.php`, make `password()` fail closed instead of falling back:
 ```php
 public static function password(): string

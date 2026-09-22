@@ -1,5 +1,19 @@
 # GitHub Public Repository - Security Audit
 
+> ## ⚠️ SUPERSEDED — historical record
+>
+> This audit was written when the admin password was a client-side constant in
+> `auth.js` (`CORRECT_PASSWORD = 'podcast2025'`). **That file has been deleted.**
+> Authentication is now server-side in `includes/Auth.php`, with the password in
+> the `ADMIN_PASSWORD` environment variable, and every admin page and API
+> endpoint is gated individually rather than merely hidden.
+>
+> Any instruction below to edit `auth.js` refers to a file that no longer
+> exists — following it would change nothing about the live password.
+>
+> Current documentation: [PASSWORD-SETUP.md](PASSWORD-SETUP.md) ·
+> [HANDOFF.md](HANDOFF.md) — *noted 2026-09-22*
+
 ## Date: October 17, 2025
 
 ---

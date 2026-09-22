@@ -110,7 +110,7 @@ try {
 - Graceful degradation on failures
 
 ### 4. **Security**
-- Admin-only access (requires auth.js)
+- Admin-only access (gated server-side by `includes/Auth.php`)
 - File upload type validation
 - SQL injection N/A (XML storage)
 - Proper file permissions (755 for dirs, 644 for files)
@@ -406,7 +406,7 @@ All testing passed with zero known bugs.
 ### Common Issues
 
 #### Menu Manager Not Loading
-- **Check:** Is auth.js working? (password protection)
+- **Check:** Are you logged in? (`/login.php` — password protection)
 - **Fix:** Clear browser cache, try incognito mode
 
 #### Changes Not Appearing on Public Site

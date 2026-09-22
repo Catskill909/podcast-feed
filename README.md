@@ -467,13 +467,21 @@ git push origin main
    chmod 755 uploads/covers/
    ```
 
-3. **🔐 IMPORTANT: Change the default password** in `auth.js`:
-   ```javascript
-   // Line 10 in auth.js
-   const CORRECT_PASSWORD = 'your-secure-password-here';  // Change from 'podcast2025'!
-   ```
-   
-   **Note:** This is client-side protection for casual use. For production with sensitive data, see [GITHUB-SECURITY-AUDIT.md](GITHUB-SECURITY-AUDIT.md) for additional security options (HTTP Basic Auth, IP whitelisting, etc.).
+3. **🔐 IMPORTANT: Set the admin password** via the `ADMIN_PASSWORD`
+   environment variable:
+
+   | Where | How |
+   |---|---|
+   | Coolify / hosted | Configuration → Environment Variables → add `ADMIN_PASSWORD` |
+   | Local / self-hosted | Copy `.env.example` to `.env`, or export it in your shell |
+
+   The value is the password itself, in plain text — no hashing step. To change
+   it later, edit that value and redeploy.
+
+   If `ADMIN_PASSWORD` is unset, the app falls back to a built-in default so a
+   missing variable cannot lock you out. **The login page tells you which one is
+   active**, so you can confirm your variable took effect. See
+   [docs/PASSWORD-SETUP.md](docs/PASSWORD-SETUP.md).
 
 4. **Configure the application** (optional - auto-detects by default):
    - APP_URL is auto-detected from server
@@ -903,18 +911,35 @@ The interface is fully responsive and works on:
 - Mobile phones
 - Touch devices with drag-and-drop support
 
-## 🔮 Future Authentication
+## 🔐 Authentication
 
-The system includes a placeholder authentication structure ready for:
+Authentication is server-side, in `includes/Auth.php`. The password never
+reaches the browser, and every admin page and API endpoint is gated — not just
+the UI.
 
-- **User Management**: Admin user registration and login
-- **Role-Based Access**: Different permission levels
-- **Session Management**: Secure session handling
-- **Password Security**: Proper password hashing
-- **Login Attempt Limiting**: Brute force protection
-- **Activity Logging**: User action audit trails
+- **Password source**: the `ADMIN_PASSWORD` environment variable, plain text
+- **Changing it**: edit that variable and redeploy — there is deliberately no
+  password-change screen in the app
+- **Login**: `/login.php` — shows whether the env var or the built-in fallback
+  is active
+- **Logout**: `/logout.php`
+- **Public and unaffected**: `index.php`, `feed.php`, the embed and gallery
+  pages — no password required
 
-To enable authentication, modify the `AuthPlaceholder` class in `config/auth_placeholder.php`.
+Gating a new page or endpoint:
+
+```php
+require_once __DIR__ . '/includes/Auth.php';
+Auth::requirePage();   // HTML pages: redirects to /login.php
+Auth::requireApi();    // JSON endpoints: 401 + {success:false, error:...}
+```
+
+Setup and troubleshooting: [docs/PASSWORD-SETUP.md](docs/PASSWORD-SETUP.md).
+Design notes and the single remaining hardening step:
+[docs/HANDOFF.md](docs/HANDOFF.md).
+
+Not implemented (single shared password by design): multiple user accounts,
+roles, or per-user activity logging.
 
 ## 📊 RSS Feed Format
 

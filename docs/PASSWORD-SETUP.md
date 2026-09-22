@@ -1,219 +1,158 @@
-# Simple Password Setup Guide
+# Admin Password Setup
 
-## How It Works
+**Status:** Live in production. Last updated 2026-09-22.
 
-**Super Simple:**
-1. User visits your site
-2. Browser prompts for password
-3. Password saved in browser's localStorage
-4. User never asked again on that browser
-5. RSS feed (`feed.php`) stays public - no password needed
+The admin password is the **`ADMIN_PASSWORD` environment variable**, in plain
+text. Change the password by editing that value and redeploying. There is
+deliberately no password-change screen in the app.
+
+> **Superseded approach.** This used to be a client-side check in `auth.js`
+> with the password in a JavaScript constant. That file has been deleted.
+> Older docs that tell you to edit `auth.js` are describing a system that no
+> longer exists — editing it would not change anything, because there is
+> nothing to edit. See [HANDOFF.md](HANDOFF.md) for why it changed.
 
 ---
 
-## Setup (30 seconds)
+## Setting the password
 
-### Step 1: Set Your Password
+### Coolify (production)
 
-Edit `auth.js` line 10:
+1. Coolify dashboard → the `podcast-feed` app
+2. **Configuration → Environment Variables → Add**
+3. Name `ADMIN_PASSWORD`, value = the password you want, e.g. `Podcast2026`
+4. **Redeploy**
 
-```javascript
-const CORRECT_PASSWORD = 'podcast2025';  // Change this!
-```
+### Local development
 
-Change `'podcast2025'` to whatever password you want.
-
-**Examples:**
-```javascript
-const CORRECT_PASSWORD = 'mySecretPass123';
-const CORRECT_PASSWORD = 'labor-radio-2025';
-const CORRECT_PASSWORD = 'anything-you-want';
-```
-
-### Step 2: Deploy
+Either export it in your shell:
 
 ```bash
-git add auth.js
-git commit -m "Add password protection"
-git push
+ADMIN_PASSWORD='your-password' php -S localhost:8000
 ```
 
-**That's it!**
+…or copy `.env.example` to `.env` and set it there.
 
 ---
 
-## How It Works
+## Confirming it worked
 
-### Local Development (localhost)
-- ✅ **NO password required**
-- Works normally for development
+Visit **`/login.php`**. A status line at the bottom of the card tells you which
+password is actually in use — you never have to guess:
 
-### Production (your domain)
-- 🔒 **Password required** on first visit
-- Saved in browser localStorage
-- Never asked again on same browser
+| Banner | Meaning |
+|---|---|
+| 🟢 **"Using ADMIN_PASSWORD from environment"** | Your variable took effect |
+| 🟠 **"ADMIN_PASSWORD not set — using built-in fallback"** | Your variable did not reach PHP; the old default is still live |
 
-### RSS Feed
-- ✅ **Always public** - no password
-- Your Flutter app can access freely
+**If the banner is orange after you set the variable**, the variable is genuinely
+absent from the container. Check that:
 
----
+- it is saved on the **right Coolify resource**, and
+- the app was **redeployed** after saving, and
+- the value is **not blank** — a blank or whitespace-only value is deliberately
+  treated as unset.
 
-## User Experience
-
-**First Visit:**
-```
-┌─────────────────────────────────────┐
-│ Enter password to access            │
-│ Podcast Directory:                  │
-│                                     │
-│ [_____________________]             │
-│                                     │
-│        [OK]    [Cancel]             │
-└─────────────────────────────────────┘
-```
-
-**After Entering Correct Password:**
-- Page loads normally
-- Password saved in browser
-- Never asked again
-
-**Wrong Password:**
-- Shows "Incorrect password. 2 attempts remaining"
-- Allows 3 total attempts
-- After 3 failures: Shows "Access Denied" page
+The usual PHP-FPM cause is already handled in code: a value delivered to the
+pool as `env[...]` or as a FastCGI param lands in `$_SERVER` and reaches
+`getenv()` only when `variables_order` contains `E`, so `Auth::envPassword()`
+checks `getenv()`, `$_SERVER` and `$_ENV` in turn.
 
 ---
 
-## Managing Access
+## What the value can contain
 
-### Change Password
+Leading and trailing whitespace is stripped, because that is a paste artifact
+rather than part of a password. Everything else is taken literally: interior
+spaces, `$`, `#`, quotes, and other punctuation all work.
 
-1. Edit `auth.js`
-2. Change `CORRECT_PASSWORD` value
-3. Deploy
-
-**All users will need to enter new password on next visit.**
-
-### Clear Saved Password (for testing)
-
-Open browser console (F12) and run:
-```javascript
-localStorage.removeItem('podcast_auth');
-```
-
-Or clear all site data in browser settings.
-
-### Force Re-authentication
-
-Change the password in `auth.js` - all users will be prompted again.
+If Coolify's own field does any shell-style interpolation, quote the value so
+`$` is not eaten.
 
 ---
 
-## Security Notes
+## The fallback — read before removing it
 
-**This is CLIENT-SIDE protection:**
-- ✅ Perfect for non-critical data
-- ✅ Keeps casual visitors out
-- ✅ Super simple to use
-- ⚠️ Not for sensitive data (password visible in source)
-- ⚠️ Technical users could bypass
+If `ADMIN_PASSWORD` is unset or blank, `Auth::FALLBACK_PASSWORD` (the old
+`auth.js` password) is used instead.
 
-**For your use case (XML feed maker):** This is perfect! ✅
+**This is intentional.** Without it, a silently-missing env var would lock you
+out of a live site with no way back in except a redeploy. It makes a
+misconfiguration degrade to *"the security you had yesterday"* instead of
+*"a brick."*
+
+Removing it is a deliberate follow-up step, and only once the login banner is
+confirmed green in production — see step 3 in [HANDOFF.md](HANDOFF.md).
+
+---
+
+## What is and is not protected
+
+**Requires the password:** `admin.php`, `ads-manager.php`, the admin API
+endpoints, and anything else calling `Auth::requirePage()` or
+`Auth::requireApi()`.
+
+**Stays public, no password:** `index.php`, `feed.php`, `app.html`,
+`features.html`, `embed/`, `gallery/`, `stream.php` — listeners and podcast
+apps are unaffected.
+
+Sessions are server-side PHP sessions. The session id is rotated on login, so a
+session id captured beforehand cannot be reused. Log out at `/logout.php`.
 
 ---
 
 ## Testing
 
-### Test Locally
+Run the test suite:
+
 ```bash
-php -S localhost:8000
-# Visit http://localhost:8000
-# Should work WITHOUT password ✓
+php tests/auth_env_test.php
 ```
 
-### Test Production
+It covers every place the runtime can deliver the variable (`getenv`,
+`$_SERVER`, `$_ENV`), plus blank, whitespace-padded, and shell-metacharacter
+values.
+
+Exercise the real login flow locally:
+
 ```bash
-# Visit https://yourdomain.com
-# Should prompt for password ✓
-
-# Enter wrong password
-# Should show error and retry ✓
-
-# Enter correct password
-# Should save and load page ✓
-
-# Refresh page
-# Should NOT ask for password again ✓
-
-# Visit feed
-curl https://yourdomain.com/feed.php
-# Should work without password ✓
+ADMIN_PASSWORD='Podcast2026' php -S 127.0.0.1:8777 -t .
 ```
 
----
-
-## Troubleshooting
-
-### Password prompt not showing in production
-
-Check `config/config.php` - environment detection:
-```php
-// Should detect production correctly
-define('ENVIRONMENT', $isLocalhost ? 'development' : 'production');
-```
-
-### Password keeps asking every time
-
-Check browser console (F12) for errors. localStorage might be disabled.
-
-### Want to remove password protection
-
-Remove these lines from `index.php`:
-```php
-<?php if (ENVIRONMENT === 'production'): ?>
-<script src="auth.js"></script>
-<?php endif; ?>
-```
+| Check | Expected |
+|---|---|
+| `/login.php` banner | green, "from environment" |
+| Sign in with `Podcast2026` | 302 redirect to `/admin.php` |
+| Sign in with anything else | "Incorrect password." |
+| `/admin.php` with no session | 302 redirect to `/login.php` |
+| `curl /feed.php` | works, no password |
 
 ---
 
-## Advantages of This Approach
+## Security notes
 
-✅ **Zero server configuration** - pure JavaScript  
-✅ **Remembers user** - localStorage persists  
-✅ **Works locally** - no password in development  
-✅ **RSS feed public** - no auth needed  
-✅ **30 second setup** - just change one line  
-✅ **No database** - no user management needed  
-✅ **One password** - share with your team  
-✅ **Easy to change** - edit one file  
+The password is verified **server-side**. It never reaches the browser, and the
+admin pages and API endpoints are gated individually — so a direct request to an
+endpoint is rejected, not merely hidden from the UI. This is the substantive
+difference from the old `auth.js` approach, where View Source revealed the
+password and every endpoint was reachable regardless.
 
----
+The tradeoff of storing it as plain text: anyone with access to your Coolify
+dashboard can read the password. That is a deliberate simplicity choice. It is
+not exposed to site visitors.
 
-## Perfect For
+Comparison uses `hash_equals`, so response timing does not reveal how many
+leading characters a guess got right.
 
-- ✅ Internal tools
-- ✅ Non-critical data
-- ✅ Small teams
-- ✅ Quick deployments
-- ✅ XML feed makers (like yours!)
+**Not implemented**, by design — this is a single shared admin password:
+multiple user accounts, roles, per-user activity logs, and rate limiting on
+login attempts.
 
 ---
 
-## Summary
+## Related
 
-**Setup:**
-1. Edit `auth.js` - change password (line 10)
-2. Deploy
-
-**Usage:**
-- Enter password once per browser
-- Never asked again
-- RSS feed always public
-
-**Total complexity:** One line of code to change  
-**Maintenance:** Zero  
-**User friction:** Minimal (one-time password)
-
-Perfect for your podcast feed manager! 🎉
+- [HANDOFF.md](HANDOFF.md) — design rationale, remaining hardening steps
+- `includes/Auth.php` — the implementation
+- `tests/auth_env_test.php` — the tests
+- `.env.example` — the variable, documented inline
