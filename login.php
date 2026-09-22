@@ -23,15 +23,19 @@ if (Auth::check()) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// With no ADMIN_PASSWORD set, no password can ever be correct. Show the
+// operator what to fix instead of a form that silently rejects everything.
+$configured = Auth::isConfigured();
+
+if (!$configured) {
+    http_response_code(503);
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (Auth::attempt($_POST['password'] ?? '')) {
         header('Location: ' . $redirect);
         exit;
     }
     $message = 'Incorrect password.';
 }
-
-$usingEnv = Auth::usingEnvPassword();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,7 +102,22 @@ $usingEnv = Auth::usingEnvPassword();
             font-size: 12px; color: #8b949e; text-align: center; line-height: 1.5;
         }
         .envnote .ok { color: #3fb950; }
-        .envnote .warn { color: #d29922; }
+        .setup {
+            background: rgba(248, 81, 73, 0.1);
+            border: 1px solid rgba(248, 81, 73, 0.4);
+            border-radius: 8px;
+            padding: 16px 18px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #c9d1d9;
+        }
+        .setup h2 { font-size: 15px; color: #f85149; margin-bottom: 10px; }
+        .setup code {
+            background: #0d1117; border: 1px solid #30363d; border-radius: 4px;
+            padding: 1px 5px; font-size: 12px; color: #f0f6fc;
+        }
+        .setup ol { margin: 10px 0 0 18px; }
+        .setup li { margin-bottom: 5px; }
     </style>
 </head>
 
@@ -108,33 +127,50 @@ $usingEnv = Auth::usingEnvPassword();
         <h1>Admin Access</h1>
         <p class="sub">Enter the admin password to continue</p>
 
-        <?php if ($message !== ''): ?>
-            <div class="error"><i class="fas fa-circle-exclamation"></i> <?= htmlspecialchars($message) ?></div>
-        <?php endif; ?>
+        <?php if (!$configured): ?>
 
-        <form method="POST">
-            <label for="password">Password</label>
-            <div class="field">
-                <input type="password" id="password" name="password"
-                       autocomplete="current-password" required autofocus>
-                <button type="button" class="toggle" id="toggle" title="Show password">
-                    <i class="fas fa-eye"></i>
-                </button>
+            <div class="setup">
+                <h2><i class="fas fa-triangle-exclamation"></i> ADMIN_PASSWORD is not set</h2>
+                <p>
+                    Admin login is disabled until an admin password is configured.
+                    The public site and RSS feeds are unaffected.
+                </p>
+                <ol>
+                    <li>Coolify &rarr; the <code>podcast-feed</code> app &rarr;
+                        <strong>Configuration &rarr; Environment Variables</strong></li>
+                    <li>Add <code>ADMIN_PASSWORD</code>, set to the password you want</li>
+                    <li>Redeploy, then reload this page</li>
+                </ol>
+                <p style="margin-top:12px">See <code>docs/PASSWORD-SETUP.md</code>.</p>
             </div>
-            <button type="submit">Sign In</button>
-        </form>
 
-        <div class="envnote">
-            <?php if ($usingEnv): ?>
-                <span class="ok"><i class="fas fa-circle-check"></i> Using ADMIN_PASSWORD from environment</span>
-            <?php else: ?>
-                <span class="warn"><i class="fas fa-triangle-exclamation"></i> ADMIN_PASSWORD not set &mdash; using built-in fallback</span>
+        <?php else: ?>
+
+            <?php if ($message !== ''): ?>
+                <div class="error"><i class="fas fa-circle-exclamation"></i> <?= htmlspecialchars($message) ?></div>
             <?php endif; ?>
-        </div>
+
+            <form method="POST">
+                <label for="password">Password</label>
+                <div class="field">
+                    <input type="password" id="password" name="password"
+                           autocomplete="current-password" required autofocus>
+                    <button type="button" class="toggle" id="toggle" title="Show password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <button type="submit">Sign In</button>
+            </form>
+
+            <div class="envnote">
+                <span class="ok"><i class="fas fa-circle-check"></i> Using ADMIN_PASSWORD from environment</span>
+            </div>
+
+        <?php endif; ?>
     </div>
 
     <script>
-        document.getElementById('toggle').addEventListener('click', function () {
+        document.getElementById('toggle')?.addEventListener('click', function () {
             const input = document.getElementById('password');
             const show = input.type === 'password';
             input.type = show ? 'text' : 'password';

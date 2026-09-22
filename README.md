@@ -478,9 +478,9 @@ git push origin main
    The value is the password itself, in plain text — no hashing step. To change
    it later, edit that value and redeploy.
 
-   If `ADMIN_PASSWORD` is unset, the app falls back to a built-in default so a
-   missing variable cannot lock you out. **The login page tells you which one is
-   active**, so you can confirm your variable took effect. See
+   **This variable is required.** There is no fallback password — if it is
+   unset, admin login is disabled and `/login.php` returns 503 with the steps to
+   fix it. The public site and RSS feeds keep working regardless. See
    [docs/PASSWORD-SETUP.md](docs/PASSWORD-SETUP.md).
 
 4. **Configure the application** (optional - auto-detects by default):
@@ -920,8 +920,8 @@ the UI.
 - **Password source**: the `ADMIN_PASSWORD` environment variable, plain text
 - **Changing it**: edit that variable and redeploy — there is deliberately no
   password-change screen in the app
-- **Login**: `/login.php` — shows whether the env var or the built-in fallback
-  is active
+- **Login**: `/login.php` — confirms the env var took effect, or returns 503
+  with setup instructions if it is missing (fails closed, no fallback password)
 - **Logout**: `/logout.php`
 - **Public and unaffected**: `index.php`, `feed.php`, the embed and gallery
   pages — no password required

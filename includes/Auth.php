@@ -11,16 +11,22 @@
  * dashboard as plain text - change the password by editing that value and
  * redeploying. There is no password-change screen in the app, by design.
  *
- * FALLBACK_PASSWORD below is the old auth.js password and is used only when
- * ADMIN_PASSWORD is unset or blank, so a missing env var degrades to "the
- * security you had yesterday" instead of locking the admin out of a live site.
- * The login page shows which one is active. See docs/HANDOFF.md.
+ * This fails closed: if ADMIN_PASSWORD is missing or blank, nobody can log in.
+ * There used to be a hardcoded fallback password here so that a missing env
+ * var could not lock the admin out, which made sense while it was still
+ * unproven whether container env vars reached PHP at all. That is now
+ * confirmed working in production, so the fallback's justification expired -
+ * and because the old password is in this repo's git history and its docs, a
+ * fallback means a publicly known password would quietly go live the moment
+ * the env var went missing. Failing loudly is the safer end of that trade.
+ *
+ * The blast radius of failing closed is only the admin login: index.php,
+ * feed.php, stream.php and the embed/gallery pages never include this file,
+ * so the public site and the RSS feeds keep serving either way.
+ * See docs/HANDOFF.md.
  */
 class Auth
 {
-    /** The pre-existing auth.js password, used only when ADMIN_PASSWORD is unset. */
-    private const FALLBACK_PASSWORD = 'podcast2025';
-
     private const SESSION_KEY = 'admin_authenticated';
 
     /**
@@ -61,19 +67,21 @@ class Auth
     }
 
     /**
-     * The active password: environment first, fallback second.
+     * The configured password, or null when ADMIN_PASSWORD is unset or blank.
+     * Callers must handle null rather than substituting a default - see the
+     * class comment on why there is no fallback.
      */
-    public static function password(): string
+    public static function password(): ?string
     {
-        return self::envPassword() ?? self::FALLBACK_PASSWORD;
+        return self::envPassword();
     }
 
     /**
-     * True when ADMIN_PASSWORD actually reached PHP.
-     * Used by the status banner on login.php so this can be verified in
-     * production without guessing.
+     * True when ADMIN_PASSWORD actually reached PHP. When this is false nobody
+     * can log in, so login.php uses it to show a configuration error instead of
+     * a password form that could never accept anything.
      */
-    public static function usingEnvPassword(): bool
+    public static function isConfigured(): bool
     {
         return self::envPassword() !== null;
     }
@@ -82,9 +90,17 @@ class Auth
     {
         self::boot();
 
+        $expected = self::password();
+
+        // No password configured means no login is possible. Checked before the
+        // comparison so an unset env var cannot be matched by submitting "".
+        if ($expected === null) {
+            return false;
+        }
+
         // hash_equals rather than === so the comparison time does not depend on
         // how many leading characters a guess got right.
-        if (!hash_equals(self::password(), $password)) {
+        if (!hash_equals($expected, $password)) {
             return false;
         }
 

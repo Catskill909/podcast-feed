@@ -2,9 +2,9 @@
 
 **Date:** 2026-08-19 · **Updated:** 2026-09-22
 **Branch:** `main`
-**Status:** ✅ **Live and verified in production.** `ADMIN_PASSWORD` is set in
-Coolify and the login banner reads green. Steps 1 and 2 below are done; step 3
-(removing the fallback) is the one remaining optional hardening step.
+**Status:** ✅ **Complete and verified in production.** `ADMIN_PASSWORD` is set
+in Coolify, the login banner reads green, and the hardcoded fallback password
+has been removed — auth now fails closed. All three steps below are done.
 **Context:** This is a **demo application**. No payments, no PII, no destructive
 public actions. Full source is on GitHub, so worst-case recovery is a revert.
 Risk tolerance was explicitly set to "ship it, verify later."
@@ -121,18 +121,27 @@ Leading and trailing whitespace is stripped from the value, since that is a
 paste artifact rather than part of a password. Everything else — spaces in the
 middle, `$`, `#`, quotes — is taken literally.
 
-### ⚠️ The fallback — read this before "cleaning it up"
+### ✅ The fallback — removed 2026-09-22
 
-`Auth::FALLBACK_PASSWORD` is the **old auth.js password (`podcast2025`)**. If
-`ADMIN_PASSWORD` is unset or blank, auth falls back to it.
+There used to be a `FALLBACK_PASSWORD` constant holding the old `auth.js`
+password, used whenever `ADMIN_PASSWORD` was unset. **It is gone.** Auth now
+fails closed: no env var means no login.
 
-**This is intentional, not an oversight.** Container env vars can fail to reach
-PHP (see step 2). Without the fallback, a silently-missing env var would lock
-the admin out of a live site with no way back in except a redeploy. The fallback
-makes a misconfiguration degrade to *"the security you had yesterday"* instead
-of *"a brick."*
+It existed for a real reason — while it was still unproven whether container
+env vars reached PHP at all, a silently-missing variable would have locked the
+admin out of a live site. Once the env var was confirmed working in production,
+that justification expired, and the calculus inverted: the old password is in
+this repo's git history and its documentation, so a fallback meant a **publicly
+known password** would quietly go live the moment the variable went missing.
 
-**Removing it is step 3 below — do that only after confirming the env var works.**
+The lockout risk it guarded against is also smaller than it looks. Failing
+closed affects **only the admin login** — `index.php`, `feed.php`, `stream.php`
+and the embed/gallery pages never include `Auth.php`, so the public site and the
+RSS feeds keep serving regardless. And the recovery is the same two minutes it
+took to set the variable in the first place.
+
+`/login.php` now detects the unconfigured state, returns **503**, hides the
+password form, and prints the Coolify steps to fix it.
 
 ---
 
@@ -161,26 +170,23 @@ Visit **`/login.php`**. There is a status line at the bottom of the card:
 
 Run `php tests/auth_env_test.php` to exercise all of these paths locally.
 
-### ⬜ Step 3 — Remove the fallback (optional; step 2 is green, so this is now unblocked)
+### ✅ Step 3 — Remove the fallback — DONE (2026-09-22)
 
-Doing this means a missing `ADMIN_PASSWORD` produces a 500 instead of silently
-accepting the old password. The tradeoff: no way back in except fixing the env
-var and redeploying. For a demo app either choice is defensible — it is left
-undone deliberately, not forgotten.
+`FALLBACK_PASSWORD` deleted. `Auth::password()` now returns `?string` (null when
+unconfigured) and `Auth::attempt()` refuses before comparing, so an unset
+variable cannot be matched by submitting an empty string.
+`Auth::usingEnvPassword()` was renamed `Auth::isConfigured()`, which is what it
+now means.
 
-In `includes/Auth.php`, make `password()` fail closed instead of falling back:
-```php
-public static function password(): string
-{
-    $password = self::envPassword();
-    if ($password === null) {
-        http_response_code(500);
-        exit('ADMIN_PASSWORD is not configured.');
-    }
-    return $password;
-}
-```
-Then delete the `FALLBACK_PASSWORD` constant.
+Verified end-to-end with the variable both set and absent:
+
+| | `ADMIN_PASSWORD` set | absent |
+|---|---|---|
+| `/login.php` | 200, form, green banner | **503**, no form, setup instructions |
+| old `podcast2025` | rejected | **rejected** |
+| correct password | 302 → `/admin.php` | n/a |
+| `/admin.php` unauthenticated | 302 → login | 302 → login |
+| public `index.php` / `feed.php` | 200 | **200** |
 
 ### Step 4 — Cleanup (independent, safe, not yet done)
 Delete from the repo root — these are live on production right now:
