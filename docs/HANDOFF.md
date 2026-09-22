@@ -15,8 +15,10 @@ The admin password used to live in **`auth.js`** as a plain-text JavaScript
 constant (`podcast2025`). The browser downloaded it, so anyone could read it via
 View Source — and because the check was client-side, every admin page and API
 endpoint was reachable directly regardless. This change moves authentication to
-the **server**, stores only a **bcrypt hash**, and reads that hash from the
-**`ADMIN_PASSWORD_HASH` environment variable** set in the Coolify dashboard.
+the **server**: the password never reaches the browser, and every admin page and
+API endpoint is gated. The password itself is the **`ADMIN_PASSWORD` environment
+variable** set in the Coolify dashboard, in plain text — change it there and
+redeploy.
 
 ---
 
@@ -96,26 +98,32 @@ Also untouched and public: `index.php`, `app.html`, `features.html`,
 ## 4. How `Auth.php` works
 
 ```php
-Auth::attempt($password)   // password_verify + session_regenerate_id, sets session
+Auth::attempt($password)   // constant-time compare + session_regenerate_id, sets session
 Auth::check()              // bool — is this session authenticated
 Auth::requirePage()        // redirect to /login.php?redirect=<current URI>
 Auth::requireApi()         // 401 + JSON {success:false, error:...}
-Auth::logout()             // clear session
-Auth::passwordHash()       // env var, or fallback
-Auth::usingEnvHash()       // did the env var actually reach PHP?
+Auth::password()           // env var, or fallback
+Auth::usingEnvPassword()   // did the env var actually reach PHP?
 ```
+
+The password is the **plain-text `ADMIN_PASSWORD` environment variable**. There
+is no hashing step and no password-change screen in the app, by design: you
+change the password by editing that value in Coolify and redeploying.
+
+Leading and trailing whitespace is stripped from the value, since that is a
+paste artifact rather than part of a password. Everything else — spaces in the
+middle, `$`, `#`, quotes — is taken literally.
 
 ### ⚠️ The fallback — read this before "cleaning it up"
 
-`Auth::FALLBACK_HASH` is the bcrypt hash of the **old auth.js password
-(`podcast2025`)**. If `ADMIN_PASSWORD_HASH` is unset or empty, auth falls back
-to it.
+`Auth::FALLBACK_PASSWORD` is the **old auth.js password (`podcast2025`)**. If
+`ADMIN_PASSWORD` is unset or blank, auth falls back to it.
 
-**This is intentional, not an oversight.** PHP-FPM can run with `clear_env=on`,
-which strips container env vars before PHP ever sees them. Without the fallback,
-a silently-missing env var would lock the admin out of a live site with no way
-back in except a redeploy. The fallback makes a misconfiguration degrade to
-*"the security you had yesterday"* instead of *"a brick."*
+**This is intentional, not an oversight.** Container env vars can fail to reach
+PHP (see step 2). Without the fallback, a silently-missing env var would lock
+the admin out of a live site with no way back in except a redeploy. The fallback
+makes a misconfiguration degrade to *"the security you had yesterday"* instead
+of *"a brick."*
 
 **Removing it is step 3 below — do that only after confirming the env var works.**
 
@@ -124,35 +132,42 @@ back in except a redeploy. The fallback makes a misconfiguration degrade to
 ## 5. NEXT STEPS (in order)
 
 ### Step 1 — Set the env var in Coolify
-1. Generate a hash locally (do **not** commit the plain password):
-   ```bash
-   php -r "echo password_hash('YOUR-NEW-PASSWORD', PASSWORD_DEFAULT), PHP_EOL;"
-   ```
-2. Coolify dashboard → the `podcast-feed` app → **Configuration → Environment Variables**
-3. Add: name `ADMIN_PASSWORD_HASH`, value = the full `$2y$12$...` string
-   - ⚠️ Quote it or make sure Coolify doesn't mangle the `$` characters.
-4. Redeploy.
+1. Coolify dashboard → the `podcast-feed` app → **Configuration → Environment Variables**
+2. Add: name `ADMIN_PASSWORD`, value = the password you want, e.g. `Podcast2026`
+3. Redeploy.
+
+To change it later, edit that same value and redeploy. Nothing else to do.
 
 ### Step 2 — Verify it reached PHP
 Visit **`/login.php`**. There is a status line at the bottom of the card:
 
-- 🟢 **"Using ADMIN_PASSWORD_HASH from environment"** → working. Continue to step 3.
-- 🟠 **"ADMIN_PASSWORD_HASH not set — using built-in fallback"** → the env var did
-  not reach PHP. Likely `clear_env=on` in PHP-FPM. Fix: set `clear_env = no` in
-  the FPM pool config, or write the value into a `.env` file and add a loader.
+- 🟢 **"Using ADMIN_PASSWORD from environment"** → working. Continue to step 3.
+- 🟠 **"ADMIN_PASSWORD not set — using built-in fallback"** → the env var did
+  not reach PHP at all. `Auth::envPassword()` already checks `getenv()`,
+  `$_SERVER` and `$_ENV`, so the usual PHP-FPM cause (a value delivered as
+  `env[...]` or a FastCGI param, which only reaches `getenv()` when
+  `variables_order` contains `E`) is handled. If the banner is still orange, the
+  variable is genuinely absent from the container: check it is saved on the
+  right Coolify resource and that the app was redeployed, and that the value is
+  not blank — a blank or whitespace-only value is deliberately treated as unset.
   **Do not proceed to step 3 until this is green.**
 
+Run `php tests/auth_env_test.php` to exercise all of these paths locally.
+
 ### Step 3 — Remove the fallback (only after step 2 is green)
-In `includes/Auth.php`, make `passwordHash()` fail closed instead of falling back:
+In `includes/Auth.php`, make `password()` fail closed instead of falling back:
 ```php
-$hash = getenv('ADMIN_PASSWORD_HASH');
-if ($hash === false || trim($hash) === '') {
-    http_response_code(500);
-    exit('ADMIN_PASSWORD_HASH is not configured.');
+public static function password(): string
+{
+    $password = self::envPassword();
+    if ($password === null) {
+        http_response_code(500);
+        exit('ADMIN_PASSWORD is not configured.');
+    }
+    return $password;
 }
-return trim($hash);
 ```
-Then delete the `FALLBACK_HASH` constant.
+Then delete the `FALLBACK_PASSWORD` constant.
 
 ### Step 4 — Cleanup (independent, safe, not yet done)
 Delete from the repo root — these are live on production right now:

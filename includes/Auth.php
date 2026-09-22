@@ -7,17 +7,19 @@
  * to the browser in plain text and only hid the UI (the API endpoints and
  * admin pages were still reachable directly).
  *
- * The password hash comes from the ADMIN_PASSWORD_HASH environment variable,
- * set in the Coolify dashboard. FALLBACK_HASH below is the hash of the old
- * auth.js password and exists so that a missing/unreadable env var degrades
- * to "the previous behaviour" instead of locking the admin out entirely.
- * See docs/HANDOFF.md - removing the fallback is a deliberate follow-up step
- * once the env var is confirmed working in production.
+ * The password is the ADMIN_PASSWORD environment variable, set in the Coolify
+ * dashboard as plain text - change the password by editing that value and
+ * redeploying. There is no password-change screen in the app, by design.
+ *
+ * FALLBACK_PASSWORD below is the old auth.js password and is used only when
+ * ADMIN_PASSWORD is unset or blank, so a missing env var degrades to "the
+ * security you had yesterday" instead of locking the admin out of a live site.
+ * The login page shows which one is active. See docs/HANDOFF.md.
  */
 class Auth
 {
-    /** bcrypt hash of 'podcast2025' - the pre-existing auth.js password. */
-    private const FALLBACK_HASH = '$2y$12$I8U8aa/4GgpkWxjCrAqQR.B5BnReTM4a4nirkhnI4/Gimgl2DIbqa';
+    /** The pre-existing auth.js password, used only when ADMIN_PASSWORD is unset. */
+    private const FALLBACK_PASSWORD = 'podcast2025';
 
     private const SESSION_KEY = 'admin_authenticated';
 
@@ -34,37 +36,55 @@ class Auth
     }
 
     /**
-     * The active password hash: environment first, fallback second.
+     * Read ADMIN_PASSWORD from wherever the runtime actually put it.
+     *
+     * getenv() alone is not enough under PHP-FPM. When the value is passed to
+     * the pool as env[...] or as a FastCGI param, it lands in $_SERVER, and it
+     * only reaches getenv()/$_ENV if variables_order includes "E". So an env
+     * var that is genuinely set in Coolify can still make getenv() return
+     * false. Checking all three is what makes "set it in the dashboard"
+     * actually work regardless of how Nixpacks wires the pool.
+     *
+     * Only surrounding whitespace is stripped, since that is a paste artifact
+     * rather than part of the password. Returns null when the value is absent
+     * or blank everywhere.
      */
-    public static function passwordHash(): string
+    private static function envPassword(): ?string
     {
-        $hash = getenv('ADMIN_PASSWORD_HASH');
-
-        if ($hash === false || trim($hash) === '') {
-            return self::FALLBACK_HASH;
+        foreach ([getenv('ADMIN_PASSWORD'), $_SERVER['ADMIN_PASSWORD'] ?? null, $_ENV['ADMIN_PASSWORD'] ?? null] as $candidate) {
+            if (is_string($candidate) && trim($candidate) !== '') {
+                return trim($candidate);
+            }
         }
 
-        return trim($hash);
+        return null;
     }
 
     /**
-     * True when ADMIN_PASSWORD_HASH actually reached PHP.
-     * PHP-FPM can be configured with clear_env=on, which strips container
-     * environment variables before PHP sees them. Used by the status banner
-     * on login.php so this can be verified in production without guessing.
+     * The active password: environment first, fallback second.
      */
-    public static function usingEnvHash(): bool
+    public static function password(): string
     {
-        $hash = getenv('ADMIN_PASSWORD_HASH');
+        return self::envPassword() ?? self::FALLBACK_PASSWORD;
+    }
 
-        return $hash !== false && trim($hash) !== '';
+    /**
+     * True when ADMIN_PASSWORD actually reached PHP.
+     * Used by the status banner on login.php so this can be verified in
+     * production without guessing.
+     */
+    public static function usingEnvPassword(): bool
+    {
+        return self::envPassword() !== null;
     }
 
     public static function attempt(string $password): bool
     {
         self::boot();
 
-        if (!password_verify($password, self::passwordHash())) {
+        // hash_equals rather than === so the comparison time does not depend on
+        // how many leading characters a guess got right.
+        if (!hash_equals(self::password(), $password)) {
             return false;
         }
 

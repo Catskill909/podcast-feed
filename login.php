@@ -4,7 +4,7 @@
  * Admin login.
  *
  * Password-only, matching the UX of the old auth.js modal it replaces.
- * Verification happens server-side against Auth::passwordHash().
+ * Verification happens server-side against Auth::password().
  */
 
 require_once __DIR__ . '/includes/Auth.php';
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = 'Incorrect password.';
 }
 
-$usingEnv = Auth::usingEnvHash();
+$usingEnv = Auth::usingEnvPassword();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -126,9 +126,9 @@ $usingEnv = Auth::usingEnvHash();
 
         <div class="envnote">
             <?php if ($usingEnv): ?>
-                <span class="ok"><i class="fas fa-circle-check"></i> Using ADMIN_PASSWORD_HASH from environment</span>
+                <span class="ok"><i class="fas fa-circle-check"></i> Using ADMIN_PASSWORD from environment</span>
             <?php else: ?>
-                <span class="warn"><i class="fas fa-triangle-exclamation"></i> ADMIN_PASSWORD_HASH not set &mdash; using built-in fallback</span>
+                <span class="warn"><i class="fas fa-triangle-exclamation"></i> ADMIN_PASSWORD not set &mdash; using built-in fallback</span>
             <?php endif; ?>
         </div>
     </div>
