@@ -23,6 +23,7 @@ chdir(dirname(__DIR__));
 require_once __DIR__ . '/../includes/PodcastManager.php';
 require_once __DIR__ . '/../includes/RssFeedParser.php';
 require_once __DIR__ . '/../includes/FeedHealthMonitor.php';
+require_once __DIR__ . '/../includes/ScanExitPolicy.php';
 
 // Configuration
 $config = [
@@ -54,7 +55,12 @@ try {
         'updated' => 0,
         'failed' => 0,
         'skipped' => 0,
-        'errors' => []
+        'errors' => [],
+        // Breakdown of 'failed' for ScanExitPolicy
+        'fetched' => 0,
+        'fetch_failed' => 0,
+        'local_failed' => 0,
+        'newly_disabled' => []
     ];
     
     log_message("Found {$stats['total']} podcasts to scan");
@@ -77,10 +83,11 @@ try {
         }
         
         try {
-            // Fetch feed metadata with timing
-            $startTime = microtime(true);
+            // Fetch feed metadata with timing ($feedStart, not $startTime: that one times the whole run)
+            $stats['fetched']++;
+            $feedStart = microtime(true);
             $result = $parser->fetchFeedMetadata($podcast['feed_url']);
-            $responseTime = microtime(true) - $startTime;
+            $responseTime = microtime(true) - $feedStart;
             
             if ($result['success']) {
                 // Record successful check
@@ -113,6 +120,7 @@ try {
                         log_message("  ✓ Updated - Latest episode: $episodeDate, Episodes: {$result['episode_count']}");
                     } else {
                         $stats['failed']++;
+                        $stats['local_failed']++;
                         $stats['errors'][] = [
                             'podcast' => $podcast['title'],
                             'error' => 'Update failed: ' . ($updateResult['message'] ?? 'Unknown error')
@@ -127,7 +135,8 @@ try {
                 // Record failure with error details
                 $error = $result['error'] ?? 'Unknown error';
                 $healthMonitor->recordFailure($podcast['id'], $error, 'fetch_error', 0, $responseTime);
-                
+                countFetchFailure($stats, $podcast);
+
                 $stats['failed']++;
                 $stats['errors'][] = [
                     'podcast' => $podcast['title'],
@@ -139,7 +148,8 @@ try {
         } catch (Exception $e) {
             // Record exception as failure
             $healthMonitor->recordFailure($podcast['id'], $e->getMessage(), 'exception', 0, 0);
-            
+            countFetchFailure($stats, $podcast);
+
             $stats['failed']++;
             $stats['errors'][] = [
                 'podcast' => $podcast['title'],
@@ -193,8 +203,20 @@ try {
     // Update last scan timestamp
     updateLastScanTime();
     
-    // Exit with appropriate code
-    exit($stats['failed'] > 0 ? 1 : 0);
+    // Exit code decides whether Coolify emails a "FAILED" alert (see ScanExitPolicy)
+    foreach ($stats['newly_disabled'] as $title) {
+        log_message("AUTO-DISABLED after " . FeedHealthMonitor::THRESHOLD_AUTO_DISABLE_FAILURES . " failed scans in a row: $title");
+    }
+    $exitCode = ScanExitPolicy::exitCode(
+        $stats['fetched'],
+        $stats['fetch_failed'],
+        $stats['local_failed'],
+        count($stats['newly_disabled'])
+    );
+    if ($exitCode === 0 && $stats['failed'] > 0) {
+        log_message("{$stats['failed']} feed(s) failed this run; not reported as a task failure (retried next run)");
+    }
+    exit($exitCode);
     
 } catch (Exception $e) {
     log_message("FATAL ERROR: " . $e->getMessage());
@@ -221,6 +243,16 @@ function log_message(string $message) {
     }
     
     file_put_contents($config['log_file'], $logEntry, FILE_APPEND);
+}
+
+/**
+ * Count a failed fetch and note it if this failure auto-disables the feed
+ */
+function countFetchFailure(array &$stats, array $podcast) {
+    $stats['fetch_failed']++;
+    if (ScanExitPolicy::isNewlyDisabled($podcast)) {
+        $stats['newly_disabled'][] = $podcast['title'];
+    }
 }
 
 /**
