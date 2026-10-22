@@ -1,5 +1,45 @@
 # HANDOFF — Admin Authentication Migration
 
+> ## ⚠️ 2026-10-21: APP IS OFF IN PRODUCTION (PHP security fix needed)
+>
+> **What happened:** PHP released fixes for two critical flaws ("PHP2Shell",
+> CVE-2026-109618 / CVE-2026-109619: remote code execution with no login, plus
+> a memory leak that can expose passwords and keys). Fixed in PHP **8.3.36**,
+> 8.4.27 and 8.5.12. This app runs **PHP 8.3.15** (Nixpacks pulls it from Nix,
+> built Dec 2024), so it was exposed. **The container was stopped on
+> 2026-10-21** at the owner's request; podcast.supersoul.top returns 503.
+>
+> **Why a redeploy alone won't fix it:** Nixpacks keeps installing that same old
+> Nix PHP. The planned fix is a `Dockerfile` based on the official
+> `php:8.3.36-fpm` image (or newer) plus nginx, replacing the Nixpacks build.
+> Check after deploying: `docker exec <container> php -v` shows ≥ 8.3.36.
+>
+> **Before bringing it back, do all of these:**
+> - [ ] **Delete the debug/check pages from the repo root.** Tested on
+>       2026-10-21: `debug-server-vars.php`, `check-user.php` and
+>       `check-production-config.php` returned **200 to anyone**; `debug.php`
+>       returned 302. Not tested, but delete too: `debug-episode-dates.php`,
+>       `debug-labor-heritage.php`, `debug-permissions.php`,
+>       `css-diagnostic.php`. (Their contents were not reviewed. Assume they
+>       may have shown secrets, and consider rotating `ADMIN_PASSWORD` and
+>       other keys.)
+> - [ ] Deploy the PHP fix and confirm the version as above.
+> - [ ] **Turn the Coolify scheduled task back on:** Coolify → PodFeed Studio →
+>       Scheduled Tasks → **podcast feed** (`*/15 * * * *`,
+>       `php /app/cron/auto-scan-feeds.php`) → **Enabled** on → Save.
+>       It was disabled on 2026-10-21 because it failed (and emailed) every
+>       15 minutes while the container was stopped. **Feeds won't auto-scan
+>       until it's back on.**
+> - [ ] Bring it back with a **full Deploy in Coolify** (PodFeed Studio →
+>       Deploy). A push alone does nothing: GitHub pushes don't trigger a
+>       deploy (see below), and the stopped container won't start on its own.
+>
+> **Pushing is safe:** pushes to `main` don't auto-deploy, so the app stays off
+> until someone clicks Deploy.
+>
+> The fleet-wide record of this is in
+> `~/Desktop/paul-vps/coolify-paul/handoff.md` (open items).
+
 **Date:** 2026-08-19 · **Updated:** 2026-09-22
 **Branch:** `main`
 **Status:** ✅ **Complete and verified in production.** `ADMIN_PASSWORD` is set
@@ -35,7 +75,7 @@ redeploy.
 |---|---|
 | Platform | Coolify + Nixpacks (nginx + PHP-FPM, docroot `/app`) |
 | Repo | https://github.com/Catskill909/podcast-feed |
-| Deploy trigger | Push to `main` → Coolify auto-deploys |
+| Deploy trigger | **Manual:** click **Deploy** in Coolify after pushing to `main`. (Auto-deploy is switched on, but GitHub pushes don't trigger it; noted 2026-10-21) |
 | Config loaded at runtime | `config/config.php` |
 | `config/config.production.php` | **Dead file** — nothing includes it. Not used. |
 | `.htaccess` | **Inert** — nginx does not read `.htaccess`. Its "Protect sensitive files" block does nothing. |
