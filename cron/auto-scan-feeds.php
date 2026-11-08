@@ -241,7 +241,14 @@ function log_message(string $message) {
     if (!is_dir($logDir)) {
         mkdir($logDir, 0755, true);
     }
-    
+
+    // Runs every 15 minutes and only ever appends, so cap it: past 10 MB the
+    // log moves to auto-scan.log.1 (replacing the previous one) and starts over.
+    clearstatcache(true, $config['log_file']);
+    if (is_file($config['log_file']) && filesize($config['log_file']) > 10 * 1024 * 1024) {
+        rename($config['log_file'], $config['log_file'] . '.1');
+    }
+
     file_put_contents($config['log_file'], $logEntry, FILE_APPEND);
 }
 

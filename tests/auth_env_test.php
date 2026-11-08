@@ -111,6 +111,36 @@ foreach (['P@ss w0rd!', 'a$b$c', 'quote"and\'quote', 'Podcast2026#$%'] as $candi
     ok("round-trips intact: $candidate", Auth::password() === $candidate);
 }
 
+echo "Login attempts are limited per IP\n";
+resetEnv();
+$_SERVER['ADMIN_PASSWORD'] = NEW_PASSWORD;
+Auth::$attemptsFile = tempnam(sys_get_temp_dir(), 'auth-attempts-');
+$attacker = '203.0.113.7';
+$owner = '198.51.100.20';
+for ($i = 1; $i < Auth::MAX_FAILURES; $i++) {
+    Auth::attempt('wrong-' . $i, $attacker);
+}
+ok('not locked out one guess before the limit', !Auth::isLockedOut($attacker));
+Auth::attempt('wrong-last', $attacker);
+ok('locked out after MAX_FAILURES wrong guesses', Auth::isLockedOut($attacker));
+ok('correct password is refused while locked out', !Auth::attempt(NEW_PASSWORD, $attacker));
+ok('another IP is not affected by the lockout', Auth::attempt(NEW_PASSWORD, $owner));
+
+// Failures older than the window no longer count.
+file_put_contents(Auth::$attemptsFile, json_encode([
+    $attacker => array_fill(0, Auth::MAX_FAILURES, time() - Auth::LOCKOUT_SECONDS - 1),
+]));
+ok('lockout expires after LOCKOUT_SECONDS', !Auth::isLockedOut($attacker));
+
+// A success wipes earlier failures, so the owner's typos don't accumulate.
+Auth::attempt('typo', $owner);
+Auth::attempt(NEW_PASSWORD, $owner);
+Auth::attempt('typo', $owner);
+ok('a successful login resets the failure count', count(json_decode(file_get_contents(Auth::$attemptsFile), true)[$owner]) === 1);
+
+unlink(Auth::$attemptsFile);
+Auth::$attemptsFile = null;
+
 resetEnv();
 echo $failures === 0 ? "\nALL PASS\n" : "\n$failures FAILURE(S)\n";
 exit($failures === 0 ? 0 : 1);

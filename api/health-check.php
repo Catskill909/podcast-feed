@@ -1,4 +1,8 @@
 <?php
+
+// Admin-only endpoint (only admin.php calls it): reject unauthenticated callers.
+require_once __DIR__ . '/../includes/Auth.php';
+Auth::requireApi();
 /**
  * Podcast Health Check API Endpoint
  * Performs health checks on podcast feeds

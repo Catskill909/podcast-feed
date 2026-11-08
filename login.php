@@ -14,7 +14,8 @@ $message = '';
 // Only allow relative redirect targets, so ?redirect= cannot be used to
 // bounce a logged-in admin to an external site.
 $redirect = $_GET['redirect'] ?? '/admin.php';
-if (!is_string($redirect) || $redirect === '' || $redirect[0] !== '/' || str_starts_with($redirect, '//')) {
+// Browsers treat a backslash like a slash, so "/\evil.com" is also off-site.
+if (!is_string($redirect) || $redirect === '' || $redirect[0] !== '/' || str_starts_with($redirect, '//') || str_contains($redirect, '\\')) {
     $redirect = '/admin.php';
 }
 
@@ -30,12 +31,23 @@ $configured = Auth::isConfigured();
 if (!$configured) {
     http_response_code(503);
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (Auth::attempt($_POST['password'] ?? '')) {
+    // REMOTE_ADDR is the visitor's real IP: nginx resolves it from Coolify's
+    // proxy headers (set_real_ip_from in docker/nginx.conf).
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    if (Auth::attempt($_POST['password'] ?? '', $ip)) {
         header('Location: ' . $redirect);
         exit;
     }
-    $message = 'Incorrect password.';
+    if (Auth::isLockedOut($ip)) {
+        http_response_code(429);
+        $message = 'Too many wrong passwords. Try again in 15 minutes.';
+    } else {
+        $message = 'Incorrect password.';
+    }
 }
+
+// The login form must never be framed by another site (clickjacking).
+header('X-Frame-Options: DENY');
 ?>
 <!DOCTYPE html>
 <html lang="en">

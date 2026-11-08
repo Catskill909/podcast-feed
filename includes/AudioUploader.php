@@ -20,9 +20,7 @@ class AudioUploader
         
         // Max file size: 500MB (configurable)
         $this->maxFileSize = 500 * 1024 * 1024;
-        
-        error_log('[AudioUploader] Initialized with support for: ' . implode(', ', $this->allowedExtensions));
-        
+
         // Ensure audio directory exists
         $this->ensureDirectoryExists();
     }
@@ -30,8 +28,24 @@ class AudioUploader
     /**
      * Upload audio file for an episode
      */
+    /**
+     * True when the IDs and extension are safe to use as path segments.
+     * They arrive from the browser (POST podcast_id / episode_id), so a value
+     * like "../x" would otherwise write or delete outside uploads/audio/.
+     */
+    private function isSafePath(string $podcastId, string $episodeId, string $extension = 'mp3'): bool
+    {
+        return preg_match('/^[A-Za-z0-9_-]+$/', $podcastId) === 1
+            && preg_match('/^[A-Za-z0-9_-]+$/', $episodeId) === 1
+            && in_array($extension, $this->allowedExtensions, true);
+    }
+
     public function uploadAudio(array $file, string $podcastId, string $episodeId)
     {
+        if (!$this->isSafePath($podcastId, $episodeId)) {
+            return ['success' => false, 'message' => 'Invalid podcast or episode ID'];
+        }
+
         try {
             // Validate file
             $validation = $this->validateAudioFile($file);
@@ -108,6 +122,10 @@ class AudioUploader
      */
     public function deleteAudio(string $podcastId, string $episodeId, string $extension = 'mp3')
     {
+        if (!$this->isSafePath($podcastId, $episodeId, $extension)) {
+            return ['success' => false, 'message' => 'Invalid podcast or episode ID'];
+        }
+
         try {
             // Try to find the file with any supported extension
             $filepath = null;
@@ -156,6 +174,10 @@ class AudioUploader
      */
     public function getAudioInfo(string $podcastId, string $episodeId, string $extension = 'mp3')
     {
+        if (!$this->isSafePath($podcastId, $episodeId, $extension)) {
+            return null;
+        }
+
         // Try to find the file with any supported extension
         $filepath = null;
         $actualExtension = $extension;

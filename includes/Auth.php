@@ -86,7 +86,68 @@ class Auth
         return self::envPassword() !== null;
     }
 
-    public static function attempt(string $password): bool
+    /** Wrong passwords allowed per IP within LOCKOUT_SECONDS before refusing. */
+    public const MAX_FAILURES = 5;
+    public const LOCKOUT_SECONDS = 900;
+
+    /** Where failed attempts are counted. Tests point this at a temp file. */
+    public static ?string $attemptsFile = null;
+
+    private static function attemptsFile(): string
+    {
+        return self::$attemptsFile ?? __DIR__ . '/../data/login-attempts.json';
+    }
+
+    /**
+     * Read-modify-write the per-IP failure list under an exclusive lock, so
+     * parallel guesses cannot each read the same count and slip past the limit.
+     * $change receives the IP's recent failure timestamps and returns the new
+     * list; the result of the last call is returned.
+     */
+    private static function withFailures(string $ip, ?callable $change = null): array
+    {
+        $handle = fopen(self::attemptsFile(), 'c+');
+        if ($handle === false) {
+            // Can't count attempts (data/ unwritable): log it and allow the
+            // attempt rather than locking the owner out of their own admin.
+            error_log('[Auth] cannot open login attempts file; throttling disabled');
+            return [];
+        }
+        flock($handle, LOCK_EX);
+        $all = json_decode(stream_get_contents($handle) ?: '{}', true) ?: [];
+
+        $cutoff = time() - self::LOCKOUT_SECONDS;
+        foreach ($all as $key => $times) {
+            $all[$key] = array_values(array_filter($times, fn ($t) => $t > $cutoff));
+            if ($all[$key] === []) {
+                unset($all[$key]);
+            }
+        }
+
+        $failures = $all[$ip] ?? [];
+        if ($change !== null) {
+            $failures = $change($failures);
+            if ($failures === []) {
+                unset($all[$ip]);
+            } else {
+                $all[$ip] = $failures;
+            }
+            ftruncate($handle, 0);
+            rewind($handle);
+            fwrite($handle, json_encode($all));
+        }
+        flock($handle, LOCK_UN);
+        fclose($handle);
+
+        return $failures;
+    }
+
+    public static function isLockedOut(string $ip): bool
+    {
+        return count(self::withFailures($ip)) >= self::MAX_FAILURES;
+    }
+
+    public static function attempt(string $password, string $ip = ''): bool
     {
         self::boot();
 
@@ -98,10 +159,23 @@ class Auth
             return false;
         }
 
+        // Refuse while locked out, even if this guess is right, so an attacker
+        // can't keep guessing at full speed and just watch for a success.
+        if ($ip !== '' && self::isLockedOut($ip)) {
+            return false;
+        }
+
         // hash_equals rather than === so the comparison time does not depend on
         // how many leading characters a guess got right.
         if (!hash_equals($expected, $password)) {
+            if ($ip !== '') {
+                self::withFailures($ip, fn ($times) => [...$times, time()]);
+            }
             return false;
+        }
+
+        if ($ip !== '') {
+            self::withFailures($ip, fn () => []);
         }
 
         // Rotate the session id on privilege change so a session id captured
@@ -131,6 +205,9 @@ class Auth
      */
     public static function requirePage(): void
     {
+        // Admin pages must never be framed by another site (clickjacking).
+        header('X-Frame-Options: DENY');
+
         if (self::check()) {
             return;
         }

@@ -113,10 +113,23 @@ class StreamingProxy
     }
 
     /**
+     * The only hosts this proxy fetches from. The public endpoints take the URL
+     * from the query string, so without this anyone could make the server
+     * fetch internal addresses (Coolify network, other containers).
+     */
+    private const ALLOWED_HOSTS = ['docs.pacifica.org', 'confessor.wpfwfm.org'];
+
+    /**
      * Basic HTTP GET wrapper with cURL.
      */
     private function httpGet(string $url, array $headers = [], int $timeout = self::DEFAULT_TIMEOUT): string
     {
+        $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+        $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
+        if (!in_array($host, self::ALLOWED_HOSTS, true) || !in_array($scheme, ['http', 'https'], true)) {
+            throw new InvalidArgumentException('URL host is not permitted');
+        }
+
         $ch = curl_init();
         if ($ch === false) {
             throw new RuntimeException('Failed to initialise cURL');
@@ -134,6 +147,8 @@ class StreamingProxy
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_MAXREDIRS => 5,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+            CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_TIMEOUT => $timeout,
             CURLOPT_CONNECTTIMEOUT => 5,
             CURLOPT_USERAGENT => self::DEFAULT_USER_AGENT,

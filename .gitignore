@@ -63,3 +63,4 @@ cache/
 
 # Migration backups
 data/*.bak-*
+data/login-attempts.json
