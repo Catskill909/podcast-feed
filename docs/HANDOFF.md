@@ -32,10 +32,15 @@
 >       Dockerfile**. Keep Exposed ports **3000**.
 > - [ ] Deploy, then in Coolify → Terminal run `php -v` and confirm **8.3.36**.
 >       Check the site, admin login, a cover image, and an audio upload.
-> - [ ] Once it works: remove the old Nixpacks files (`nixpacks.toml`,
->       `nixpacks-start.sh`, `docker-entrypoint.sh`, `coolify-post-deploy.sh`,
->       `Dockerfile.broken-backup`, `nginx-custom.conf`,
->       `.coolify-volumes.example`). Kept until then so rolling back is easy.
+> - [x] Old Nixpacks files removed (2026-11-08), after the Dockerfile build
+>       was confirmed live. Rolling back to Nixpacks would mean restoring
+>       `nixpacks.toml` from git history.
+>
+> **2026-11-08: back online** on PHP 8.3.36 (Dockerfile build), scheduled
+> task re-enabled. A security audit the same day fixed open URL fetching in
+> the streaming proxy, path traversal in audio uploads, unlimited login
+> guesses, missing cookie flags, and removed 6 unused API endpoints (two of
+> them fetched any URL). See commit 824ea81 and the one after it.
 > - [ ] **Turn the Coolify scheduled task back on:** Coolify → PodFeed Studio →
 >       Scheduled Tasks → **podcast feed** (`*/15 * * * *`,
 >       `php /app/cron/auto-scan-feeds.php`) → **Enabled** on → Save.
