@@ -10,20 +10,32 @@
 > 2026-10-21** at the owner's request; podcast.supersoul.top returns 503.
 >
 > **Why a redeploy alone won't fix it:** Nixpacks keeps installing that same old
-> Nix PHP. The planned fix is a `Dockerfile` based on the official
-> `php:8.3.36-fpm` image (or newer) plus nginx, replacing the Nixpacks build.
-> Check after deploying: `docker exec <container> php -v` shows ≥ 8.3.36.
+> Nix PHP. **Fix (2026-11-08):** a `Dockerfile` on the official
+> `php:8.3.36-fpm-bookworm` image plus nginx (configs in `docker/`). The build
+> fails on purpose if PHP is older than 8.3.36. Not yet deployed; it has not
+> been built anywhere yet (no Docker on the dev Mac), so the first Deploy is
+> its first test. nginx now also returns 404 for `data/`, `logs/`, `config/`,
+> `cron/`, `includes/`, `docs/`, `.md`/`.sh`/`.bak` files, and never runs PHP
+> inside `uploads/` (the repo's `.htaccess` never did any of this under nginx).
 >
 > **Before bringing it back, do all of these:**
-> - [ ] **Delete the debug/check pages from the repo root.** Tested on
->       2026-10-21: `debug-server-vars.php`, `check-user.php` and
->       `check-production-config.php` returned **200 to anyone**; `debug.php`
->       returned 302. Not tested, but delete too: `debug-episode-dates.php`,
->       `debug-labor-heritage.php`, `debug-permissions.php`,
->       `css-diagnostic.php`. (Their contents were not reviewed. Assume they
->       may have shown secrets, and consider rotating `ADMIN_PASSWORD` and
->       other keys.)
-> - [ ] Deploy the PHP fix and confirm the version as above.
+> - [x] **Debug/test pages deleted from the repo root** (2026-11-08): all
+>       `debug*`, `check-*`, `test-*`, `migrate-*` and empty diagnostic pages,
+>       `view-source.php`, `mobile-test.php`, `css-diagnostic.php`, `.bak`
+>       copies, and `update_status.php` (a no-login status-change endpoint
+>       that nothing used; `admin.php` handles that itself). Before this,
+>       `debug-server-vars.php` and `check-user.php` returned **200 to anyone**.
+>       The allowlist test moved to `tests/proxy_allowlist_test.php`.
+> - [ ] **Rotate `ADMIN_PASSWORD`** in Coolify → Environment Variables (the
+>       debug pages may have shown it).
+> - [ ] **Switch the build:** Coolify → General → Build pack: **Nixpacks →
+>       Dockerfile**. Keep Exposed ports **3000**.
+> - [ ] Deploy, then in Coolify → Terminal run `php -v` and confirm **8.3.36**.
+>       Check the site, admin login, a cover image, and an audio upload.
+> - [ ] Once it works: remove the old Nixpacks files (`nixpacks.toml`,
+>       `nixpacks-start.sh`, `docker-entrypoint.sh`, `coolify-post-deploy.sh`,
+>       `Dockerfile.broken-backup`, `nginx-custom.conf`,
+>       `.coolify-volumes.example`). Kept until then so rolling back is easy.
 > - [ ] **Turn the Coolify scheduled task back on:** Coolify → PodFeed Studio →
 >       Scheduled Tasks → **podcast feed** (`*/15 * * * *`,
 >       `php /app/cron/auto-scan-feeds.php`) → **Enabled** on → Save.

@@ -1,0 +1,8 @@
+.git
+.vscode
+.DS_Store
+docs
+docs-archive
+tests
+*.md
+Dockerfile.broken-backup

@@ -7,10 +7,10 @@
  * added to the directory was rejected by the proxy, so the player fell through
  * to third-party CORS proxies and rendered nothing when those were down.
  *
- * Run: php test-proxy-allowlist.php
+ * Run: php tests/proxy_allowlist_test.php
  */
 
-require_once __DIR__ . '/includes/FeedUrlGuard.php';
+require_once __DIR__ . '/../includes/FeedUrlGuard.php';
 
 $ownHost = 'podcast.supersoul.top';
 $failures = [];
@@ -31,8 +31,8 @@ function check(string $label, bool $actual, bool $expected, array &$failures): v
 // 1. THE CLASS: every feed in the directory must be proxyable. This fails for
 //    any podcast whose host is not covered, not just the ones reported broken.
 $sources = [
-    __DIR__ . '/data/podcasts.xml',
-    __DIR__ . '/data/self-hosted-podcasts.xml',
+    __DIR__ . '/../data/podcasts.xml',
+    __DIR__ . '/../data/self-hosted-podcasts.xml',
 ];
 
 foreach ($sources as $source) {

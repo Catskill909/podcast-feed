@@ -17,7 +17,7 @@
  * podcast added through the admin UI becomes proxyable immediately. A static
  * list silently 403s every newly added podcast, which is what broke playback.
  *
- * Kept in its own file so test-proxy-allowlist.php can exercise it without
+ * Kept in its own file so tests/proxy_allowlist_test.php can exercise it without
  * running the proxy's request handling.
  *
  * @param string $ownHost The host serving this request (may include a port).
